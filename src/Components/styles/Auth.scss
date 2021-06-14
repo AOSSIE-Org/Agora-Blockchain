@@ -47,9 +47,10 @@
       }
       .authButtons {
         color: white;
-        float: right;
+        text-decoration: none;
         width: 100px;
         height: 35px;
+        margin: auto;
         background: #593cda;
         border-radius: 4px;
         font-weight: bolder;
@@ -61,6 +62,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
+      }
+      .authButtonRight {
+        float: right;
       }
       .centered {
         display: flex;

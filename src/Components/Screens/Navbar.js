@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import '../styles/Navbar.scss';
 
 function Navbar({header, infoText, pictureUrl}) {
@@ -13,7 +14,7 @@ function Navbar({header, infoText, pictureUrl}) {
 
             <div className="navbarMenuOption">
                 <img src="/assets/settings.png" className="navbarMenuIcon navbarMenuLeft" alt="settings"/>
-                <img src="/assets/logout.png" className="navbarMenuIcon" alt="logout"/>
+                <Link to="/"><img src="/assets/logout.png" className="navbarMenuIcon" alt="logout"/></Link>
             </div>
         </nav>
 	)

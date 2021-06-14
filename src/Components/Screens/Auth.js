@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+
 import "../styles/Auth.scss";
 
 function Auth() {
@@ -11,7 +13,8 @@ function Auth() {
           <label className="form-label">Email</label>
           <input 
             className="form-control" 
-            placeholder="email@example.com" 
+            placeholder="email@example.com"
+            type="password"
           />
           <br />
 
@@ -19,19 +22,21 @@ function Auth() {
           <input
             className="form-control"
             placeholder="Choose a strong password"
+            type="password"
           />
           <br />
 
           <label className="form-label">Confirm Password</label>
           <input 
             className="form-control" 
-            placeholder="Retype your password" 
+            placeholder="Retype your password"
+            type="password"
           />
           <br />
 
-          <div className="authButtons">SIGN UP</div>
+          <Link to="/dashboard" className="authButtons">SIGN UP</Link>
         </form>
-        <br />
+
         <br />
 
         <font
@@ -64,7 +69,7 @@ function Auth() {
             Forgot password?
           </font>
 
-          <div className="authButtons">SIGN IN</div>
+          <Link to="/dashboard" className="authButtons authButtonRight">SIGN IN</Link>
         </form>
         <br />
         <br />
