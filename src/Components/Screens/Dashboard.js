@@ -1,4 +1,6 @@
 import { Table, MetaMaskButton } from 'rimble-ui';
+import { Link } from 'react-router-dom';
+import '../styles/Layout.scss';
 import '../styles/Dashboard.scss';
 import { COLORS } from '../constants';
 import CreateElectionModal from './modals/CreateElectionModal';
@@ -37,7 +39,7 @@ function Dashboard() {
 
 	const ElectionRow = ({electionId, electionTitle, electionAddress, startDate, endDate, status}) => {
 		return (
-			<tr>
+			<tr style={{cursor: "pointer"}} onClick={()=> {window.location.href='/election'}}>
 				<td>{electionId}</td>
 				<td className="tableDetails">
 					<font>{electionTitle}</font><br/>
@@ -81,8 +83,8 @@ function Dashboard() {
 					<CardItem headerValue="1" descriptor="Pending elections" imgUrl="/assets/pendingElections.png" imgBackground="#fffbd1"/>
 				</div>
 
-				<div className="dashboardBody row">
-					<div className="lhsDashboard">
+				<div className="layoutBody row">
+					<div className="lhsLayout">
 						<div className="lhsHeader" style={{marginTop: "10px"}}>
 							<h5>Elections</h5>
 						</div>
@@ -132,7 +134,7 @@ function Dashboard() {
 						</div>
 					</div>
 
-					<div className="rhsDashboard">
+					<div className="rhsLayout">
 						<div className="lhsHeader" style={{marginTop: "10px"}}>
 							<h5>Network Information</h5>
 						</div>

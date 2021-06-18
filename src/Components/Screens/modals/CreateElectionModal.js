@@ -16,7 +16,7 @@ function CreateElectionModal() {
   
     return (
         <div>
-            <div className="dashboardButton" onClick={openModal}>
+            <div className="createElectionButton" onClick={openModal}>
                 <img src="/assets/plus.png" alt="+" style={{width: "15px", height: "15px", marginRight: "10px"}}/>
                 Create Election
             </div>
