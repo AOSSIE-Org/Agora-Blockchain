@@ -9,6 +9,7 @@ node_modules
 
 # production
 build
+client/src/blockchainBuild
 
 # misc
 .DS_Store
