@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 
 contract Election {
     // Public address of election creator
-    address public electionOrganiser;
+    // address public electionOrganiser;
 
     // Election details
     string public name;
@@ -35,7 +35,7 @@ contract Election {
 
     // Iniitializing election contract
     constructor (string[] memory _nda, uint[] memory _se) {
-        electionOrganiser = msg.sender;
+        // electionOrganiser = msg.sender;
         name = _nda[0];
         description = _nda[1];
         algorithm = _nda[2];
@@ -58,10 +58,10 @@ contract Election {
             return Status.closed;
         }
     }
-    
+
     // Adding candidates before election started (only by organiser)
     function addCandidate(string memory _name, string memory _about) public {
-        require(msg.sender == electionOrganiser, "Only organiser can add candidates");
+        // require(msg.sender == electionOrganiser, "Only organiser can add candidates");
         require(getStatus() == Status.pending, "Candidates can only be added before election has started");
         candidatesCount++;
         candidates[candidatesCount] = Candidate(candidatesCount, _name, _about, 0);
@@ -69,35 +69,37 @@ contract Election {
 
     // Casting votes (only when election is active)
     function vote(uint _candidate) public {
+        // emit electionStatus(getStatus());
         require(!voters[msg.sender], "Voter has already Voted!");
         require(_candidate <= candidatesCount && _candidate >= 1, "Invalid candidate to Vote!");
-        require(getStatus() == Status.active, "Election closed");
+        require(getStatus() != Status.closed, "Election closed");
+        require(getStatus() != Status.pending, "Election not yet started");
         voters[msg.sender] = true;
         candidates[_candidate].voteCount++;
     }
 
     // Calculate results
-    function calculateResults() public {
-        require(msg.sender == electionOrganiser, "Only organiser can call this function");
+    function calculateResults() private {
+        // require(msg.sender == electionOrganiser, "Only organiser can call this function");
         require(getStatus() == Status.closed, "Election not yet closed.");
         uint maxVote = 0;
         for(uint i = 1; i <= candidatesCount; i++) {
-            if(candidates[i].voteCount >= maxVote) {
-                if(candidates[i].voteCount > maxVote) {
-                    // Remove existing winners if new max vote is found
-                    maxVote = candidates[i].voteCount;
-                    delete winnerDetails;
-                    winnerDetails.push(candidates[i]);
-                } else {
+              if(candidates[i].voteCount > maxVote) {
+                  // Remove existing winners if new max vote is found
+                  maxVote = candidates[i].voteCount;
+                  delete winnerDetails;
+                  winnerDetails.push(candidates[i]);
+              } else if(candidates[i].voteCount == maxVote) {
                     // Push to existing winner array if same max vote is found
-                    winnerDetails.push(candidates[i]);
-                }
+                  winnerDetails.push(candidates[i]);
             }
         }
     }
 
     // Get winner details
-    function getWinnerDetails() public view returns (Candidate[] memory) {
+    function getWinnerDetails() public returns (Candidate[] memory)
+    {
+        calculateResults();
         return winnerDetails;
     }
 }
