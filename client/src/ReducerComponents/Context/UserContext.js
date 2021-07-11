@@ -1,15 +1,47 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useDrizzleContext } from '../../drizzle/drizzleContext';
+import { useCacheCallsContext } from './CacheCallsContext';
 
-export const UserContext = createContext();
+const Context = createContext();
 
-const UserContextProvider = (props) => {
-  const [user, setAuthUser] = useState({});
+export function UserProvider({ children }) {
+  const { drizzle, addNewContract, drizzleVariables } = useDrizzleContext();
+  const { cacheCalls } = useCacheCallsContext();
 
-  return (
-    <UserContext.Provider values={(user, setAuthUser)}>
-      {props.children}
-    </UserContext.Provider>
-  );
-};
+  const [userInfo, setUserInfo] = useState({
+    userId: null,
+    name: null,
+    publicAddress: null,
+    contractAddress: null,
+    isRegistered: null
+  })
 
-export default UserContextProvider;
+  useEffect(() => {
+    if(cacheCalls.isRegistered && cacheCalls.isRegistered[0] == 1) {
+      userInfo.contractAddress != null && 
+      drizzle.contracts[userInfo.contractAddress] === undefined && 
+      addNewContract(userInfo.contractAddress, userInfo.contractAddress);
+      
+      setUserInfo({
+        ...userInfo,
+        userId: cacheCalls.isRegistered[1],
+        isRegistered: true,
+        // name: cacheCalls.fullName,
+        publicAddress: cacheCalls?.user?.publicAddress,
+        contractAddress: cacheCalls?.user?.contractAddress
+      })
+    } else {
+      setUserInfo({
+        ...userInfo,
+        isRegistered: false
+      })
+    }
+  }, [cacheCalls, drizzleVariables.UserContract]);
+
+  return <Context.Provider value={{ userInfo }}>{children}</Context.Provider>;
+}
+
+export function useUserContext() {
+  const context = useContext(Context);
+  return context;
+}

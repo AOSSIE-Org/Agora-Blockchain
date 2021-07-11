@@ -84,22 +84,24 @@ contract Election {
         require(getStatus() == Status.closed, "Election not yet closed.");
         uint maxVote = 0;
         for(uint i = 1; i <= candidatesCount; i++) {
-              if(candidates[i].voteCount > maxVote) {
-                  // Remove existing winners if new max vote is found
-                  maxVote = candidates[i].voteCount;
-                  delete winnerDetails;
-                  winnerDetails.push(candidates[i]);
-              } else if(candidates[i].voteCount == maxVote) {
-                    // Push to existing winner array if same max vote is found
-                  winnerDetails.push(candidates[i]);
+            if(candidates[i].voteCount > maxVote) {
+                // Remove existing winners if new max vote is found
+                maxVote = candidates[i].voteCount;
+                delete winnerDetails;
+                winnerDetails.push(candidates[i]);
+            } else if(candidates[i].voteCount == maxVote) {
+                // Push to existing winner array if same max vote is found
+                winnerDetails.push(candidates[i]);
             }
         }
     }
 
     // Get winner details
-    function getWinnerDetails() public returns (Candidate[] memory)
-    {
-        calculateResults();
+    function getWinnerDetails() public returns (Candidate[] memory) {
+        require(block.timestamp > edate);
+        if(winnerDetails.length == 0) {
+            calculateResults();
+        }
         return winnerDetails;
     }
 }

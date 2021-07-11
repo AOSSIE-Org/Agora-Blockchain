@@ -4,9 +4,20 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { Drizzle } from "@drizzle/store";
+import drizzleOptions from './drizzle/drizzleOptions';
+import { DrizzleProvider } from './drizzle/drizzleContext';
+import { CacheCallsProvider } from './ReducerComponents/Context/CacheCallsContext';
+
+const drizzle = new Drizzle(drizzleOptions);
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <DrizzleProvider drizzle={drizzle}>
+      <CacheCallsProvider>
+        <App />
+      </CacheCallsProvider>
+    </DrizzleProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

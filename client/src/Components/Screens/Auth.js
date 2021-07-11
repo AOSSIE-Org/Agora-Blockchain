@@ -1,40 +1,56 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 import "../styles/Auth.scss";
 
+import { useDrizzleContext } from '../../drizzle/drizzleContext';
+import { useUserContext } from '../../ReducerComponents/Context/UserContext';
+
 function Auth() {
   const [authMode, setAuthMode] = useState("signup");
+  const { drizzleVariables } = useDrizzleContext();
+  const { initialized, accounts, MainContract } = drizzleVariables;
+  const { userInfo } = useUserContext();
+
+  const [fullName, setFullName] = useState("");
+
+  const handleNameChange = (e) => {
+    setFullName(e.target.value)
+  }
+
+  const registerUser = async (e) => {
+    e.preventDefault();
+    MainContract.createUser(fullName).send({from: accounts[0]});
+  }
 
   const GetAuthMode = () => {
     return authMode === "signup" ? (
       <>
-        <form style={{ margin: "10px" }}>
-          <label className="form-label">Email</label>
+        <form onSubmit={registerUser} style={{ margin: "10px" }}>
+          <label className="form-label">Name</label>
           <input 
             className="form-control" 
-            placeholder="email@example.com"
-            type="password"
+            placeholder="Enter your full name"
+            onChange={handleNameChange}
+            type="text"
           />
           <br />
 
-          <label className="form-label">Password</label>
+          <label className="form-label">Wallet address</label>
           <input
             className="form-control"
-            placeholder="Choose a strong password"
-            type="password"
+            type="text"
+            disabled
+            value={initialized ? accounts[0] : "Loading..."}
           />
           <br />
-
-          <label className="form-label">Confirm Password</label>
-          <input 
-            className="form-control" 
-            placeholder="Retype your password"
-            type="password"
-          />
-          <br />
-
-          <Link to="/dashboard" className="authButtons">SIGN UP</Link>
+          {
+            userInfo.isRegistered
+            ?
+            <Redirect to='/dashboard' />
+            :
+            <button onClick={registerUser} className="authButtons">SIGN UP</button>
+          }
         </form>
 
         <br />
