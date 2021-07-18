@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Table, MetaMaskButton } from 'rimble-ui';
 import { Link } from 'react-router-dom';
 import '../styles/Layout.scss';
@@ -5,8 +6,13 @@ import '../styles/Dashboard.scss';
 import { COLORS } from '../constants';
 import CreateElectionModal from './modals/CreateElectionModal';
 import Navbar from './Navbar';
+import { useDrizzleContext } from '../../drizzle/drizzleContext';
+import { useUserContext } from '../../ReducerComponents/Context/UserContext';
 
 function Dashboard() {
+	const { drizzle, drizzleVariables } = useDrizzleContext();
+	const { userInfo } = useUserContext();
+
 	const CardItem = ({headerValue, descriptor, imgUrl, imgBackground = "#f7f7f7"}) => {
 		return (
 			<div className="shadow cardItem">
@@ -56,7 +62,7 @@ function Dashboard() {
 
 	return (
 		<div style={{backgroundColor: "#f7f7f7", minHeight: "100%"}}>
-			<Navbar header="Raj Ranjan" infoText="0xF30F9801df6c722C552Fd60E8E201A4c0524BFAb" pictureUrl="/assets/avatar.png"/>
+			<Navbar header={userInfo?.name} infoText={userInfo?.publicAddress} pictureUrl="/assets/avatar.png"/>
 
 			<div style={{margin: "30px"}}>
 				<div style={{width: "100%"}}>
