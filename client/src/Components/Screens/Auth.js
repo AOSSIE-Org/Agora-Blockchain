@@ -3,24 +3,26 @@ import { Link, Redirect } from "react-router-dom";
 
 import "../styles/Auth.scss";
 
-import { useDrizzleContext } from '../../drizzle/drizzleContext';
-import { useUserContext } from '../../ReducerComponents/Context/UserContext';
+import { useCallContext } from '../../drizzle/calls';
 
 function Auth() {
   const [authMode, setAuthMode] = useState("signup");
-  const { drizzleVariables } = useDrizzleContext();
-  const { initialized, accounts, MainContract } = drizzleVariables;
-  const { userInfo } = useUserContext();
+  const { MainContract, account, initialized, isRegistered } = useCallContext();
 
-  const [fullName, setFullName] = useState("");
+  const [fullName, setFullName] = useState({
+    name: null
+  });
 
   const handleNameChange = (e) => {
-    setFullName(e.target.value)
+    setFullName({
+      ...fullName,
+      name: e.target.value
+    })
   }
 
   const registerUser = async (e) => {
     e.preventDefault();
-    MainContract.createUser(fullName).send({from: accounts[0]});
+    MainContract.createUser(fullName.name).send({from: account});
   }
 
   const GetAuthMode = () => {
@@ -32,6 +34,7 @@ function Auth() {
             className="form-control" 
             placeholder="Enter your full name"
             onChange={handleNameChange}
+            value={fullName.name}
             type="text"
           />
           <br />
@@ -41,11 +44,11 @@ function Auth() {
             className="form-control"
             type="text"
             disabled
-            value={initialized ? accounts[0] : "Loading..."}
+            value={initialized ? account : "Loading..."}
           />
           <br />
           {
-            userInfo.isRegistered
+            isRegistered && isRegistered[0] != 0
             ?
             <Redirect to='/dashboard' />
             :
