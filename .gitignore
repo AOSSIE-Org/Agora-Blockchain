@@ -10,6 +10,7 @@ node_modules
 # production
 build
 client/src/blockchainBuild
+server/coverage
 
 # misc
 .DS_Store
