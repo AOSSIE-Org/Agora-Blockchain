@@ -5,7 +5,8 @@ node_modules
 .pnp.js
 
 # testing
-/coverage
+server/coverage
+server/coverage.json
 
 # production
 build
