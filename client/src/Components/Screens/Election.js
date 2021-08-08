@@ -5,10 +5,13 @@ import '../styles/Election.scss';
 import '../styles/Layout.scss';
 import VoteModal from './modals/VoteModal';
 import DeleteModal from './modals/DeleteModal';
+import AddCandidateModal from './modals/AddCandidateModal';
 import Candidate from './modals/Candidate'
 import Navbar from './Navbar';
 import TimerStyled from './TimerStyled';
 import { useCallContext } from "../../drizzle/calls";
+import { AVATARS } from '../constants'
+import { ImageComponent } from './Image';
 
 function Election() {
     const [isAdmin, setAdmin] = useState(true);
@@ -18,10 +21,11 @@ function Election() {
 	const search = useLocation().search;
 	const contractAddress = new URLSearchParams(search).get('contractAddress');
 
-	const { getCurrentElection, CurrentElection, currentElectionDetails, userInfo } = useCallContext();
-	console.log(currentElectionDetails);
+	const { getCurrentElection, CurrentElection, currentElectionDetails, userInfo, account } = useCallContext();
 
 	getCurrentElection(contractAddress);
+
+	console.log(currentElectionDetails)
 
 	return useMemo(() => {
 		const CardItem = ({headerValue, descriptor, imgUrl, imgBackground = "#f7f7f7"}) => {
@@ -30,7 +34,8 @@ function Election() {
 					<div className="centered">
 						<div className="cardImageHolder" style={{backgroundColor: imgBackground}}>
 							<div className="centered">
-								<img src={imgUrl} className="cardImage" alt="profile-pic"/>
+								<ImageComponent src={imgUrl} className="cardImage" />
+								{/* <img src={imgUrl} className="cardImage" alt="profile-pic"/> */}
 							</div>
 						</div>
 
@@ -43,17 +48,28 @@ function Election() {
 			)
 		}
 
-		const MyTimer = ({ expiryTimestamp }) => {
+		const MyTimer = ({ sdate, edate }) => {
+			sdate *= 1000;
+			edate *= 1000;
+			let expiryTimestamp = 0;
+			// console.log(Date.now(), " vs ", sdate, " vs ", edate);
+			if(Date.now() < sdate) {
+				expiryTimestamp = sdate;
+			} else {
+				// console.log("here")
+				expiryTimestamp = edate;
+			}
 			const {
 				seconds,
 				minutes,
 				hours,
 				days,
 				start
-			} = useTimer({ expiryTimestamp, onExpire: () => console.warn('onExpire called'), autostart: "false"});
+			} = useTimer({ expiryTimestamp, onExpire: () => {expiryTimestamp = edate}, autostart: "false"});
 			useEffect(() => {
+				console.log("hi")
 			    start();
-			}, [])
+			}, [expiryTimestamp])
 			return (
 				<TimerStyled seconds={seconds} minutes={minutes} hours={hours} days={days} />
 			);
@@ -72,9 +88,9 @@ function Election() {
 
 
 						<div style={{float: "right", display: "flex"}}>
-							<MyTimer expiryTimestamp={currentElectionDetails?.info?.edate} />
-							<DeleteModal Candidate={Candidate} isAdmin={isAdmin} isPending={isPending}/>
-							<VoteModal Candidate={Candidate} isActive={isActive} isPending={isPending}/>
+							<MyTimer sdate={currentElectionDetails?.info?.sdate} edate={currentElectionDetails?.info?.edate}/>
+							{/* <DeleteModal Candidate={Candidate} isAdmin={isAdmin} isPending={isPending}/> */}
+							<VoteModal account={account} Candidate={Candidate} CurrentElection={CurrentElection} currentElectionDetails={currentElectionDetails} isActive={isActive} isPending={isPending}/>
 						</div>
 					</div>
 
@@ -83,9 +99,9 @@ function Election() {
 					<div className="cardContainer row">
 						<CardItem headerValue={currentElectionDetails?.info?.algorithm} descriptor="Algorithm" imgUrl="/assets/totalElections.png"/>
 
-						<CardItem headerValue={(new Date(currentElectionDetails?.info?.sdate * 1)).toLocaleString()} descriptor="Start date" imgUrl="/assets/activeElections.png" imgBackground="#eaffe8"/>
+						<CardItem headerValue={(new Date(currentElectionDetails?.info?.sdate * 1000)).toLocaleString()} descriptor="Start date" imgUrl="/assets/activeElections.png" imgBackground="#eaffe8"/>
 
-						<CardItem headerValue={(new Date(currentElectionDetails?.info?.sdate * 1)).toLocaleString()} descriptor="End date" imgUrl="/assets/endedElections.png" imgBackground="#ffe8e8"/>
+						<CardItem headerValue={(new Date(currentElectionDetails?.info?.edate * 1000)).toLocaleString()} descriptor="End date" imgUrl="/assets/endedElections.png" imgBackground="#ffe8e8"/>
 
 						<CardItem headerValue="137" descriptor="Total voters" imgUrl="/assets/pendingElections.png" imgBackground="#fffbd1"/>
 					</div>
@@ -111,19 +127,25 @@ function Election() {
 						</div>
 
 						<div className="rhsLayout" style={{overflowY: "scroll"}}>
-							<div className="lhsHeader" style={{marginTop: "10px"}}>
-								<h5>Candidates (4)</h5>
+							<div className="lhsHeader" style={{marginTop: "10px", display: 'flex', justifyContent: 'space-between'}}>
+								<h5 style={{width: "60%"}}>Candidates ({currentElectionDetails?.candidate?.length || 0})</h5>
+								<AddCandidateModal CurrentElection={CurrentElection} account={account}/>
 							</div>
 
 							<br/>
 
-							<Candidate name="Raj" id="1" imageUrl="/assets/avatar.png" modalEnabled="true"/>
+							{
+								currentElectionDetails?.candidate?.map((candidate) => (
+									<Candidate name={candidate?.name} id={candidate?.id} about={candidate?.about} voteCount={candidate?.voteCount} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'} modalEnabled="true"/> 
+								))
+							}
 
-							<Candidate name="Ayush" id="2" imageUrl="/assets/avatar2.png" modalEnabled="true"/>
+
+							{/* <Candidate name="Ayush" id="2" imageUrl="/assets/avatar2.png" modalEnabled="true"/>
 
 							<Candidate name="Thuva" id="3" imageUrl="/assets/avatar4.png" modalEnabled="true"/>
 
-							<Candidate name="Bruno" id="4" imageUrl="/assets/avatar3.png" modalEnabled="true"/>
+							<Candidate name="Bruno" id="4" imageUrl="/assets/avatar3.png" modalEnabled="true"/> */}
 						</div>
 					</div>
 
@@ -131,7 +153,7 @@ function Election() {
 				</div>
 			</div>
 		)
-	}, [CurrentElection, userInfo])
+	}, [CurrentElection, userInfo, currentElectionDetails])
 }
 
 export default Election;

@@ -25,85 +25,85 @@ function Auth() {
     MainContract.createUser(fullName.name).send({from: account});
   }
 
-  const GetAuthMode = () => {
-    return authMode === "signup" ? (
-      <>
-        <form onSubmit={registerUser} style={{ margin: "10px" }}>
-          <label className="form-label">Name</label>
-          <input 
-            className="form-control" 
-            placeholder="Enter your full name"
-            onChange={handleNameChange}
-            value={fullName.name}
-            type="text"
-          />
-          <br />
+  // const GetAuthMode = () => {
+  //   return authMode === "signup" ? (
+  //     <>
+  //       <form onSubmit={registerUser} style={{ margin: "10px" }}>
+  //         <label className="form-label">Name</label>
+  //         <input 
+  //           className="form-control" 
+  //           placeholder="Enter your full name"
+  //           onChange={handleNameChange}
+  //           value={fullName.name}
+  //           type="text"
+  //         />
+  //         <br />
 
-          <label className="form-label">Wallet address</label>
-          <input
-            className="form-control"
-            type="text"
-            disabled
-            value={initialized ? account : "Loading..."}
-          />
-          <br />
-          {
-            isRegistered && isRegistered[0] != 0
-            ?
-            <Redirect to='/dashboard' />
-            :
-            <button onClick={registerUser} className="authButtons">SIGN UP</button>
-          }
-        </form>
+  //         <label className="form-label">Wallet address</label>
+  //         <input
+  //           className="form-control"
+  //           type="text"
+  //           disabled
+  //           value={initialized ? account : "Loading..."}
+  //         />
+  //         <br />
+  //         {
+  //           isRegistered && isRegistered[0] != 0
+  //           ?
+  //           <Redirect to='/dashboard' />
+  //           :
+  //           <button onClick={registerUser} className="authButtons">SIGN UP</button>
+  //         }
+  //       </form>
 
-        <br />
+  //       <br />
 
-        <font
-          className="text-muted centered signInOption"
-          size="2"
-          onClick={() => setAuthMode("signin")}
-        >
-          Already a member? Sign in
-        </font>
-        <br />
-      </>
-    ) : (
-      <>
-        <form style={{ margin: "10px" }}>
-          <label className="form-label">Email</label>
-          <input 
-            className="form-control" 
-            placeholder="email@example.com" 
-          />
-          <br />
+  //       <font
+  //         className="text-muted centered signInOption"
+  //         size="2"
+  //         onClick={() => setAuthMode("signin")}
+  //       >
+  //         Already a member? Sign in
+  //       </font>
+  //       <br />
+  //     </>
+  //   ) : (
+  //     <>
+  //       <form style={{ margin: "10px" }}>
+  //         <label className="form-label">Email</label>
+  //         <input 
+  //           className="form-control" 
+  //           placeholder="email@example.com" 
+  //         />
+  //         <br />
 
-          <label className="form-label">Password</label>
-          <input 
-            className="form-control" 
-            placeholder="Enter password" 
-          />
-          <br />
+  //         <label className="form-label">Password</label>
+  //         <input 
+  //           className="form-control" 
+  //           placeholder="Enter password" 
+  //         />
+  //         <br />
 
-          <font size="2" className="text-muted">
-            Forgot password?
-          </font>
+  //         <font size="2" className="text-muted">
+  //           Forgot password?
+  //         </font>
 
-          <Link to="/dashboard" className="authButtons authButtonRight">SIGN IN</Link>
-        </form>
-        <br />
-        <br />
+  //         <Link to="/dashboard" className="authButtons authButtonRight">SIGN IN</Link>
+  //       </form>
+  //       <br />
+  //       <br />
 
-        <font
-          className="text-muted centered signInOption"
-          size="2"
-          onClick={() => setAuthMode("signup")}
-        >
-          Not yet registered? Sign up
-        </font>
-        <br />
-      </>
-    );
-  };
+  //       <font
+  //         className="text-muted centered signInOption"
+  //         size="2"
+  //         onClick={() => setAuthMode("signup")}
+  //       >
+  //         Not yet registered? Sign up
+  //       </font>
+  //       <br />
+  //     </>
+  //   );
+  // };
 
   return (
     <div className="authDiv">
@@ -120,9 +120,48 @@ function Auth() {
             </font>
           </center>
 
-          <GetAuthMode />
+          <>
+            <form onSubmit={registerUser} style={{ margin: "10px" }}>
+              <label className="form-label">Name</label>
+              <input 
+                className="form-control" 
+                placeholder="Enter your full name"
+                onChange={handleNameChange}
+                value={fullName.name}
+                type="text"
+              />
+              <br />
 
-          <font className="centered" size="2">
+              <label className="form-label">Wallet address</label>
+              <input
+                className="form-control"
+                type="text"
+                disabled
+                value={initialized ? account : "Loading..."}
+              />
+              <br />
+              {
+                isRegistered && isRegistered[0] != 0
+                ?
+                <Redirect to='/dashboard' />
+                :
+                <button onClick={registerUser} className="authButtons">SIGN UP</button>
+              }
+            </form>
+
+            <br />
+
+            {/* <font
+              className="text-muted centered signInOption"
+              size="2"
+              onClick={() => setAuthMode("signin")}
+            >
+              Already a member? Sign in
+            </font> */}
+            <br />
+          </>
+
+          {/* <font className="centered" size="2">
             OR
           </font>
           <br />
@@ -144,7 +183,7 @@ function Auth() {
               className="socialLoginButton"
             />
           </div>
-          <br />
+          <br /> */}
         </div>
       </div>
     </div>
