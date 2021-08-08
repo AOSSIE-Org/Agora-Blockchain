@@ -2,9 +2,6 @@
 pragma solidity >=0.8.0;
 
 contract Election {
-    // Public address of election creator
-    // address public electionOrganiser;
-
     // Election details
     struct ElectionInfo {
         uint id;
@@ -13,6 +10,8 @@ contract Election {
         string algorithm;
         uint sdate;
         uint edate;
+        uint voterCount;
+        address electionOrganiser;
     }
 
     ElectionInfo public electionInfo;
@@ -45,13 +44,19 @@ contract Election {
 
     // Iniitializing election contract
     constructor (uint _id, string[] memory _nda, uint[] memory _se) {
-        // electionOrganiser = msg.sender;
-        electionInfo = ElectionInfo(_id, _nda[0], _nda[1], _nda[2], _se[0], _se[1]);
+        electionInfo = ElectionInfo(_id, _nda[0], _nda[1], _nda[2], _se[0], _se[1], 0, msg.sender);
         if(block.timestamp < _se[0]) {
             status = Status.pending;
         } else {
             status = Status.active;
         }
+    }
+
+    function getTimestamps() public view returns (uint[2] memory) {
+        uint[2] memory result = [uint256(0), uint256(0)];
+        result[0] = block.timestamp;
+        result[1] = electionInfo.sdate;
+        return result;
     }
 
     // To get status of election
@@ -67,26 +72,25 @@ contract Election {
 
     // Adding candidates before election started (only by organiser)
     function addCandidate(string memory _name, string memory _about) public {
-        // require(msg.sender == electionOrganiser, "Only organiser can add candidates");
-        require(getStatus() == Status.pending, "Candidates can only be added before election has started");
+        require(msg.sender == electionInfo.electionOrganiser, "Only organiser can add candidates");
+        require(block.timestamp <= electionInfo.edate, "Candidates can only be added before election has started");
+        candidates.push(Candidate(candidatesCount, _name, _about, 0));
         candidatesCount++;
-        candidates[candidatesCount] = Candidate(candidatesCount, _name, _about, 0);
     }
 
     // Casting votes (only when election is active)
     function vote(uint _candidate) public {
-        // emit electionStatus(getStatus());
         require(!voters[msg.sender], "Voter has already Voted!");
-        require(_candidate <= candidatesCount && _candidate >= 1, "Invalid candidate to Vote!");
+        require(_candidate < candidatesCount && _candidate >= 0, "Invalid candidate to Vote!");
         require(getStatus() != Status.closed, "Election closed");
         require(getStatus() != Status.pending, "Election not yet started");
         voters[msg.sender] = true;
         candidates[_candidate].voteCount++;
+        electionInfo.voterCount++;
     }
 
     // Calculate results
     function calculateResults() private {
-        // require(msg.sender == electionOrganiser, "Only organiser can call this function");
         require(getStatus() == Status.closed, "Election not yet closed.");
         uint maxVote = 0;
         for(uint i = 1; i <= candidatesCount; i++) {
