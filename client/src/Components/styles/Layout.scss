@@ -63,14 +63,17 @@
         flex: 1 1 0%;
         margin: 10px;
         max-width: 73%;
+        overflow: scroll;
         height: 400px;
         border-radius: 6px;
         background-color: white;
         .lhsBody {
             overflow-x: scroll;
+            overflow-y: scroll;
         }
         .lhsBody::-webkit-scrollbar{
             height: 1px;
+            width: 1px;
         }
     }
     .rhsLayout {

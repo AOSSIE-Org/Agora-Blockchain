@@ -2,16 +2,16 @@
 
 ## Prerequisites (only for contributing)
 
-* Basic familarity with [Git](https://git-scm.com/), [NodeJS](https://nodejs.org/en) and [npm](https://www.npmjs.com/).
-* Basic familarity with [ReactJS](https://reactjs.org/), [React context APIs](https://reactjs.org/docs/context.html) and [Drizzle](https://www.trufflesuite.com/drizzle), if working on frontend part.
-* Basic familarity with Blockchain, [Solidity](https://docs.soliditylang.org/en/v0.8.6/) and [Truffle](https://www.trufflesuite.com/truffle), if working on blockchain part.
+- Basic familarity with [Git](https://git-scm.com/), [NodeJS](https://nodejs.org/en) and [npm](https://www.npmjs.com/).
+- Basic familarity with [ReactJS](https://reactjs.org/), [React context APIs](https://reactjs.org/docs/context.html) and [Drizzle](https://www.trufflesuite.com/drizzle), if working on frontend part.
+- Basic familarity with Blockchain, [Solidity](https://docs.soliditylang.org/en/v0.8.6/) and [Truffle](https://www.trufflesuite.com/truffle), if working on blockchain part.
 
 ## Requirements
 
-* [NodeJS](https://nodejs.org/en) >= 10.16 and [npm](https://www.npmjs.com/) >= 5.6 installed.
-* [Git](https://git-scm.com/) installed in the system.
-* [Truffle](https://www.trufflesuite.com/truffle), which can be installed globally with `npm install -g truffle`
-* [Metamask](https://metamask.io) extension added to the browser.
+- [NodeJS](https://nodejs.org/en) >= 10.16 and [npm](https://www.npmjs.com/) >= 5.6 installed.
+- [Git](https://git-scm.com/) installed in the system.
+- [Truffle](https://www.trufflesuite.com/truffle), which can be installed globally with `npm install -g truffle`
+- [Metamask](https://metamask.io) extension added to the browser.
 
 ## Development Guide
 
@@ -84,6 +84,7 @@ Smart contracts or blockchain codes and necessary config files for developing, t
 We use Trufflesuite (or Truffle) for compiling and deploying our smart contracts. Compiled smart contracts or build files are then stored inside the `/client/src` directory. This is necessary because, our React application can't use these build files if present outside the `src` folder.
 
 **Install server-side dependencies**
+
 ```bash
 npm run install-server
 ```
@@ -137,3 +138,13 @@ Instead of deploying on public test networks like Rinkeby, we may use local bloc
 ```bash
 truffle migrate --reset
 ```
+
+**Running test coverage**
+
+Migrate to the server folder and run the following commands on the terminal. Make sure to run `npm install`
+
+```bash
+truffle run coverage
+```
+
+This will generate the test results of all the solidity files in contracts folder. The results are displayed on the terminal and can also be found in `coverage` folder.
