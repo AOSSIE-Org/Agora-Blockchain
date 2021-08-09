@@ -28,6 +28,10 @@ contract Election {
     mapping(uint => Candidate) public candidates;
     mapping(address => bool) public voters;
 
+    //events
+    event candidateAdded(Candidate candidate);
+    event voted(uint candidateId);
+
     Candidate[] public winnerDetails;
 
     // To keep account of candidate id
@@ -61,10 +65,11 @@ contract Election {
 
     // Adding candidates before election started (only by organiser)
     function addCandidate(string memory _name, string memory _about) public {
-        // require(msg.sender == electionOrganiser, "Only organiser can add candidates");
+        //require(msg.sender == electionOrganiser, "Only organiser can add candidates");
         require(getStatus() == Status.pending, "Candidates can only be added before election has started");
         candidatesCount++;
         candidates[candidatesCount] = Candidate(candidatesCount, _name, _about, 0);
+        emit candidateAdded(candidates[candidatesCount]);
     }
 
     // Casting votes (only when election is active)
@@ -76,6 +81,7 @@ contract Election {
         require(getStatus() != Status.pending, "Election not yet started");
         voters[msg.sender] = true;
         candidates[_candidate].voteCount++;
+        emit voted(_candidate);
     }
 
     // Calculate results
