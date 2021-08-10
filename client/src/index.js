@@ -5,19 +5,22 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import { Drizzle } from "@drizzle/store";
+import { DrizzleContext } from '@drizzle/react-plugin';
 import drizzleOptions from './drizzle/drizzleOptions';
-import { DrizzleProvider } from './drizzle/drizzleContext';
-import { CacheCallsProvider } from './ReducerComponents/Context/CacheCallsContext';
+import { CallProvider } from './drizzle/calls';
+import { ContractProvider } from './drizzle/drizzleContracts';
 
 const drizzle = new Drizzle(drizzleOptions);
 
 ReactDOM.render(
   <React.StrictMode>
-    <DrizzleProvider drizzle={drizzle}>
-      <CacheCallsProvider>
-        <App />
-      </CacheCallsProvider>
-    </DrizzleProvider>
+    <DrizzleContext.Provider drizzle={drizzle}>
+      <ContractProvider>
+        <CallProvider>
+          <App />
+        </CallProvider>
+      </ContractProvider>
+    </DrizzleContext.Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
