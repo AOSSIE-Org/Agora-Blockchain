@@ -6,11 +6,16 @@ contract Election {
     // address public electionOrganiser;
 
     // Election details
-    string public name;
-    string public description;
-    string public algorithm;
-    uint public sdate;
-    uint public edate;
+    struct ElectionInfo {
+        uint id;
+        string name;
+        string description;
+        string algorithm;
+        uint sdate;
+        uint edate;
+    }
+
+    ElectionInfo public electionInfo;
 
     // Enum for election status
     enum Status {active, pending, closed}
@@ -24,8 +29,13 @@ contract Election {
         uint voteCount;
     }
 
+    struct ElectionDetail {
+        ElectionInfo info;
+        Candidate[] candidate;
+    }
+
     // Mapping for candidates and voters
-    mapping(uint => Candidate) public candidates;
+    Candidate[] public candidates;
     mapping(address => bool) public voters;
 
     Candidate[] public winnerDetails;
@@ -34,13 +44,9 @@ contract Election {
     uint public candidatesCount = 0;
 
     // Iniitializing election contract
-    constructor (string[] memory _nda, uint[] memory _se) {
+    constructor (uint _id, string[] memory _nda, uint[] memory _se) {
         // electionOrganiser = msg.sender;
-        name = _nda[0];
-        description = _nda[1];
-        algorithm = _nda[2];
-        sdate = _se[0];
-        edate = _se[1];
+        electionInfo = ElectionInfo(_id, _nda[0], _nda[1], _nda[2], _se[0], _se[1]);
         if(block.timestamp < _se[0]) {
             status = Status.pending;
         } else {
@@ -50,9 +56,9 @@ contract Election {
 
     // To get status of election
     function getStatus() public view returns (Status) {
-        if(block.timestamp < sdate) {
+        if(block.timestamp < electionInfo.sdate) {
             return Status.pending;
-        } else if(block.timestamp < edate) {
+        } else if(block.timestamp < electionInfo.edate) {
             return Status.active;
         } else {
             return Status.closed;
@@ -98,10 +104,15 @@ contract Election {
 
     // Get winner details
     function getWinnerDetails() public returns (Candidate[] memory) {
-        require(block.timestamp > edate);
+        require(block.timestamp > electionInfo.edate);
         if(winnerDetails.length == 0) {
             calculateResults();
         }
         return winnerDetails;
+    }
+
+    function getElectionDetails() public view returns (ElectionDetail memory) {
+        ElectionDetail memory electionDetail = ElectionDetail(electionInfo, candidates);
+        return electionDetail; 
     }
 }
