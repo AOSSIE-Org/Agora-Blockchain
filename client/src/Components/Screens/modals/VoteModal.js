@@ -80,31 +80,6 @@ function VoteModal({Candidate, isActive, status, currentElectionDetails, Current
                                         </label>
                                     ))
                                 }
-                                
-                                {/* <label className="voteCandidate">
-                                    <input type="radio" name="candidate" className="voteCandiateInput"/>
-                                    <Candidate name="Raj" id="1" imageUrl="/assets/avatar.png"/>
-                                </label>
-
-                                <label className="voteCandidate">
-                                    <input type="radio" name="candidate" className="voteCandiateInput"/>
-                                    <Candidate name="Ayush" id="2" imageUrl="/assets/avatar2.png"/>
-                                </label>
-
-                                <label className="voteCandidate">
-                                    <input type="radio" name="candidate" className="voteCandiateInput"/>
-                                    <Candidate name="Thuva" id="3" imageUrl="/assets/avatar4.png"/>
-                                </label>
-
-                                <label className="voteCandidate">
-                                    <input type="radio" name="candidate" className="voteCandiateInput"/>
-                                    <Candidate name="Bruno" id="4" imageUrl="/assets/avatar3.png"/>
-                                </label>
-
-                                <label className="voteCandidate">
-                                    <input type="radio" name="candidate" className="voteCandiateInput"/>
-                                    <Candidate name="Bruno" id="4" imageUrl="/assets/avatar3.png"/>
-                                </label> */}
                             </div>
                         </div>
                     </div>
