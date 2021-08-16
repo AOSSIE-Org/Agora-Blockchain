@@ -3,3 +3,16 @@ export const COLORS = {
     closed: "#FF4C61",
     pending: "#FFB800"
 }
+
+export const STATUS = {
+    PENDING: "Pending",
+    ACTIVE: "Active",
+    CLOSED: "Closed"
+}
+
+export const AVATARS = [
+    '/assets/avatar.png',
+    '/assets/avatar2.png',
+    '/assets/avatar3.png',
+    '/assets/avatar4.png'
+]

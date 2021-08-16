@@ -173,8 +173,8 @@ const Dashboard = () => {
                       		electionId = {election?.info?.id}
                       		electionTitle = {election?.info?.name}
                       		electionAddress = {election?.contractAddress}
-                      		startDate = {(new Date(election?.info?.sdate * 1)).toLocaleString()}
-                      		endDate = {(new Date(election?.info?.edate * 1)).toLocaleString()}
+                      		startDate = {(new Date(election?.info?.sdate * 1000)).toLocaleString()}
+                      		endDate = {(new Date(election?.info?.edate * 1000)).toLocaleString()}
                       		status = "active"
 						/>
 					  ))

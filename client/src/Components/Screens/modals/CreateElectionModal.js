@@ -13,8 +13,8 @@ function CreateElectionModal({ UserContract, account }) {
     });
 
     const [se, setSe] = useState({
-        startTime: Date.now(),
-        endTime: Date.now()
+        startTime: parseInt(Date.now()/1000),
+        endTime: parseInt(Date.now()/1000)
     });
 
     const handleNdaChange = (e) => {
@@ -26,17 +26,19 @@ function CreateElectionModal({ UserContract, account }) {
     }
 
     const handleSeChange = (e, type) => {
+        console.log(e, Date.now(), Date.parse(e))
         setSe(oldSe => (
             type === "start"
             ?
-            {...oldSe, startTime: Date.parse(e)}
+            {...oldSe, startTime: parseInt(Date.parse(e)/1000)}
             :
-            {...oldSe, endTime: Date.parse(e)}
+            {...oldSe, endTime: parseInt(Date.parse(e)/1000)}
         ));
     }
 
     const handleSubmitNewElection = async (e) => {
         e.preventDefault();
+        console.log(se)
         try{
             await UserContract.createElection([nda.name, nda.description, nda.algorithm], [se.startTime, se.endTime]).send({from: account})
             setNda({
@@ -45,8 +47,8 @@ function CreateElectionModal({ UserContract, account }) {
                 algorithm: ""
             });
             setSe({
-                startTime: Date.now(),
-                endTime: Date.now()
+                startTime: parseInt(Date.now()/1000),
+                endTime: parseInt(Date.now()/1000)
             });
             setIsOpen(false);
         } catch {
@@ -122,7 +124,7 @@ function CreateElectionModal({ UserContract, account }) {
                                             dateFormat="yyyy/MM/dd hh:mm:ss"
                                             className = "form-control"
                                             name = "startTime"
-                                            selected = {se.startTime}
+                                            selected = {se.startTime * 1000}
                                             onChange = {(date) => handleSeChange(date, "start")}
                                         />
                                     </div>
@@ -137,7 +139,7 @@ function CreateElectionModal({ UserContract, account }) {
                                             dateFormat="yyyy/MM/dd hh:mm:ss"
                                             className = "form-control"
                                             name = "endTime"
-                                            selected = {se.endTime}
+                                            selected = {se.endTime * 1000}
                                             onChange = {(date) => handleSeChange(date, "end")}
                                         />
                                     </div>
