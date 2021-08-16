@@ -1,6 +1,7 @@
 var mainContract = artifacts.require("MainContract");
 var Election = artifacts.require("Election");
 var User = artifacts.require("User");
+
 contract("userContract", function (accounts) {
   const owner = accounts[0];
   const user1 = accounts[1];
@@ -13,14 +14,15 @@ contract("userContract", function (accounts) {
 
   beforeEach(async () => {
     deployedMainContract = await mainContract.deployed();
-    await deployedMainContract.createUser({ from: user1 });
-    const createdUser1 = await deployedMainContract.Users.call(1);
-    let res = await User.at(createdUser1);
-    const election = await res.createElection(nda, se, {
-      from: user1,
-    });
-    userElections = await Election.at(election.logs[0].args[0]);
+    await deployedMainContract.createUser("Ayush", { from: user1 });
   });
 
-  it("for future implementation", async () => {});
+  it("Should create new election", async () => {
+    const createdUser1 = await deployedMainContract.Users.call(0);
+    const electionContract = await User.at(createdUser1.contractAddress);
+    const election = await electionContract.createElection(nda, se, {
+      from: user1,
+    });
+    assert.equal(election.logs[0].event, "electionCreated");
+  });
 });

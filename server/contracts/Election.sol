@@ -37,8 +37,6 @@ contract Election {
     Candidate[] public candidates;
     mapping(address => bool) public voters;
 
-    // Candidate[] public winnerDetails;
-
     // To keep account of candidate id
     uint public candidatesCount = 0;
 
