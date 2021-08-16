@@ -3,7 +3,7 @@ import { Table, MetaMaskButton } from "rimble-ui";
 import { Link } from "react-router-dom";
 import "../styles/Layout.scss";
 import "../styles/Dashboard.scss";
-import { COLORS } from "../constants";
+import { COLORS, STATUS } from "../constants";
 import CreateElectionModal from "./modals/CreateElectionModal";
 import Navbar from "./Navbar";
 import { useCallContext } from "../../drizzle/calls";
@@ -18,6 +18,21 @@ const Dashboard = () => {
     electionDetails,
     UserSubscriber,
   } = useCallContext();
+
+  const getStatus = (sdate, edate) => {
+    sdate = sdate * 1000;
+    edate = edate * 1000;
+
+    const timestamp = Date.now();
+
+		if(timestamp < sdate) {
+			return (STATUS.PENDING);
+		} else if(timestamp < edate) {
+			return (STATUS.ACTIVE);
+		} else {
+			return (STATUS.CLOSED);
+		}
+  }
 
   return useMemo(() => {
     const CardItem = ({
@@ -175,28 +190,10 @@ const Dashboard = () => {
                       		electionAddress = {election?.contractAddress}
                       		startDate = {(new Date(election?.info?.sdate * 1000)).toLocaleString()}
                       		endDate = {(new Date(election?.info?.edate * 1000)).toLocaleString()}
-                      		status = "active"
-						/>
-					  ))
+                      		status = {getStatus(election?.info?.sdate, election?.info?.edate)}
+                        />
+                      ))
                     }
-
-                    <ElectionRow
-                      electionId="1"
-                      electionTitle="Test Election"
-                      electionAddress="0xF30F9801df6c722C552Fd60E8E201A4c0524BFAb"
-                      startDate="Monday, 7th June 2021"
-                      endDate="Monday, 14th June 2021"
-                      status="pending"
-                    />
-
-                    <ElectionRow
-                      electionId="1"
-                      electionTitle="Test Election"
-                      electionAddress="0xF30F9801df6c722C552Fd60E8E201A4c0524BFAb"
-                      startDate="Monday, 7th June 2021"
-                      endDate="Monday, 14th June 2021"
-                      status="closed"
-                    />
                   </tbody>
                 </Table>
 

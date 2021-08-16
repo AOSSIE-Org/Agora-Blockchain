@@ -5,9 +5,9 @@ export const COLORS = {
 }
 
 export const STATUS = {
-    PENDING: "Pending",
-    ACTIVE: "Active",
-    CLOSED: "Closed"
+    PENDING: "pending",
+    ACTIVE: "active",
+    CLOSED: "closed"
 }
 
 export const AVATARS = [

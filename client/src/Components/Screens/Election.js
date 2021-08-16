@@ -10,7 +10,7 @@ import Candidate from './modals/Candidate'
 import Navbar from './Navbar';
 import TimerStyled from './TimerStyled';
 import { useCallContext } from "../../drizzle/calls";
-import { AVATARS, STATUS } from '../constants'
+import { AVATARS, COLORS, STATUS } from '../constants'
 import { ImageComponent } from './Image';
 
 function Election() {
@@ -27,6 +27,20 @@ function Election() {
 	getCurrentElection(contractAddress);
 
 	const [winnerDetails, setWinnerDetails] = useState([]);
+
+	const Status = ({ status, text }) => {
+		return (
+		  <div style={{marginTop: "1px"}}>
+			<div className="status">
+			  <div
+				className="statusIndicator"
+				style={{ backgroundColor: COLORS[status], marginTop: "8px", marginLeft: "8px" }}
+			  ></div>
+			  <font>{text}</font>
+			</div>
+		  </div>
+		);
+	};
 
 	const getResults = async () => {
 		const edate = currentElectionDetails?.info?.edate * 1000;
@@ -112,9 +126,14 @@ function Election() {
 				<div style={{padding: "30px"}}>
 					<div style={{width: "100%"}}>
 						<div style={{float: "left"}}>
-							<h5 style={{marginBottom: "0px"}}>{currentElectionDetails?.info?.name}</h5>
-							<font className="text-muted" size="2">Ayush Tiwari</font><br/>
-							{/* <font size="1" className="text-muted" style={{marginTop: "0px"}}>0xF30F9801df6c722C552Fd60E8E201A4c0524BFAb</font> */}
+							<div style={{display: "flex"}}>
+								<h5 style={{marginBottom: "0px", width: "max-content"}}>{currentElectionDetails?.info?.name}</h5>
+								<Status
+									status={status}
+									text={status.charAt(0).toUpperCase() + status.slice(1)}
+								/>
+							</div>
+							<font size="2" className="text-muted" style={{marginTop: "0px"}}>{contractAddress}</font>
 						</div>
 
 
@@ -191,12 +210,12 @@ function Election() {
 						</div>
 
 						<div className="rhsLayout" style={{overflowY: "scroll"}}>
-							{
-								isAdmin && status == STATUS.PENDING && <div className="lhsHeader" style={{marginTop: "10px", display: 'flex', justifyContent: 'space-between'}}>
-									<h5 style={{width: "60%"}}>Candidates ({currentElectionDetails?.candidate?.length || 0})</h5>
-									<AddCandidateModal CurrentElection={CurrentElection} account={account}/>
-								</div>
-							}
+							<div className="lhsHeader" style={{marginTop: "10px", display: 'flex', justifyContent: 'space-between'}}>
+								<h5 style={{width: "60%"}}>Candidates ({currentElectionDetails?.candidate?.length || 0})</h5>
+								{
+									isAdmin && status == STATUS.PENDING && <AddCandidateModal CurrentElection={CurrentElection} account={account}/>
+								}
+							</div>
 
 							<br/>
 
