@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Flex, Modal, Button, Card } from "rimble-ui";
+import { Flex, Modal, Button, Card, ToastMessage } from "rimble-ui";
 import '../../styles/Modal.scss';
+import { AVATARS, STATUS } from '../../constants';
 
-function VoteModal({Candidate, isActive}) {
+function VoteModal({Candidate, isActive, status, currentElectionDetails, CurrentElection, account}) {
     const [isOpen, setIsOpen] = useState(false);
+    const [candidateId, setCandidateId] = useState(null);
   
     const closeModal = e => {
       e.preventDefault();
@@ -14,18 +16,48 @@ function VoteModal({Candidate, isActive}) {
       e.preventDefault();
       setIsOpen(true);
     };
+
+    const handleCandidateIdChange = (e) => {
+        setCandidateId(e.target.value);
+    }
+
+    const handleVoteSubmit = async (e) => {
+        e.preventDefault();
+        setIsOpen(false);
+        try{
+            window.toastProvider.addMessage("Processing your voting request.", {
+                variant: "processing"
+            })
+            
+            await CurrentElection.vote(candidateId).send({from: account});
+            
+            window.toastProvider.addMessage("Voted", {
+                secondaryMessage: "You have successfully voted! Thank you.",
+                variant: "success"
+            });
+            
+            setCandidateId(null);
+            setIsOpen(false);
+        } catch(err) {
+            window.toastProvider.addMessage("Failed", {
+                secondaryMessage: "Transaction failed. Try again",
+                variant: "failure"
+            });
+        }
+    }
   
     return (
         <div>
-            {isActive
-            ?
-            <div className="voteButton" onClick={openModal}>
-                VOTE
-            </div>
-            :
-            <div className="voteButton voteButtonDisabled">
-                VOTE
-            </div>
+            {
+                status == STATUS.ACTIVE
+                ?
+                <div className="voteButton" onClick={openModal}>
+                    VOTE
+                </div>
+                :
+                <div className="voteButton voteButtonDisabled">
+                    VOTE
+                </div>
             }
             <Modal isOpen={isOpen}>
                 <Card width={"90%"} height={"80%"} p={0} style={{maxWidth: "700px", borderRadius: "5px"}}>
@@ -42,7 +74,7 @@ function VoteModal({Candidate, isActive}) {
                         onClick={closeModal}
                     />
 
-                    <div style={{margin: "10px", maxWidth: "500px", width: "90%"}}>
+                    <div style={{margin: "10px", maxWidth: "700px", width: "90%"}}>
                         <h5>Choose candidates according to your preferences</h5>
 
                         <br/>
@@ -52,38 +84,26 @@ function VoteModal({Candidate, isActive}) {
                             <br/><br/>
 
                             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between"}}>
-                                <label className="voteCandidate">
-                                    <input type="radio" name="candidate" className="voteCandiateInput"/>
-                                    <Candidate name="Raj" id="1" imageUrl="/assets/avatar.png"/>
-                                </label>
-
-                                <label className="voteCandidate">
-                                    <input type="radio" name="candidate" className="voteCandiateInput"/>
-                                    <Candidate name="Ayush" id="2" imageUrl="/assets/avatar2.png"/>
-                                </label>
-
-                                <label className="voteCandidate">
-                                    <input type="radio" name="candidate" className="voteCandiateInput"/>
-                                    <Candidate name="Thuva" id="3" imageUrl="/assets/avatar4.png"/>
-                                </label>
-
-                                <label className="voteCandidate">
-                                    <input type="radio" name="candidate" className="voteCandiateInput"/>
-                                    <Candidate name="Bruno" id="4" imageUrl="/assets/avatar3.png"/>
-                                </label>
-
-                                <label className="voteCandidate">
-                                    <input type="radio" name="candidate" className="voteCandiateInput"/>
-                                    <Candidate name="Bruno" id="4" imageUrl="/assets/avatar3.png"/>
-                                </label>
+                                {
+                                    currentElectionDetails?.candidate?.map((candidate) => (
+                                        <label className="voteCandidate">
+                                            <input type="radio" name="candidate" value={candidate?.id} onChange={handleCandidateIdChange} className="voteCandiateInput"/>
+                                            <Candidate name={candidate?.name} id={candidate?.id} about={candidate?.about} voteCount={candidate?.voteCount} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
+                                        </label>
+                                    ))
+                                }
                             </div>
                         </div>
                     </div>
         
-                    <div className="modalButtons">
+                    <Flex
+                        px={4}
+                        py={3}
+                        justifyContent={"flex-end"}
+                    >
                         <Button.Outline onClick={closeModal}>Cancel</Button.Outline>
-                        <Button ml={3}>Confirm</Button>
-                    </div>                    
+                        <Button ml={3} type="submit" onClick={handleVoteSubmit}>Confirm</Button>
+                    </Flex>                
                 </Card>
             </Modal>
         </div>

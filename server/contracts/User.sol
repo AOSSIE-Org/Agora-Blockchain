@@ -23,7 +23,7 @@ contract User {
 
     function createElection (string[] memory _nda, uint[] memory _se) public returns(uint) {
 	    require(msg.sender == info.publicAddress, "Can't create election using other's contract");
-        Election election = new Election(electionId, _nda, _se);
+        Election election = new Election(electionId, _nda, _se, msg.sender);
         Elections[electionId] = address(election);
         emit electionCreated(Elections[electionId]);
         electionId++;

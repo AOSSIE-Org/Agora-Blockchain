@@ -13,8 +13,8 @@ function CreateElectionModal({ UserContract, account }) {
     });
 
     const [se, setSe] = useState({
-        startTime: Date.now(),
-        endTime: Date.now()
+        startTime: parseInt(Date.now()/1000),
+        endTime: parseInt(Date.now()/1000)
     });
 
     const handleNdaChange = (e) => {
@@ -29,28 +29,43 @@ function CreateElectionModal({ UserContract, account }) {
         setSe(oldSe => (
             type === "start"
             ?
-            {...oldSe, startTime: Date.parse(e)}
+            {...oldSe, startTime: parseInt(Date.parse(e)/1000)}
             :
-            {...oldSe, endTime: Date.parse(e)}
+            {...oldSe, endTime: parseInt(Date.parse(e)/1000)}
         ));
     }
 
     const handleSubmitNewElection = async (e) => {
         e.preventDefault();
+
         try{
+            setIsOpen(false);
+
+            window.toastProvider.addMessage("Processing your new election request.", {
+                variant: "processing"
+            })
+            
             await UserContract.createElection([nda.name, nda.description, nda.algorithm], [se.startTime, se.endTime]).send({from: account})
+            
+            window.toastProvider.addMessage("Success", {
+                secondaryMessage: "Election created. Thank you.",
+                variant: "success"
+            });
+
             setNda({
                 name: "",
                 description: "",
                 algorithm: ""
             });
             setSe({
-                startTime: Date.now(),
-                endTime: Date.now()
+                startTime: parseInt(Date.now()/1000),
+                endTime: parseInt(Date.now()/1000)
             });
-            setIsOpen(false);
         } catch {
-            alert("Transaction failed")
+            window.toastProvider.addMessage("Failed", {
+                secondaryMessage: "Please try again. Transaction failed.",
+                variant: "failure"
+            });
         }
     }
   
@@ -122,7 +137,7 @@ function CreateElectionModal({ UserContract, account }) {
                                             dateFormat="yyyy/MM/dd hh:mm:ss"
                                             className = "form-control"
                                             name = "startTime"
-                                            selected = {se.startTime}
+                                            selected = {se.startTime * 1000}
                                             onChange = {(date) => handleSeChange(date, "start")}
                                         />
                                     </div>
@@ -137,7 +152,7 @@ function CreateElectionModal({ UserContract, account }) {
                                             dateFormat="yyyy/MM/dd hh:mm:ss"
                                             className = "form-control"
                                             name = "endTime"
-                                            selected = {se.endTime}
+                                            selected = {se.endTime * 1000}
                                             onChange = {(date) => handleSeChange(date, "end")}
                                         />
                                     </div>

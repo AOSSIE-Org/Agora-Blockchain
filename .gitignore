@@ -8,10 +8,6 @@ node_modules
 server/coverage
 server/coverage.json
 
-# production
-build
-client/src/blockchainBuild
-
 # misc
 .DS_Store
 .env
