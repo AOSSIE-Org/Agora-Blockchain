@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Flex, Modal, Button, Card } from "rimble-ui";
+import { Flex, Modal, Button, Card, ToastMessage } from "rimble-ui";
 import '../../styles/Modal.scss';
 import { AVATARS, STATUS } from '../../constants';
 
@@ -23,14 +23,26 @@ function VoteModal({Candidate, isActive, status, currentElectionDetails, Current
 
     const handleVoteSubmit = async (e) => {
         e.preventDefault();
-        console.log(await CurrentElection.getTimestamps().call())
+        setIsOpen(false);
         try{
-            console.log(candidateId)
-            await CurrentElection.vote(candidateId).send({from: account})
+            window.toastProvider.addMessage("Processing your voting request.", {
+                variant: "processing"
+            })
+            
+            await CurrentElection.vote(candidateId).send({from: account});
+            
+            window.toastProvider.addMessage("Voted", {
+                secondaryMessage: "You have successfully voted! Thank you.",
+                variant: "success"
+            });
+            
             setCandidateId(null);
             setIsOpen(false);
         } catch(err) {
-            alert("Transaction failed: ", JSON.stringify(err))
+            window.toastProvider.addMessage("Failed", {
+                secondaryMessage: "Transaction failed. Try again",
+                variant: "failure"
+            });
         }
     }
   

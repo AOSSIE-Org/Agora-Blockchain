@@ -19,14 +19,28 @@ function AddCandidateModal({CurrentElection, account}) {
     const handleSubmitCandidate = async (e) => {
         e.preventDefault();
         try{
+            setIsOpen(false);
+
+            window.toastProvider.addMessage("Processing your new candidate request.", {
+                variant: "processing"
+            })
+
             await CurrentElection.addCandidate(candidateDetail.name, candidateDetail.description).send({from: account})
+            
+            window.toastProvider.addMessage("Success", {
+                secondaryMessage: "New candidate added! Thank you.",
+                variant: "success"
+            });
+            
             setCandidateDetail({
                 name: "",
                 description: ""
             });
-            setIsOpen(false);
         } catch(err) {
-            alert("Transaction failed: ", JSON.stringify(err))
+            window.toastProvider.addMessage("Failed", {
+                secondaryMessage: "Please try again. Transaction failed",
+                variant: "failure"
+            });
         }
     }
   

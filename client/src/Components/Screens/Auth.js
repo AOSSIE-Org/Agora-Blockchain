@@ -22,7 +22,26 @@ function Auth() {
 
   const registerUser = async (e) => {
     e.preventDefault();
-    MainContract.createUser(fullName.name).send({from: account});
+    
+    window.toastProvider.addMessage("Processing your registration request.", {
+      variant: "processing",
+      colorTheme: "light"
+    });
+
+    try{
+      await MainContract.createUser(fullName.name).send({from: account});
+
+      window.toastProvider.addMessage("Success", {
+        secondaryMessage: "Welcome to Agora Blockchain.",
+        variant: "success",
+      });
+    } catch {
+      window.toastProvider.addMessage("Failed", {
+        secondaryMessage: "Please try again. Transaction failed.",
+        variant: "failure",
+        colorTheme: "light"
+      });
+    }
   }
 
   // const GetAuthMode = () => {

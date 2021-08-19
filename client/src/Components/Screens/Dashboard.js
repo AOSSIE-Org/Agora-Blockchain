@@ -1,6 +1,5 @@
-import { useEffect, useContext, useMemo } from "react";
-import { Table, MetaMaskButton } from "rimble-ui";
-import { Link } from "react-router-dom";
+import { useMemo } from "react";
+import { Table, Button, EthAddress } from "rimble-ui";
 import "../styles/Layout.scss";
 import "../styles/Dashboard.scss";
 import { COLORS, STATUS } from "../constants";
@@ -17,6 +16,8 @@ const Dashboard = () => {
     userInfo,
     electionDetails,
     UserSubscriber,
+    account,
+    balance
   } = useCallContext();
 
   const getStatus = (sdate, edate) => {
@@ -110,6 +111,10 @@ const Dashboard = () => {
         </tr>
       );
     };
+
+    const getTokens = () => {
+      window.open('https://faucet.avax-test.network/', '_blank');
+    }
 
     return (
       <div style={{ backgroundColor: "#f7f7f7", minHeight: "100%" }}>
@@ -225,16 +230,19 @@ const Dashboard = () => {
 
                 <font size="2" className="imageText">
                   <font size="3">Current Network</font>
-                  <Status status="active" text="Ethereum Mainnet" />
+                  <Status status="active" text="Avalanche Fuji" />
                 </font>
               </div>
 
               <br />
 
-              <h4 style={{ marginBottom: "0px" }}>0.04 ETH</h4>
-              <font size="2" className="text-muted">
-                0x9505...c8E49
-              </font>
+              <h4 style={{ marginBottom: "0px" }}>{balance} AVAX</h4>
+
+              <br/>
+
+              <div style={{overflow: "hidden", textOverflow: "ellipsis", width: "100%"}} className="text-muted">
+                <EthAddress address={account}/>
+              </div>
 
               <div
                 style={{
@@ -244,9 +252,9 @@ const Dashboard = () => {
                   alignItems: "flex-end",
                 }}
               >
-                <MetaMaskButton.Outline style={{ width: "100%" }}>
-                  Connect
-                </MetaMaskButton.Outline>
+                <Button style={{width: "100%"}} onClick={getTokens}>
+                  Get Tokens
+                </Button>
               </div>
             </div>
           </div>

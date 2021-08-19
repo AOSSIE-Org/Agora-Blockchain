@@ -20,6 +20,11 @@ export function CallProvider({ children }) {
 
   const accounts = drizzleState?.accounts;
   const account = accounts ? accounts[0] : "0x0";
+  let balance = drizzleState?.accountBalances;
+  
+  if(balance) {
+    balance = ((Object.values(balance))[0] / 1e18).toFixed(2);
+  }
 
   const drizzleVariables = {drizzle, drizzleState, contracts, account};
 
@@ -61,6 +66,7 @@ export function CallProvider({ children }) {
         initialized,
         isRegistered,
         account,
+        balance
       }}
     >
       {children}

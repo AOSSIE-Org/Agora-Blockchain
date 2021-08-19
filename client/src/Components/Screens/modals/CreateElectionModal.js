@@ -38,9 +38,20 @@ function CreateElectionModal({ UserContract, account }) {
 
     const handleSubmitNewElection = async (e) => {
         e.preventDefault();
-        console.log(se)
         try{
+            setIsOpen(false);
+
+            window.toastProvider.addMessage("Processing your new election request.", {
+                variant: "processing"
+            })
+            
             await UserContract.createElection([nda.name, nda.description, nda.algorithm], [se.startTime, se.endTime]).send({from: account})
+            
+            window.toastProvider.addMessage("Success", {
+                secondaryMessage: "Election created. Thank you.",
+                variant: "success"
+            });
+
             setNda({
                 name: "",
                 description: "",
@@ -50,9 +61,11 @@ function CreateElectionModal({ UserContract, account }) {
                 startTime: parseInt(Date.now()/1000),
                 endTime: parseInt(Date.now()/1000)
             });
-            setIsOpen(false);
         } catch {
-            alert("Transaction failed")
+            window.toastProvider.addMessage("Failed", {
+                secondaryMessage: "Please try again. Transaction failed.",
+                variant: "failure"
+            });
         }
     }
   
