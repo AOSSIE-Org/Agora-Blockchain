@@ -1,9 +1,8 @@
-import { useEffect, useContext, useMemo } from "react";
-import { Table, MetaMaskButton } from "rimble-ui";
-import { Link } from "react-router-dom";
+import { useMemo } from "react";
+import { Table, Button, EthAddress } from "rimble-ui";
 import "../styles/Layout.scss";
 import "../styles/Dashboard.scss";
-import { COLORS } from "../constants";
+import { COLORS, STATUS } from "../constants";
 import CreateElectionModal from "./modals/CreateElectionModal";
 import Navbar from "./Navbar";
 import { useCallContext } from "../../drizzle/calls";
@@ -17,7 +16,24 @@ const Dashboard = () => {
     userInfo,
     electionDetails,
     UserSubscriber,
+    account,
+    balance
   } = useCallContext();
+
+  const getStatus = (sdate, edate) => {
+    sdate = sdate * 1000;
+    edate = edate * 1000;
+
+    const timestamp = Date.now();
+
+		if(timestamp < sdate) {
+			return (STATUS.PENDING);
+		} else if(timestamp < edate) {
+			return (STATUS.ACTIVE);
+		} else {
+			return (STATUS.CLOSED);
+		}
+  }
 
   return useMemo(() => {
     const CardItem = ({
@@ -96,6 +112,10 @@ const Dashboard = () => {
       );
     };
 
+    const getTokens = () => {
+      window.open('https://faucet.avax-test.network/', '_blank');
+    }
+
     return (
       <div style={{ backgroundColor: "#f7f7f7", minHeight: "100%" }}>
         <Navbar header={userInfo?.name} infoText={userInfo?.contractAddress} pictureUrl="/assets/avatar.png"/>
@@ -173,30 +193,12 @@ const Dashboard = () => {
                       		electionId = {election?.info?.id}
                       		electionTitle = {election?.info?.name}
                       		electionAddress = {election?.contractAddress}
-                      		startDate = {(new Date(election?.info?.sdate * 1)).toLocaleString()}
-                      		endDate = {(new Date(election?.info?.edate * 1)).toLocaleString()}
-                      		status = "active"
-						/>
-					  ))
+                      		startDate = {(new Date(election?.info?.sdate * 1000)).toLocaleString()}
+                      		endDate = {(new Date(election?.info?.edate * 1000)).toLocaleString()}
+                      		status = {getStatus(election?.info?.sdate, election?.info?.edate)}
+                        />
+                      ))
                     }
-
-                    <ElectionRow
-                      electionId="1"
-                      electionTitle="Test Election"
-                      electionAddress="0xF30F9801df6c722C552Fd60E8E201A4c0524BFAb"
-                      startDate="Monday, 7th June 2021"
-                      endDate="Monday, 14th June 2021"
-                      status="pending"
-                    />
-
-                    <ElectionRow
-                      electionId="1"
-                      electionTitle="Test Election"
-                      electionAddress="0xF30F9801df6c722C552Fd60E8E201A4c0524BFAb"
-                      startDate="Monday, 7th June 2021"
-                      endDate="Monday, 14th June 2021"
-                      status="closed"
-                    />
                   </tbody>
                 </Table>
 
@@ -228,16 +230,19 @@ const Dashboard = () => {
 
                 <font size="2" className="imageText">
                   <font size="3">Current Network</font>
-                  <Status status="active" text="Ethereum Mainnet" />
+                  <Status status="active" text="Avalanche Fuji" />
                 </font>
               </div>
 
               <br />
 
-              <h4 style={{ marginBottom: "0px" }}>0.04 ETH</h4>
-              <font size="2" className="text-muted">
-                0x9505...c8E49
-              </font>
+              <h4 style={{ marginBottom: "0px" }}>{balance} AVAX</h4>
+
+              <br/>
+
+              <div style={{overflow: "hidden", textOverflow: "ellipsis", width: "100%"}} className="text-muted">
+                <EthAddress address={account}/>
+              </div>
 
               <div
                 style={{
@@ -247,9 +252,9 @@ const Dashboard = () => {
                   alignItems: "flex-end",
                 }}
               >
-                <MetaMaskButton.Outline style={{ width: "100%" }}>
-                  Connect
-                </MetaMaskButton.Outline>
+                <Button style={{width: "100%"}} onClick={getTokens}>
+                  Get Tokens
+                </Button>
               </div>
             </div>
           </div>

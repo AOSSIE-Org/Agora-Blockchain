@@ -4,16 +4,24 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { ToastMessage } from 'rimble-ui';
+
 import { Drizzle } from "@drizzle/store";
 import { DrizzleContext } from '@drizzle/react-plugin';
 import drizzleOptions from './drizzle/drizzleOptions';
 import { CallProvider } from './drizzle/calls';
 import { ContractProvider } from './drizzle/drizzleContracts';
 
+import OnBoardUser from './OnBoardUser';
+import OnboardUser from './OnBoardUser';
+
 const drizzle = new Drizzle(drizzleOptions);
 
 ReactDOM.render(
   <React.StrictMode>
+    <OnboardUser/>
+    <ToastMessage.Provider ref={node => (window.toastProvider = node)} />
+
     <DrizzleContext.Provider drizzle={drizzle}>
       <ContractProvider>
         <CallProvider>
