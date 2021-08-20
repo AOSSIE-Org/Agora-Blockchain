@@ -26,6 +26,7 @@ function CreateElectionModal({ UserContract, account }) {
     }
 
     const handleSeChange = (e, type) => {
+        console.log(e, Date.now(), Date.parse(e))
         setSe(oldSe => (
             type === "start"
             ?
@@ -37,7 +38,6 @@ function CreateElectionModal({ UserContract, account }) {
 
     const handleSubmitNewElection = async (e) => {
         e.preventDefault();
-
         try{
             setIsOpen(false);
 
