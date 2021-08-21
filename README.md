@@ -141,10 +141,12 @@ truffle migrate --reset
 
 **Running test coverage**
 
+`Solidity-coverage` module has been configured in the config file to check how much of the code is being covered in test. To get the results of test coverage, follow the steps below.
+
 Migrate to the server folder and run the following commands on the terminal. Make sure to run `npm install`
 
 ```bash
 truffle run coverage
 ```
 
-This will generate the test results of all the solidity files in contracts folder. The results are displayed on the terminal and can also be found in `coverage` folder.
+This will generate the test results of all the solidity files in contracts folder. The results are displayed on the terminal and can also be found in `coverage.json` file.
