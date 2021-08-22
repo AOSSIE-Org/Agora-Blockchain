@@ -100,7 +100,6 @@ import { DrizzleContext } from '@drizzle/react-plugin';
 ```
 
 Drizzle requires a `DrizzleOption` object, in which we define what contracts we want to add by default, events, web3 provider, etc. Currently, we are just adding `MainContract` to the drizzle as a default contract, as this is the only contract which we will be deployed to the network. (see `client/src/drizzle/drizzleOptions.js`).
-
 ```javascript=
 import MainContract from "../blockchainBuild/MainContract.json";
 
@@ -273,7 +272,6 @@ const { MainContract, userInfo, account } = useCallContext();
 **UserSubscriber** - Same as `MainSubscriber`
 
 **userInfo** - Information about user signed in. It is an object with the following structure.
-
 ```javascript
 {
     id: Number,
@@ -284,7 +282,6 @@ const { MainContract, userInfo, account } = useCallContext();
 ```
 
 **electionDetails** - Array of details of elections created by the user signed in. Each element in the array is an object, with the following structure.
-
 ```javascript
 id: Number,
 name: String,
@@ -314,7 +311,6 @@ contractAddress: String
 In this project, we separately deploy **backend** (blockchain) and **frontend** (ReactJS). We choose **[Avalanche](https://www.avax.network/)** or any **EVM** based test network for deploying our smart contracts. Whereas, we deploy our frontend on **[Heroku](https://heroku.com)**.
 
 ### Deploying backend
-
 To migrate our smart contracts to the blockchain, we need 2 things - **RPC node** connected to the network and **an account** with few funds in it to cover the deployment cost. **Avalanche** provides RPC node, and since we are deploying on test network (**Avalanche's Fuji**), we can get free test tokens from their **Faucet**.
 
 **Steps to deploy backend**
