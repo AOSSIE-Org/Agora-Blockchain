@@ -1,0 +1,20 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Server side for agora web",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.4.1",
+    "dotenv": "^10.0.0",
+    "solidity-coverage": "^0.7.16",
+    "truffle-hdwallet-provider": "^1.0.17"
+  }
+}
