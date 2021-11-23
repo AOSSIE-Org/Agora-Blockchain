@@ -35,6 +35,8 @@ const Dashboard = () => {
 		}
   }
 
+  const statistics = UserContract.getStatistics()
+
   return useMemo(() => {
     const CardItem = ({
       headerValue,
@@ -140,27 +142,27 @@ const Dashboard = () => {
 
           <div className="cardContainer row">
             <CardItem
-              headerValue="4"
+              headerValue={statistics[0]}
               descriptor="Total elections"
               imgUrl="/assets/totalElections.png"
             />
 
             <CardItem
-              headerValue="2"
+              headerValue={statistics[1]}
               descriptor="Active elections"
               imgUrl="/assets/activeElections.png"
               imgBackground="#eaffe8"
             />
 
             <CardItem
-              headerValue="1"
+              headerValue={statistics[2]}
               descriptor="Closed elections"
               imgUrl="/assets/endedElections.png"
               imgBackground="#ffe8e8"
             />
 
             <CardItem
-              headerValue="1"
+              headerValue={statistics[3]}
               descriptor="Pending elections"
               imgUrl="/assets/pendingElections.png"
               imgBackground="#fffbd1"
