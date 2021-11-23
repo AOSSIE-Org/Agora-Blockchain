@@ -33,9 +33,9 @@ contract User {
         return info;
     }
 
-    function getStatistics() public returns(uint[] memory) {
+    function getStatistics() public view returns(uint[] memory) {
 
-        uint[] memory statistics = new uint[](4); //Creating an array of analytics
+        uint[] memory _statistics = new uint[](4); //Creating an array of analytics
 
         /**
         * The index-value pair is:
@@ -46,7 +46,7 @@ contract User {
         */
 
         //Set the electionId as the total number of elections held
-        statistics[0] = electionId;
+        _statistics[0] = electionId;
 
         //Iterate over the map of elections and check their status
         for(uint i = 0; i < electionId; i++){
@@ -54,14 +54,14 @@ contract User {
             Election.Status status = election.getStatus();
 
             if(status == Election.Status.active){
-                statistics[1] += 1;
+                _statistics[1] += 1;
             }else if(status == Election.Status.closed){
-                statistics[2] += 1;
+                _statistics[2] += 1;
             }else{
-                statistics[3] += 1;
+                _statistics[3] += 1;
             }
         }
 
-        return statistics;
+        return _statistics;
     }
 }
