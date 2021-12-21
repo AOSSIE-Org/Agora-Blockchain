@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo,useEffect,useState } from "react";
 import { Table, Button, EthAddress } from "rimble-ui";
 import "../styles/Layout.scss";
 import "../styles/Dashboard.scss";
@@ -35,7 +35,18 @@ const Dashboard = () => {
 		}
   }
 
-  const statistics = UserContract.getStatistics()
+  const [statistics,setStatistics] = useState([])
+
+  //Fetch the election statistics 
+  useEffect(async () => {
+
+    if(!UserContract) return
+
+    let newStatistics = await UserContract.getStatistics().call()
+    setStatistics(newStatistics)
+    console.log(statistics)
+    
+  },[UserContract])
 
   return useMemo(() => {
     const CardItem = ({
@@ -140,6 +151,7 @@ const Dashboard = () => {
           <br />
           <br />
 
+          {UserContract &&
           <div className="cardContainer row">
             <CardItem
               headerValue={statistics[0]}
@@ -167,7 +179,7 @@ const Dashboard = () => {
               imgUrl="/assets/pendingElections.png"
               imgBackground="#fffbd1"
             />
-          </div>
+          </div>}
 
           <div className="layoutBody row">
             <div className="lhsLayout">
