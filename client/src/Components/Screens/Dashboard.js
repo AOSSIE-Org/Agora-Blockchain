@@ -44,9 +44,8 @@ const Dashboard = () => {
 
     let newStatistics = await UserContract.getStatistics().call()
     setStatistics(newStatistics)
-    console.log(statistics)
     
-  },[UserContract])
+  },[UserContract,electionDetails])
 
   return useMemo(() => {
     const CardItem = ({
