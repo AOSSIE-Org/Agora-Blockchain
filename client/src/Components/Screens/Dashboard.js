@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo,useEffect,useState } from "react";
 import { Table, Button, EthAddress } from "rimble-ui";
 import "../styles/Layout.scss";
 import "../styles/Dashboard.scss";
@@ -34,6 +34,18 @@ const Dashboard = () => {
 			return (STATUS.CLOSED);
 		}
   }
+
+  const [statistics,setStatistics] = useState([])
+
+  //Fetch the election statistics 
+  useEffect(async () => {
+
+    if(!UserContract) return
+
+    let newStatistics = await UserContract.getStatistics().call()
+    setStatistics(newStatistics)
+    
+  },[UserContract,electionDetails])
 
   return useMemo(() => {
     const CardItem = ({
@@ -138,34 +150,35 @@ const Dashboard = () => {
           <br />
           <br />
 
+          {UserContract &&
           <div className="cardContainer row">
             <CardItem
-              headerValue="4"
+              headerValue={statistics[0]}
               descriptor="Total elections"
               imgUrl="/assets/totalElections.png"
             />
 
             <CardItem
-              headerValue="2"
+              headerValue={statistics[1]}
               descriptor="Active elections"
               imgUrl="/assets/activeElections.png"
               imgBackground="#eaffe8"
             />
 
             <CardItem
-              headerValue="1"
+              headerValue={statistics[2]}
               descriptor="Closed elections"
               imgUrl="/assets/endedElections.png"
               imgBackground="#ffe8e8"
             />
 
             <CardItem
-              headerValue="1"
+              headerValue={statistics[3]}
               descriptor="Pending elections"
               imgUrl="/assets/pendingElections.png"
               imgBackground="#fffbd1"
             />
-          </div>
+          </div>}
 
           <div className="layoutBody row">
             <div className="lhsLayout">
