@@ -18,7 +18,20 @@ contract Voter{
     constructor(VoterInfo memory _voterInfo){
         voterInfo=_voterInfo;
     }
-    // function addElectionVote(Election,Candidate)public virtual;
-    // function castVote(Election)public virtual;
+
+    function castVote(Election election)public{
+        election.vote(electionVotes[election]);
+    }
+
+
+    function addElectionVote(Election election,Candidate candidate)public{
+        electionVotes[election].push(candidate);
+    }
+
+    // function castVote(Election election)public {
+    //     require(!voteStatus[election],"Voter has already Voted!");
+    //     // require(election.getStatus()=Election.Status.active); -> should be done in election contract
+    //     election.vote()
+    // }
     // function isAuthenticated()public virtual;
 }

@@ -6,5 +6,7 @@ contract ElectionStorage {
     Election[] contracts;
     mapping(Election.Status=>Election[]) activeElections;
     mapping(address=>Election[]) addressToElections;  // change name
-    function addContract(Election _contract)public;
+    function addContract(Election _contract)public{
+        contracts.push(_contract);
+    }
 }

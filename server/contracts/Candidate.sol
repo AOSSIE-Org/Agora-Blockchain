@@ -6,13 +6,16 @@ contract Candidate {
     struct CandidateInfo {
         uint candidateID;
         string name;
-        uint voteCount;
+        // uint voteCount;
     }
     CandidateInfo candidateInfo;
     
     // map candidates to elections
     // mapping(CandidateInfo => Election) candidate_election;
 
+    // function addVote() public{
+    //     candidateInfo.voteCount++;
+    // }
 
     constructor(CandidateInfo memory _candidateInfo){
         candidateInfo = _candidateInfo;

@@ -4,5 +4,5 @@ import './Election.sol';
 import './Candidate.sol';
 
 interface VotingSystem {
-    function vote(Election,Candidate[] calldata) external;
+    function vote(Election,Candidate[] memory) external;
 }

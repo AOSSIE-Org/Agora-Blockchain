@@ -13,9 +13,11 @@ contract Election {
         uint startDate;
         uint endDate;
         address electionOrganizer;
-        Candidate[] candidates;
-        Candidate winner;
     }
+    Candidate[] candidates;
+    Candidate[] winners;
+    mapping(Candidate => uint) public voteCount;
+
     ElectionInfo public electionInfo;
 
     enum Status {
@@ -65,19 +67,42 @@ contract Election {
     function getElectionInfo() public view returns(ElectionInfo memory){
         return electionInfo;
     }
-
+    
     function addCandidate(Candidate _candidate)public {
-        electionInfo.candidates.push(_candidate);
+        candidates.push(_candidate);
     }
     
     function getCandidates() public view returns (Candidate[] memory){
-        return electionInfo.candidates;
+        return candidates;
+    }
+
+    function addWinner(Candidate _candidate)public {
+        winners.push(_candidate);
+    }
+
+    function getWinners()public view returns(Candidate[] memory){
+        return winners;
     }
     
+    
+    function addVote(Candidate _candidate) public {
+        voteCount[_candidate]++;
+    }
+
+    function getVoteCount(Candidate _candidate)public view returns(uint){
+        return voteCount[_candidate];
+    }
+
+
+    function vote(Candidate[] memory _candidates)public{
+        votingSystem.vote(this, _candidates);
+    }
+
     // function getTimeStamps()public;
     //                  ->this can be depracated, since time stamps are easily available from ElectionInfo
-    // function vote(VotingSystem votingSystem)public;
-    // function getResults(ResultCalculator resultCalculator)public;
+    function getResult()public{
+        resultCalculator.getResult(this);
+    }
 
 }
 

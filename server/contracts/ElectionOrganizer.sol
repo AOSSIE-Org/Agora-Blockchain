@@ -42,6 +42,9 @@ contract ElectionOrganizer {
         _election.addCandidate(candidate);
     }
     
-    // function getResult(Election)public;
+    function getResult(Election election)public{
+        election.getResult();
+        Candidate[] memory winners = election.getWinners();
+    }
     
 }
