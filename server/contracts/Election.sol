@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.0;
 import './Candidate.sol';
-import './VotingSystem.sol';
-import './ResultCalculator.sol';
+import './votingSystem/VotingSystem.sol';
+import './resultCalculator/ResultCalculator.sol';
 
 
 contract Election {

@@ -28,10 +28,4 @@ contract Voter{
         electionVotes[election].push(candidate);
     }
 
-    // function castVote(Election election)public {
-    //     require(!voteStatus[election],"Voter has already Voted!");
-    //     // require(election.getStatus()=Election.Status.active); -> should be done in election contract
-    //     election.vote()
-    // }
-    // function isAuthenticated()public virtual;
 }
