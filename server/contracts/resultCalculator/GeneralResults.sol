@@ -2,29 +2,39 @@
 pragma solidity >=0.8.0;
 
 import './ResultCalculator.sol';
-import '../Election.sol';
 import '../Candidate.sol';
+import '../ballot/Ballot.sol';
 
 contract GeneralResults is ResultCalculator {
     
-    function getResult(Election election)public{
-        uint maxVotes = 0;
+    Candidate[] public winners;
+
+    function getResult(Ballot ballot, uint voterCount)public override returns(Candidate[]memory) {
+        
+        Candidate[] memory candidates = ballot.getCandidates();
+        uint candidateCount = candidates.length;
+        uint winningVoteCount = 0;
+        uint voteCount = 0;
         uint i;
-        uint candidatesCount = election.getCandidates().length;
-        Candidate[] memory candidates = election.getCandidates();
-        uint votes = 0;
-        for (i = 0; i<candidatesCount; i++){
-            votes = election.getVoteCount(candidates[i]);
-            if(votes>maxVotes){
-                maxVotes=votes;
+
+        for(i = 0; i < candidateCount; i++){
+            voteCount=ballot.getVoteCount(candidates[i],1);
+            if ( voteCount > winningVoteCount) {
+                winningVoteCount = voteCount;
+            }
+            if (winningVoteCount > voterCount/2) {
+                winners.push(candidates[i]);
+                return winners;
             }
         }
-        for(i = 0;i<candidatesCount;i++){
-            votes = election.getVoteCount(candidates[i]);
-            if(votes==maxVotes){
-                election.addWinner(candidates[i]);
+
+        for(i = 0; i < candidateCount; i++){
+            voteCount=ballot.getVoteCount(candidates[i],1);
+            if (voteCount == winningVoteCount) {
+                winners.push(candidates[i]);
             }
         }
-        //call getWinners from Election.sol
+        return winners;
     }
+
 }

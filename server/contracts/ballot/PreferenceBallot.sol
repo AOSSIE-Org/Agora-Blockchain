@@ -4,9 +4,13 @@ import './Ballot.sol';
 import '../Candidate.sol';
 
 contract PreferenceBallot is Ballot{
-    mapping (Candidate=>uint[])preferences;
+    mapping (uint=> mapping (Candidate => uint)) votes;
+    
     function vote(Candidate _candidate, uint preference) public override{
-        // votes[_candidate] += preference;
-        preferences[_candidate].push(preference);
+        votes[preference][_candidate]+=1;
+    }
+    
+    function getVoteCount(Candidate _candidate, uint weight) public override view returns(uint){
+        return votes[weight][_candidate];
     }
 }

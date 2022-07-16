@@ -2,31 +2,25 @@
 pragma solidity >=0.8.0;
 import './Election.sol';
 import './Candidate.sol';
-import './VotingSystem.sol';
+import './ballot/Ballot.sol';
 import './ElectionStorage.sol';
 
 contract ElectionOrganizer {
+    
     struct OrganizerInfo{
-        string name;
         uint organizerID;
+        string name;
         address publicAddress;
     }
+    OrganizerInfo organizerInfo;
 
-    
-    constructor(string memory _name, uint _organizerID, address _publicAddress){
-
-        OrganizerInfo memory organizerInfo;
-        organizerInfo.name=_name;
-        organizerInfo.organizerID = _organizerID;
-        organizerInfo.publicAddress= _publicAddress;
-    
+    constructor(OrganizerInfo memory _organizerInfo){
+        organizerInfo = _organizerInfo;
     }
 
-    function createElection(Election.ElectionInfo memory _electionInfo,VotingSystem _votingSystem, ResultCalculator _resultCalculator)public{
+    function createElection(Election.ElectionInfo memory _electionInfo,Ballot _ballot, ResultCalculator _resultCalculator)public{
 
-        Election election = new Election(_electionInfo,_votingSystem,_resultCalculator);
-        
-        // election.setVotingSystem(_votingSystem);
+        Election election = new Election(_electionInfo,_ballot,_resultCalculator);
         // save in ElectionStorage
     }
     
@@ -36,15 +30,13 @@ contract ElectionOrganizer {
     
         Candidate candidate = new Candidate(_candidateInfo);
         
-        // _election.electionInfo.candidates.push(candidate);
-        // election.getElectionInfo()
         
         _election.addCandidate(candidate);
     }
     
     function getResult(Election election)public{
         election.getResult();
-        Candidate[] memory winners = election.getWinners();
+        // Candidate[] memory winners = election.getWinners();
     }
     
 }

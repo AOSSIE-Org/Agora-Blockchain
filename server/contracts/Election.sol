@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.0;
 import './Candidate.sol';
-import './votingSystem/VotingSystem.sol';
+import './ballot/Ballot.sol';
 import './resultCalculator/ResultCalculator.sol';
 
 
 contract Election {
+
     struct ElectionInfo {
         uint electionID;
         string name;
@@ -14,11 +15,12 @@ contract Election {
         uint endDate;
         address electionOrganizer;
     }
+    ElectionInfo public electionInfo;
+
     Candidate[] candidates;
     Candidate[] winners;
-    mapping(Candidate => uint) public voteCount;
+    uint voterCount;
 
-    ElectionInfo public electionInfo;
 
     enum Status {
         active,
@@ -27,14 +29,16 @@ contract Election {
     }
     Status status;
     
-    VotingSystem public votingSystem;
+    //Dependencies
+    Ballot public ballot;
     ResultCalculator public resultCalculator;
 
-    constructor(ElectionInfo memory _electionInfo, VotingSystem _votingSystem, ResultCalculator _resultCalculator){
+    //Constructor
+    constructor(ElectionInfo memory _electionInfo, Ballot _ballot, ResultCalculator _resultCalculator){
         
         electionInfo = _electionInfo;
         
-        votingSystem = _votingSystem;
+        ballot = _ballot;
         
         resultCalculator = _resultCalculator;
         
@@ -43,6 +47,7 @@ contract Election {
         } else {
             status = Status.active;
         }
+        voterCount = 0;
     }
 
     function getStatus()public view returns (Status){
@@ -60,58 +65,43 @@ contract Election {
         }
     }
 
-    // function setVotingSystem(VotingSystem _votingSystem) public {
-    //     votingSystem = _votingSystem;
-    // } 
 
     function getElectionInfo() public view returns(ElectionInfo memory){
         return electionInfo;
     }
     
+    //Add candidate to election as well as ballot
     function addCandidate(Candidate _candidate)public {
         candidates.push(_candidate);
+        ballot.addCandidate(_candidate);
     }
     
     function getCandidates() public view returns (Candidate[] memory){
         return candidates;
     }
 
-    function addWinner(Candidate _candidate)public {
-        winners.push(_candidate);
+    function getVoterCount() public view returns(uint){
+        return voterCount;
     }
+
 
     function getWinners()public view returns(Candidate[] memory){
         return winners;
     }
     
-    
-    function addVote(Candidate _candidate) public {
-        voteCount[_candidate]++;
-    }
-
-    function getVoteCount(Candidate _candidate)public view returns(uint){
-        return voteCount[_candidate];
-    }
-
-
-    function vote(Candidate[] memory _candidates)public{
-        votingSystem.vote(this, _candidates);
+    // Performs vote in ballot and updates voterCount
+    function vote(Candidate _candidate, uint weight)public{
+        ballot.vote(_candidate, weight);
+        voterCount++;
     }
 
     // function getTimeStamps()public;
     //                  ->this can be depracated, since time stamps are easily available from ElectionInfo
+    
+
     function getResult()public{
-        resultCalculator.getResult(this);
+        winners = resultCalculator.getResult(ballot, voterCount);
     }
 
 }
 
-
-/*
-Each new algorithm will look like:
-    -> [optional] an implementation of VotingSystem
-    -> [optional] an implementation of ResultCalculator
-    -> but one of the above for sure
-
-So during instantiation of a new election, one implementation of VotingSystem and one of ResultCalculator needs to be passed
-*/
