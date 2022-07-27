@@ -14,6 +14,10 @@ contract ElectionOrganizer {
     }
     OrganizerInfo organizerInfo;
 
+    event CreatedElection(address election);
+    event CandidateAdded(address election, address candidate);
+    event ResultsDeclared(address election, Candidate[] winners);
+
     constructor(OrganizerInfo memory _organizerInfo){
         organizerInfo = _organizerInfo;
     }
@@ -21,6 +25,7 @@ contract ElectionOrganizer {
     function createElection(Election.ElectionInfo memory _electionInfo,Ballot _ballot, ResultCalculator _resultCalculator)public{
 
         Election election = new Election(_electionInfo,_ballot,_resultCalculator);
+        emit CreatedElection(address(election));
         // save in ElectionStorage
     }
     
@@ -29,14 +34,13 @@ contract ElectionOrganizer {
     function addCandidate(Election _election,Candidate.CandidateInfo memory _candidateInfo)public{
     
         Candidate candidate = new Candidate(_candidateInfo);
-        
-        
         _election.addCandidate(candidate);
+        emit CandidateAdded(address(_election),address(candidate));
     }
     
-    function getResult(Election election)public{
-        election.getResult();
-        // Candidate[] memory winners = election.getWinners();
+    function getResult(Election _election)public{
+        _election.getResult();
+        emit ResultsDeclared(address(_election),_election.getWinners());
     }
     
 }

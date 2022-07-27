@@ -5,8 +5,6 @@ import '../Candidate.sol';
 
 interface ResultCalculator {
 
-    function getResult(Ballot,uint) external returns(Candidate[] memory);
+    function getResult(Ballot _ballot,uint _voterCount) external returns(Candidate[] memory);
     
 }
-
-// uint is voter count

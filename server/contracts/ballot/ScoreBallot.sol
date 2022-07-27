@@ -19,12 +19,12 @@ contract ScoreBallot is Ballot{
         scoreRange = _scoreRange;
     }
     
-    function vote(Candidate _candidate, uint score) public override{
-        scores[_candidate] += score;
+    function vote(Candidate _candidate, uint _score) public override{
+        scores[_candidate] += _score;
     }
 
-    function getVoteCount(Candidate _candidate, uint weight)public override view returns(uint){
-        weight = 1;
+    function getVoteCount(Candidate _candidate, uint _weight)public override view returns(uint){
+        _weight = 1;
         return scores[_candidate];
     }
 }
