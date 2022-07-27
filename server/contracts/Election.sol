@@ -50,7 +50,7 @@ contract Election {
     //Constructor
     constructor(ElectionInfo memory _electionInfo, Ballot _ballot, ResultCalculator _resultCalculator){
         
-        electionOrganizer = msg.sender;
+        electionOrganizer = address(msg.sender);
         electionInfo = _electionInfo;
         ballot = _ballot;
         resultCalculator = _resultCalculator;
@@ -102,7 +102,7 @@ contract Election {
     }
 
     // only after election ends
-    function getWinners()public view returns(Candidate[] memory){
+    function getWinners()onlyOrganizer public view returns(Candidate[] memory){
         return winners;
     }
     
