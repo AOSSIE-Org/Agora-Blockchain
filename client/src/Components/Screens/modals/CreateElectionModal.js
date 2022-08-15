@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Flex, Modal, Button, Card } from "rimble-ui";
 import DatePicker from 'react-datepicker';
+
 import "react-datepicker/dist/react-datepicker.css";
 
-function CreateElectionModal({ UserContract, account }) {
-    const [isOpen, setIsOpen] = useState(false);
+export function CreateElectionModal({ UserContract, account }) {
+    const [isOpen, setIsOpen] = useState(true);
 
     const [nda, setNda] = useState({
         name: "",
@@ -68,23 +69,24 @@ function CreateElectionModal({ UserContract, account }) {
             });
         }
     }
-  
+
     const closeModal = e => {
-      e.preventDefault();
-      setIsOpen(false);
+        e.preventDefault();
+        setIsOpen(false);
     };
-  
+
     const openModal = e => {
-      e.preventDefault();
-      setIsOpen(true);
+        e.preventDefault();
+        setIsOpen(true);
     };
-  
+
     return (
         <form>
             <div className="createElectionButton" onClick={openModal}>
                 <img src="/assets/plus.png" alt="+" style={{width: "15px", height: "15px", marginRight: "10px"}}/>
                 Create Election
             </div>
+            
             <Modal isOpen={isOpen}>
                 <Card width={"90%"} height={"max-content"} style={{maxWidth: "600px"}} p={0}>
                     <Button.Text
@@ -173,6 +175,4 @@ function CreateElectionModal({ UserContract, account }) {
             </Modal>
         </form>
     );
-  }
-
-export default CreateElectionModal;
+}

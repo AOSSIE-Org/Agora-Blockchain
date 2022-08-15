@@ -1,0 +1,11 @@
+.status {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    .statusIndicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 25px;
+        margin-right: 5px;
+    }
+}

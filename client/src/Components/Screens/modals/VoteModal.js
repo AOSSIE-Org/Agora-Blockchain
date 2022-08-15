@@ -1,20 +1,22 @@
 import { useState } from 'react';
-import { Flex, Modal, Button, Card, ToastMessage } from "rimble-ui";
+import { Flex, Modal, Button, Card } from "rimble-ui";
+
 import '../../styles/Modal.scss';
+
 import { AVATARS, STATUS } from '../../constants';
 
-function VoteModal({Candidate, isActive, status, currentElectionDetails, CurrentElection, account}) {
+export function VoteModal({Candidate, status, candidates, CurrentElection, account}) {
     const [isOpen, setIsOpen] = useState(false);
     const [candidateId, setCandidateId] = useState(null);
-  
+
     const closeModal = e => {
-      e.preventDefault();
-      setIsOpen(false);
+        e.preventDefault();
+        setIsOpen(false);
     };
-  
+
     const openModal = e => {
-      e.preventDefault();
-      setIsOpen(true);
+        e.preventDefault();
+        setIsOpen(true);
     };
 
     const handleCandidateIdChange = (e) => {
@@ -24,6 +26,7 @@ function VoteModal({Candidate, isActive, status, currentElectionDetails, Current
     const handleVoteSubmit = async (e) => {
         e.preventDefault();
         setIsOpen(false);
+        
         try{
             window.toastProvider.addMessage("Processing your voting request.", {
                 variant: "processing"
@@ -45,11 +48,11 @@ function VoteModal({Candidate, isActive, status, currentElectionDetails, Current
             });
         }
     }
-  
+
     return (
         <div>
             {
-                status == STATUS.ACTIVE
+                status === STATUS.ACTIVE
                 ?
                 <div className="voteButton" onClick={openModal}>
                     VOTE
@@ -85,7 +88,7 @@ function VoteModal({Candidate, isActive, status, currentElectionDetails, Current
 
                             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between"}}>
                                 {
-                                    currentElectionDetails?.candidate?.map((candidate) => (
+                                    candidates?.map((candidate) => (
                                         <label className="voteCandidate">
                                             <input type="radio" name="candidate" value={candidate?.id} onChange={handleCandidateIdChange} className="voteCandiateInput"/>
                                             <Candidate name={candidate?.name} id={candidate?.id} about={candidate?.about} voteCount={candidate?.voteCount} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
@@ -95,7 +98,7 @@ function VoteModal({Candidate, isActive, status, currentElectionDetails, Current
                             </div>
                         </div>
                     </div>
-        
+
                     <Flex
                         px={4}
                         py={3}
@@ -107,7 +110,5 @@ function VoteModal({Candidate, isActive, status, currentElectionDetails, Current
                 </Card>
             </Modal>
         </div>
-    );
-  }
-
-export default VoteModal;
+    )
+}

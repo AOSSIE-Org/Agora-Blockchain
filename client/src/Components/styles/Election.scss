@@ -17,17 +17,6 @@
     margin-left: 30px;
 }
 
-.status {
-    display: flex;
-    .statusIndicator {
-        width: 8px;
-        height: 8px;
-        border-radius: 25px;
-        margin-right: 5px;
-        margin-top: 5px;
-    }
-}
-
 .voteButtonDisabled {
     background: #593cda69;
     cursor: not-allowed;

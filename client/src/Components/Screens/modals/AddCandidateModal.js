@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Flex, Modal, Button, Card } from "rimble-ui";
 
-function AddCandidateModal({CurrentElection, account}) {
+export function AddCandidateModal({ CurrentElection, account }) {
     const [isOpen, setIsOpen] = useState(false);
     const [candidateDetail, setCandidateDetail] = useState({
         name: '',
@@ -43,22 +43,23 @@ function AddCandidateModal({CurrentElection, account}) {
             });
         }
     }
-  
+
     const closeModal = e => {
-      e.preventDefault();
-      setIsOpen(false);
+        e.preventDefault();
+        setIsOpen(false);
     };
-  
+
     const openModal = e => {
-      e.preventDefault();
-      setIsOpen(true);
+        e.preventDefault();
+        setIsOpen(true);
     };
-  
+
     return (
         <div>
             <div onClick={openModal} style={{cursor: "pointer"}}>
                 <font size = '2'>Add Candidate</font>
             </div>
+            
             <Modal isOpen={isOpen}>
                 <Card width={"90%"} height={"max-content"} p={0} style={{maxWidth: "500px"}}>
                     <Button.Text
@@ -82,6 +83,7 @@ function AddCandidateModal({CurrentElection, account}) {
                         <div>
                             <b>Canidate Name</b>
                             <br/>
+                            
                             <input 
                                 className="form-control" 
                                 placeholder="Name of the candidate"
@@ -94,6 +96,7 @@ function AddCandidateModal({CurrentElection, account}) {
 
                             <b>Canidate Description</b>
                             <br/>
+                            
                             <textarea
                                 className="form-control" 
                                 placeholder="Name of the candidate"
@@ -103,6 +106,7 @@ function AddCandidateModal({CurrentElection, account}) {
                                 onChange={handleCandidateDetailChange}
                                 style={{marginTop: "15px"}}
                             /> 
+                            
                             <br /><br />
                         </div>
                     </div>
@@ -119,6 +123,4 @@ function AddCandidateModal({CurrentElection, account}) {
             </Modal>
         </div>
     );
-  }
-
-export default AddCandidateModal;
+}

@@ -1,24 +1,29 @@
 import { useState } from 'react';
-import { Flex, Modal, Button, Card } from "rimble-ui";
+import { Modal, Button, Card } from "rimble-ui";
 
-function DeleteModal({isAdmin = false, isPending = false}) {
+export function DeleteModal({isAdmin = false, isPending = false}) {
     const [isOpen, setIsOpen] = useState(false);
-  
+
     const closeModal = e => {
-      e.preventDefault();
-      setIsOpen(false);
+        e.preventDefault();
+        setIsOpen(false);
     };
-  
+
     const openModal = e => {
-      e.preventDefault();
-      setIsOpen(true);
+        e.preventDefault();
+        setIsOpen(true);
     };
-  
+
     return (
         <div>
-            {(isAdmin && isPending) && <div className="voteButton deleteButton" onClick={openModal}>
-                DELETE
-            </div>}
+            {
+                (isAdmin && isPending)
+                &&
+                <div className="voteButton deleteButton" onClick={openModal}>
+                    DELETE
+                </div>
+            }
+
             <Modal isOpen={isOpen}>
                 <Card width={"90%"} height={"80%"} p={0} style={{maxWidth: "500px", maxHeight: "300px"}}>
                     <Button.Text
@@ -38,7 +43,7 @@ function DeleteModal({isAdmin = false, isPending = false}) {
 
                     <div style={{margin: "20px 10px"}}>
                         <div>
-                            <div style={{textAlign: "justify"}}>
+                            <div>
                                 Are your sure, you want to delete this election? Once this transaction is confirmed, this cannot be undone.
                             </div>
                         </div>
@@ -52,6 +57,4 @@ function DeleteModal({isAdmin = false, isPending = false}) {
             </Modal>
         </div>
     );
-  }
-
-export default DeleteModal;
+}

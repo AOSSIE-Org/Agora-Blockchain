@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Modal, Button, Card } from "rimble-ui";
+
 import '../../styles/Modal.scss';
 
-function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = false}) {
+export function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = false}) {
     const [isOpen, setIsOpen] = useState(false);
-  
+
     const closeModal = e => {
-      e.preventDefault();
-      setIsOpen(false);
+        e.preventDefault();
+        setIsOpen(false);
     };
 
     const openModal = e => {
@@ -21,10 +22,13 @@ function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = false})
         return (
             <div style={{display: "flex", marginBottom: "20px", cursor: "pointer"}} onClick={openModal}>
                 <img src={imageUrl} style={{width: "40px", height: "40px", borderRadius: "25px"}} alt="profile-pic"/>
+                
                 <div style={{marginLeft: "10px", marginTop: "-4px"}}>
                     <font size="3">{name}</font>
                     <font size="2" className="text-muted"> ({voteCount} votes)</font>
+                    
                     <br/>
+                    
                     <font size="2" className="text-muted">#{id}</font>
                 </div>
             </div>
@@ -34,6 +38,7 @@ function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = false})
     return (
         <div>
             <CandidateButton />
+            
             <Modal isOpen={isOpen}>
                 <Card width={"90%"} height={"80%"} p={0} style={{maxWidth: "600px"}}>
                     <Button.Text
@@ -75,7 +80,7 @@ function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = false})
                                     }
                                 </font>
                             </div>
-                         </div>
+                        </div>
                     </div>
         
                     <div className="modalButtons">
@@ -86,6 +91,4 @@ function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = false})
             </Modal>
         </div>
     );
-  }
-
-export default Candidate;
+}

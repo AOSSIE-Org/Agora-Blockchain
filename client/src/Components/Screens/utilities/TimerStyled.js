@@ -9,7 +9,7 @@ const TimerContainer = styled.div`
   margin-top: -10px;
 `;
 
-export default function TimerStyled({ seconds, minutes, hours, days }) {
+export function TimerStyled({ seconds, minutes, hours, days }) {
   return (
     <TimerContainer>
       {days !== undefined ? <Digit value={days} title="DAYS" addSeparator /> : null}

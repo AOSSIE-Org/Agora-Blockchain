@@ -269,18 +269,18 @@ function OnBoardModal({step, account, balance}) {
                         :
                         step === 1
                         ?
-                        <SwitchNetwork/>
+                        <ConnectAccount/>
                         :
                         step === 2
                         ?
-                        <AddFunds/>
+                        <SwitchNetwork/>
                         :
-                        <ConnectAccount/>                                                                                               
+                        <AddFunds/>                                                                                               
                     }
                 </Card>
             </Modal>
         </div>
     );
-  }
+}
 
 export default OnBoardModal;
