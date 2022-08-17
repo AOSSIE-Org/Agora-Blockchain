@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.0;
-import './Candidate.sol';
+
 import './ballot/Ballot.sol';
 import './resultCalculator/ResultCalculator.sol';
 
@@ -17,11 +17,21 @@ contract Election {
         // bool electionType;
     }
     ElectionInfo public electionInfo;
-    
-    address electionOrganizer;
 
+    struct Candidate {
+        uint candidateID;
+        string name;
+    }
     Candidate[] candidates;
     Candidate[] winners;
+
+    uint[] candidateIDs;
+    uint[] winnerIDs;
+
+    mapping(uint=>Candidate)candidateMap;
+
+    address electionOrganizer;
+
     uint voterCount;
 
 
@@ -37,8 +47,8 @@ contract Election {
     ResultCalculator public resultCalculator;
 
     //Events
-    event CandidateAdded(address election, address ballot, address candidate);
-    event VoteCasted(address ballot, address candidate, uint weight);
+    event CandidateAdded(address election, address ballot, Candidate candidate);
+    event VoteCasted(address ballot, Candidate candidate, uint weight);
     event ListWinners(Candidate[] winners);
 
     //Modifiers
@@ -48,9 +58,9 @@ contract Election {
     }    
 
     //Constructor
-    constructor(ElectionInfo memory _electionInfo, Ballot _ballot, ResultCalculator _resultCalculator){
+    constructor(ElectionInfo memory _electionInfo, Ballot _ballot, ResultCalculator _resultCalculator,address _electionOrganizer){
         
-        electionOrganizer = address(msg.sender);
+        electionOrganizer = _electionOrganizer;
         electionInfo = _electionInfo;
         ballot = _ballot;
         resultCalculator = _resultCalculator;
@@ -87,10 +97,12 @@ contract Election {
     }
     
     //Add candidate to election as well as ballot
-    function addCandidate(Candidate _candidate) onlyOrganizer public {
+    function addCandidate(Candidate memory _candidate) onlyOrganizer public {
         candidates.push(_candidate);
-        ballot.addCandidate(_candidate);
-        emit CandidateAdded(address(this),address(ballot),address(_candidate));
+        ballot.addCandidate(_candidate.candidateID);
+        candidateMap[_candidate.candidateID]=_candidate;
+        candidateIDs.push(_candidate.candidateID);
+        emit CandidateAdded(address(this),address(ballot),_candidate);
     }
     
     function getCandidates() public view returns (Candidate[] memory){
@@ -101,9 +113,13 @@ contract Election {
         return voterCount;
     }
 
+    function getVoteStatus(address _voter) public view returns(bool){
+        return ballot.getVoteStatus(_voter);
+    }
+
     // only after election ends
-    function getWinners()onlyOrganizer public view returns(Candidate[] memory){
-        return winners;
+    function getWinners()onlyOrganizer public view returns(uint[] memory){
+        return winnerIDs;
     }
     
     // Performs vote in ballot and updates voterCount
@@ -111,13 +127,13 @@ contract Election {
         In invite based elections, a condidition to check if voter is authenticated
 
     */
-    function vote(Candidate _candidate, uint weight) public {
+    function vote(address _voter, uint _candidateID, uint weight) public {
         // if (electionInfo.electionType==0) {
         //     require(isAuthenticated(msg.Sender),"Voter must be authenticated to cast vote");
         // }
-        ballot.vote(_candidate, weight);
+        ballot.vote(_voter,_candidateID, weight);
         voterCount++;
-        emit VoteCasted(address(ballot),address(_candidate),weight);
+        emit VoteCasted(address(ballot),candidateMap[_candidateID],weight);
     }
 
     // function getTimeStamps()public;
@@ -125,7 +141,10 @@ contract Election {
     
 
     function getResult() onlyOrganizer public {
-        winners = resultCalculator.getResult(ballot, voterCount);
+        winnerIDs = resultCalculator.getResult(ballot, voterCount);
+        for(uint i=0; i<candidates.length; i++){
+            winners.push(candidateMap[winnerIDs[i]]);
+        }
         emit ListWinners(winners);
     }
 

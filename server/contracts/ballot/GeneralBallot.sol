@@ -1,18 +1,20 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.0;
 import './Ballot.sol';
-import '../Candidate.sol';
+import '../Election.sol';
 
 contract GeneralBallot is Ballot {
 
-    mapping(Candidate=>uint) public votes;
+    // candidateID => vote count
+    mapping(uint=>uint) public votes;
 
-    function vote(Candidate _candidate, uint _weight)public override{
+    function vote(address _voter, uint _candidate, uint _weight)public override{
         _weight = 1;
         votes[_candidate]+=1;
+        voteStatus[_voter] = true;
     }    
 
-    function getVoteCount(Candidate _candidate, uint _weight)public override view returns(uint){
+    function getVoteCount(uint _candidate, uint _weight)public override view returns(uint){
         _weight = 1; 
         return votes[_candidate];
     }

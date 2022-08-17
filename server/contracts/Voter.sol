@@ -1,40 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.0;
 import './Election.sol';
-import './Candidate.sol';
 
 contract Voter{
     
     address voter;
     
-    struct VoterInfo {
-        uint voterID;
-        bool voterAuth;
-    }
-    VoterInfo public voterInfo;
-    
-    mapping (Election => bool) voteStatus;
+    event VoteCasted(address election, uint canidateID, uint weight);
 
-    modifier onlyVoter() {
-        require(msg.sender==voter,"Not a valid voter");
-        _;
-    }
-
-    event VoteCasted(address election, address candidate, uint weight);
-
-    constructor(VoterInfo memory _voterInfo){
-        voter = msg.sender;
-        voterInfo=_voterInfo;
-    }
-
-    function setVoteStatus(Election _election) public {
-        voteStatus[_election]=true;
-    }
-
-    function castVote(Election _election,Candidate _candidate, uint _weight) onlyVoter public {
-        require(voteStatus[_election]==false,"Already voted");
-        _election.vote(_candidate, _weight);
-        emit VoteCasted(address(_election),address(_candidate),_weight);
+    function castVote(Election _election,uint _candidateID, uint _weight) public {
+        require(_election.getVoteStatus(msg.sender)==false,"Already voted");
+        _election.vote(msg.sender,_candidateID, _weight);
+        emit VoteCasted(address(_election),_candidateID,_weight);
 
         /* 
             Based on the type of ballot, the vote status of the voter should be set:

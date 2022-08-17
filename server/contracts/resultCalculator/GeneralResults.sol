@@ -2,16 +2,15 @@
 pragma solidity >=0.8.0;
 
 import './ResultCalculator.sol';
-import '../Candidate.sol';
 import '../ballot/Ballot.sol';
 
 contract GeneralResults is ResultCalculator {
     
-    Candidate[] public winners;
+    uint[] winners;
 
-    function getResult(Ballot _ballot, uint _voterCount)public override returns(Candidate[]memory) {
+    function getResult(Ballot _ballot, uint _voterCount)public override returns(uint[]memory) {
         
-        Candidate[] memory candidates = _ballot.getCandidates();
+        uint[] memory candidates = _ballot.getCandidates();
         uint candidateCount = candidates.length;
         uint winningVoteCount = 0;
         uint voteCount = 0;
