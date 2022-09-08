@@ -8,8 +8,12 @@ contract GeneralResults is ResultCalculator {
     
     uint[] winners;
 
-    function getResult(Ballot _ballot, uint _voterCount)public override returns(uint[]memory) {
-        
+    // ------------------------------------------------------------------------------------------------------
+    //                                            FUNCTIONS
+    // ------------------------------------------------------------------------------------------------------
+
+    function getResult(Ballot _ballot, uint _voterCount)external override returns(uint[] memory) {
+        winners = new uint[](0);
         uint[] memory candidates = _ballot.getCandidates();
         uint candidateCount = candidates.length;
         uint winningVoteCount = 0;
@@ -17,7 +21,7 @@ contract GeneralResults is ResultCalculator {
         uint i;
 
         for(i = 0; i < candidateCount; i++){
-            voteCount=_ballot.getVoteCount(candidates[i],1);
+            voteCount = _ballot.getVoteCount(candidates[i],1);
             if ( voteCount > winningVoteCount) {
                 winningVoteCount = voteCount;
             }
@@ -28,12 +32,11 @@ contract GeneralResults is ResultCalculator {
         }
 
         for(i = 0; i < candidateCount; i++){
-            voteCount=_ballot.getVoteCount(candidates[i],1);
+            voteCount = _ballot.getVoteCount(candidates[i],1);
             if (voteCount == winningVoteCount) {
                 winners.push(candidates[i]);
             }
         }
         return winners;
     }
-
 }

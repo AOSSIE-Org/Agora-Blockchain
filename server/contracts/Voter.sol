@@ -4,9 +4,17 @@ import './Election.sol';
 
 contract Voter{
     
+    // ------------------------------------------------------------------------------------------------------
+    //                                              STATE
+    // ------------------------------------------------------------------------------------------------------
+
     address voter;
     
     event VoteCasted(address election, uint canidateID, uint weight);
+
+    // ------------------------------------------------------------------------------------------------------
+    //                                            FUNCTIONS
+    // ------------------------------------------------------------------------------------------------------
 
     function castVote(Election _election,uint _candidateID, uint _weight) public {
         require(_election.getVoteStatus(msg.sender)==false,"Already voted");

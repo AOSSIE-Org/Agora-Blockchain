@@ -5,16 +5,24 @@ import '../Election.sol';
 
 contract GeneralBallot is Ballot {
 
+    // ------------------------------------------------------------------------------------------------------
+    //                                              STATE
+    // ------------------------------------------------------------------------------------------------------
+
     // candidateID => vote count
     mapping(uint=>uint) public votes;
 
-    function vote(address _voter, uint _candidate, uint _weight)public override{
+    // ------------------------------------------------------------------------------------------------------
+    //                                            FUNCTIONS
+    // ------------------------------------------------------------------------------------------------------
+
+    function vote(address _voter, uint _candidate, uint _weight)external override{
         _weight = 1;
         votes[_candidate]+=1;
         voteStatus[_voter] = true;
     }    
 
-    function getVoteCount(uint _candidate, uint _weight)public override view returns(uint){
+    function getVoteCount(uint _candidate, uint _weight)external override view returns(uint){
         _weight = 1; 
         return votes[_candidate];
     }
