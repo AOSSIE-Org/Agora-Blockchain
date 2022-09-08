@@ -9,6 +9,11 @@ import '../Election.sol';
 */
 
 contract PreferenceBallot is Ballot{
+
+    // ------------------------------------------------------------------------------------------------------
+    //                                              STATE
+    // ------------------------------------------------------------------------------------------------------
+
     // preference => (candidateID => vote count)
     // gives the number of votes of a candidate in each preference
     mapping (uint=> mapping (uint => uint)) votes;
@@ -17,8 +22,12 @@ contract PreferenceBallot is Ballot{
     mapping (address => mapping (uint => bool))voterCandidateVoteStatus;
     
     mapping (address => uint)voterVoteCount;
+
+    // ------------------------------------------------------------------------------------------------------
+    //                                            FUNCTIONS
+    // ------------------------------------------------------------------------------------------------------
     
-    function vote(address _voter, uint _candidate, uint _preference) public override{
+    function vote(address _voter, uint _candidate, uint _preference) external  override{
         require(voteStatus[_voter]==false,"Voter already voted");
         require(voterCandidateVoteStatus[_voter][_candidate]==false,"Voter already voted for this candidate");
         require(voterVoteCount[_voter]<candidates.length,"Max votes already casted by voter");
@@ -32,7 +41,7 @@ contract PreferenceBallot is Ballot{
         }
     }
     
-    function getVoteCount(uint _candidate, uint _weight) public override view returns(uint){
-        return votes[_weight][_candidate];
+    function getVoteCount(uint _candidate, uint _preference) external  override view returns(uint){
+        return votes[_preference][_candidate];
     }
 }

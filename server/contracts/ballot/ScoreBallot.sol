@@ -11,18 +11,30 @@ Each vote is a score in a given range - set when the contract is created
 
 contract ScoreBallot is Ballot{
 
+    // ------------------------------------------------------------------------------------------------------
+    //                                              STATE
+    // ------------------------------------------------------------------------------------------------------
+
     mapping(uint=>uint)scores;
     uint scoreRange;
-    
-    constructor(uint _scoreRange){
-        scoreRange = _scoreRange;
-    }
-    
+
     mapping (address => mapping (uint => bool))voterCandidateVoteStatus;
     
     mapping (address => uint)voterVoteCount;
     
-    function vote(address _voter, uint _candidate, uint _score) public override{
+    // ------------------------------------------------------------------------------------------------------
+    //                                           CONSTRUCTOR
+    // ------------------------------------------------------------------------------------------------------
+
+    // constructor(uint _scoreRange){
+    //     scoreRange = _scoreRange;
+    // }
+
+    // ------------------------------------------------------------------------------------------------------
+    //                                            FUNCTIONS
+    // ------------------------------------------------------------------------------------------------------
+    
+    function vote(address _voter, uint _candidate, uint _score) external override{
         require(voteStatus[_voter]==false,"Voter already voted");
         require(voterCandidateVoteStatus[_voter][_candidate]==false,"Voter already voted for this candidate");
         require(voterVoteCount[_voter]<candidates.length,"Max votes already casted by voter");
@@ -35,7 +47,7 @@ contract ScoreBallot is Ballot{
             voteStatus[_voter]=true;
         }
     }
-    function getVoteCount(uint _candidate, uint _weight)public override view returns(uint){
+    function getVoteCount(uint _candidate, uint _weight)external override view returns(uint){
         _weight = 1;
         return scores[_candidate];
     }
