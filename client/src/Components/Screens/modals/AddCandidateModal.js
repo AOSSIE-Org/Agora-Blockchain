@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Flex, Modal, Button, Card } from "rimble-ui";
+import { ethers } from "ethers";
+// import ElectionOrganiser from "../../../build/ElectionOrganizer.json";
 
 export function AddCandidateModal({ CurrentElection, account }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -15,34 +17,37 @@ export function AddCandidateModal({ CurrentElection, account }) {
             [name]: value
         });
     }
+    const contractAddress = "0x0165878A594ca255338adfa4d48449f69242Eb8F";
 
-    const handleSubmitCandidate = async (e) => {
-        e.preventDefault();
-        try{
-            setIsOpen(false);
-
-            window.toastProvider.addMessage("Processing your new candidate request.", {
-                variant: "processing"
-            })
-
-            await CurrentElection.addCandidate(candidateDetail.name, candidateDetail.description).send({from: account})
-            
-            window.toastProvider.addMessage("Success", {
-                secondaryMessage: "New candidate added! Thank you.",
-                variant: "success"
-            });
-            
-            setCandidateDetail({
-                name: "",
-                description: ""
-            });
-        } catch(err) {
-            window.toastProvider.addMessage("Failed", {
-                secondaryMessage: "Please try again. Transaction failed",
-                variant: "failure"
-            });
-        }
-    }
+    // const handleSubmitCandidate = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         const { ethereum } = window;
+    //         if (ethereum) {
+    //           const provider = new ethers.providers.Web3Provider(ethereum);
+    //           const signer = provider.getSigner();
+    //           const contract = new ethers.Contract(
+    //             contractAddress,
+    //             ElectionOrganiser.abi,
+    //             signer
+    //           );
+    //           console.log(contract);
+    //           const transaction = await contract.addCandidate(
+    //             "0x856e4424f806D16E8CBC702B3c0F2ede5468eae5",
+    //               [1,
+    //               "abc"]
+    //           );
+    //           await transaction.wait();
+      
+    //           console.log("suceessss");
+              
+      
+    //         }
+    //       } catch(err) {
+    //         console.log(err);
+    //       }
+        
+    // }
 
     const closeModal = e => {
         e.preventDefault();
@@ -117,7 +122,7 @@ export function AddCandidateModal({ CurrentElection, account }) {
                         justifyContent={"flex-end"}
                     >
                         <Button.Outline onClick={closeModal}>Cancel</Button.Outline>
-                        <Button ml={3} type="submit" onClick={handleSubmitCandidate}>Confirm</Button>
+                        {/* <Button ml={3} type="submit" onClick={handleSubmitCandidate}>Confirm</Button> */}
                     </Flex>
                 </Card>
             </Modal>
