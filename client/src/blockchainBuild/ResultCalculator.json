@@ -1,0 +1,412 @@
+{
+  "contractName": "ResultCalculator",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "contract Ballot",
+          "name": "_ballot",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_voterCount",
+          "type": "uint256"
+        }
+      ],
+      "name": "getResult",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract Ballot\",\"name\":\"_ballot\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_voterCount\",\"type\":\"uint256\"}],\"name\":\"getResult\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/resultCalculator/ResultCalculator.sol\":\"ResultCalculator\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Election.sol\":{\"keccak256\":\"0xf812e7967375bfcb9a2c2245b4332dd035d444cab93f22826de36548d45c94ec\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://40db735874709768a4d75e1bc863e2cc6123845f0e9db25cd5204199fc42c897\",\"dweb:/ipfs/QmXr13Zx5LS5hY7GsjWd36DYkz1tHbgnN3JpfXRxXCVjvL\"]},\"project:/contracts/ballot/Ballot.sol\":{\"keccak256\":\"0x0ffa7375659b6ba2abbd62def5dbd45ecc9509ac5b675a62fc2b13a9d61c83a7\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://290ef03f1c1879ec2cefc3613e3884deff1ca3601cc9b57d8240ff471011c2a8\",\"dweb:/ipfs/QmUL8Yuc4WEG2sVBXGNXLr8sNfyQEByaxyicPy8qAZV2qd\"]},\"project:/contracts/resultCalculator/ResultCalculator.sol\":{\"keccak256\":\"0xc7e89ccd6bdb74107b0db512f5ca26afb21d8a72161563f03fa001d914705f94\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://94bf2b7e2b6c4aa3313c5e00071a1867aecd16079c03cdc298be48779849670f\",\"dweb:/ipfs/QmPpZhETXesSifdpj8SYKqCKCvAYX3kzavYnhVQRLSq5Tx\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: UNLICENSED\npragma solidity >=0.8.0;\nimport '../ballot/Ballot.sol';\n\n\ninterface ResultCalculator {\n\n    function getResult(Ballot _ballot,uint _voterCount) external returns(uint[] memory);\n    \n}",
+  "sourcePath": "/Users/rajranjan/gitProjects/agora-blockchain/server/contracts/resultCalculator/ResultCalculator.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/resultCalculator/ResultCalculator.sol",
+    "exportedSymbols": {
+      "Ballot": [
+        668
+      ],
+      "ResultCalculator": [
+        1116
+      ]
+    },
+    "id": 1117,
+    "license": "UNLICENSED",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1103,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:24:11"
+      },
+      {
+        "absolutePath": "project:/contracts/ballot/Ballot.sol",
+        "file": "../ballot/Ballot.sol",
+        "id": 1104,
+        "nodeType": "ImportDirective",
+        "scope": 1117,
+        "sourceUnit": 669,
+        "src": "64:30:11",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 1116,
+        "linearizedBaseContracts": [
+          1116
+        ],
+        "name": "ResultCalculator",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "functionSelector": "c8344a20",
+            "id": 1115,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getResult",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1110,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1107,
+                  "mutability": "mutable",
+                  "name": "_ballot",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1115,
+                  "src": "150:14:11",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_Ballot_$668",
+                    "typeString": "contract Ballot"
+                  },
+                  "typeName": {
+                    "id": 1106,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 1105,
+                      "name": "Ballot",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 668,
+                      "src": "150:6:11"
+                    },
+                    "referencedDeclaration": 668,
+                    "src": "150:6:11",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_Ballot_$668",
+                      "typeString": "contract Ballot"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1109,
+                  "mutability": "mutable",
+                  "name": "_voterCount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1115,
+                  "src": "165:16:11",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1108,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "165:4:11",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "149:33:11"
+            },
+            "returnParameters": {
+              "id": 1114,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1113,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1115,
+                  "src": "200:13:11",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 1111,
+                      "name": "uint",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "200:4:11",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 1112,
+                    "nodeType": "ArrayTypeName",
+                    "src": "200:6:11",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "199:15:11"
+            },
+            "scope": 1116,
+            "src": "131:84:11",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 1117,
+        "src": "97:125:11"
+      }
+    ],
+    "src": "39:183:11"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/resultCalculator/ResultCalculator.sol",
+    "exportedSymbols": {
+      "Ballot": [
+        668
+      ],
+      "ResultCalculator": [
+        1116
+      ]
+    },
+    "id": 1117,
+    "license": "UNLICENSED",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1103,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:24:11"
+      },
+      {
+        "absolutePath": "project:/contracts/ballot/Ballot.sol",
+        "file": "../ballot/Ballot.sol",
+        "id": 1104,
+        "nodeType": "ImportDirective",
+        "scope": 1117,
+        "sourceUnit": 669,
+        "src": "64:30:11",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 1116,
+        "linearizedBaseContracts": [
+          1116
+        ],
+        "name": "ResultCalculator",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "functionSelector": "c8344a20",
+            "id": 1115,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getResult",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1110,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1107,
+                  "mutability": "mutable",
+                  "name": "_ballot",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1115,
+                  "src": "150:14:11",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_Ballot_$668",
+                    "typeString": "contract Ballot"
+                  },
+                  "typeName": {
+                    "id": 1106,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 1105,
+                      "name": "Ballot",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 668,
+                      "src": "150:6:11"
+                    },
+                    "referencedDeclaration": 668,
+                    "src": "150:6:11",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_Ballot_$668",
+                      "typeString": "contract Ballot"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1109,
+                  "mutability": "mutable",
+                  "name": "_voterCount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1115,
+                  "src": "165:16:11",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1108,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "165:4:11",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "149:33:11"
+            },
+            "returnParameters": {
+              "id": 1114,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1113,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1115,
+                  "src": "200:13:11",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 1111,
+                      "name": "uint",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "200:4:11",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 1112,
+                    "nodeType": "ArrayTypeName",
+                    "src": "200:6:11",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "199:15:11"
+            },
+            "scope": 1116,
+            "src": "131:84:11",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 1117,
+        "src": "97:125:11"
+      }
+    ],
+    "src": "39:183:11"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.5",
+  "updatedAt": "2022-08-22T18:37:34.034Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
