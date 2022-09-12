@@ -107,7 +107,7 @@ const OnboardUser = () => {
 
     return (
         <div>
-            <OnBoardModal step={step} account={account} balance={balance}/>
+            {/* <OnBoardModal step={step} account={account} balance={balance}/> */}
         </div>
     )
 }

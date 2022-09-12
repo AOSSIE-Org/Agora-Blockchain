@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "concurrently": "^5.3.0",
+    "hardhat": "^2.10.2",
     "nodemon": "^2.0.4",
     "sass": "^1.49.9"
   },
