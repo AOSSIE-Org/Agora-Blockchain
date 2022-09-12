@@ -119,7 +119,11 @@ I hope our contributions to this project were valuable and would help someone wh
 
 ### Merge Requests
 
-1. [Merge request !38](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/38) - Integrated Hardhat with the smart contracts. **Open**
+1. [Merge request !38](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/38) - **Merged**
+   
+   - Implemented Hardhat with the smart contracts. 
+   - Integrated backend with the frontend.
+   - Authentication and Dashboard working properly.
 
 2. [Merge request !37](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/37) - BrightID integration both in frontend and backend. **Closed**
 
