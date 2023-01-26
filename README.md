@@ -1,4 +1,4 @@
-# agora-blockchain
+# Agora Blockchain
 
 # Agora Blockchain
 

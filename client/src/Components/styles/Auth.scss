@@ -1,0 +1,102 @@
+.authDiv {
+  width: 100%;
+  min-height: 100%;
+  background: linear-gradient(180deg, #441151 0%, rgba(255, 255, 255, 0) 100%),
+    #1f094b;
+  display: flex;
+  .description {
+    flex: 1 1 60%;
+    height: 100%;
+    .aossieLogo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 260px;
+      height: 220px;
+
+      margin: 50px auto 0px auto;
+    }
+  }
+  .authCardHolder {
+    flex: 1 1 40%;
+    min-height: 100%;
+    .authCard {
+      min-width: 240px;
+      max-width: 340px;
+      height: 500px;
+      width: 80%;
+      margin: 50px auto 20px auto;
+
+      background: #ffffff;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      .agoraLogo {
+        width: 50px;
+        height: 50px;
+        margin-top: 8px;
+      }
+      .agoraTitle {
+        margin-left: 10px;
+      }
+      .form-label {
+        font-size: 12px;
+        font-weight: bolder;
+      }
+      .signInOption {
+        cursor: pointer;
+      }
+      .authButtons {
+        color: white;
+        text-decoration: none;
+        width: 100px;
+        height: 35px;
+        margin: auto;
+        background: #593cda;
+        border-radius: 4px;
+        font-weight: bolder;
+        font-size: 15px;
+        cursor: pointer;
+
+        transition: all ease 0.3s;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .authButtonRight {
+        float: right;
+      }
+      .centered {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .socialLoginHolder {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        .socialLoginButton {
+          width: 40px;
+          height: 40px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 800px) {
+  .authDiv {
+    flex-direction: column;
+  }
+  .authCardHolder {
+    flex: 0 0 100%;
+    align-items: flex-start;
+  }
+
+  .description {
+    flex: 0 0 100%;
+    align-items: flex-end;
+  }
+}

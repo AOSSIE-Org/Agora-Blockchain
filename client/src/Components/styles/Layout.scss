@@ -1,0 +1,108 @@
+::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(207, 207, 207); 
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(255, 255, 255); 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(207, 207, 207); 
+}
+
+.cardContainer {
+    display: flex;
+    justify-content: space-between;
+    .cardItem {
+        min-width: 200px;
+        max-width: 280px;
+        height: 120px;
+        flex: 1 1 0%;
+        margin: 10px; 
+        border-radius: 6px;
+        background-color: white;
+        .cardImageHolder {
+            border-radius: 25px;
+            width: 50px;
+            height: 50px;
+            .cardImage {
+                width: 25px;
+                height: 25px;
+            }
+        }
+        .cardText {
+            margin-left: 15px;
+            display: flex; 
+            flex-direction: column;
+        }
+        .cardText > font {
+            font-weight: bolder;
+        }
+    }
+}
+
+.centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    margin: auto;
+    border: 0px !important;
+}
+
+.layoutBody {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    .lhsLayout {
+        flex: 1 1 0%;
+        margin: 10px;
+        max-width: 73%;
+        overflow: scroll;
+        height: 400px;
+        border-radius: 6px;
+        background-color: white;
+        .lhsBody {
+            overflow-x: scroll;
+            overflow-y: scroll;
+        }
+        .lhsBody::-webkit-scrollbar{
+            height: 1px;
+            width: 1px;
+        }
+    }
+    .rhsLayout {
+        flex: 1 1 0%;
+        margin: 10px;
+        max-width: 280px;
+        height: 400px;
+        border-radius: 6px;
+        background-color: white;
+        position: relative;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .layoutBody {
+        justify-content: space-around;
+        .lhsLayout {
+            flex: 1 1 100%;
+            max-width: 100%;
+        }
+        .rhsLayout {
+            flex: 1 1 100%;
+            max-width: 100%;
+        }
+    }
+}
+
+@media screen and (max-width: 475px) {
+    .cardContainer {
+        justify-content: space-around;
+    }
+}
