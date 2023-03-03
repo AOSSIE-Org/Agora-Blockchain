@@ -39,7 +39,7 @@ const Dashboard = () => {
       return STATUS.CLOSED;
     }
   };
-  const AuthcontractAddress = "0xBB9AE7B6c49fC58B4eEe936b2cC5111abe481Fa2";
+  const AuthcontractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
   // const DashcontractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
   const fetchElections = async () => {
@@ -48,17 +48,25 @@ const Dashboard = () => {
 
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
+        const signer = await provider.getSigner();
+
+        //to fetch signers address
+        const add = await signer.getAddress();
+        console.log('signer',add);
+
 
         const contract = new ethers.Contract(
-          "0x69b881FA177657bFF7d5638240A134076F7B6Dd6",
+          DashContractAddress,
           ElectionOrganiser.abi,
           signer
         );
+
+        //removed the hardcoded address
         console.log(contract);
         const data = await contract.getElectionOrganizerByAddress(
-          "0x69b881FA177657bFF7d5638240A134076F7B6Dd6"
+          add
         );
+        
         // console.log(data);
         setOrganizerInfo({
           name: data.name,
@@ -87,7 +95,7 @@ const Dashboard = () => {
         );
         // console.log(contract);
         const data = await contract.getElectionOrganizerContract(); //get elections
-        console.log(data)
+        console.log('elecion organiser ',data)
         setDashContractAddress(data);
       }
     } catch (err) {
@@ -102,7 +110,7 @@ const Dashboard = () => {
   useEffect(() => {
     fetchContract();
     fetchElections();
-  }, []);
+  }, [DashContractAddress]);
   return (
     <div style={{ backgroundColor: "#f7f7f7", minHeight: "100%" }}>
       <Navbar
