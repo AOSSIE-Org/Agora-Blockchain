@@ -11,7 +11,7 @@ function Auth() {
   const [fullName, setFullName] = useState({
     name: "",
   });
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  const contractAddress = "0xBB9AE7B6c49fC58B4eEe936b2cC5111abe481Fa2";
 
   const handleNameChange = (e) => {
     setFullName({
@@ -34,6 +34,7 @@ function Auth() {
           signer
         );
         console.log(contract);
+        console.log(fullName.name);
         // const tx = await contract.createUser(fullName.name);
         const tx = await contract.createUser([1,fullName.name,"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]);
         await tx.wait();
@@ -56,10 +57,11 @@ function Auth() {
           signer
         );
         const tx = await contract.getAuthStatus(
-          "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+          "0xa221e2E48A4FB4461ed44e80F1ce1c598d3666A8"
         );
         console.log(tx);
         setRegistered(tx);
+        // setRegistered(true);
       }
     } catch (err) {
       console.log(err);

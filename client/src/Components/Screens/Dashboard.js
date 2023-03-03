@@ -39,7 +39,7 @@ const Dashboard = () => {
       return STATUS.CLOSED;
     }
   };
-  const AuthcontractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  const AuthcontractAddress = "0xBB9AE7B6c49fC58B4eEe936b2cC5111abe481Fa2";
   // const DashcontractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
   const fetchElections = async () => {
@@ -51,13 +51,13 @@ const Dashboard = () => {
         const signer = provider.getSigner();
 
         const contract = new ethers.Contract(
-          DashContractAddress,
+          "0x69b881FA177657bFF7d5638240A134076F7B6Dd6",
           ElectionOrganiser.abi,
           signer
         );
-        // console.log(contract);
+        console.log(contract);
         const data = await contract.getElectionOrganizerByAddress(
-          "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+          "0x69b881FA177657bFF7d5638240A134076F7B6Dd6"
         );
         // console.log(data);
         setOrganizerInfo({
@@ -79,7 +79,7 @@ const Dashboard = () => {
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
-
+        console.log(signer);
         const contract = new ethers.Contract(
           AuthcontractAddress,
           Authentication.abi,
@@ -87,6 +87,7 @@ const Dashboard = () => {
         );
         // console.log(contract);
         const data = await contract.getElectionOrganizerContract(); //get elections
+        console.log(data)
         setDashContractAddress(data);
       }
     } catch (err) {
