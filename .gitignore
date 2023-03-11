@@ -6,6 +6,8 @@ node_modules
 
 #client side files
 client/src/blockchainBuild
+
+#server side files
 server/artifacts
 server/cache
 
