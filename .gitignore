@@ -4,6 +4,11 @@ node_modules
 /.pnp
 .pnp.js
 
+#client side files
+client/src/blockchainBuild
+server/artifacts
+server/cache
+
 # testing
 server/coverage
 server/coverage.json
@@ -11,7 +16,7 @@ server/coverage.json
 # misc
 .DS_Store
 .env
-.env.local
+.env.localS
 .env.development.local
 .env.test.local
 .env.production.local

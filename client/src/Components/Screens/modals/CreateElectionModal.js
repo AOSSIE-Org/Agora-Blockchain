@@ -55,7 +55,6 @@ export function CreateElectionModal(props) {
           1,1
         );
         await transaction.wait();
-
         console.log("suceessss", [
           1,
           nda.name,
