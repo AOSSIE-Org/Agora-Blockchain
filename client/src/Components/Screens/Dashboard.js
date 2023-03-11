@@ -52,7 +52,7 @@ const Dashboard = () => {
 
         //to fetch signers address
         const add = await signer.getAddress();
-        console.log('signer',add);
+       
 
 
         const contract = new ethers.Contract(
@@ -62,19 +62,17 @@ const Dashboard = () => {
         );
 
         //removed the hardcoded address
-        console.log(contract);
         const data = await contract.getElectionOrganizerByAddress(
           add
         );
         
-        // console.log(data);
+       
         setOrganizerInfo({
           name: data.name,
           publicAddress: data.publicAddress,
         });
         const elections = await contract.getElections(); //get elections
         getElections(elections);
-        console.log(elections);
       }
     } catch (err) {
       console.log(err);
@@ -87,15 +85,12 @@ const Dashboard = () => {
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
-        console.log(signer);
         const contract = new ethers.Contract(
           AuthcontractAddress,
           Authentication.abi,
           signer
         );
-        // console.log(contract);
         const data = await contract.getElectionOrganizerContract(); //get elections
-        console.log('elecion organiser ',data)
         setDashContractAddress(data);
       }
     } catch (err) {
