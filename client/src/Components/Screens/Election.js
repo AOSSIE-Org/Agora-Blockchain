@@ -2,6 +2,9 @@ import React from "react";
 import { useTimer } from 'react-timer-hook';
 import { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
+import ElectionABI from '../../build/Election.sol/Election.json'
+import { ethers } from "ethers";
+
 
 import {
 	AddCandidateModal,
@@ -24,21 +27,42 @@ function Election() {
 
 	const search = useLocation().search;
 	const contractAddress = new URLSearchParams(search).get('contractAddress');
+	const organizerAddress = new URLSearchParams(search).get('organizerAddress');
+	const [electionDetails, setElectionDetails] = useState({});
+	const [candidates, setCandidates] = useState([])
 
-	const [candidates, setCandidates] = useState([
-		{
-			name: "Raj",
-			id: 1,
-			about: "Hey! I am a candidate.",
-			voteCount: 3
-		},
-		{
-			name: "Test User",
-			id: 3,
-			about: "Hey! I am a candidate.",
-			voteCount: 2
+
+	const fetchElectionDetails = async () => {
+		try{
+
+			const { ethereum } = window;
+    		if (ethereum) {
+      		const provider = new ethers.providers.Web3Provider(ethereum);
+      		const signer = provider.getSigner();
+			  const electionContract = new ethers.Contract(
+				contractAddress,
+				ElectionABI.abi,
+				signer
+			  );
+
+			//fetched election details
+			const electionDetail =await electionContract.getElectionInfo();
+			setElectionDetails(electionDetail);
+
+			//fetched all candidates
+			const cand =await electionContract.getCandidates();
+			setCandidates(cand);
+
+
+
+			}
+
+		}catch(err){
+			console.log(err);
 		}
-	])
+	}
+
+
 
 	const [winnerDetails, setWinnerDetails] = useState([
 		...candidates
@@ -75,6 +99,10 @@ function Election() {
 	useEffect(() => {
 		updateStatus();
 	}, [])
+	useEffect(() => {
+		fetchElectionDetails();
+
+	},[contractAddress])
 
 	const MyTimer = ({ sdate, edate }) => {
 		sdate *= 1000;
@@ -124,7 +152,7 @@ function Election() {
 
 
 					<div style={{float: "right", display: "flex"}}>
-						<MyTimer sdate = {1665000000} edate = {1665000000}/>
+						<MyTimer sdate = {electionDetails.startDate} edate = {electionDetails.endDate}/>
 						<DeleteModal Candidate = {Candidate} isAdmin = {isAdmin} isPending = {true}/>
 						<VoteModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } />
 					</div>
@@ -135,9 +163,9 @@ function Election() {
 				<div className="cardContainer row">
 					<CardItem headerValue={"General"} descriptor="Algorithm" imgUrl="/assets/totalElections.png"/>
 
-					<CardItem headerValue={(new Date(1665000000 * 1000)).toLocaleString()} descriptor="Start date" imgUrl="/assets/activeElections.png" imgBackground="#eaffe8"/>
+					<CardItem headerValue={new Date(electionDetails?.startDate * 1000).toLocaleString()} descriptor="Start date" imgUrl="/assets/activeElections.png" imgBackground="#eaffe8"/>
 
-					<CardItem headerValue={(new Date(1665000000 * 1000)).toLocaleString()} descriptor="End date" imgUrl="/assets/endedElections.png" imgBackground="#ffe8e8"/>
+					<CardItem headerValue={new Date(electionDetails?.endDate * 1000).toLocaleString()} descriptor="End date" imgUrl="/assets/endedElections.png" imgBackground="#ffe8e8"/>
 
 					<CardItem headerValue={1} descriptor="Total voters" imgUrl="/assets/pendingElections.png" imgBackground="#fffbd1"/>
 				</div>
@@ -189,7 +217,7 @@ function Election() {
 						<div className="lhsBody" style={{textAlign: "justify"}}>
 							<font size="2" className="text-muted">
 								<p>
-									This is a description
+									{electionDetails.description}
 								</p>
 							</font>
 
@@ -212,7 +240,7 @@ function Election() {
 							<h5 style={{width: "60%"}}>Candidates ({candidates.length})</h5>
 							{
 								// isAdmin && status == STATUS.PENDING &&
-								<AddCandidateModal/>
+								<AddCandidateModal organizerAddress={organizerAddress}  electionAddress={contractAddress} />
 							}
 						</div>
 
@@ -223,7 +251,7 @@ function Election() {
 								<Candidate
 									name={candidate?.name}
 									id={candidate?.id}
-									about={candidate?.about}
+									about={candidate?.description}
 									voteCount={candidate?.voteCount}
 									imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}
 									modalEnabled="true"
