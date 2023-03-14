@@ -30,6 +30,8 @@ function Election() {
 	const organizerAddress = new URLSearchParams(search).get('organizerAddress');
 	const [electionDetails, setElectionDetails] = useState({});
 	const [candidates, setCandidates] = useState([])
+	const [voterscount, setVotersCount] = useState(0);
+	const [ballotAddress,setBallotAddress] = useState('');
 
 
 	const fetchElectionDetails = async () => {
@@ -49,12 +51,22 @@ function Election() {
 			const electionDetail =await electionContract.getElectionInfo();
 			setElectionDetails(electionDetail);
 
+			//fetch ballot address
+			const ballot_add = await electionContract.getBallot();
+			setBallotAddress(ballot_add);
+
+
 			//fetched all candidates
 			const cand =await electionContract.getCandidates();
 			setCandidates(cand);
+			
 
+			const no  = await electionContract.getVoterCount();
 
-
+			//total voters
+			setVotersCount(Number(no._hex));	
+			
+			
 			}
 
 		}catch(err){
@@ -69,7 +81,7 @@ function Election() {
 	]);
 
 	const getResults = async () => {
-		const edate = 160000000 * 1000;
+		const edate = electionDetails.endDate;
 		if(Date.now() >= edate) {
 			let _winnerDetails = [];
 			setWinnerDetails(_winnerDetails);
@@ -101,8 +113,7 @@ function Election() {
 	}, [])
 	useEffect(() => {
 		fetchElectionDetails();
-
-	},[contractAddress])
+	},[contractAddress,ballotAddress])
 
 	const MyTimer = ({ sdate, edate }) => {
 		sdate *= 1000;
@@ -154,7 +165,7 @@ function Election() {
 					<div style={{float: "right", display: "flex"}}>
 						<MyTimer sdate = {electionDetails.startDate} edate = {electionDetails.endDate}/>
 						<DeleteModal Candidate = {Candidate} isAdmin = {isAdmin} isPending = {true}/>
-						<VoteModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } />
+						<VoteModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} />
 					</div>
 				</div>
 
@@ -167,7 +178,7 @@ function Election() {
 
 					<CardItem headerValue={new Date(electionDetails?.endDate * 1000).toLocaleString()} descriptor="End date" imgUrl="/assets/endedElections.png" imgBackground="#ffe8e8"/>
 
-					<CardItem headerValue={1} descriptor="Total voters" imgUrl="/assets/pendingElections.png" imgBackground="#fffbd1"/>
+					<CardItem headerValue={voterscount } descriptor="Total voters" imgUrl="/assets/pendingElections.png" imgBackground="#fffbd1"/>
 				</div>
 
 				<div className="layoutBody row">
@@ -196,11 +207,12 @@ function Election() {
 											&&
 											<Candidate
 												name={candidate?.name}
-												id={candidate?.id}
+												id={Number(candidate.candidateID?._hex)}
 												about={candidate?.about}
 												voteCount={candidate?.voteCount}
 												imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}
 												modalEnabled="true"
+												ballotAddress = {ballotAddress}
 											/> 
 										))
 									}	
@@ -250,11 +262,12 @@ function Election() {
 							candidates?.map((candidate) => (
 								<Candidate
 									name={candidate?.name}
-									id={candidate?.id}
+									id={Number(candidate?.candidateID._hex)}
 									about={candidate?.description}
 									voteCount={candidate?.voteCount}
 									imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}
 									modalEnabled="true"
+									ballotAddress={ballotAddress}
 								/> 
 							))
 						}

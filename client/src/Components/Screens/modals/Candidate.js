@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { Modal, Button, Card } from "rimble-ui";
+import { useEffect } from 'react';
 
 import '../../styles/Modal.scss';
+import ballot from '../../../build/ballot/Ballot.sol/Ballot.json'
+import { ethers } from "ethers";
 
-export function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = false}) {
+export function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = false,ballotAddress}) {
     const [isOpen, setIsOpen] = useState(false);
+    const [votes,setVotes] = useState(0);
 
     const closeModal = e => {
         e.preventDefault();
@@ -17,15 +21,44 @@ export function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = 
             setIsOpen(true);
         }
     };
+    const fetchVotes = async (e) => {
+        try{
 
-    const CandidateButton = () => {
+
+            const { ethereum } = window;
+    		if (ethereum) {
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                console.log('ba',ballotAddress)
+                const signer = provider.getSigner();
+                const ballotContract = new ethers.Contract(
+                    ballotAddress,
+                    ballot.abi,
+                    signer
+                    );
+                    
+                let cvotes = await ballotContract.getVoteCount(Number(id),1);
+                setVotes(Number(cvotes._hex))
+                
+                }
+            }catch(err){
+                console.log(err)
+            }
+        }
+
+        useEffect(() => {
+            fetchVotes()
+        },[]);
+                
+                
+                
+        const CandidateButton = () => {
         return (
             <div style={{display: "flex", marginBottom: "20px", cursor: "pointer"}} onClick={openModal}>
                 <img src={imageUrl} style={{width: "40px", height: "40px", borderRadius: "25px"}} alt="profile-pic"/>
                 
                 <div style={{marginLeft: "10px", marginTop: "-4px"}}>
                     <font size="3">{name}</font>
-                    <font size="2" className="text-muted"> ({voteCount} votes)</font>
+                    <font size="2" className="text-muted"> ({votes} votes)</font>
                     
                     <br/>
                     
