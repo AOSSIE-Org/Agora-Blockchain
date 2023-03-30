@@ -37,6 +37,10 @@ const handleTypeChange = (e) => {
     setBallotType(1);
     setResultCalculator(1);
   }
+  if(e.target.value === 'Oklahoma'){
+    setBallotType(2);
+    setResultCalculator(1);
+  }
   console.log('type',ballotType);
   console.log('type',resultCalculator);
 };
@@ -165,6 +169,7 @@ const handleTypeChange = (e) => {
                     >
                       <option value="General">General</option>
                       <option value="Borda">Borda</option>
+                      <option value="Oklahoma">Oklahoma</option>
                       
                     </select>
                   </div>

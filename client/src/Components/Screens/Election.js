@@ -10,8 +10,10 @@ import {
 	AddCandidateModal,
 	Candidate,
 	VoteModal,
-	DeleteModal
+	DeleteModal,
 } from './modals'
+
+import { OklahomaModal } from "./modals/OklahomaModal";
 
 import { AVATARS, STATUS } from '../constants'
 import { Status, CardItem, TimerStyled } from "./utilities";
@@ -32,6 +34,8 @@ function Election() {
 	const [candidates, setCandidates] = useState([])
 	const [voterscount, setVotersCount] = useState(0);
 	const [ballotAddress,setBallotAddress] = useState('');
+	const [ballotType,setBallotType] = useState(-1);
+	const [supportVar,setSupportVar] = useState(0);
 
 
 	const fetchElectionDetails = async () => {
@@ -49,6 +53,12 @@ function Election() {
 
 			//fetched election details
 			const electionDetail =await electionContract.getElectionInfo();
+			const ballotType = await electionContract.getBallotType();
+			console.log('ballotType',Number(ballotType._hex));
+			setBallotType(Number(ballotType._hex));
+			if(Number(ballotType._hex) === 4){
+				setSupportVar(1001);
+			}
 			setElectionDetails(electionDetail);
 
 			//fetch ballot address
@@ -93,6 +103,7 @@ function Election() {
 			signer
 		  );
 		//   if()
+		
 		  electionContract.getResult();
 		//   let _winnerDetails = [];
 		  
@@ -148,7 +159,10 @@ function Election() {
 			hours,
 			days,
 			start
-		} = useTimer({ expiryTimestamp, onExpire: () => {expiryTimestamp = edate; updateStatus(); Date.now() >= edate && winnerDetails.length === 0 && getResults()}, autostart: "false"});
+		} = useTimer({ expiryTimestamp, onExpire: () => {expiryTimestamp = edate; updateStatus();
+			//  Date.now() >= edate && winnerDetails.length === 0 && getResults()
+			}, 
+			 autostart: "false"});
 		
 		useEffect(() => {
 			start();
@@ -181,7 +195,13 @@ function Election() {
 					<div style={{float: "right", display: "flex"}}>
 						<MyTimer sdate = {electionDetails.startDate} edate = {electionDetails.endDate}/>
 						<DeleteModal Candidate = {Candidate} isAdmin = {isAdmin} isPending = {true}/>
-						<VoteModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
+						{ballotType===4 &&
+							<VoteModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
+						}
+						{ballotType===2 &&
+							<OklahomaModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
+						}
+
 					</div>
 				</div>
 
@@ -221,18 +241,16 @@ function Election() {
 										winnerDetails?.map((candidate) => (
 											candidate?.name !== ""
 											&&
-											// <>
-											// <div>{(candidate?._hex)}</div>
-											// <div>hi</div>
-											// </>
+									
 											<Candidate
 												name={candidate?.name}
-												id={1001+Number(candidate?._hex)}
+												id={supportVar+ Number(candidate?._hex)}
 												about={candidate?.about}
 												voteCount={candidate?.voteCount}
 												imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}
 												modalEnabled="true"
 												ballotAddress = {ballotAddress}
+												ballotType = {ballotType}
 											/> 
 										))
 									}	

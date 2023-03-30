@@ -36,6 +36,9 @@ contract Election {
     address electionOrganizerContract;
 
     uint voterCount;
+    
+    uint ballotType;
+
 
     enum Status {
         active,
@@ -79,7 +82,7 @@ contract Election {
     //                                            CONSTRUCTOR
     // ------------------------------------------------------------------------------------------------------
 
-    constructor(ElectionInfo memory _electionInfo, Ballot _ballot, ResultCalculator _resultCalculator,address _electionOrganizer, address _electionOrganizerContract) {
+    constructor(ElectionInfo memory _electionInfo, Ballot _ballot, ResultCalculator _resultCalculator,address _electionOrganizer, address _electionOrganizerContract,uint _ballotType) {
         
         electionOrganizer = _electionOrganizer;
         electionOrganizerContract = _electionOrganizerContract;
@@ -94,6 +97,7 @@ contract Election {
         candidateCount = 1000;
         voterCount = 0;
         resultDeclared = false;
+        ballotType = _ballotType;
 
     }
 
@@ -204,6 +208,11 @@ contract Election {
         else {
             return getWinners();
         }
+    }
+
+    //it helps to get the type of ballot used in the election
+    function getBallotType() external view returns(uint){
+        return ballotType;
     }
 
 }

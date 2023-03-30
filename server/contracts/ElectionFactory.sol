@@ -83,7 +83,7 @@ contract ElectionFactory {
         Election election;
         getBallot(_ballotType);
         getResultCalculator(_ballotType, _resultCalculatorType);
-        election = new Election(_electionInfo,ballot,resultCalculator,_electionOrganizer,_electionOrganizerContract);
+        election = new Election(_electionInfo,ballot,resultCalculator,_electionOrganizer,_electionOrganizerContract,_ballotType);
         return election;
     }
 
