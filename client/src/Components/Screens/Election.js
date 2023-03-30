@@ -77,14 +77,30 @@ function Election() {
 
 
 	const [winnerDetails, setWinnerDetails] = useState([
-		...candidates
+		
 	]);
 
 	const getResults = async () => {
 		const edate = electionDetails.endDate;
 		if(Date.now() >= edate) {
-			let _winnerDetails = [];
-			setWinnerDetails(_winnerDetails);
+		const { ethereum } = window;
+		if (ethereum) {
+		  const provider = new ethers.providers.Web3Provider(ethereum);
+		  const signer = provider.getSigner();
+		  const electionContract = new ethers.Contract(
+			contractAddress,
+			ElectionABI.abi,
+			signer
+		  );
+		//   if()
+		  electionContract.getResult();
+		//   let _winnerDetails = [];
+		  
+		  let winners = await electionContract.getWinners();
+		  console.log('winner',winners);
+		  setWinnerDetails(winners);
+		}
+		
 		}
 	}
 
@@ -165,7 +181,7 @@ function Election() {
 					<div style={{float: "right", display: "flex"}}>
 						<MyTimer sdate = {electionDetails.startDate} edate = {electionDetails.endDate}/>
 						<DeleteModal Candidate = {Candidate} isAdmin = {isAdmin} isPending = {true}/>
-						<VoteModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} />
+						<VoteModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
 					</div>
 				</div>
 
@@ -202,12 +218,16 @@ function Election() {
 
 								<div style={{display: "flex", justifyContent: "space-around", flexWrap: "wrap"}}>
 									{
-										winnerDetails.map((candidate) => (
+										winnerDetails?.map((candidate) => (
 											candidate?.name !== ""
 											&&
+											// <>
+											// <div>{(candidate?._hex)}</div>
+											// <div>hi</div>
+											// </>
 											<Candidate
 												name={candidate?.name}
-												id={Number(candidate.candidateID?._hex)}
+												id={1001+Number(candidate?._hex)}
 												about={candidate?.about}
 												voteCount={candidate?.voteCount}
 												imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}

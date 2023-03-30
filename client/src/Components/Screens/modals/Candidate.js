@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 export function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = false,ballotAddress}) {
     const [isOpen, setIsOpen] = useState(false);
     const [votes,setVotes] = useState(0);
-
+    // ballotAddress = "0xAea9A82DF040538a0b84D28384A0eC3004b9892F"
     const closeModal = e => {
         e.preventDefault();
         setIsOpen(false);
@@ -58,7 +58,7 @@ export function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = 
                 
                 <div style={{marginLeft: "10px", marginTop: "-4px"}}>
                     <font size="3">{name}</font>
-                    <font size="2" className="text-muted"> ({votes} votes)</font>
+                    {/* <font size="2" className="text-muted"> ({votes} votes)</font> */}
                     
                     <br/>
                     
