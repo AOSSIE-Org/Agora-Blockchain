@@ -2,7 +2,7 @@ import ReactStars from 'react-stars'
 import React from 'react'
 import { render } from 'react-dom'
 import { useState } from 'react';
-import { Flex, Modal, Button, Card, ToastMessage } from "rimble-ui";
+import { Flex, Modal, Button, Card } from "rimble-ui";
 import '../../styles/Modal.scss';
 import { AVATARS, STATUS } from '../../constants';
 import { ethers } from 'ethers';
@@ -159,4 +159,3 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
     );
 }
 
-// export default OklahomaModal;
