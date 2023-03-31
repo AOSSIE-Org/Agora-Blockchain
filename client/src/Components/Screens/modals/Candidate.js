@@ -6,7 +6,7 @@ import '../../styles/Modal.scss';
 import ballot from '../../../build/ballot/Ballot.sol/Ballot.json'
 import { ethers } from "ethers";
 
-export function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = false,ballotAddress}) {
+export function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = false}) {
     const [isOpen, setIsOpen] = useState(false);
     const [votes,setVotes] = useState(0);
     // ballotAddress = "0xAea9A82DF040538a0b84D28384A0eC3004b9892F"
@@ -21,33 +21,33 @@ export function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = 
             setIsOpen(true);
         }
     };
-    const fetchVotes = async (e) => {
-        try{
+    // const fetchVotes = async (e) => {
+    //     try{
 
 
-            const { ethereum } = window;
-    		if (ethereum) {
-                const provider = new ethers.providers.Web3Provider(ethereum);
-                console.log('ba',ballotAddress)
-                const signer = provider.getSigner();
-                const ballotContract = new ethers.Contract(
-                    ballotAddress,
-                    ballot.abi,
-                    signer
-                    );
+    //         const { ethereum } = window;
+    // 		if (ethereum) {
+    //             const provider = new ethers.providers.Web3Provider(ethereum);
+    //             console.log('ba',ballotAddress)
+    //             const signer = provider.getSigner();
+    //             const ballotContract = new ethers.Contract(
+    //                 ballotAddress,
+    //                 ballot.abi,
+    //                 signer
+    //                 );
                     
-                let cvotes = await ballotContract.getVoteCount(Number(id),1);
-                setVotes(Number(cvotes._hex))
+    //             let cvotes = await ballotContract.getVoteCount(Number(id),1);
+    //             setVotes(Number(cvotes._hex))
                 
-                }
-            }catch(err){
-                console.log(err)
-            }
-        }
+    //             }
+    //         }catch(err){
+    //             console.log(err)
+    //         }
+    //     }
 
-        useEffect(() => {
-            fetchVotes()
-        },[]);
+        // useEffect(() => {
+        //     fetchVotes()
+        // },[]);
                 
                 
                 

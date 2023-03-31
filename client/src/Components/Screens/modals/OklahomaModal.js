@@ -29,8 +29,6 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
     const handleVoteSubmit = async (e) => {
         e.preventDefault();
         // setIsOpen(false);
-        console.log(e.target)
-        console.log('hellooo')
         try {
 
             const { ethereum } = window;
@@ -43,9 +41,6 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                 ElectionABI.abi,
                 signer
               );
-              console.log('candidateId',candidateId)
-                console.log('id',id)
-                console.log('val',val)
                 let temp;
                 if(val===5){
                     temp =1;
@@ -67,9 +62,8 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                 // so the higher stars the lower priority in contract logic so to make it more intuitive we reversed the order
               let res  =await CurrentElection.vote(addr,id,temp,[]);
               console.log('res',res);
-
-            //   console.log(CurrentElection)
-              }
+              console.log('you have succesfully voted ')
+            }
 
             setCandidateId(null);
             // setIsOpen(false);

@@ -7,10 +7,13 @@ import '../../styles/Modal.scss';
 
 import { AVATARS, STATUS } from '../../constants';
 
-export function VoteModal({Candidate, status, candidates, CurrentElection, account,contractAddress,ballotAddress}) {
+export function BordaModal({Candidate, status, candidates, CurrentElection, account,contractAddress,ballotAddress}) {
     const [isOpen, setIsOpen] = useState(false);
     const [candidateId, setCandidateId] = useState(null);
+    const [voteCount, setVoteCount] = useState([]);
     
+
+    let arr = new Array(candidates.length);
 
     const closeModal = e => {
         e.preventDefault();
@@ -24,6 +27,14 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
 
     const handleCandidateIdChange = (e) => {
         setCandidateId(e.target.value);
+    }
+    const handleVoteChange = (e) => {
+        console.log('value',e.target.value);
+        console.log('cid',typeof(Number(e.target.name)))
+        let temp  = voteCount;
+        temp[Number(e.target.name)-1001] = Number(e.target.value);
+        setVoteCount(temp);
+        console.log('arr',arr)
     }
 
     const handleVoteSubmit = async (e) => {
@@ -43,13 +54,20 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
                 contractAddress,
                 ElectionABI.abi,
                 signer
-              );
+              );            
             
-            
+            console.log('voting')
             // window.toastProvider.addMessage("Processing your voting request.", {
             //     variant: "processing"
             // })
-            let res  =await CurrentElection.vote(addr,candidateId,1,[]);
+            console.log(CurrentElection)
+            console.log('candidateId',candidateId)
+            // let temp = [3,2,1];
+            console.log('arr',voteCount)
+
+
+            let res  =await CurrentElection.vote(addr,1,4,voteCount);
+            // console.log('res',res);
             // window.toastProvider.addMessage("Voted", {
             //     secondaryMessage: "You have successfully voted! Thank you.",
             //     variant: "success"
@@ -96,7 +114,9 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
                     />
 
                     <div style={{margin: "10px", maxWidth: "700px", width: "90%"}}>
-                        <h5>Choose candidates according to your preferences</h5>
+                        {/* <h5>Choose candidates according to your preferences</h5> */}
+                        <h5>Enter Preference order of candidates</h5>
+
 
                         <br/>
 
@@ -107,8 +127,9 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
                             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between"}}>
                                 {
                                     candidates?.map((candidate) => (
-                                        <label className="voteCandidate">
-                                            <input type="radio" name="candidate" value={candidate?.candidateID} onChange={handleCandidateIdChange} className="voteCandiateInput"/>
+                                        <label className="voteCandidate" >
+                                            {/* <input type="radio" name="candidate" value={candidate?.candidateID} onChange={handleCandidateIdChange} className="voteCandiateInput"/> */}
+                                            <input type="number" name={candidate?.candidateID} onChange={(e)=>handleVoteChange(e)}/>
                                             <Candidate name={candidate?.name} id={Number(candidate?.candidateID._hex)} about={candidate?.about} voteCount={candidate?.voteCount} ballotAddress={ballotAddress} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
                                         </label>
                                     ))

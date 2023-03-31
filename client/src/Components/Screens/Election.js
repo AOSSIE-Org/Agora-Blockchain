@@ -3,6 +3,8 @@ import { useTimer } from 'react-timer-hook';
 import { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 import ElectionABI from '../../build/Election.sol/Election.json'
+import ElectionOrganiser from "../../build/ElectionOrganizer.json";
+
 import { ethers } from "ethers";
 
 
@@ -14,6 +16,7 @@ import {
 } from './modals'
 
 import { OklahomaModal } from "./modals/OklahomaModal";
+import {BordaModal} from './modals/BordaModal';
 
 import { AVATARS, STATUS } from '../constants'
 import { Status, CardItem, TimerStyled } from "./utilities";
@@ -30,12 +33,16 @@ function Election() {
 	const search = useLocation().search;
 	const contractAddress = new URLSearchParams(search).get('contractAddress');
 	const organizerAddress = new URLSearchParams(search).get('organizerAddress');
+	const name = new URLSearchParams(search).get('name');
+	const publicAddress = new URLSearchParams(search).get('publicAddress');
 	const [electionDetails, setElectionDetails] = useState({});
 	const [candidates, setCandidates] = useState([])
 	const [voterscount, setVotersCount] = useState(0);
 	const [ballotAddress,setBallotAddress] = useState('');
 	const [ballotType,setBallotType] = useState(-1);
+	//to support Borda Election
 	const [supportVar,setSupportVar] = useState(0);
+
 
 
 	const fetchElectionDetails = async () => {
@@ -53,8 +60,9 @@ function Election() {
 
 			//fetched election details
 			const electionDetail =await electionContract.getElectionInfo();
+			updateStatus(Number(electionDetail.startDate._hex), Number(electionDetail.endDate._hex));
+
 			const ballotType = await electionContract.getBallotType();
-			console.log('ballotType',Number(ballotType._hex));
 			setBallotType(Number(ballotType._hex));
 			if(Number(ballotType._hex) === 4){
 				setSupportVar(1001);
@@ -62,8 +70,8 @@ function Election() {
 			setElectionDetails(electionDetail);
 
 			//fetch ballot address
-			const ballot_add = await electionContract.getBallot();
-			setBallotAddress(ballot_add);
+			// const ballot_add = await electionContract.getBallot();
+			// setBallotAddress(ballot_add);
 
 
 			//fetched all candidates
@@ -90,6 +98,23 @@ function Election() {
 		
 	]);
 
+	const getWinnerDetails = async () => {
+		const { ethereum } = window;
+		if (ethereum) {
+		  const provider = new ethers.providers.Web3Provider(ethereum);
+		  const signer = provider.getSigner();
+		  const electionContract = new ethers.Contract(
+			contractAddress,
+			ElectionABI.abi,
+			signer
+		  );
+		  let _winnerDetails = [];
+		  let winners = await electionContract.getWinners();
+		  console.log('winner',winners);
+		  setWinnerDetails(winners);
+		}
+	}
+
 	const getResults = async () => {
 		const edate = electionDetails.endDate;
 		if(Date.now() >= edate) {
@@ -102,14 +127,7 @@ function Election() {
 			ElectionABI.abi,
 			signer
 		  );
-		//   if()
-		
-		  electionContract.getResult();
-		//   let _winnerDetails = [];
-		  
-		  let winners = await electionContract.getWinners();
-		  console.log('winner',winners);
-		  setWinnerDetails(winners);
+		  electionContract.getResult();	
 		}
 		
 		}
@@ -121,11 +139,10 @@ function Election() {
 		}
 	}, [])
 
-	const updateStatus = () => {
-		const sdate = 160000000000 * 1000;
-		const edate = 160000000000 * 1000;
+	const updateStatus = (sdate,edate) => {
+		sdate = sdate * 1000;
+		edate = edate * 1000;
 		const timestamp = Date.now();
-
 		if(timestamp < sdate) {
 			setStatus(STATUS.PENDING);
 		} else if(timestamp < edate) {
@@ -135,12 +152,10 @@ function Election() {
 		}
 	}
 
-	useEffect(() => {
-		updateStatus();
-	}, [])
+	
 	useEffect(() => {
 		fetchElectionDetails();
-	},[contractAddress,ballotAddress])
+	},[contractAddress])
 
 	const MyTimer = ({ sdate, edate }) => {
 		sdate *= 1000;
@@ -159,14 +174,14 @@ function Election() {
 			hours,
 			days,
 			start
-		} = useTimer({ expiryTimestamp, onExpire: () => {expiryTimestamp = edate; updateStatus();
+		} = useTimer({ expiryTimestamp, onExpire: () => {expiryTimestamp = edate;
 			//  Date.now() >= edate && winnerDetails.length === 0 && getResults()
 			}, 
 			 autostart: "false"});
 		
 		useEffect(() => {
 			start();
-			updateStatus(); 
+			// updateStatus((electionDetails?.startDate._hex), Number(electionDetails?.endDate._hex)); 
 		}, [expiryTimestamp])
 		
 		return (
@@ -176,7 +191,7 @@ function Election() {
 
 	return (
 		<div style={{backgroundColor: "#f7f7f7", minHeight: "100%"}}>
-			<Navbar header={"Raj"} infoText={"0xADA"} pictureUrl="/assets/avatar.png"/>
+			<Navbar header={name} infoText={publicAddress} organizerAddress={organizerAddress} pictureUrl="/assets/avatar.png"/>
 			
 			<div style={{padding: "30px"}}>
 				<div style={{width: "100%"}}>
@@ -196,12 +211,14 @@ function Election() {
 						<MyTimer sdate = {electionDetails.startDate} edate = {electionDetails.endDate}/>
 						<DeleteModal Candidate = {Candidate} isAdmin = {isAdmin} isPending = {true}/>
 						{ballotType===4 &&
-							<VoteModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
+							<BordaModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
 						}
 						{ballotType===2 &&
 							<OklahomaModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
 						}
-
+						{ballotType===1 &&
+							<VoteModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
+						}
 					</div>
 				</div>
 
@@ -222,9 +239,13 @@ function Election() {
 						{
 							status == STATUS.CLOSED
 							?
-							<span onClick={getResults} className="voteButton" style={{float: "right", marginTop: "10px", width: "100px"}}>Get Results</span>
+							<div>
+								<span onClick={getResults} className="voteButton" style={{float: "right", marginTop: "10px", width: "100px"}}>Get Results</span>
+								<span onClick={getWinnerDetails} className="voteButton" style={{float: "right", marginTop: "10px", width: "100px"}}>Show Winner</span>
+							</div>
+
 							:
-							<span onClick={getResults} className="voteButton voteButtonDisabled" style={{float: "right", marginTop: "10px", width: "100px"}}>Get Results</span>
+								<span onClick={getResults} className="voteButton voteButtonDisabled" style={{float: "right", marginTop: "10px", width: "100px"}}>Get Result</span>
 						}
 
 						{
