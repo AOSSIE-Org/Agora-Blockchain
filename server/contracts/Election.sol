@@ -210,7 +210,6 @@ contract Election {
         }
     }
 
-    //it helps to get the type of ballot used in the election
     function getBallotType() external view returns(uint){
         return ballotType;
     }
