@@ -13,6 +13,7 @@ import {
 	Candidate,
 	VoteModal,
 	DeleteModal,
+	UpdateElectionModal,
 } from './modals'
 
 import { OklahomaModal } from "./modals/OklahomaModal";
@@ -25,6 +26,7 @@ import Navbar from './Navbar';
 
 import '../styles/Election.scss';
 import '../styles/Layout.scss';
+import { Update } from "rimble-ui";
 
 function Election() {
 	const [isAdmin, setAdmin] = useState(false);
@@ -208,8 +210,9 @@ function Election() {
 
 
 					<div style={{float: "right", display: "flex"}}>
-						<MyTimer sdate = {electionDetails.startDate} edate = {electionDetails.endDate}/>
+						<MyTimer style={{marginRight:"15%"}} sdate = {electionDetails.startDate} edate = {electionDetails.endDate}/>
 						<DeleteModal Candidate = {Candidate} isAdmin = {isAdmin} isPending = {true}/>
+						<UpdateElectionModal contractAddress={contractAddress} electionDetails={electionDetails} election/>
 						{ballotType===4 &&
 							<BordaModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
 						}
