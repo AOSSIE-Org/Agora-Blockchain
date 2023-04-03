@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Table, Button, EthAddress } from "rimble-ui";
+import { Table, Button, EthAddress, display } from "rimble-ui";
 
 import { CreateElectionModal } from "./modals/";
 
@@ -28,7 +28,38 @@ const Dashboard = () => {
   });
   const [statistics, setStatistics] = useState([0, 0, 0, 0]);
   const [detailedelection, setdetailedelection] = useState([]);
+  const [search, setSearch] = useState("");
+  const [type,setType] = useState("ALL");
 
+
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    console.log(search)
+  }
+  const handleTypeChange = (e) => {
+    setType(e.target.value);
+    console.log(type)
+  }
+
+  //helper function to filter the elections
+  const filtercheck = (elections) => {
+    console.log(elections);
+    console.log('type',type ,'status',elections.status);
+    console.log(type===elections.status);
+      if(search === "" && type === "ALL"){
+        return true;
+      }
+      if(search ===elections.name && type === "ALL"){
+        return true;
+      }
+      if(search ==="" && type == elections.status){
+        return true;
+      }
+      if(search ===elections.name && type == elections.status){
+        return true;
+      }
+
+  }
 
   const getStatus = (sdate, edate) => {
     sdate = sdate * 1000;
@@ -59,6 +90,7 @@ const Dashboard = () => {
         const add = await signer.getAddress();
        
 
+        if(DashContractAddress !== ""){
         const contract = new ethers.Contract(
           DashContractAddress,
           ElectionOrganiser.abi,
@@ -77,6 +109,7 @@ const Dashboard = () => {
         });
         const elections = await contract.getElections(); //get elections
         getElections(elections);
+      }
       }
     } catch (err) {
       console.log(err);
@@ -231,9 +264,30 @@ const Dashboard = () => {
 
         <div className="layoutBody row">
           <div className="lhsLayout">
-            <div className="lhsHeader" style={{ marginTop: "10px" }}>
-              <h5>Elections</h5>
-            </div>
+            <div className="lhsHeader" style={{ marginTop: "10px", display:"flex" ,justifyContent:"space-between" }}>
+              <div style={{display:"flex" , alignItems:"Center"}}>
+              <h5 style={{lineHeight:0}}>Elections</h5>
+              </div>
+              <div style={{display:"flex"}}>
+              <input onChange={(e)=>handleSearchChange(e)} placeholder= "Search Election" style={{marginRight:"10px"}}/>
+                    <div className="">
+                    <select style={{ width: "100px" }}
+                      onChange={(e) => handleTypeChange(e)}
+                      type="text"
+                      className="form-control"
+                      placeholder="Filter by type"
+                    >
+                      <option value="ALL">ALL</option>
+                      <option value="pending">Pending</option>
+                      <option value="active">Active</option>
+                      <option value="closed">Closed</option>
+                      
+                    </select>
+                    </div>
+
+                  </div>
+              </div>
+
 
             <br />
 
@@ -251,7 +305,7 @@ const Dashboard = () => {
                 <tbody style={{ fontSize: "13px" }}>
                   {
                     (detailedelection.length > 0) &&
-                    detailedelection.map((electionData) => (
+                    detailedelection.filter((e)=>filtercheck(e)).map((electionData) => (
                       <ElectionRow
                         DashContractAddress={DashContractAddress}
                         id={parseInt(electionData.ID)}
@@ -261,6 +315,7 @@ const Dashboard = () => {
                         startDate={electionData.startDate}
                         endDate={electionData.endDate}
                         status={electionData.status}
+                        organizerInfo= {organizerInfo}
                       />
                     ))
                   }
