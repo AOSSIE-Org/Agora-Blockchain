@@ -228,7 +228,7 @@ function Election() {
 				<br/><br/><br/>
 
 				<div className="cardContainer row">
-					<CardItem headerValue={"General"} descriptor="Algorithm" imgUrl="/assets/totalElections.png"/>
+					<CardItem headerValue={ballotType===1?"general":ballotType==2?"Oklahoma":"Borda"} descriptor="Algorithm" imgUrl="/assets/totalElections.png"/>
 
 					<CardItem headerValue={new Date(electionDetails?.startDate * 1000).toLocaleString()} descriptor="Start date" imgUrl="/assets/activeElections.png" imgBackground="#eaffe8"/>
 
@@ -297,14 +297,30 @@ function Election() {
 
 							<br/>
 
-							<h5>About {"General"} Algorithm</h5>
+							<h5>About {ballotType===1?"general":ballotType==2?"Oklahoma":"Borda"} Algorithm</h5>
 							<font size="2" className="text-muted">
-								In General or Regular voting algorithm, winner(s) is(are) chosen
+								{ballotType===1?`In General or Regular voting algorithm, winner(s) is(are) chosen
 								from the list of candidates according to the number of votes they
 								get. Those with the maximum number of votes are chosen as the winner
 								of the candidates. If 2 or more candidates are eligible for winning,
 								then it depends upon the organization to whether choose a candidate by
-								a draw or by any other means.
+								a draw or by any other means`:ballotType==2?`The Oklahoma primary electoral system is
+								a voting system used to elect one winner from a pool of candidates using preferential
+								voting. Voters rank candidates in order of preference, and their votes are initially 
+								allocated to their first-choice candidate. If, after this initial count, 
+								no candidate has a majority of votes cast, a mathematical formula comes into play.
+								`:`The Borda count method is a point-based election system in which voters number their 
+								preferred choices in order. The Borda count method does not rely on the majority criterion
+								 or Condorcet criterion. The majority criterion states if one choice gets the majority of
+								  the first-place votes, that choice should be declared the winner. In the Borda count 
+								  method it is possible, and sometimes happens, that the first choice option would get 
+								  the majority of the votes, but once all of the votes are considered, that choice is not the 
+								  winner.`}
+
+
+
+
+								
 							</font>
 						</div>
 					</div>
