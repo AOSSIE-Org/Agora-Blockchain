@@ -59,7 +59,6 @@ const Dashboard = () => {
         const add = await signer.getAddress();
        
 
-        if(DashContractAddress !== ""){
         const contract = new ethers.Contract(
           DashContractAddress,
           ElectionOrganiser.abi,
@@ -78,7 +77,6 @@ const Dashboard = () => {
         });
         const elections = await contract.getElections(); //get elections
         getElections(elections);
-      }
       }
     } catch (err) {
       console.log(err);
@@ -263,7 +261,6 @@ const Dashboard = () => {
                         startDate={electionData.startDate}
                         endDate={electionData.endDate}
                         status={electionData.status}
-                        organizerInfo= {organizerInfo}
                       />
                     ))
                   }
