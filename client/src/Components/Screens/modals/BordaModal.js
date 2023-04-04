@@ -113,25 +113,26 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
                         onClick={closeModal}
                     />
 
-                    <div style={{margin: "10px", maxWidth: "700px", width: "90%"}}>
+                    <div style={{margin: "10px", maxWidth: "700px", width: "96%"}}>
                         {/* <h5>Choose candidates according to your preferences</h5> */}
-                        <h5>Enter Preference order of candidates</h5>
+                        <h3 style={{textAlign:"center" ,paddingTop:"24px" ,fontWeight:"bold" , fontFamily:"monospace"}}>Enter Rank of candidates</h3>
 
 
                         <br/>
 
                         <div>
-                            <b>1st Preference</b>
-                            <br/><br/>
+                           
 
-                            <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between"}}>
+                            <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-around"}}>
                                 {
                                     candidates?.map((candidate) => (
-                                        <label className="voteCandidate" >
-                                            {/* <input type="radio" name="candidate" value={candidate?.candidateID} onChange={handleCandidateIdChange} className="voteCandiateInput"/> */}
-                                            <input type="number" name={candidate?.candidateID} onChange={(e)=>handleVoteChange(e)}/>
+                                        // <label className="voteCandidate" >
+
+                                            <div className='card' style={{display:"flex", marginLeft:"1%",marginRight:"1%",marginBottom:"2%",padding:"6%"}}>
                                             <Candidate name={candidate?.name} id={Number(candidate?.candidateID._hex)} about={candidate?.about} voteCount={candidate?.voteCount} ballotAddress={ballotAddress} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
-                                        </label>
+                                            <input type="number" className='' placeholder="Rank.." id="borda_input" name={candidate?.candidateID}  onChange={(e)=>handleVoteChange(e)}/>
+                                            </div>
+                                        // </label>
                                     ))
                                 }
                             </div>
@@ -141,7 +142,7 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
                     <Flex
                         px={4}
                         py={3}
-                        justifyContent={"flex-end"}
+                        justifyContent={"flex-start"}
                     >
                         <Button.Outline onClick={closeModal}>Cancel</Button.Outline>
                         <Button ml={3} type="submit" onClick={handleVoteSubmit}>Confirm</Button>

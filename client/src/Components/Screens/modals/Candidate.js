@@ -56,11 +56,12 @@ export function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = 
             <div style={{display: "flex", marginBottom: "20px", cursor: "pointer"}} onClick={openModal}>
                 <img src={imageUrl} style={{width: "40px", height: "40px", borderRadius: "25px"}} alt="profile-pic"/>
                 
-                <div style={{marginLeft: "10px", marginTop: "-4px"}}>
+                <div style={{marginLeft: "10px", marginTop: "6px"}}>
                     <font size="3">{name}</font>
                     {/* <font size="2" className="text-muted"> ({votes} votes)</font> */}
                     
-                    <br/>
+            
+
                     
                     <font size="2" className="text-muted">#{id}</font>
                 </div>
