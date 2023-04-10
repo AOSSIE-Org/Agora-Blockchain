@@ -19,7 +19,7 @@ export function DeleteModal({isAdmin = false, isPending = false}) {
             {
                 (isAdmin && isPending)
                 &&
-                <div className="voteButton deleteButton" onClick={openModal}>
+                <div className="voteButton deleteButton" style={{marginLeft:"15%"}} onClick={openModal}>
                     DELETE
                 </div>
             }

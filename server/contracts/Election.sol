@@ -214,4 +214,10 @@ contract Election {
         return ballotType;
     }
 
+    function updateElectionInfo(ElectionInfo memory _electionInfo) external  onlyOrganizer{
+        require(getStatus() == Status.pending,"Cannot update election info after election has started");
+        electionInfo = _electionInfo;
+
+    }   
+
 }

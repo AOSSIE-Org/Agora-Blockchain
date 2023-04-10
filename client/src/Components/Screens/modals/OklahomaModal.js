@@ -62,8 +62,7 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                 // so the higher stars the lower priority in contract logic so to make it more intuitive we reversed the order
               let res  =await CurrentElection.vote(addr,id,temp,[]);
               console.log('res',res);
-              console.log('you have succesfully voted ')
-            }
+              }
 
             setCandidateId(null);
             // setIsOpen(false);
@@ -102,21 +101,24 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                         onClick={closeModal}
                     />
 
-                    <div style={{ margin: "10px", maxWidth: "700px", width: "90%" }}>
-                        <h5>Choose candidates according to your preferences</h5>
+                    <div style={{ margin: "10px", maxWidth: "700px", width: "96%" }}>
+                        <div>
+                        <h3 style={{textAlign:"center" ,paddingTop:"24px", fontFamily:"monospace",fontWeight:"bold"}}>Choose candidates according to your preferences</h3>
 
-                        <br />
+                        </div>
+
+                        
 
                         <div>
-                            <b>1st Preference</b>
-                            <br /><br />
+                            
+                            <br />
 
-                            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between" }}>
+                            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-around" }}>
                                 {
                                     candidates?.map((candidate) => (
-                                        <div className="voteCandidate">
+                                        <div className="card" style={{marginLeft:"1%",marginRight:"1%",marginBottom:"2%"}}>
                                             
-                                            <Candidate name={candidate?.name} id={candidate?.id} about={candidate?.about} voteCount={candidate?.voteCount} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'} />
+                                            <Candidate name={candidate?.name} id={Number(candidate?.candidateID)} about={candidate?.about} voteCount={candidate?.voteCount} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'} />
                                             <div >
                                                
 
@@ -135,9 +137,9 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                                                 </div>
                                                 
                                                 <div>
-                                            <Button.Outline ml={3} type="submit" onClick={(e)=>(handleVoteSubmit(e))}>Confirm</Button.Outline>
+                                            <Button.Outline ml={0} type="submit" onClick={(e)=>(handleVoteSubmit(e))}>Confirm</Button.Outline>
                                                
-                                             </div>:
+                                             </div>
                                             <p></p>  
                                         </div>
                                     ))

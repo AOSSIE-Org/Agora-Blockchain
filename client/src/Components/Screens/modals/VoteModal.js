@@ -95,22 +95,30 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
                         onClick={closeModal}
                     />
 
-                    <div style={{margin: "10px", maxWidth: "700px", width: "90%"}}>
-                        <h5>Choose candidates according to your preferences</h5>
-
-                        <br/>
-
+                    <div style={{margin: "10px", maxWidth: "700px", width: "96%"}}>
+                        <h3 style={{textAlign:"center" ,paddingTop:"24px" ,fontWeight:"bold" , fontFamily:"monospace"}}>Choose candidates according to your preferences</h3>
                         <div>
-                            <b>1st Preference</b>
-                            <br/><br/>
+                            
+                            <br/>
 
-                            <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between"}}>
+                            <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-around"}}>
                                 {
                                     candidates?.map((candidate) => (
-                                        <label className="voteCandidate">
+                                        <div className="card"  style={{display:"flex", marginLeft:"1%",marginRight:"1%",marginBottom:"2%",padding:"2%" ,paddingTop:"0.4%"}}>
+                                           
+                                            <div>
+
+                                            <div>
                                             <input type="radio" name="candidate" value={candidate?.candidateID} onChange={handleCandidateIdChange} className="voteCandiateInput"/>
+                                            </div>
+                                            <div style={{padding:"1.9rem"}}>
+
                                             <Candidate name={candidate?.name} id={Number(candidate?.candidateID._hex)} about={candidate?.about} voteCount={candidate?.voteCount} ballotAddress={ballotAddress} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
-                                        </label>
+                                            </div>
+                                            </div>
+
+                                      
+                                        </div>
                                     ))
                                 }
                             </div>
@@ -120,7 +128,7 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
                     <Flex
                         px={4}
                         py={3}
-                        justifyContent={"flex-end"}
+                        justifyContent={"flex-start"}
                     >
                         <Button.Outline onClick={closeModal}>Cancel</Button.Outline>
                         <Button ml={3} type="submit" onClick={handleVoteSubmit}>Confirm</Button>
