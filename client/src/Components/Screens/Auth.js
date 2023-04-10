@@ -109,6 +109,7 @@ function Auth() {
               <input
                 className="form-control"
                 type="text"
+                value={window?.ethereum?.selectedAddress}
                 disabled
                 // value={initialized ? account : "Loading..."}
               />
