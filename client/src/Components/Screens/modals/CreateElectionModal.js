@@ -159,7 +159,7 @@ const handleTypeChange = (e) => {
               <br />
 
               <div className="">
-                    <label className="labels UP_labels">ac</label>
+                    <label className="labels UP_labels">Select Election Type</label>
                     <select
                       onChange={(e) => handleTypeChange(e)}
                       type="text"
