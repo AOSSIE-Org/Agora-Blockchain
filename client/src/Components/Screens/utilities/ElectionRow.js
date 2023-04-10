@@ -7,14 +7,16 @@ export const ElectionRow = ({
     startDate,
     endDate,
     status,
+    DashContractAddress,
+    organizerInfo
 }) => {
     return (
         <tr
             style={{ cursor: "pointer" }}
+            //added new param to send organizer address
             onClick={() => {
-                window.location.href = `/election?contractAddress=${electionAddress}`;
-            }}
-        >
+                window.location.href = `/election?contractAddress=${electionAddress}&organizerAddress=${DashContractAddress}&name=${organizerInfo.name}&publicAddress=${organizerInfo.publicAddress}`;
+            }}>
             <td>{electionId}</td>
             <td className="tableDetails">
                 <font>{electionTitle}</font>

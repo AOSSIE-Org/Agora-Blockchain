@@ -16,7 +16,7 @@ contract GeneralBallot is Ballot {
     //                                            FUNCTIONS
     // ------------------------------------------------------------------------------------------------------
 
-    function vote(address _voter, uint _candidate, uint _weight)external override{
+    function vote(address _voter, uint _candidate, uint _weight,uint[] memory voteArr)external override{
         _weight = 1;
         votes[_candidate]+=1;
         voteStatus[_voter] = true;
@@ -25,6 +25,11 @@ contract GeneralBallot is Ballot {
     function getVoteCount(uint _candidate, uint _weight)external override view returns(uint){
         _weight = 1; 
         return votes[_candidate];
+    }
+  
+       function getVoteArr() external override returns(uint[][] memory  ){
+        uint [][] memory arr;
+        return arr;
     }
     
 }

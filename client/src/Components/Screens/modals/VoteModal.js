@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { Flex, Modal, Button, Card } from "rimble-ui";
+import { ethers } from "ethers";
+import ElectionABI from '../../../build/Election.sol/Election.json'
 
 import '../../styles/Modal.scss';
 
 import { AVATARS, STATUS } from '../../constants';
 
-export function VoteModal({Candidate, status, candidates, CurrentElection, account}) {
+export function VoteModal({Candidate, status, candidates, CurrentElection, account,contractAddress,ballotAddress}) {
     const [isOpen, setIsOpen] = useState(false);
     const [candidateId, setCandidateId] = useState(null);
+    
 
     const closeModal = e => {
         e.preventDefault();
@@ -24,28 +27,43 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
     }
 
     const handleVoteSubmit = async (e) => {
+
+       
         e.preventDefault();
         setIsOpen(false);
         
         try{
-            window.toastProvider.addMessage("Processing your voting request.", {
-                variant: "processing"
-            })
+
+            const { ethereum } = window;
+            if (ethereum) {
+              const provider = new ethers.providers.Web3Provider(ethereum);
+              const signer = provider.getSigner();
+              const addr = await signer.getAddress();
+              const CurrentElection = new ethers.Contract(
+                contractAddress,
+                ElectionABI.abi,
+                signer
+              );
             
-            await CurrentElection.vote(candidateId).send({from: account});
             
-            window.toastProvider.addMessage("Voted", {
-                secondaryMessage: "You have successfully voted! Thank you.",
-                variant: "success"
-            });
-            
+            // window.toastProvider.addMessage("Processing your voting request.", {
+            //     variant: "processing"
+            // })
+            let res  =await CurrentElection.vote(addr,candidateId,1,[]);
+            // window.toastProvider.addMessage("Voted", {
+            //     secondaryMessage: "You have successfully voted! Thank you.",
+            //     variant: "success"
+            // });
+            console.log('you have succesfully voted ')
             setCandidateId(null);
             setIsOpen(false);
+        }
         } catch(err) {
-            window.toastProvider.addMessage("Failed", {
-                secondaryMessage: "Transaction failed. Try again",
-                variant: "failure"
-            });
+            // window.toastProvider.addMessage("Failed", {
+            //     secondaryMessage: "Transaction failed. Try again",
+            //     variant: "failure"
+            // });
+            console.log(err)
         }
     }
 
@@ -90,8 +108,8 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
                                 {
                                     candidates?.map((candidate) => (
                                         <label className="voteCandidate">
-                                            <input type="radio" name="candidate" value={candidate?.id} onChange={handleCandidateIdChange} className="voteCandiateInput"/>
-                                            <Candidate name={candidate?.name} id={candidate?.id} about={candidate?.about} voteCount={candidate?.voteCount} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
+                                            <input type="radio" name="candidate" value={candidate?.candidateID} onChange={handleCandidateIdChange} className="voteCandiateInput"/>
+                                            <Candidate name={candidate?.name} id={Number(candidate?.candidateID._hex)} about={candidate?.about} voteCount={candidate?.voteCount} ballotAddress={ballotAddress} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
                                         </label>
                                     ))
                                 }

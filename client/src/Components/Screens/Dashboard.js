@@ -15,6 +15,8 @@ import "../styles/Dashboard.scss";
 import { ethers } from "ethers";
 import ElectionOrganiser from "../../build/ElectionOrganizer.json";
 import Authentication from "../../build/Authentication.json";
+import ElectionABI from '../../build/Election.sol/Election.json'
+
 // import BrightID from "./BrightID";
 
 const Dashboard = () => {
@@ -24,6 +26,9 @@ const Dashboard = () => {
     name: "",
     publicAddress: "",
   });
+  const [statistics, setStatistics] = useState([0, 0, 0, 0]);
+  const [detailedelection, setdetailedelection] = useState([]);
+
 
   const getStatus = (sdate, edate) => {
     sdate = sdate * 1000;
@@ -48,25 +53,32 @@ const Dashboard = () => {
 
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
+        const signer =  provider.getSigner();
 
+        //to fetch signers address
+        const add = await signer.getAddress();
+       
+
+        if(DashContractAddress !== ""){
         const contract = new ethers.Contract(
           DashContractAddress,
           ElectionOrganiser.abi,
           signer
         );
-        // console.log(contract);
+
+        //removed the hardcoded address
         const data = await contract.getElectionOrganizerByAddress(
-          "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+          add
         );
-        // console.log(data);
+        
+       
         setOrganizerInfo({
           name: data.name,
           publicAddress: data.publicAddress,
         });
         const elections = await contract.getElections(); //get elections
         getElections(elections);
-        console.log(elections);
+      }
       }
     } catch (err) {
       console.log(err);
@@ -79,13 +91,11 @@ const Dashboard = () => {
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
-
         const contract = new ethers.Contract(
           AuthcontractAddress,
           Authentication.abi,
           signer
         );
-        // console.log(contract);
         const data = await contract.getElectionOrganizerContract(); //get elections
         setDashContractAddress(data);
       }
@@ -93,7 +103,59 @@ const Dashboard = () => {
       console.log(err);
     }
   };
-  const [statistics, setStatistics] = useState([1, 2, 4, 2]);
+
+  //to fetch all election details 
+  const fetchDetailedElection = async() => {
+    try{
+    const { ethereum } = window;
+   
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const signer = provider.getSigner();    
+      let tempStats = [0, 0, 0, 0];
+       elections.map(async (address) => {
+        const electionContract = new ethers.Contract(
+          address,
+          ElectionABI.abi,
+          signer
+        );
+
+        let info = await electionContract.getElectionInfo();
+          let st = getStatus(info.startDate, info.endDate);
+          const data = {
+            electionID: parseInt(info.electionID % 1000),
+            name: info.name,
+            address: address,
+            startDate: new Date(info.startDate * 1000).toLocaleString(),
+            endDate: new Date(info.endDate * 1000).toLocaleString(),
+            status: st
+          }
+
+          
+          
+          // to set status 
+            if (st === "active") {
+              tempStats[1]++;
+            }
+            else if (st === "closed") {
+              tempStats[2]++;
+            }
+            else if (st === "pending") {
+              tempStats[3]++;
+            }
+          
+          setdetailedelection(detailedelection => [...detailedelection, data]);
+          let sum =(tempStats[1]+tempStats[2]+tempStats[3])
+          tempStats[0] = sum+1;
+          setStatistics(tempStats);
+         
+       
+        })
+    
+
+  }catch(err){
+    console.log(err)
+  }
+  }
 
   const getTokens = () => {
     window.open("https://faucet.avax-test.network/", "_blank");
@@ -101,7 +163,11 @@ const Dashboard = () => {
   useEffect(() => {
     fetchContract();
     fetchElections();
-  }, []);
+  }, [DashContractAddress]);
+
+  useEffect(() => {
+    fetchDetailedElection()
+    }, [elections])
   return (
     <div style={{ backgroundColor: "#f7f7f7", minHeight: "100%" }}>
       <Navbar
@@ -137,7 +203,7 @@ const Dashboard = () => {
           // UserContract &&
           <div className="cardContainer row">
             <CardItem
-              headerValue={1}
+              headerValue={statistics[0]}
               descriptor="Total elections"
               imgUrl="/assets/totalElections.png"
             />
@@ -185,16 +251,22 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody style={{ fontSize: "13px" }}>
-                  {elections.map((election) => (
-                    <ElectionRow
-                      electionId={0}
-                      electionTitle={"Test election"}
-                      electionAddress={election}
-                      startDate={new Date(160000000 * 1000).toLocaleString()}
-                      endDate={new Date(160000000 * 1000).toLocaleString()}
-                      status={getStatus(160000000, 160000000)}
-                    />
-                  ))}
+                  {
+                    (detailedelection.length > 0) &&
+                    detailedelection.map((electionData) => (
+                      <ElectionRow
+                        DashContractAddress={DashContractAddress}
+                        id={parseInt(electionData.ID)}
+                        electionId={electionData.electionID}
+                        electionTitle={electionData.name}
+                        electionAddress={electionData.address}
+                        startDate={electionData.startDate}
+                        endDate={electionData.endDate}
+                        status={electionData.status}
+                        organizerInfo= {organizerInfo}
+                      />
+                    ))
+                  }
                 </tbody>
               </Table>
 
