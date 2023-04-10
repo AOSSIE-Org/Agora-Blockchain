@@ -1,7 +1,7 @@
 const list =[];
 async function main() {
   //compiles
-    const org = await ethers.getContractFactory("ElectionOrganizer");
+    // const org = await ethers.getContractFactory("ElectionOrganizer");
     const auth = await ethers.getContractFactory("Authentication");
     const brightid = await ethers.getContractFactory("BrightID");
 
@@ -9,17 +9,17 @@ async function main() {
     const contract1 = await auth.deploy();   
     await contract1.deployed();
     
-    console.log("Contract auth deployed to address:", contract1.address);
+    console.log("Auth contract deployed to address:", contract1.address);
 
     // const contract2 = await org.deploy();   
     // await contract2.deployed();
     
-    // console.log("Contract org deployed to address:", contract2.address);
+    // console.log("Contract deployed to address:", contract2.address);
 
-    // const contract3 = await brightid.deploy();   
-    // await contract3.deployed();
+    const contract3 = await brightid.deploy();   
+    await contract3.deployed();
     
-    // console.log("Contract bright deployed to address:", contract3.address);
+    console.log("Contract deployed to address:", contract3.address);
     
  }
  
