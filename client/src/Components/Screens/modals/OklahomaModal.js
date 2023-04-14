@@ -57,7 +57,6 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                 else if(val===1){
                     temp =5;
                 }
-
                 // the order is reversed because in the logic of oklahoma the candidates votes gets divided by priority every time
                 // so the higher stars the lower priority in contract logic so to make it more intuitive we reversed the order
               let res  =await CurrentElection.vote(addr,id,temp,[]);
@@ -70,7 +69,7 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
            console.log(err);
         }
     }
-    let detail;
+    
 
 
     return (
@@ -132,7 +131,7 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                                                   }}
                                                 size={24}
                                                 color2={'#ffd700'}
-                                                value={0}
+                                                value={val}
                                                 half={false} ></ReactStars>
                                                 </div>
                                                 
