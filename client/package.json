@@ -15,6 +15,7 @@
     "react-scripts": "^5.0.0",
     "react-stars": "^2.2.5",
     "react-timer-hook": "^3.0.5",
+    "react-toastify": "^9.1.2",
     "rimble-ui": "^0.9.7",
     "styled-components": "^5.3.3",
     "web-vitals": "^2.1.4"

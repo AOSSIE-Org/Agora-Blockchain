@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { Flex, Modal, Button, Card } from "rimble-ui";
 import { ethers } from "ethers";
 import ElectionABI from '../../../build/Election.sol/Election.json'
+import { successtoast,dangertoast } from "../utilities/Toasts";
+import { ToastContainer, toast } from "react-toastify";
+
+
 
 import '../../styles/Modal.scss';
 
@@ -45,24 +49,15 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
                 signer
               );
             
-            
-            // window.toastProvider.addMessage("Processing your voting request.", {
-            //     variant: "processing"
-            // })
             let res  =await CurrentElection.vote(addr,candidateId,1,[]);
-            // window.toastProvider.addMessage("Voted", {
-            //     secondaryMessage: "You have successfully voted! Thank you.",
-            //     variant: "success"
-            // });
+            
+            successtoast("you have succesfully voted for candidate ID #"+candidateId);
             console.log('you have succesfully voted ')
             setCandidateId(null);
             setIsOpen(false);
         }
         } catch(err) {
-            // window.toastProvider.addMessage("Failed", {
-            //     secondaryMessage: "Transaction failed. Try again",
-            //     variant: "failure"
-            // });
+            dangertoast("Voting failed. Try again");
             console.log(err)
         }
     }

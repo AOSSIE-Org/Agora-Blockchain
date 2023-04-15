@@ -3,6 +3,7 @@ import { Flex, Modal, Button, Card } from "rimble-ui";
 import DatePicker from "react-datepicker";
 import { ethers } from "ethers";
 import ElectionABI from '../../../build/Election.sol/Election.json'
+import { successtoast,dangertoast } from "../utilities/Toasts";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -60,6 +61,8 @@ export function UpdateElectionModal({contractAddress,electionDetails}) {
             se?.endTime || electionDetails.endDate,]
         );
         await transaction.wait();
+        successtoast("Election Updated Successfully");
+
         console.log("suceessss", [
           1,
           nda?.name || electionDetails.name,
@@ -70,6 +73,7 @@ export function UpdateElectionModal({contractAddress,electionDetails}) {
         
       }
     } catch (err) {
+      dangertoast("Election Updation Failed");
       console.log(err);
     }
   };

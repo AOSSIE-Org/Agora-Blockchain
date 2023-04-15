@@ -4,6 +4,8 @@ import DatePicker from "react-datepicker";
 import { ethers } from "ethers";
 import ElectionOrganiser from "../../../build/ElectionOrganizer.json";
 import "react-datepicker/dist/react-datepicker.css";
+import { toast } from "react-toastify";
+import { successtoast, dangertoast } from "../utilities/Toasts";
 
 export function CreateElectionModal(props) {
   const [isOpen, setIsOpen] = useState(false);
@@ -73,7 +75,7 @@ const handleTypeChange = (e) => {
           [1, nda.name, nda.description, se.startTime, se.endTime],
           ballotType,resultCalculator
         );
-        await transaction.wait();
+        // await transaction.wait();
         console.log("suceessss", [
           1,
           nda.name,
@@ -83,9 +85,11 @@ const handleTypeChange = (e) => {
           ballotType,
           resultCalculator,
         ]);
+        successtoast("Election Created Successfully");
         
       }
     } catch (err) {
+      dangertoast("Election Creation Failed");
       console.log(err);
     }
   };

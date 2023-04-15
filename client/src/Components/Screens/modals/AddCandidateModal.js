@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Flex, Modal, Button, Card } from "rimble-ui";
 import { ethers } from "ethers";
 import ElectionOrganiser from "../../../build/ElectionOrganizer.json";
+import { successtoast,dangertoast } from '../utilities/Toasts';
 
 export function AddCandidateModal({ organizerAddress, electionAddress }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -39,12 +40,14 @@ export function AddCandidateModal({ organizerAddress, electionAddress }) {
                   candidateDetail.name,candidateDetail.description]
               );
               await transaction.wait();
+              successtoast("Candidate Added Successfully")
       
               console.log("suceessss");
               
       
             }
           } catch(err) {
+            dangertoast("Candidate Addition Failed")
             console.log(err);
           }
         

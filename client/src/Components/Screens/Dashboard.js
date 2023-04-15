@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Table, Button, EthAddress, display } from "rimble-ui";
+import { Table, Button, EthAddress, display, zIndex } from "rimble-ui";
 
 import { CreateElectionModal } from "./modals/";
 
@@ -16,6 +16,8 @@ import { ethers } from "ethers";
 import ElectionOrganiser from "../../build/ElectionOrganizer.json";
 import Authentication from "../../build/Authentication.json";
 import ElectionABI from '../../build/Election.sol/Election.json'
+import { ToastContainer } from 'react-toastify';
+
 
 // import BrightID from "./BrightID";
 
@@ -201,6 +203,7 @@ const Dashboard = () => {
     }, [elections])
   return (
     <div style={{ backgroundColor: "#f7f7f7", minHeight: "100%" }}>
+      <ToastContainer style={{zIndex:"99999"}}/>
       <Navbar
         header={organizerInfo.name}
         infoText={organizerInfo.publicAddress}

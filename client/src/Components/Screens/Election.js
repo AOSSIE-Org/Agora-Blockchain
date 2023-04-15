@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 import ElectionABI from '../../build/Election.sol/Election.json'
 import ElectionOrganiser from "../../build/ElectionOrganizer.json";
+import { ToastContainer ,toast} from 'react-toastify';
+import { successtoast,dangertoast } from "./utilities/Toasts";
 
 import { ethers } from "ethers";
 
@@ -101,39 +103,54 @@ function Election() {
 	]);
 
 	const getWinnerDetails = async () => {
-		const { ethereum } = window;
-		if (ethereum) {
-		  const provider = new ethers.providers.Web3Provider(ethereum);
-		  const signer = provider.getSigner();
-		  const electionContract = new ethers.Contract(
-			contractAddress,
-			ElectionABI.abi,
-			signer
-		  );
-		  let _winnerDetails = [];
-		  let winners = await electionContract.getWinners();
-		  console.log('winner',winners);
-		  setWinnerDetails(winners);
-		}
-	}
+		try{
 
-	const getResults = async () => {
-		const edate = electionDetails.endDate;
-		if(Date.now() >= edate) {
-		const { ethereum } = window;
-		if (ethereum) {
-		  const provider = new ethers.providers.Web3Provider(ethereum);
-		  const signer = provider.getSigner();
-		  const electionContract = new ethers.Contract(
-			contractAddress,
-			ElectionABI.abi,
-			signer
-		  );
-		  electionContract.getResult();	
+			const { ethereum } = window;
+			if (ethereum) {
+				const provider = new ethers.providers.Web3Provider(ethereum);
+				const signer = provider.getSigner();
+				const electionContract = new ethers.Contract(
+					contractAddress,
+					ElectionABI.abi,
+					signer
+					);
+					let _winnerDetails = [];
+					let winners = await electionContract.getWinners();
+					console.log('winner',winners);
+					setWinnerDetails(winners);
+				}
+			}catch(e){
+				dangertoast("Falied to get winner details");
+				console.log(e);
+			}
 		}
-		
+			
+			const getResults = async () => {
+				try{
+					
+			const edate = electionDetails.endDate;
+			if(Date.now() >= edate) {
+				const { ethereum } = window;
+				if (ethereum) {
+					const provider = new ethers.providers.Web3Provider(ethereum);
+					const signer = provider.getSigner();
+					const electionContract = new ethers.Contract(
+						contractAddress,
+						ElectionABI.abi,
+						signer
+						);
+						
+						let data = await electionContract.getResult();	
+						successtoast("Results has been Calculated");
+						
+					}
+					
+				}
+			}catch(e){
+				dangertoast("Falied to get results");
+				console.log(e);
+			}
 		}
-	}
 
 	useEffect(() => {
 		if(1) {
@@ -193,8 +210,8 @@ function Election() {
 
 	return (
 		<div style={{backgroundColor: "#f7f7f7", minHeight: "100%"}}>
+			<ToastContainer style={{zIndex:"99999"}} />
 			<Navbar header={name} infoText={publicAddress} organizerAddress={organizerAddress} pictureUrl="/assets/avatar.png"/>
-			
 			<div style={{padding: "30px"}}>
 				<div style={{width: "100%"}}>
 					<div style={{float: "left"}}>

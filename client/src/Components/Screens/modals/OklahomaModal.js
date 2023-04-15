@@ -7,6 +7,7 @@ import '../../styles/Modal.scss';
 import { AVATARS, STATUS } from '../../constants';
 import { ethers } from 'ethers';
 import ElectionABI from '../../../build/Election.sol/Election.json'
+import { successtoast,dangertoast } from "../utilities/Toasts";
 
 export function OklahomaModal({ Candidate, status, candidates, CurrentElection, account,contractAddress,ballotAddress  }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -60,12 +61,14 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                 // the order is reversed because in the logic of oklahoma the candidates votes gets divided by priority every time
                 // so the higher stars the lower priority in contract logic so to make it more intuitive we reversed the order
               let res  =await CurrentElection.vote(addr,id,temp,[]);
+              successtoast("you have succesfully voted for candidate ID #"+id);
               console.log('res',res);
               }
 
             setCandidateId(null);
             // setIsOpen(false);
         } catch (err) {
+            dangertoast("Voting Failed. Try again");
            console.log(err);
         }
     }
@@ -131,7 +134,8 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                                                   }}
                                                 size={24}
                                                 color2={'#ffd700'}
-                                                value={val}
+
+                                                value={id==Number(candidate?.candidateID?._hex)?val:0}
                                                 half={false} ></ReactStars>
                                                 </div>
                                                 

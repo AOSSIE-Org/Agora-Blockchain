@@ -6,6 +6,7 @@ import ElectionABI from '../../../build/Election.sol/Election.json'
 import '../../styles/Modal.scss';
 
 import { AVATARS, STATUS } from '../../constants';
+import { successtoast,dangertoast } from "../utilities/Toasts";
 
 export function BordaModal({Candidate, status, candidates, CurrentElection, account,contractAddress,ballotAddress}) {
     const [isOpen, setIsOpen] = useState(false);
@@ -67,20 +68,13 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
 
 
             let res  =await CurrentElection.vote(addr,1,4,voteCount);
-            // console.log('res',res);
-            // window.toastProvider.addMessage("Voted", {
-            //     secondaryMessage: "You have successfully voted! Thank you.",
-            //     variant: "success"
-            // });
+            successtoast("you have succesfully voted for");
             console.log('you have succesfully voted ')
             setCandidateId(null);
             setIsOpen(false);
         }
         } catch(err) {
-            // window.toastProvider.addMessage("Failed", {
-            //     secondaryMessage: "Transaction failed. Try again",
-            //     variant: "failure"
-            // });
+            dangertoast("Voting failed. Try again");
             console.log(err)
         }
     }
