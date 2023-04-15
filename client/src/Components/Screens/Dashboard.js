@@ -18,7 +18,6 @@ import Authentication from "../../build/Authentication.json";
 import ElectionABI from '../../build/Election.sol/Election.json'
 import { ToastContainer } from 'react-toastify';
 
-
 // import BrightID from "./BrightID";
 
 const Dashboard = () => {
@@ -272,7 +271,7 @@ const Dashboard = () => {
               <h5 style={{lineHeight:0}}>Elections</h5>
               </div>
               <div style={{display:"flex"}}>
-              <input onChange={(e)=>handleSearchChange(e)} placeholder= "Search Election" style={{marginRight:"10px"}}/>
+              <input onChange={(e)=>handleSearchChange(e)} placeholder= "Search Election" style={{marginRight:"10px", padding:"5px"}}/>
                     <div className="">
                     <select style={{ width: "100px" }}
                       onChange={(e) => handleTypeChange(e)}

@@ -261,7 +261,7 @@ function Election() {
 							?
 							<div>
 								<span onClick={getResults} className="voteButton" style={{float: "right", marginTop: "10px", width: "100px"}}>Get Results</span>
-								<span onClick={getWinnerDetails} className="voteButton" style={{float: "right", marginTop: "10px", width: "100px"}}>Show Winner</span>
+								<span onClick={getWinnerDetails} className="voteButton" style={{float: "right", marginTop: "10px", width: "120px" ,padding:"5px"}}>Show Winner</span>
 							</div>
 
 							:
