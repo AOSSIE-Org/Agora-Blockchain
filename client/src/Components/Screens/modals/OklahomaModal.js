@@ -131,7 +131,7 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                                                   }}
                                                 size={24}
                                                 color2={'#ffd700'}
-                                                value={val}
+                                                value={id===Number(candidate?.candidateID?._hex)?val:0}
                                                 half={false} ></ReactStars>
                                                 </div>
                                                 
