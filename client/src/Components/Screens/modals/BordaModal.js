@@ -6,7 +6,8 @@ import ElectionABI from '../../../build/Election.sol/Election.json'
 import '../../styles/Modal.scss';
 
 import { AVATARS, STATUS } from '../../constants';
-import { successtoast,dangertoast } from "../utilities/Toasts";
+import { successtoast, dangertoast } from "../utilities/Toasts";
+import {  toast } from "react-toastify";
 
 export function BordaModal({Candidate, status, candidates, CurrentElection, account,contractAddress,ballotAddress}) {
     const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +41,7 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
 
     const handleVoteSubmit = async (e) => {
 
-       
+       let id ;
         e.preventDefault();
         setIsOpen(false);
         
@@ -48,6 +49,7 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
 
             const { ethereum } = window;
             if (ethereum) {
+              id = toast.loading("Processing your voting request",{theme: "dark",position: "top-center"})
               const provider = new ethers.providers.Web3Provider(ethereum);
               const signer = provider.getSigner();
               const addr = await signer.getAddress();
@@ -58,23 +60,18 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
               );            
             
             console.log('voting')
-            // window.toastProvider.addMessage("Processing your voting request.", {
-            //     variant: "processing"
-            // })
+           
             console.log(CurrentElection)
             console.log('candidateId',candidateId)
-            // let temp = [3,2,1];
             console.log('arr',voteCount)
 
 
             let res  =await CurrentElection.vote(addr,1,4,voteCount);
-            successtoast("you have succesfully voted for");
-            console.log('you have succesfully voted ')
-            setCandidateId(null);
-            setIsOpen(false);
+
+			successtoast(id,"you have succesfully voted ");
         }
         } catch(err) {
-            dangertoast("Voting failed. Try again");
+            dangertoast(id,"Voting failed. Try again");
             console.log(err)
         }
     }

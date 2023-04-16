@@ -4,9 +4,6 @@ import { ethers } from "ethers";
 import ElectionABI from '../../../build/Election.sol/Election.json'
 import { successtoast,dangertoast } from "../utilities/Toasts";
 import { ToastContainer, toast } from "react-toastify";
-
-
-
 import '../../styles/Modal.scss';
 
 import { AVATARS, STATUS } from '../../constants';
@@ -31,7 +28,7 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
     }
 
     const handleVoteSubmit = async (e) => {
-
+        let id
        
         e.preventDefault();
         setIsOpen(false);
@@ -49,15 +46,17 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
                 signer
               );
             
+            id = toast.loading("Processing Your Vote Request",{theme: "dark",position: "top-center"})
             let res  =await CurrentElection.vote(addr,candidateId,1,[]);
+		
             
-            successtoast("you have succesfully voted for candidate ID #"+candidateId);
+            successtoast(id,"you have succesfully voted for candidate ID #"+candidateId);
             console.log('you have succesfully voted ')
             setCandidateId(null);
             setIsOpen(false);
         }
         } catch(err) {
-            dangertoast("Voting failed. Try again");
+            dangertoast(id,"Voting failed. Try again");
             console.log(err)
         }
     }

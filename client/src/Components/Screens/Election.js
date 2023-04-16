@@ -103,6 +103,7 @@ function Election() {
 	]);
 
 	const getWinnerDetails = async () => {
+		let id ;
 		try{
 
 			const { ethereum } = window;
@@ -115,17 +116,21 @@ function Election() {
 					signer
 					);
 					let _winnerDetails = [];
+					id = toast.loading("Processing Your Vote Request",{theme: "dark",position: "top-center"})
+
 					let winners = await electionContract.getWinners();
 					console.log('winner',winners);
 					setWinnerDetails(winners);
+					successtoast(id ,"Winner Details has been fetched");
 				}
 			}catch(e){
-				dangertoast("Falied to get winner details");
+				dangertoast(id ,"Falied to get winner details");
 				console.log(e);
 			}
 		}
 			
 			const getResults = async () => {
+				let id ;
 				try{
 					
 			const edate = electionDetails.endDate;
@@ -134,20 +139,22 @@ function Election() {
 				if (ethereum) {
 					const provider = new ethers.providers.Web3Provider(ethereum);
 					const signer = provider.getSigner();
+					id = toast.loading("Processing Your Request",{theme: "dark",position: "top-center"})
 					const electionContract = new ethers.Contract(
 						contractAddress,
 						ElectionABI.abi,
 						signer
 						);
-						
+
 						let data = await electionContract.getResult();	
-						successtoast("Results has been Calculated");
+						data.wait();
+						successtoast(id ,"Results has been Calculated");
 						
 					}
 					
 				}
 			}catch(e){
-				dangertoast("Falied to get results");
+				dangertoast(id ,"Falied to get results");
 				console.log(e);
 			}
 		}

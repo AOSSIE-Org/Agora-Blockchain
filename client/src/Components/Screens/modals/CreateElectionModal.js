@@ -58,6 +58,7 @@ const handleTypeChange = (e) => {
 
   const handleSubmitNewElection = async (e) => {
     e.preventDefault();
+    let id
     try {
       const { ethereum } = window;
 
@@ -65,6 +66,7 @@ const handleTypeChange = (e) => {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
 
+        id  = toast.loading("Processing Your Transaction",{theme: "dark",position: "top-center"})
         const contract = new ethers.Contract(
           props.DashContractAddress,
           ElectionOrganiser.abi,
@@ -85,11 +87,11 @@ const handleTypeChange = (e) => {
           ballotType,
           resultCalculator,
         ]);
-        successtoast("Election Created Successfully");
+       successtoast(id, "Election Created Successfully")
         
       }
     } catch (err) {
-      dangertoast("Election Creation Failed");
+      dangertoast(id, "Election Creation Failed");
       console.log(err);
     }
   };

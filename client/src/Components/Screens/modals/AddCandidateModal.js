@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Flex, Modal, Button, Card } from "rimble-ui";
 import { ethers } from "ethers";
 import ElectionOrganiser from "../../../build/ElectionOrganizer.json";
-import { successtoast,dangertoast } from '../utilities/Toasts';
+import {successtoast, dangertoast } from '../utilities/Toasts';
+import { toast } from "react-toastify";
 
 export function AddCandidateModal({ organizerAddress, electionAddress }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -22,10 +23,12 @@ export function AddCandidateModal({ organizerAddress, electionAddress }) {
     
 
     const handleSubmitCandidate = async (e) => {
+        let id ;
         e.preventDefault();
         try {
             const { ethereum } = window;
             if (ethereum) {
+             id = toast.loading("Processing Your Transaction",{theme: "dark",position: "top-center"})
               const provider = new ethers.providers.Web3Provider(ethereum);
               const signer = provider.getSigner();
               const contract = new ethers.Contract(
@@ -40,14 +43,13 @@ export function AddCandidateModal({ organizerAddress, electionAddress }) {
                   candidateDetail.name,candidateDetail.description]
               );
               await transaction.wait();
-              successtoast("Candidate Added Successfully")
-      
-              console.log("suceessss");
+              
+              successtoast(id, "Candidate Added Successfully")
               
       
             }
           } catch(err) {
-            dangertoast("Candidate Addition Failed")
+            dangertoast(id ,"Candidate Addition Failed")
             console.log(err);
           }
         

@@ -32,7 +32,6 @@ const Dashboard = () => {
   const [search, setSearch] = useState("");
   const [type,setType] = useState("ALL");
 
-
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
     console.log(search)

@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import { ethers } from "ethers";
 import ElectionABI from '../../../build/Election.sol/Election.json'
 import { successtoast,dangertoast } from "../utilities/Toasts";
+import { toast } from "react-toastify";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -40,20 +41,22 @@ export function UpdateElectionModal({contractAddress,electionDetails}) {
   };
 
   const handleSubmitNewElection = async (e) => {
+    let id;
     e.preventDefault();
     try {
       const { ethereum } = window;
-
+      
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
-
+        
         const contract = new ethers.Contract(
           contractAddress,
           ElectionABI.abi,
           signer
-        );
-        //function to deploy ballot,result
+          );
+          //function to deploy ballot,result
+         id = toast.loading("Processing Your Update Request",{theme: "dark",position: "top-center"})
         const transaction = await contract.updateElectionInfo(
           [Number(electionDetails.electionID), nda?.name || electionDetails.name,
             nda?.description || electionDetails.description,
@@ -61,7 +64,9 @@ export function UpdateElectionModal({contractAddress,electionDetails}) {
             se?.endTime || electionDetails.endDate,]
         );
         await transaction.wait();
-        successtoast("Election Updated Successfully");
+
+        successtoast(id, "Election Updated Successfully")
+		
 
         console.log("suceessss", [
           1,
@@ -73,7 +78,7 @@ export function UpdateElectionModal({contractAddress,electionDetails}) {
         
       }
     } catch (err) {
-      dangertoast("Election Updation Failed");
+      dangertoast(id,"Election Updation Failed");
       console.log(err);
     }
   };
