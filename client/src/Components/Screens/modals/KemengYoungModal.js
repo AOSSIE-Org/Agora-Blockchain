@@ -1,11 +1,11 @@
 import { useState, useEffect} from 'react';
 import { Flex, Modal, Button, Card } from "rimble-ui";
 import { ethers } from "ethers";
-import ElectionABI from '../../../../build/Election.sol/Election.json'
+import ElectionABI from '../../../build/Election.sol/Election.json'
 
-import '../../../styles/Modal.scss';
+import '../../styles/Modal.scss';
 
-import { AVATARS, STATUS } from '../../../constants';
+import { AVATARS, STATUS } from '../../constants';
 
 export function KemengYoungModal ({Candidate, status, candidates, CurrentElection, account,contractAddress,ballotAddress}) {
     const [isOpen, setIsOpen] = useState(false);

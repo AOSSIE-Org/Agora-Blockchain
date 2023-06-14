@@ -20,7 +20,7 @@ import { OklahomaModal } from "./modals/OklahomaModal";
 import { BordaModal } from './modals/BordaModal';
 import { SchulzeModal } from "./modals/SchulzeModal";
 import { IRVModal } from "./modals/IRVModal";
-import { KemengYoungResult } from './modals/KemengYoungModal'
+import { KemengYoungModal } from './modals/KemengYoungModal'
 
 
 import { AVATARS, STATUS } from '../constants'
