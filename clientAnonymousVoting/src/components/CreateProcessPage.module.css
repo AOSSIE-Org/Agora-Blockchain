@@ -1,0 +1,43 @@
+.createProcess{
+    max-width: 50%;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 3em;
+}
+/* create new blog form */
+.create {
+    max-width: 30%;
+    margin: 0 auto;
+    text-align: center;
+    font-size: calc(10px + 0.6vw);
+}
+.create label {
+    text-align: left;
+    display: block;
+}
+.create h2 {
+    font-size: 20px;
+    color: #f1356d;
+    margin-bottom: 30px;
+}
+.create input, .create textarea, .create select {
+    width: 100%;
+    padding: 6px 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    display: block;
+}
+.create button {
+    margin-top: 2em;
+}
+
+.collapse {
+    margin-top: 2em;
+    padding: 1em;
+    border: 1px solid black;
+}
+.collapse p{
+    word-break: break-all;
+    white-space: normal;
+}

@@ -1,0 +1,45 @@
+nav {
+    height: 60px;
+    background-color: white;
+    position: sticky;
+    top: 0px;
+}
+.navbarUserInfo {
+    margin: 10px;
+    float: left;
+    width: 60%;
+    .navbarProfilePic {
+        float: left; 
+        width: 40px;
+        height: 40px; 
+        border-radius: 25px;
+    }
+    .navbarUserText {
+        margin-left: 5px; 
+        float: left; 
+        display: flex; 
+        flex-direction: column;
+        .navbarAddress {
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}
+.navbarMenuOption {
+    margin: 15px 15px 15px 0px; 
+    float: right;
+    .navbarMenuIcon {
+        cursor: pointer; 
+        width: 25px; 
+        height: 25px;
+    }
+    .navbarMenuLeft {
+        margin-right: 20px;
+    }
+}
+@media screen and (max-width: 600px) {
+    .navbarUserText {
+        width: 60%;
+    }
+}

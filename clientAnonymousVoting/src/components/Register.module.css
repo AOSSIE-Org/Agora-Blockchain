@@ -1,0 +1,14 @@
+.Register {
+    font-size: calc(10px + 0.6vw);
+}
+
+.title {
+    font-size: calc(15px + 2vw);
+    font-weight: 500;
+    
+}
+.subtitle {
+    margin-bottom: 2em;
+    font-size: calc(12px + 1.1vw);
+    font-weight: 400;
+}

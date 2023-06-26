@@ -644,6 +644,335 @@
       "artifacts": [
         "Migrations"
       ]
+    },
+    "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/IncrementalMerkleTree.sol": {
+      "lastModificationDate": 1687704485219,
+      "contentHash": "10e87c9d07a2ecaa1ecada990dbe6e13",
+      "sourceName": "contracts/IncrementalMerkleTree.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./MiMC.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IncrementalMerkleTree"
+      ]
+    },
+    "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/MiMC.sol": {
+      "lastModificationDate": 1687704485229,
+      "contentHash": "dff4f7f14e4586d5b06803b7704380ba",
+      "sourceName": "contracts/MiMC.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "MiMC"
+      ]
+    },
+    "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/Semaphore.sol": {
+      "lastModificationDate": 1687704485249,
+      "contentHash": "b415137d892d75b22832f4e6c5245b91",
+      "sourceName": "contracts/Semaphore.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./verifier.sol",
+        "./IncrementalMerkleTree.sol",
+        "./Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Semaphore"
+      ]
+    },
+    "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/verifier.sol": {
+      "lastModificationDate": 1687704485270,
+      "contentHash": "81fbcbf595239e2aa155bfb907311c73",
+      "sourceName": "contracts/verifier.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Pairing",
+        "Verifier"
+      ]
+    },
+    "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/Ownable.sol": {
+      "lastModificationDate": 1687704485238,
+      "contentHash": "7e6ec30dae049d6a6f88e47367196ba1",
+      "sourceName": "contracts/Ownable.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Ownable"
+      ]
+    },
+    "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/SemaphoreClient.sol": {
+      "lastModificationDate": 1687704485253,
+      "contentHash": "52f2cde6fd5af1507a31d30287fdb20e",
+      "sourceName": "contracts/SemaphoreClient.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Semaphore.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SemaphoreClient"
+      ]
+    },
+    "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/VotingProcess.sol": {
+      "lastModificationDate": 1687704485266,
+      "contentHash": "87f191189b44d32cf0d08208a98b71b2",
+      "sourceName": "contracts/VotingProcess.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Semaphore.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "VotingProcess"
+      ]
+    },
+    "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/OneVote.sol": {
+      "lastModificationDate": 1687704485234,
+      "contentHash": "e19159fee42a251cab75d48152573d85",
+      "sourceName": "contracts/OneVote.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./VotingProcess.sol",
+        "./Semaphore.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "OneVote"
+      ]
+    },
+    "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/SnarkConstants.sol": {
+      "lastModificationDate": 1687704485256,
+      "contentHash": "763785b4796a1cc38976a361a0830a31",
+      "sourceName": "contracts/SnarkConstants.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SnarkConstants"
+      ]
     }
   }
 }
