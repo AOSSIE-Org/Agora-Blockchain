@@ -1,13 +1,14 @@
 import { useDispatch } from 'react-redux'
 import { setHasRegistered } from '../store/home.slice';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,Navigate } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
 
 import {ethers} from 'ethers';
 import { initLocalStorage, generateIdentityCommitment } from '../web3/semaphore';
-import { getOneVoteContract } from '../web3/contracts';
+import { getOneVoteContract,getAuthStatus } from '../web3/contracts';
 import "./styles/Auth.scss";
+
 
 import styles from './Register.module.css';
 
@@ -18,6 +19,7 @@ const Register = () => {
     const [identityCommitment, setIdentityCommitment] = useState(null);
     const [connectWallet, setConnectWallet] = useState('');
     const [pending, setPending] = useState(false);
+    const [registered, setRegistered] = useState(false);
 
     const handleRegisterClick = async () => {
         const {ethereum} = window;
@@ -35,6 +37,7 @@ const Register = () => {
         try{
             setPending(true);
             console.log('big no',ethers.BigNumber.from(identityCommitment))
+
             const tx = await oneVote.insertIdentityAsClient(ethers.BigNumber.from(identityCommitment))
             const receipt = await tx.wait();
             setPending(false);
@@ -43,17 +46,34 @@ const Register = () => {
             if (receipt.status === 1) {
                 dispatch(setHasRegistered(true));
             }
+
+            
         }catch(e){
             setPending(false);
         }
     }
+  const isRegistered = async () => {
+    try {
+  
+      if(identityCommitment!=null){
 
+        const tx = await getAuthStatus(identityCommitment);
+        console.log(tx);
+        setRegistered(tx);
+      }
+        // setRegistered(true);
+      
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-    useEffect(() => {
+    useEffect(() => { 
         initLocalStorage();
         setIdentityCommitment(generateIdentityCommitment());
+        isRegistered();
         console.log("Identity commitment: ", identityCommitment);
-    }, []);
+    }, [identityCommitment]);
     
     return ( 
         <div className='authDiv'>
@@ -86,8 +106,13 @@ const Register = () => {
                 // value={initialized ? account : "Loading..."}
               />
               <br />
-              <div >
+              <div >{
+                registered==true
+                ?
+                <Navigate to='/dashboard' />
+                :
                     <button onClick={handleRegisterClick} className="authButtons">Register</button>
+              }
                     <h2 style={{color: "red", marginTop: "1em"}}>{connectWallet}</h2>
                 </div>
                 {pending && <div style={{marginTop: "2em", marginBottom: "2em"}}>

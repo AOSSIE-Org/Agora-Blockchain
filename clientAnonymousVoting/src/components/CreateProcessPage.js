@@ -42,7 +42,7 @@ const CreateProcess = () => {
         setPending(true);
         refValue.current = true;
         //deploy new process contract
-        const result = await deployVotingProcess(name, description, proposalArray);
+        const result = await deployVotingProcess(name, description, proposalArray,1000000,1000000);
         setTransactionResult(result);
 
         refValue.current = false;

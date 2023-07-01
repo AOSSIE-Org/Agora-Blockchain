@@ -129,7 +129,7 @@ const VotingPage = () => {
             console.log("Proving key: ", provingKey);
 
             const identity = retrieveId();
-            console.log("a");
+            console.log("identity",identity);
             setProofStatus('Generating witness')
             var result,witness;
             console.log("Vote: ", vote)
@@ -176,6 +176,7 @@ const VotingPage = () => {
                 // const vpRes = await vp.vote(voteLocal);
                 // console.log("Voted: ", vpRes);
                 // console.log("Vote decision: ", ethers.utils.toUtf8Bytes(voteLocal))
+                console.log('vote',voteLocal,params.proof,'root', ethers.BigNumber.from(params.root),'nullifier hash',params.nullifiersHash,'external nullifier',params.externalNullifier)
                 const tx = await oneVoteContract.vote(
                     //ethers.utils.toUtf8Bytes(params.signal),
                     voteLocal,

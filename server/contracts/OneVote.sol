@@ -4,9 +4,13 @@ pragma solidity ^0.8.0;
 
 import { VotingProcess } from './VotingProcess.sol';
 import { Semaphore } from './Semaphore.sol';
+import './Election.sol';
+import './ElectionStorage.sol';
+import './ElectionFactory.sol';
 
 contract OneVote {
     mapping(uint => VotingProcess) public votingProcesses;
+    mapping(uint256 => bool)userAuthStatus;
     uint processCounter;
 
     uint256[] public identityCommitments;
@@ -44,7 +48,11 @@ contract OneVote {
     function insertIdentityAsClient(uint256 _leaf) public {
         semaphore.insertIdentity(_leaf);
         identityCommitments.push(_leaf);
+        userAuthStatus[_leaf] = true;
         emit IdentityCommitment(_leaf);
+    }
+    function getAuthStatus(uint256 _leaf) public view returns(bool) {
+        return userAuthStatus[_leaf];
     }
 
     function addExternalNullifier(uint232 _externalNullifier) public {
@@ -115,16 +123,20 @@ contract OneVote {
         string name;
         string description;
         bytes[] proposals;
+        uint startDate;
+        uint endDate;
     }
 
     function createVotingProcess(
         string memory _name,
         string memory _description,
-        bytes[] memory _proposals
+        bytes[] memory _proposals,
+        uint _startDate,
+        uint _endDate
     ) public {
         require(_proposals.length > 1, "There need to be at least 2 proposals");
         //add new voting proposal
-        VotingProcess vp = new VotingProcess(processCounter, _name, _description, _proposals);
+        VotingProcess vp = new VotingProcess(processCounter, _name, _description, _proposals, _startDate, _endDate);
 
         addExternalNullifier(uint232(processCounter));
 
@@ -141,7 +153,9 @@ contract OneVote {
                 id: votingProcesses[i].id(),
                 name: votingProcesses[i].name(),
                 description: votingProcesses[i].description(),
-                proposals: votingProcesses[i].getProposals()
+                proposals: votingProcesses[i].getProposals(),
+                startDate: votingProcesses[i].getStartDate(),
+                endDate: votingProcesses[i].getEndDate()
             });
         }
 
@@ -154,7 +168,9 @@ contract OneVote {
             id: votingProcess.id(),
             name: votingProcess.name(),
             description: votingProcess.description(),
-            proposals: votingProcess.getProposals()
+            proposals: votingProcess.getProposals(),
+            startDate: votingProcess.getStartDate(),
+            endDate: votingProcess.getEndDate()
         });
     }
 

@@ -2,7 +2,7 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/Authentication.sol": {
-      "lastModificationDate": 1680095921553,
+      "lastModificationDate": 1688202342797,
       "contentHash": "ac212b4132adcf699ddfa471fa96cf2e",
       "sourceName": "contracts/Authentication.sol",
       "solcConfig": {
@@ -865,8 +865,8 @@
       ]
     },
     "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/VotingProcess.sol": {
-      "lastModificationDate": 1687704485266,
-      "contentHash": "87f191189b44d32cf0d08208a98b71b2",
+      "lastModificationDate": 1687931948928,
+      "contentHash": "c7f79b412f7d3ff36445749157e615ff",
       "sourceName": "contracts/VotingProcess.sol",
       "solcConfig": {
         "version": "0.8.9",
@@ -902,8 +902,8 @@
       ]
     },
     "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/OneVote.sol": {
-      "lastModificationDate": 1687704485234,
-      "contentHash": "e19159fee42a251cab75d48152573d85",
+      "lastModificationDate": 1688202421316,
+      "contentHash": "f697aac9b2bbae663546609b2d9fed7d",
       "sourceName": "contracts/OneVote.sol",
       "solcConfig": {
         "version": "0.8.9",
@@ -930,7 +930,10 @@
       },
       "imports": [
         "./VotingProcess.sol",
-        "./Semaphore.sol"
+        "./Semaphore.sol",
+        "./Election.sol",
+        "./ElectionStorage.sol",
+        "./ElectionFactory.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
