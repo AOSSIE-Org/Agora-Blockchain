@@ -865,8 +865,8 @@
       ]
     },
     "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/VotingProcess.sol": {
-      "lastModificationDate": 1687931948928,
-      "contentHash": "c7f79b412f7d3ff36445749157e615ff",
+      "lastModificationDate": 1688618641242,
+      "contentHash": "cc12eb2ce2ff8d2ec0bf8b38557f4b27",
       "sourceName": "contracts/VotingProcess.sol",
       "solcConfig": {
         "version": "0.8.9",
@@ -902,8 +902,8 @@
       ]
     },
     "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/OneVote.sol": {
-      "lastModificationDate": 1688202421316,
-      "contentHash": "f697aac9b2bbae663546609b2d9fed7d",
+      "lastModificationDate": 1688618651757,
+      "contentHash": "020738d12d6a3a246085cb5243b2f795",
       "sourceName": "contracts/OneVote.sol",
       "solcConfig": {
         "version": "0.8.9",

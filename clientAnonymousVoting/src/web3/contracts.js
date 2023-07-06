@@ -6,17 +6,17 @@ import oneVoteAbi from '@/../../abi/OneVote.json';
 import oneVoteNetworks from '@/../../addresses/OneVote.json';
 import votingProcessAbi from '@/../../abi/VotingProcess.json';
 
-const semaphoreAddress = "0x68B1D87F95878fE05B998F19b66F4baba5De1aed";
-const oneVoteAddress = "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c";
+const semaphoreAddress = "0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d";
+const oneVoteAddress = "0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6";
 
-const deployVotingProcess = async (name, description, proposals,startDate,endDate) => {
+const deployVotingProcess = async (name, description,startDate,endDate) => {
     console.log("One Vote testnet address: ", oneVoteAddress);
     const { ethereum } = window;
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
 
     const args = [
-        name, description, proposals,startDate,endDate
+        name, description,startDate,endDate
     ];
 
     const oneVoteContract = new Contract(oneVoteAddress, oneVoteAbi.abi, signer);
@@ -91,8 +91,18 @@ const getSignalsForNullifier = async (id) => {
     return result;
 }
 
+const addProposal = async (id,proposal) => {
+    const { ethereum } = window;
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const signer = provider.getSigner();
+    const oneVoteContract = new Contract(oneVoteAddress, oneVoteAbi.abi, signer);
+    const result =oneVoteContract.addProposal(id,proposal);
+    return result;
+}
+
 
 export {
+    addProposal,
     deployVotingProcess,
     getVotingProcesses,
     getVotingProcess,

@@ -130,18 +130,20 @@ contract OneVote {
     function createVotingProcess(
         string memory _name,
         string memory _description,
-        bytes[] memory _proposals,
         uint _startDate,
         uint _endDate
     ) public {
-        require(_proposals.length > 1, "There need to be at least 2 proposals");
         //add new voting proposal
-        VotingProcess vp = new VotingProcess(processCounter, _name, _description, _proposals, _startDate, _endDate);
+        VotingProcess vp = new VotingProcess(processCounter, _name, _description, _startDate, _endDate);
 
         addExternalNullifier(uint232(processCounter));
 
         votingProcesses[processCounter] = vp;
         processCounter += 1;
+    }
+
+    function addProposal(uint _processId, bytes memory _proposal) public {
+        votingProcesses[_processId].addProposal(_proposal);
     }
 
     function getProcesses() public view returns(ProcessDTO[] memory){

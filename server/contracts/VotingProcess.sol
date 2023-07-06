@@ -87,19 +87,21 @@ contract VotingProcess{
         require(getStatus() == Status.active, "Election needs to be active to vote");
         votesPerProposal[signal] += 1;
     }
+    function addProposal(bytes memory _proposal) public {
+        require(getStatus() == Status.pending, "Election needs to be pending to add proposals");
+        proposals.push(_proposal);
+    }
 
     constructor(
         uint _id,
         string memory _name,
         string memory _description,
-        bytes[] memory _proposals,
         uint _startDate,
         uint _endDate
     ) public{
         id = _id;
         name = _name;
         description = _description;
-        proposals = _proposals;
         startDate = _startDate;
         endDate = _endDate;
     }

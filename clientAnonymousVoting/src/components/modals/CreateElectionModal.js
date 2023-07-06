@@ -2,13 +2,10 @@ import { useState } from "react";
 import { Flex, Modal, Button, Card } from "rimble-ui";
 import DatePicker from "react-datepicker";
 import { ethers } from "ethers";
-import ElectionOrganiser from "../../build/ElectionOrganizer.json";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { successtoast, dangertoast } from "../utilities/Toasts";
 import { deployVotingProcess, deployTestContract, getTestContract } from '../../web3/contracts'
-import {  useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export function CreateElectionModal(props) {
   const [isOpen, setIsOpen] = useState(false);
@@ -60,20 +57,7 @@ const handleTypeChange = (e) => {
     );
   };
 
-  const formatProposals = (input) => {
-    let proposals = input.split(',');
-    let array = []
-    for(let i=0; i < proposals.length; i ++){
-        array.push(ethers.utils.toUtf8Bytes(proposals[i].trim()));
-    }
-    return array;
-}
 
-const isFormValid = () => {
-  if(proposals < 2)
-      return false;
-  return true;
-}
 
   const handleSubmitNewElection = async (e) => {
     e.preventDefault();
@@ -86,15 +70,8 @@ const isFormValid = () => {
         const signer = provider.getSigner();
 
         id  = toast.loading("Processing Your Transaction",{theme: "dark",position: "top-center"})
-      
-        //function to deploy ballot,result
-        // const transaction = await contract.createElection(
-        //   [1, nda.name, nda.description, se.startTime, se.endTime],
-        //   ballotType,resultCalculator
-        // );
-
-        let proposalArray = formatProposals(proposals);
-        const result = await deployVotingProcess(nda.name, nda.description, proposalArray,se.startTime,se.endTime);
+    
+        const result = await deployVotingProcess(nda.name,nda.description,se.startTime,se.endTime);
 
       
        successtoast(id, "Election Created Successfully")
@@ -191,16 +168,6 @@ const isFormValid = () => {
                   </div>
                   <br/>
 
-                  <div>
-                    <label className="form-label">Proposals (separated with ","):</label>
-                    <input
-                        className="form-control"
-                        type="text"
-                        required
-                        value = {proposals}
-                        onChange={(e) => setProposals(e.target.value)}
-                    />
-                </div>
 
                 <br/>
 

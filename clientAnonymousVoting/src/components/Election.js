@@ -29,7 +29,9 @@ import Navbar from './Navbar';
 import './styles/Election.scss';
 import './styles/Layout.scss';
 import { Update } from "rimble-ui";
-import { getVotingProcess } from '../web3/contracts';
+import { getVotingProcess ,getSignalsForNullifier } from '../web3/contracts';
+// import { getVotingProcessContract } from '../../web3/contracts';
+
 
 function Election() {
 	const [isAdmin, setAdmin] = useState(false);
@@ -45,6 +47,10 @@ function Election() {
 	const [ballotType,setBallotType] = useState(1);
 	//to support Borda Election
 	const [supportVar,setSupportVar] = useState(0);
+	const [votingProcess,setVotingProcess] = useState({});
+	const [votesPerProposal, setVotesPerProposal] = useState(null);
+
+	
 
 
 
@@ -112,6 +118,17 @@ function Election() {
 			setAdmin(true);
 		}
 	}, [])
+	useEffect(() => {
+        getVotingProcess(electionId).then((result) => {
+            console.log("Voting process electionId: ", electionId);
+            console.log("Voting process: ", result);
+            setVotingProcess(result);
+        })
+		getSignalsForNullifier(electionId).then((result) => {
+			setVotesPerProposal(result);
+		});
+		
+	},[])
 
 	const updateStatus = (sdate,edate) => {
 		sdate = sdate * 1000;
@@ -302,24 +319,25 @@ function Election() {
 							<h5 style={{width: "60%"}}>Candidates ({candidates.length})</h5>
 							{
 								// isAdmin && status == STATUS.PENDING &&
-								<AddCandidateModal    />
+								<AddCandidateModal  electionId={electionId}  />
 							}
 						</div>
-
+ 
 						<br/>
 
 						{
-							candidates?.map((candidate) => (
-								<Candidate
-									name={candidate?.name}
-									id={Number(candidate?.candidateID._hex)}
-									about={candidate?.description}
-									voteCount={candidate?.voteCount}
-									imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}
-									modalEnabled="true"
-									ballotAddress={ballotAddress}
-								/> 
+							
+							votingProcess?.proposals?.map((candidate,index) => (
+								// <div style={{padding:"1rem", display:"flex" , justifyContent:"space-around"}}>
+								<Candidate name={ ethers.utils.toUtf8String(candidate)} id={index} voteCount={votesPerProposal == null ?0:votesPerProposal[index][1]._hex} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
+								// {/* { */}
+								// 	// votesPerProposal == null ? <div>0</div> :
+								// 	// <div>votes:{parseInt(votesPerProposal[index][1]._hex)}</div>
+								// // }
+								// </div>
 							))
+							
+							
 						}
 					</div>
 				</div>

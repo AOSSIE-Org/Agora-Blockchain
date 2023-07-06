@@ -4,8 +4,9 @@ import { ethers } from "ethers";
 import ElectionOrganiser from "../../build/ElectionOrganizer.json";
 import {successtoast, dangertoast } from '../utilities/Toasts';
 import { toast } from "react-toastify";
+import {addProposal} from '../../web3/contracts';
 
-export function AddCandidateModal({ organizerAddress, electionAddress }) {
+export function AddCandidateModal({ electionId }) {
     const [isOpen, setIsOpen] = useState(false);
     const [candidateDetail, setCandidateDetail] = useState({
         name: '',
@@ -26,28 +27,17 @@ export function AddCandidateModal({ organizerAddress, electionAddress }) {
         let id ;
         e.preventDefault();
         try {
-            const { ethereum } = window;
-            if (ethereum) {
-             id = toast.loading("Processing Your Transaction",{theme: "dark",position: "top-center"})
-              const provider = new ethers.providers.Web3Provider(ethereum);
-              const signer = provider.getSigner();
-              const contract = new ethers.Contract(
-                organizerAddress,
-                ElectionOrganiser.abi,
-                signer
-              );
-              const transaction = await contract.addCandidate(
-                electionAddress
-                ,
-                  [1,
-                  candidateDetail.name,candidateDetail.description]
-              );
-              await transaction.wait();
+          
+
+            let tx = await addProposal(electionId,ethers.utils.toUtf8Bytes(candidateDetail.name.trim()));
+           
+              await tx.wait();
+              console.log(tx);
               
-              successtoast(id, "Candidate Added Successfully")
+            //   successtoast(id, "Candidate Added Successfully")
               
       
-            }
+            
           } catch(err) {
             dangertoast(id ,"Candidate Addition Failed")
             console.log(err);

@@ -142,16 +142,13 @@ export function VoteModal({electionId,status}) {
 
 
             console.log("Proof root: ", ethers.BigNumber.from(params.root));
-            console.log("hi")
-            // console.log("Signal: ", ethers.utils.toUtf8Bytes(params?.signal));
-            console.log("hi again")
+       
 
             try{
                 console.log("connecting to contract");
                 
                 console.log('vote',candidateId,params.proof,'root', ethers.BigNumber.from(params.root),'nullifier hash',params.nullifiersHash,'external nullifier',params.externalNullifier)
                 const tx = await oneVoteContract.vote(
-                    //ethers.utils.toUtf8Bytes(params.signal),
                     candidateId,
                     params.proof,
                     ethers.BigNumber.from(params.root),
@@ -286,7 +283,7 @@ export function VoteModal({electionId,status}) {
                                             <div style={{padding:"1.9rem"}}>
                                                 {/* voteCount ={parseInt(votesPerProposal[2][1]._hex)} */}
 
-                                        <Candidate name={ ethers.utils.toUtf8String(candidate)} id={1}  imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
+                                        <Candidate name={ ethers.utils.toUtf8String(candidate)} id={index}  imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
                                         {
                                                 votesPerProposal == null ? <div>0</div> :
                                                 <div>Total votes:{parseInt(votesPerProposal[index][1]._hex)}</div>
