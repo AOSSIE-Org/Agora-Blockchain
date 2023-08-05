@@ -1,27 +1,33 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-
-import './Test2Facet.sol';
+import '../libraries/LibDiamond.sol';
+import './GetBallot.sol';
+import './votingApp/ballot/Ballot.sol';
+import './GetResultCalculator.sol';
+import './votingApp/resultCalculator/ResultCalculator.sol';
+import './ElectionFactory.sol';
 
 contract Test1Facet {
-    event TestEvent(address something);
-    string name;
-    Test2Facet test2facet;
-
-    function getName() external view returns (string memory){
-        return name;
+    function setReqBallot() external {
+        GetBallot(LibDiamond.addressStorage().diamond).getNewBallot(2);
     }
 
-    function setName(string memory _name) external {
-        name = _name;
+    function getReqBallot() external view returns (Ballot){
+        return LibDiamond.electionStorage().ballot;
     }
 
-    function getNewFacet() external returns (address) {
-        test2facet = new Test2Facet();
-        return address(test2facet);
+    function setReqResult() external {
+        GetResultCalculator(LibDiamond.addressStorage().diamond).getNewResultCalculator(2);
     }
 
-    function getString() external view returns (string memory){
-        return test2facet.getString();
+    function getReqResult() external view returns (ResultCalculator){
+        return LibDiamond.electionStorage().resultCalculator;
+    }
+
+    function test1facetelection() external pure returns (LibDiamond.ElectionStorage memory){
+        return LibDiamond.electionStorage();
+    }
+    function test1facetAddress() external pure returns (LibDiamond.AddressStorage memory){
+        return LibDiamond.addressStorage();
     }
 }

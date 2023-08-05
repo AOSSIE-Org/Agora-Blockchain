@@ -31,13 +31,18 @@ async function deployDiamond () {
   console.log('')
   console.log('Deploying facets')
   const FacetNames = [
-    'Authentication',
     'DiamondLoupeFacet',
     'OwnershipFacet',
-    'tempElectionOrganizer'
+    'Authentication',
+    'ElectionOrganizer',
+    'Voter',
+    'ElectionFactory',
+    'GetBallot',
+    'GetResultCalculator',
+    'Test1Facet'
   ]
   const cut = []
-  for (const FacetName of FacetNames) {
+   for (const FacetName of FacetNames) {
     const Facet = await ethers.getContractFactory(FacetName)
     const facet = await Facet.deploy()
     await facet.deployed()
@@ -64,6 +69,7 @@ async function deployDiamond () {
     throw Error(`Diamond upgrade failed: ${tx.hash}`)
   }
   console.log('Completed diamond cut')
+  console.log("diamond address - ", diamond.address)
   return diamond.address
 }
 

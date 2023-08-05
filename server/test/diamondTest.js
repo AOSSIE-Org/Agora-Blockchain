@@ -19,66 +19,163 @@ describe('DiamondTest', async function () {
   let diamondCutFacet
   let diamondLoupeFacet
   let ownershipFacet
-  let test1Facet
+  let electionFactory
+  let electionFactoryAddress
   let authentication
-  let tempElectionOrganizer
+  let test1Facet
+  let getBallot
+  let getResultCalculator
+  let electionOrganizer
+  let initializer
   let tx
   let receipt
   let result
   const addresses = []
+  let tempAddress
 
   before(async function () {
-    let resultAddress = await deployDiamond()
-    diamondAddress = resultAddress.diamond
+    let diamondAddress = await deployDiamond()
+    tempAddress = diamondAddress
     diamondCutFacet = await ethers.getContractAt('DiamondCutFacet', diamondAddress)
     diamondLoupeFacet = await ethers.getContractAt('DiamondLoupeFacet', diamondAddress)
     ownershipFacet = await ethers.getContractAt('OwnershipFacet', diamondAddress)
+
     authentication = await ethers.getContractAt('Authentication', diamondAddress)
-    tempElectionOrganizer = await ethers.getContractAt('tempElectionOrganizer', diamondAddress)
-    tempElectionOrganizer.init(resultAddress.organizer)
+    await authentication.init(diamondAddress);
+    
+    electionOrganizer = await ethers.getContractAt('ElectionOrganizer', diamondAddress)
+    
+    electionFactory = await ethers.getContractAt('ElectionFactory', diamondAddress)
+    
+    getBallot = await ethers.getContractAt('GetBallot', diamondAddress)
+    getResultCalculator = await ethers.getContractAt('GetResultCalculator', diamondAddress)
+    
+    test1Facet = await ethers.getContractAt('Test1Facet', diamondAddress)
+
+    console.log()
+    console.log()
+    console.log()
+    console.log("Testing start")
   })
 
-  it('Test with library', async () => {
-    console.log("Election Organizer Contract Address - ");
-    console.log(await authentication.getElectionOrganizerContract());
+  it('Testing all three new added algorithm', async() => {
+    let currTest = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
+    await authentication.createUser([1, 'Yogendra', currTest]);
+    console.log("Organizer Auth Status - ", await authentication.getAuthStatus('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'));
+    let organizerAddress = await authentication.getElectionOrganizerContract();
+    let organizerContract = await ethers.getContractAt('ElectionOrganizer', organizerAddress);
+    let timestamp = Math.floor(Date.now() / 1000);
+    let info = {electionID:1, name:"SchulzeVoting Testing", description:"Test description", startDate:timestamp, endDate:timestamp+100}
+    await organizerContract.createElection(info, 5, 5);
+    info = {electionID:1, name:"IRVVoting Testing", description:"Test description", startDate:timestamp, endDate:timestamp+100}
+    await organizerContract.createElection(info, 6, 6);
+    info = {electionID:1, name:"KemengYoungVoting Testing", description:"Test description", startDate:timestamp, endDate:timestamp+100}
+    await organizerContract.createElection(info, 7, 7);
+    let elections = await organizerContract.getElections()
+    console.log("Election - ", elections)
+
+    console.log()
+    console.log('First Election Testing start from here');
+    let electionContract = await ethers.getContractAt('Election', elections[0])
+    console.log("Election address - ", elections[0]);
+    console.log("Election detail - ", await electionContract.getElectionInfo())
+    console.log('Casting Vote ', await electionContract.getStatus())
   })
 
-  // it('Election Organizer', async () => {
-  //   console.log("start");
-  //   await electionOrganizer.init();
-  //   console.log(await electionOrganizer.getElectionStorage());
-  //   console.log("end");
-  // })
+  it("Testing IRV Voting algorithm", async () => {
+    console.log("Voting algorithm");
+  })
 
-  // it('Testing Authentication facet1', async () => {
-  //   console.log('Test 1')
-  //   console.log(await authentication.getAuthStatus('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'));
-  //   await authentication.init();
-  //   let organizer = await authentication.getElectionOrganizerContract();
-  //   console.log(organizer);
-  //   console.log(await authentication.getVoterContract());
-  //   organizerContract = await ethers.getContractAt('ElectionOrganizer', organizer);
-  //   console.log(await organizerContract.getElectionStorage());
 
-  //   await organizerContract.addElectionOrganizer([1, 'Yogendra', '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266']);
 
-  //   await organizerContract.createElection([1, "Election1", 'Test Election', 222222, 333333], 1, 1);
-  //   let elections = await organizerContract.getElections();
-  //   console.log("Get Elections ", elections);
-  //   console.log("Election - ", await (await ethers.getContractAt('Election', elections[0])).getElectionInfo());
-  // })
 
-  // it('testfaucet1', async () => {
-  //   console.log("Test output - ", await test1Facet.getNewFacet(), "Tested");
-  //   console.log("Test output - ", await test1Facet.getString(), "Tested");
-  // })
 
-  // it('should have three facets -- call to facetAddresses function', async () => {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+  // it("Get Address", async() => {
+  //   console.log()
+  //   console.log()
+  //   console.log()
+  //   console.log("Required facet address in smart contract - ", tempAddress)
+  // })  
+  
+  
+  // it('Testing Organizer Auth Status and address of electionOrganizer and voter', async () => {
+  //   console.log()
+  //   console.log()
+  //   console.log()
+  //   let currTest = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
+  //   console.log("Organizer Auth Status Before user creation - ", await authentication.getAuthStatus(currTest));
+    
+  //   let electionOrganizerAddress = await authentication.getElectionOrganizerContract()
+  //   let electionOrganizerContract = await ethers.getContractAt('ElectionOrganizer', electionOrganizerAddress)
+  //   console.log("Organizer Info - ", electionOrganizerAddress)
+  //   console.log("Voter Information - ", await authentication.getVoterContract());
+    
+  //   await authentication.createUser([1, 'Yogendra', currTest]);
+  //   console.log("Election Organizer created")
+  //   console.log("Organizer Auth Status After user creation - ", await authentication.getAuthStatus(currTest));
+  //   console.log(`Organizer info of address ${currTest} - `, await electionOrganizerContract.getElectionOrganizerByAddress(currTest))
+  //   console.log(`All Organizer info - `, await electionOrganizerContract.getElectionOrganizers())
+  // }) 
+  
+  
+  // it('Election Creation', async () => {
+  //   console.log()
+  //     console.log()
+  //     console.log()
+  //     let currTest = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
+  //     //await authentication.createUser([1, 'Yogendra', currTest]);
+  //     let organizerAddress = await authentication.getElectionOrganizerContract();
+  //     let organizerContract = await ethers.getContractAt('ElectionOrganizer', organizerAddress);
+  //     console.log("Organizer Auth Status - ", await authentication.getAuthStatus('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'));
+  //     console.log("Before election created", await organizerContract.getElections());
+  //     try {        
+  //       let info = {electionID:1, name:"Election1", description:"Description of election1", startDate:224466, endDate:22446688}
+  //       await organizerContract.createElection(info, 1, 1);
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //     try {        
+  //       let info = {electionID:2, name:"Election2", description:"Description of election2", startDate:224466, endDate:22446688}
+  //       await organizerContract.createElection(info, 1, 1);
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //     console.log("After election created", await organizerContract.getElections());      
+  //   })
+
+  //   it("Election Organizer Creation Failed due to a duplicate entry of the organizer", async() => {
+  //     console.log();
+  //     console.log();
+  //     console.log();
+  //     let currTest = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
+  //     await authentication.createUser([1, 'Yogendra', currTest]);
+  //   })
+    
+
+  // it('should have ten facets -- call to facetAddresses function', async () => {
   //   for (const address of await diamondLoupeFacet.facetAddresses()) {
   //     addresses.push(address)
   //   }
 
-  //   assert.equal(addresses.length, 3)
+  //   assert.equal(addresses.length, 10)
   // })
 
   // it('facets should have the right function selectors -- call to facetFunctionSelectors function', async () => {
@@ -92,25 +189,61 @@ describe('DiamondTest', async function () {
   //   result = await diamondLoupeFacet.facetFunctionSelectors(addresses[2])
   //   assert.sameMembers(result, selectors)
   // })
+  
+  //   it('selectors should be associated to facets correctly -- multiple calls to facetAddress function', async () => {
+  //     assert.equal(
+  //       addresses[0],
+  //       await diamondLoupeFacet.facetAddress('0x1f931c1c')
+  //     )
+  //     assert.equal(
+  //       addresses[1],
+  //       await diamondLoupeFacet.facetAddress('0xcdffacc6')
+  //     )
+  //     assert.equal(
+  //       addresses[1],
+  //       await diamondLoupeFacet.facetAddress('0x01ffc9a7')
+  //     )
+  //     assert.equal(
+  //       addresses[2],
+  //       await diamondLoupeFacet.facetAddress('0xf2fde38b')
+  //     )
+  //   })
 
-  // it('selectors should be associated to facets correctly -- multiple calls to facetAddress function', async () => {
-  //   assert.equal(
-  //     addresses[0],
-  //     await diamondLoupeFacet.facetAddress('0x1f931c1c')
-  //   )
-  //   assert.equal(
-  //     addresses[1],
-  //     await diamondLoupeFacet.facetAddress('0xcdffacc6')
-  //   )
-  //   assert.equal(
-  //     addresses[1],
-  //     await diamondLoupeFacet.facetAddress('0x01ffc9a7')
-  //   )
-  //   assert.equal(
-  //     addresses[2],
-  //     await diamondLoupeFacet.facetAddress('0xf2fde38b')
-  //   )
+  // it('remove all functions and facets except \'diamondCut\' and \'facets\'', async () => {
+  //   let selectors = []
+  //   let facets = await diamondLoupeFacet.facets()
+  //   for (let i = 0; i < facets.length; i++) {
+  //     selectors.push(...facets[i].functionSelectors)
+  //   }
+  //   selectors = removeSelectors(selectors, ['facets()', 'diamondCut(tuple(address,uint8,bytes4[])[],address,bytes)'])
+  //   tx = await diamondCutFacet.diamondCut(
+  //     [{
+  //       facetAddress: ethers.constants.AddressZero,
+  //       action: FacetCutAction.Remove,
+  //       functionSelectors: selectors
+  //     }],
+  //     ethers.constants.AddressZero, '0x', { gasLimit: 800000 })
+  //   receipt = await tx.wait()
+  //   if (!receipt.status) {
+  //     throw Error(`Diamond upgrade failed: ${tx.hash}`)
+  //   }
+  //   facets = await diamondLoupeFacet.facets()
+  //   assert.equal(facets.length, 2)
+  //   assert.equal(facets[0][0], addresses[0])
+  //   assert.sameMembers(facets[0][1], ['0x1f931c1c'])
+  //   assert.equal(facets[1][0], addresses[1])
+  //   assert.sameMembers(facets[1][1], ['0x7a0ed627'])
   // })
+
+
+
+
+
+
+
+
+
+
 
   // it('should add test1 functions', async () => {
   //   const Test1Facet = await ethers.getContractFactory('Test1Facet')
@@ -216,31 +349,6 @@ describe('DiamondTest', async function () {
   //   assert.sameMembers(result, getSelectors(test1Facet).get(functionsToKeep))
   // })
 
-  // it('remove all functions and facets except \'diamondCut\' and \'facets\'', async () => {
-  //   let selectors = []
-  //   let facets = await diamondLoupeFacet.facets()
-  //   for (let i = 0; i < facets.length; i++) {
-  //     selectors.push(...facets[i].functionSelectors)
-  //   }
-  //   selectors = removeSelectors(selectors, ['facets()', 'diamondCut(tuple(address,uint8,bytes4[])[],address,bytes)'])
-  //   tx = await diamondCutFacet.diamondCut(
-  //     [{
-  //       facetAddress: ethers.constants.AddressZero,
-  //       action: FacetCutAction.Remove,
-  //       functionSelectors: selectors
-  //     }],
-  //     ethers.constants.AddressZero, '0x', { gasLimit: 800000 })
-  //   receipt = await tx.wait()
-  //   if (!receipt.status) {
-  //     throw Error(`Diamond upgrade failed: ${tx.hash}`)
-  //   }
-  //   facets = await diamondLoupeFacet.facets()
-  //   assert.equal(facets.length, 2)
-  //   assert.equal(facets[0][0], addresses[0])
-  //   assert.sameMembers(facets[0][1], ['0x1f931c1c'])
-  //   assert.equal(facets[1][0], addresses[1])
-  //   assert.sameMembers(facets[1][1], ['0x7a0ed627'])
-  // })
 
   // it('add most functions and facets', async () => {
   //   const diamondLoupeFacetSelectors = getSelectors(diamondLoupeFacet).remove(['supportsInterface(bytes4)'])

@@ -14,7 +14,7 @@ contract ElectionStorage {
     mapping(address=>address[]) electionsOfOrganizer;
     mapping(uint => address) electionWithID;
 
-    uint electionCount=1000;
+    uint electionCount;
 
     // // ------------------------------------------------------------------------------------------------------
     // //                                            CONSTRUCTOR
@@ -55,7 +55,8 @@ contract ElectionStorage {
         return electionsOfOrganizer[_organizer];
     }
     
-    function addElection(Election _election, address _organizer)external{
+    function addElection(address election, address _organizer)external{
+        Election _election = Election(election);
         electionCount++;
         elections.push(address(_election));
         electionsOfOrganizer[_organizer].push(address(_election));

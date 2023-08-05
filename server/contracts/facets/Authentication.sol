@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.0;
 
-import './votingApp/ElectionOrganizer.sol';
-import './votingApp/Voter.sol';
+import './ElectionOrganizer.sol';
+import './Voter.sol';
 
 contract Authentication {
 
@@ -40,9 +40,11 @@ contract Authentication {
     //                                            FUNCTIONS
     // ------------------------------------------------------------------------------------------------------
 
-    function init() external {
-        electionOrganizer = new ElectionOrganizer();
-        voter = new Voter();   
+    function init(address _diamond) external {
+        LibDiamond.addressStorage().diamond = _diamond;
+        electionOrganizer =  ElectionOrganizer(_diamond);
+        electionOrganizer.electionOrganizerInit();
+        voter = Voter(_diamond);   
     }
 
     function createUser(ElectionOrganizer.OrganizerInfo memory _organizerInfo) public {

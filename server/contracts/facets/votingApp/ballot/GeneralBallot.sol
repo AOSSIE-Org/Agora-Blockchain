@@ -18,6 +18,7 @@ contract GeneralBallot is Ballot {
 
     function vote(address _voter, uint _candidate, uint _weight,uint[] memory voteArr)external override{
         _weight = 1;
+        require(voteStatus[_voter]==false,"Voter already voted");
         votes[_candidate]+=1;
         voteStatus[_voter] = true;
     }    

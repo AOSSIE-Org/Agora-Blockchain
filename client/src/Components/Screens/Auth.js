@@ -4,6 +4,7 @@ import { Link, Navigate } from "react-router-dom";
 import { ethers } from "ethers";
 import Authentication from "../../build/Authentication.json";
 import "../styles/Auth.scss";
+import { CONTRACTADDRESS } from '../constants'
 
 function Auth() {
   const [authMode, setAuthMode] = useState("signup");
@@ -12,7 +13,9 @@ function Auth() {
     name: "",
   });
   const [newRegistered, setNewRegistered] = useState(false);
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  const contractAddress = CONTRACTADDRESS
+
+  
 
   const handleNameChange = (e) => {
     setFullName({
@@ -40,8 +43,7 @@ function Auth() {
         // const tx = await contract.createUser(fullName.name);
 
         //changed hardcoded address to signer address
-        const tx = await contract.createUser([1,fullName.name,add
-        ]);
+        const tx = await contract.createUser([1,fullName.name,add]);
         await tx.wait();
         console.log("suucce");
         setNewRegistered(true);
@@ -63,6 +65,10 @@ function Auth() {
           Authentication.abi,
           signer
         );
+
+        console.log(contract)
+
+        // await contract.init(contractAddress)    //This step you have to do  one time
 
         //changed hardcoded address to signer address
 

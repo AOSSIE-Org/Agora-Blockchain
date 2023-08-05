@@ -1,20 +1,32 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.0;
 
-//Import ResultCalculators
-import './resultCalculator/ResultCalculator.sol';
-import './resultCalculator/GeneralResults.sol';
-import './resultCalculator/Oklahoma.sol';
-import './resultCalculator/BordaResult.sol';
-// New ResultCalculators here
 
-contract GetResultCalculator {
+// Import Ballots
+import './votingApp/ballot/Ballot.sol';
+import './votingApp/ballot/GeneralBallot.sol';
+import './votingApp/ballot/PreferenceBallot.sol';
+import './votingApp/ballot/BordaBallot.sol';
+import './votingApp/ballot/Schulze.sol';
+import './votingApp/ballot/InstantRunOff.sol';
+import './votingApp/ballot/KemenyYoung.sol';
+//New Ballot
+
+import '../libraries/LibDiamond.sol';
+
+contract GetBallot {
 
     // ------------------------------------------------------------------------------------------------------
     //                                          DEPENDENCIES
     // ------------------------------------------------------------------------------------------------------
 
-    ResultCalculator resultCalculator;
+    Ballot _ballot;
+
+    // ------------------------------------------------------------------------------------------------------
+    //                                              STATE
+    // ------------------------------------------------------------------------------------------------------
+
+    address electionOrganizerContract;
 
     // // ------------------------------------------------------------------------------------------------------
     // //                                            CONSTRUCTOR
@@ -52,27 +64,40 @@ contract GetResultCalculator {
     //                                            FUNCTIONS
     // ------------------------------------------------------------------------------------------------------
 
-    function getResultCalculator(uint _ballotType, uint _resultCalculatorType) external returns(ResultCalculator) {
-        // GeneralBallot
-        _resultCalculatorType;
+
+    function getNewBallot(uint _ballotType) external {
+        /*
+            1: GenralBallot
+            2: PreferenceBallot
+            3: ScoreBallot
+            // new Ballots
+            default: GeneralBallot
+        */
         if (_ballotType == 1) {
-            resultCalculator = new GeneralResults();
+            _ballot = new GeneralBallot();
         }
-        // PreferenceBallot
         else if (_ballotType == 2) {
-            resultCalculator = new Oklahoma();
+            _ballot = new PreferenceBallot();
         }
-        // ScoreBallot
-        // else if (_ballotType == 3) {
-        //     getScoreResultCalculator(_resultCalculatorType);
-        // }
+        else if (_ballotType == 3) {
+            // ballot = new ScoreBallot();
+        }
         else if (_ballotType == 4) {
-            resultCalculator = new BordaResult();
+            _ballot = new BordaBallot();
+        }
+        else if (_ballotType == 5) {
+            _ballot = new SchulzeBallot();
+        }
+        else if (_ballotType == 6) {
+            _ballot = new IRV();
+        }
+        else if (_ballotType == 7) {
+            _ballot = new KemenyYoung();
         }
         // New Ballots here
         else {
-            resultCalculator = new GeneralResults();
+            _ballot = new GeneralBallot();
         }
-        return resultCalculator;
+        LibDiamond.electionStorage().ballot = _ballot;
     }
 }

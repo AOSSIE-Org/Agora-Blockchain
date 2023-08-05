@@ -7,6 +7,8 @@ pragma solidity ^0.8.0;
 /******************************************************************************/
 import { IDiamondCut } from "../interfaces/IDiamondCut.sol";
 import '../facets/votingApp/Election.sol';
+import '../facets/votingApp/ballot/Ballot.sol';
+import '../facets/votingApp/resultCalculator/ResultCalculator.sol';
 
 // Remember to add the loupe functions from DiamondLoupeFacet to the diamond.
 // The loupe functions are required by the EIP2535 Diamonds standard
@@ -15,7 +17,8 @@ error InitializationFunctionReverted(address _initializationContractAddress, byt
 
 library LibDiamond {
     bytes32 constant DIAMOND_STORAGE_POSITION = keccak256("diamond.standard.diamond.storage");
-    bytes32 constant APP_STORAGE_POSITION = keccak256("diamond.standard.app.storage");
+    bytes32 constant ADDRESS_STORAGE_POSITION = keccak256("diamond.standard.address.storage");
+    bytes32 constant ELECTION_STORAGE_POSITION = keccak256("diamond.standard.election.storage");
 
     struct FacetAddressAndPosition {
         address facetAddress;
@@ -42,12 +45,14 @@ library LibDiamond {
         address contractOwner;
     }
 
-    struct AppStorage {
-        //address
-        address electionOrganizer;
-        address voter;
-        address electionFactory;
-        address electionStorage;
+    struct AddressStorage {
+        address diamond;
+    }
+
+    struct ElectionStorage {
+        Ballot ballot;
+        ResultCalculator resultCalculator;
+        Election election;
     }
 
     function diamondStorage() internal pure returns (DiamondStorage storage ds) {
@@ -57,13 +62,20 @@ library LibDiamond {
         }
     }
 
-    function appStorage() internal pure returns (AppStorage storage apps) {
-        bytes32 position = APP_STORAGE_POSITION;
+    function addressStorage() internal pure returns (AddressStorage storage adds) {
+        bytes32 position = ADDRESS_STORAGE_POSITION;
         assembly {
-            apps.slot := position
+            adds.slot := position
         }
     }
 
+    function electionStorage() internal pure returns (ElectionStorage storage es) {
+        bytes32 position = ELECTION_STORAGE_POSITION;
+        assembly {
+            es.slot := position
+        }
+    }
+    
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
     function setContractOwner(address _newOwner) internal {
@@ -225,31 +237,5 @@ library LibDiamond {
             contractSize := extcodesize(_contract)
         }
         require(contractSize > 0, _errorMessage);
-    }
-
-    // function libAddElectionOrganizer(OrganizerInfo memory _organizer) internal {
-    //     DiamondStorage storage ds = diamondStorage(); 
-    //     bytes4 test1func1Selector = bytes4(keccak256("test1Func1(OrganizerInfo)")); 
-    //     // get the function selector with the correct argument type 
-    //     address test1FacetAddress = ds.selectorToFacetAndPosition[test1func1Selector].facetAddress; 
-
-    //     // Create a struct instance with some values 
-    //     //organizerInfo memory info = organizerInfo({ publicAddress: 0x123456789abcdef0123456789abcdef012345678, name: “Alice”, id: 42 });
-
-    //     // Encode the struct as bytes using abi.encode() 
-    //     bytes memory infoBytes = abi.encode(_organizer);
-
-    //     // Encode the function call as bytes using abi.encodeWithSelector() 
-    //     bytes memory test1func1Call = abi.encodeWithSelector(test1func1Selector, infoBytes); 
-    //     // pass the encoded struct as an argument
-
-    //     (bool success, bytes memory result) = address(test1FacetAddress).delegatecall(test1func1Call); 
-    //     // call the function using delegatecall 
-    //     require(success, "test1func1 failed"); 
-    //     result;
-    // }
-
-    function libGetElection(Election.ElectionInfo memory _electionInfo, uint _ballotType, uint _resultCalculatorType, address _electionOrganizer, address _electionOrganizerContract) internal returns (Election _election){
-
     }
 }

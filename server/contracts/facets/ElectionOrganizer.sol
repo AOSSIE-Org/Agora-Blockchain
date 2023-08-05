@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.0;
 
-import './Election.sol';
-import './ElectionStorage.sol';
-import '../../libraries/LibDiamond.sol';
+import './votingApp/Election.sol';
+import './votingApp/ElectionStorage.sol';
+import '../libraries/LibDiamond.sol';
+import './ElectionFactory.sol';
 
 contract ElectionOrganizer {
 
@@ -28,7 +29,7 @@ contract ElectionOrganizer {
     // ------------------------------------------------------------------------------------------------------
 
     ElectionStorage electionStorage;
-    // ElectionFactory electionFactory;
+    ElectionFactory electionFactory;
 
     // ------------------------------------------------------------------------------------------------------
     //                                              EVENTS
@@ -65,7 +66,7 @@ contract ElectionOrganizer {
     //                                            FUNCTIONS
     // ------------------------------------------------------------------------------------------------------
 
-    function init() external {
+    function electionOrganizerInit() external {
         electionStorage = new ElectionStorage();
     }
 
@@ -74,7 +75,7 @@ contract ElectionOrganizer {
     }
 
     function getElectionFactory() public view returns(address) {
-        return address(LibDiamond.appStorage().electionFactory);
+        return LibDiamond.addressStorage().diamond;        
     }
 
     function addElectionOrganizer(OrganizerInfo memory _organizerInfo) external {
@@ -99,14 +100,15 @@ contract ElectionOrganizer {
         return organizerWithAddress[_address];
     }
 
-    function createElection(Election.ElectionInfo memory _electionInfo,uint _ballotType, uint _resultCalculatorType) public onlyOrganizer {
-        Election election;
+    function createElection(Election.ElectionInfo memory _electionInfo, uint _ballotType, uint _resultCalculatorType) public onlyOrganizer returns (address){
+        address electionFactoryAddress = LibDiamond.addressStorage().diamond;
         uint id = electionStorage.getElectionCount() + 1;
         _electionInfo.electionID = id;
-       election = LibDiamond.libGetElection(_electionInfo, _ballotType, _resultCalculatorType, msg.sender, address(this));
+        ElectionFactory(electionFactoryAddress).getElectionFromFactory(_electionInfo, _ballotType, _resultCalculatorType, msg.sender, address(this));
         // save in ElectionStorage
-        electionStorage.addElection(election,msg.sender);
-        emit CreatedElection(address(election));
+        address _election = address(LibDiamond.electionStorage().election);
+        electionStorage.addElection(_election, msg.sender);
+        emit CreatedElection(_election);
     }
 
     function getElections() public view returns(address[] memory) {

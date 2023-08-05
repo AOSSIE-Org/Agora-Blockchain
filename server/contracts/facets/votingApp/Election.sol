@@ -78,34 +78,12 @@ contract Election {
     }
 
     
-    // // ------------------------------------------------------------------------------------------------------
-    // //                                            CONSTRUCTOR
-    // // ------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------
+    //                                            CONSTRUCTOR
+    // ------------------------------------------------------------------------------------------------------
 
-    // constructor(ElectionInfo memory _electionInfo, Ballot _ballot, ResultCalculator _resultCalculator,address _electionOrganizer, address _electionOrganizerContract,uint _ballotType) {
+    constructor(ElectionInfo memory _electionInfo, Ballot _ballot, ResultCalculator _resultCalculator,address _electionOrganizer, address _electionOrganizerContract,uint _ballotType) {
         
-    //     electionOrganizer = _electionOrganizer;
-    //     electionOrganizerContract = _electionOrganizerContract;
-    //     electionInfo = _electionInfo;
-    //     ballot = _ballot;
-    //     resultCalculator = _resultCalculator;
-    //     // if(block.timestamp < _electionInfo.startDate) {
-    //     //     status = Status.pending;
-    //     // } else {
-    //     //     status = Status.active;
-    //     // }
-    //     candidateCount = 1000;
-    //     voterCount = 0;
-    //     resultDeclared = false;
-    //     ballotType = _ballotType;
-
-    // }
-
-    // ------------------------------------------------------------------------------------------------------
-    //                                            FUNCTIONS
-    // ------------------------------------------------------------------------------------------------------
-
-    function init(ElectionInfo memory _electionInfo, Ballot _ballot, ResultCalculator _resultCalculator,address _electionOrganizer, address _electionOrganizerContract,uint _ballotType) external {
         electionOrganizer = _electionOrganizer;
         electionOrganizerContract = _electionOrganizerContract;
         electionInfo = _electionInfo;
@@ -120,7 +98,13 @@ contract Election {
         voterCount = 0;
         resultDeclared = false;
         ballotType = _ballotType;
+
     }
+
+    // ------------------------------------------------------------------------------------------------------
+    //                                            FUNCTIONS
+    // ------------------------------------------------------------------------------------------------------
+
     function getStatus() public view returns (Status) {
 
         if(block.timestamp < electionInfo.startDate) {

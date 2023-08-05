@@ -17,7 +17,11 @@ import {
 } from './modals'
 
 import { OklahomaModal } from "./modals/OklahomaModal";
-import {BordaModal} from './modals/BordaModal';
+import { BordaModal } from './modals/BordaModal';
+import { SchulzeModal } from "./modals/SchulzeModal";
+import { IRVModal } from "./modals/IRVModal";
+import { KemengYoungModal } from './modals/KemengYoungModal'
+
 
 import { AVATARS, STATUS } from '../constants'
 import { Status, CardItem, TimerStyled } from "./utilities";
@@ -96,9 +100,7 @@ function Election() {
 
 
 
-	const [winnerDetails, setWinnerDetails] = useState([
-		
-	]);
+	const [winnerDetails, setWinnerDetails] = useState([]);
 
 	const getWinnerDetails = async () => {
 		const { ethereum } = window;
@@ -113,7 +115,13 @@ function Election() {
 		  let _winnerDetails = [];
 		  let winners = await electionContract.getWinners();
 		  console.log('winner',winners);
-		  setWinnerDetails(winners);
+		  for(let winner of winners){
+			console.log(Number(winner))
+		  }
+		  _winnerDetails.push(Number(winners[0]))
+		  console.log("set winner", Number(winners[0]))
+
+		  setWinnerDetails(_winnerDetails);
 		}
 	}
 
@@ -129,7 +137,7 @@ function Election() {
 			ElectionABI.abi,
 			signer
 		  );
-		  electionContract.getResult();	
+		  await electionContract.getResult();	
 		}
 		
 		}
@@ -222,6 +230,15 @@ function Election() {
 						{ballotType===1 &&
 							<VoteModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
 						}
+						{ballotType===5 &&
+							<SchulzeModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
+						}
+						{ballotType===6 &&
+							<IRVModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
+						}
+						{ballotType===7 &&
+							<KemengYoungModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
+						}
 					</div>
 				</div>
 
@@ -268,7 +285,7 @@ function Election() {
 									
 											<Candidate
 												name={candidate?.name}
-												id={supportVar+ Number(candidate?._hex)}
+												id={candidate}
 												about={candidate?.about}
 												voteCount={candidate?.voteCount}
 												imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}
@@ -309,13 +326,26 @@ function Election() {
 								voting. Voters rank candidates in order of preference, and their votes are initially 
 								allocated to their first-choice candidate. If, after this initial count, 
 								no candidate has a majority of votes cast, a mathematical formula comes into play.
-								`:`The Borda count method is a point-based election system in which voters number their 
+								`:ballotType==4?`The Borda count method is a point-based election system in which voters number their 
 								preferred choices in order. The Borda count method does not rely on the majority criterion
 								 or Condorcet criterion. The majority criterion states if one choice gets the majority of
 								  the first-place votes, that choice should be declared the winner. In the Borda count 
 								  method it is possible, and sometimes happens, that the first choice option would get 
 								  the majority of the votes, but once all of the votes are considered, that choice is not the 
-								  winner.`}
+								  winner.`:ballotType==5?`The Schulze method is a Condorcet method, which means that if there 
+								  is a candidate who is preferred by a majority over every other candidate in pairwise comparisons,
+								   then this candidate will be the winner when the Schulze method is applied. The output of the 
+								   Schulze method gives an ordering of candidates.`:ballotType==6?`Instant-runoff voting (IRV), 
+								   also called ranked-choice voting, is a type of ranked preferential voting method used in single-member
+								    districts in which there are more than two candidates. In IRV elections, voters rank the candidates 
+									in order of preference. Ballots are initially counted to establish the number of votes for each candidate. 
+									If a candidate has more than half of the first-choice votes, that candidate wins. If not, then the candidate 
+									with the fewest votes is eliminated, and the voters who selected that candidate as their first choice 
+									have their votes added to the total of the candidate who was their next choice. That process continues 
+									until one candidate has more than half of the votes, and that person is declared the winner.`:
+									`The Kemeny–Young method is an electoral system that uses preferential ballots and pairwise comparison counts 
+									to identify the most popular choices in an election. It is a Condorcet method because if there is a 
+									Condorcet winner, it will always be ranked as the most popular choice.`}
 
 
 
