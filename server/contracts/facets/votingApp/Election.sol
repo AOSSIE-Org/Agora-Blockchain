@@ -98,7 +98,6 @@ contract Election {
         voterCount = 0;
         resultDeclared = false;
         ballotType = _ballotType;
-
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -215,9 +214,15 @@ contract Election {
     }
 
     function updateElectionInfo(ElectionInfo memory _electionInfo) external  onlyOrganizer{
-        require(getStatus() == Status.pending,"Cannot update election info after election has started");
+        require(getStatus() == Status.pending, "Cannot update election info after election has started");
         electionInfo = _electionInfo;
-
     }   
 
+    function updateCandidateInfo(string memory _name, string memory _description, uint index) external onlyOrganizerContract {
+        require(getStatus() == Status.pending,"Cannot add candidates after election has started");
+        uint len = candidates.length;
+        require(index < len);
+        candidates[index].name = _name;
+        candidates[index].description = _description;
+    }
 }

@@ -131,6 +131,10 @@ contract ElectionOrganizer {
         _election.addCandidate(_candidate);
         emit CandidateAdded(address(_election),_candidate);
     }
+
+    function updateCandidateInfo(Election _election, string memory _name, string memory _description, uint index)public onlyCorrespondingOrganizer(_election.getElectionOrganizer()) {
+        _election.updateCandidateInfo(_name, _description, index);
+    }
     
     function getResult(Election _election) public returns(uint[] memory) {
         return _election.getResult();

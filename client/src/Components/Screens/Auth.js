@@ -68,7 +68,7 @@ function Auth() {
 
         console.log(contract)
 
-        // await contract.init(contractAddress)    //This step you have to do  one time
+        //await contract.init(contractAddress)    //This step you have to do  one time
 
         //changed hardcoded address to signer address
 
