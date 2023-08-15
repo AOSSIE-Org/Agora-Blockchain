@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.0;
 
-import './votingApp/Election.sol';
+import './Election.sol';
 import './votingApp/ballot/Ballot.sol';
 import './votingApp/resultCalculator/ResultCalculator.sol';
 import '../libraries/LibDiamond.sol';

@@ -101,7 +101,12 @@ const Dashboard = () => {
           publicAddress: data.publicAddress,
         });
 
-        const elections = await contract.getElections(); //get elections
+        const openBasedElections = await contract.getOpenBasedElections();
+        const inviteBasedElections = await contract.getInviteBasedElections(data.publicAddress);
+        const elections = await openBasedElections.concat(inviteBasedElections);
+        console.log(openBasedElections);
+        console.log(inviteBasedElections);
+        console.log(elections);
         getElections(elections);
       }
     } catch (err) {

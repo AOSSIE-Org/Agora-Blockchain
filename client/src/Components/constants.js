@@ -17,4 +17,4 @@ export const AVATARS = [
     '/assets/avatar4.png'
 ]
 
-export const CONTRACTADDRESS = "0xD91648F8A1d9637Fc32a4DB119b4327853DFD40A"
+export const CONTRACTADDRESS = "0xB692B11f454f9efd47475F6BCA77D94FcC1a1a22"

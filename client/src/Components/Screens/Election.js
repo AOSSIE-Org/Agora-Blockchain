@@ -2,7 +2,7 @@ import React from "react";
 import { useTimer } from 'react-timer-hook';
 import { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
-import ElectionABI from '../../build/Election.sol/Election.json'
+import ElectionABI from '../../build/Election.json'
 import ElectionOrganiser from "../../build/ElectionOrganizer.json";
 
 import { ethers } from "ethers";
@@ -14,6 +14,7 @@ import {
 	VoteModal,
 	DeleteModal,
 	UpdateElectionModal,
+	InviteOrganizer
 } from './modals'
 
 import {UpdateCandidateModal} from "./modals/UpdateCandidateModal";
@@ -56,19 +57,23 @@ function Election() {
 
 	const fetchElectionDetails = async () => {
 		try{
-
 			const { ethereum } = window;
     		if (ethereum) {
       		const provider = new ethers.providers.Web3Provider(ethereum);
       		const signer = provider.getSigner();
-			  const electionContract = new ethers.Contract(
-				contractAddress,
-				ElectionABI.abi,
-				signer
-			  );
+			const electionContract = new ethers.Contract(
+			contractAddress,
+			ElectionABI.abi,
+			signer
+			);
+					
+			console.log(electionContract);
 
 			//fetched election details
 			const electionDetail =await electionContract.getElectionInfo();
+			console.log(electionDetail);
+			const electionType  = await electionContract.getElectionType();
+			console.log(electionType);
 			updateStatus(Number(electionDetail.startDate._hex), Number(electionDetail.endDate._hex));
 
 			const ballotType = await electionContract.getBallotType();
@@ -88,13 +93,9 @@ function Election() {
 			setCandidates(cand);
 			console.log(cand);
 			
-
-			const no  = await electionContract.getVoterCount();
-
 			//total voters
+			const no  = await electionContract.getVoterCount();
 			setVotersCount(Number(no._hex));	
-			
-			
 			}
 
 		}catch(err){
@@ -224,6 +225,7 @@ function Election() {
 						<MyTimer style={{marginRight:"15%"}} sdate = {electionDetails.startDate} edate = {electionDetails.endDate}/>
 						<DeleteModal Candidate = {Candidate} isAdmin = {isAdmin} isPending = {true}/>
 						<UpdateElectionModal contractAddress={contractAddress} electionDetails={electionDetails} election/>
+						<InviteOrganizer />
 						
 						{ballotType===4 &&
 							<BordaModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>

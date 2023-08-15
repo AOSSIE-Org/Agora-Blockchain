@@ -6,7 +6,7 @@ pragma solidity ^0.8.0;
 * EIP-2535 Diamonds: https://eips.ethereum.org/EIPS/eip-2535
 /******************************************************************************/
 import { IDiamondCut } from "../interfaces/IDiamondCut.sol";
-import '../facets/votingApp/Election.sol';
+import '../facets/Election.sol';
 import '../facets/votingApp/ballot/Ballot.sol';
 import '../facets/votingApp/resultCalculator/ResultCalculator.sol';
 

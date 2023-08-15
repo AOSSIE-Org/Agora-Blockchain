@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.0;
 
-import './ballot/Ballot.sol';
-import './resultCalculator/ResultCalculator.sol';
+import './votingApp/ballot/Ballot.sol';
+import './votingApp/resultCalculator/ResultCalculator.sol';
 
 
 contract Election {
@@ -17,8 +17,8 @@ contract Election {
         string description;
         uint startDate;
         uint endDate;
+        bool electionType;
         // Election type: 0 for invite based 1 for open
-        // bool electionType;
     }
     ElectionInfo electionInfo;
 
@@ -133,6 +133,10 @@ contract Election {
 
     function getElectionInfo() public view returns(ElectionInfo memory){
         return electionInfo;
+    }
+
+    function getElectionType() public view returns(bool){
+        return electionInfo.electionType;
     }
 
     function getElectionOrganizer() public view returns (address) {
