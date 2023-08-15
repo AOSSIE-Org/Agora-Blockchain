@@ -2,7 +2,7 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\Diamond.sol": {
-      "lastModificationDate": 1688174311700,
+      "lastModificationDate": 1688301980237,
       "contentHash": "f73264b3911016e08ea9dea82b980370",
       "sourceName": "contracts/Diamond.sol",
       "solcConfig": {
@@ -40,8 +40,8 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\libraries\\LibDiamond.sol": {
-      "lastModificationDate": 1688297439956,
-      "contentHash": "dbbcfb350784b6bfb874e3f4e13dd1a6",
+      "lastModificationDate": 1691935587827,
+      "contentHash": "20702fa7e4a9edcceb547afefb62b698",
       "sourceName": "contracts/libraries/LibDiamond.sol",
       "solcConfig": {
         "version": "0.8.10",
@@ -68,7 +68,9 @@
       },
       "imports": [
         "../interfaces/IDiamondCut.sol",
-        "../facets/votingApp/Election.sol"
+        "../facets/Election.sol",
+        "../facets/votingApp/ballot/Ballot.sol",
+        "../facets/votingApp/resultCalculator/ResultCalculator.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -78,7 +80,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\interfaces\\IDiamondCut.sol": {
-      "lastModificationDate": 1687957125715,
+      "lastModificationDate": 1688301980384,
       "contentHash": "3d267178319c5e7ba5621f8cd8340550",
       "sourceName": "contracts/interfaces/IDiamondCut.sol",
       "solcConfig": {
@@ -112,8 +114,121 @@
         "IDiamondCut"
       ]
     },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\Election.sol": {
+      "lastModificationDate": 1691935481107,
+      "contentHash": "1159492cee7657f171f07a97d9cd058f",
+      "sourceName": "contracts/facets/Election.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./votingApp/ballot/Ballot.sol",
+        "./votingApp/resultCalculator/ResultCalculator.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "Election"
+      ]
+    },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\Ballot.sol": {
+      "lastModificationDate": 1691935636494,
+      "contentHash": "be978a0bbce56fe917ca96a34c14f46f",
+      "sourceName": "contracts/facets/votingApp/ballot/Ballot.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../Election.sol",
+        "../resultCalculator/ResultCalculator.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "Ballot"
+      ]
+    },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\ResultCalculator.sol": {
+      "lastModificationDate": 1688302118214,
+      "contentHash": "b98ea7294bf3f4f70ef41047cf8aaacb",
+      "sourceName": "contracts/facets/votingApp/resultCalculator/ResultCalculator.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../ballot/Ballot.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "ResultCalculator"
+      ]
+    },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\upgradeInitializers\\DiamondInit.sol": {
-      "lastModificationDate": 1687957125715,
+      "lastModificationDate": 1688301980434,
       "contentHash": "64bdac7c56bc05e8ba6e3bc5eb3c1217",
       "sourceName": "contracts/upgradeInitializers/DiamondInit.sol",
       "solcConfig": {
@@ -154,7 +269,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\interfaces\\IDiamondLoupe.sol": {
-      "lastModificationDate": 1687957125715,
+      "lastModificationDate": 1688301980384,
       "contentHash": "5c2fe4932744a1e3e72711627cbd7edf",
       "sourceName": "contracts/interfaces/IDiamondLoupe.sol",
       "solcConfig": {
@@ -189,7 +304,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\interfaces\\IERC173.sol": {
-      "lastModificationDate": 1687957125715,
+      "lastModificationDate": 1688301980414,
       "contentHash": "bb4c896ca0f6249adff834b3529636ef",
       "sourceName": "contracts/interfaces/IERC173.sol",
       "solcConfig": {
@@ -224,7 +339,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\interfaces\\IERC165.sol": {
-      "lastModificationDate": 1687957125715,
+      "lastModificationDate": 1688301980384,
       "contentHash": "77054f3cfef6c65157665ff1845a6461",
       "sourceName": "contracts/interfaces/IERC165.sol",
       "solcConfig": {
@@ -259,7 +374,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\DiamondLoupeFacet.sol": {
-      "lastModificationDate": 1688174264147,
+      "lastModificationDate": 1688301980248,
       "contentHash": "7f4c0502d1d006f23b2e8d474a462809",
       "sourceName": "contracts/facets/DiamondLoupeFacet.sol",
       "solcConfig": {
@@ -297,10 +412,10 @@
         "DiamondLoupeFacet"
       ]
     },
-    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\Election.sol": {
-      "lastModificationDate": 1688093369014,
-      "contentHash": "bd894539231cdb85b33f8a45d39b7f5e",
-      "sourceName": "contracts/facets/votingApp/Election.sol",
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\Test2Facet.sol": {
+      "lastModificationDate": 1688526713551,
+      "contentHash": "eac6224d2792810930d4dab128635749",
+      "sourceName": "contracts/facets/Test2Facet.sol",
       "solcConfig": {
         "version": "0.8.10",
         "settings": {
@@ -325,20 +440,19 @@
         }
       },
       "imports": [
-        "./ballot/Ballot.sol",
-        "./resultCalculator/ResultCalculator.sol"
+        "../libraries/LibDiamond.sol"
       ],
       "versionPragmas": [
-        ">=0.8.0"
+        "^0.8.0"
       ],
       "artifacts": [
-        "Election"
+        "Test2Facet"
       ]
     },
-    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\Ballot.sol": {
-      "lastModificationDate": 1685154060115,
-      "contentHash": "62dea5d0b96d7cd5f3d1999d7bc88673",
-      "sourceName": "contracts/facets/votingApp/ballot/Ballot.sol",
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\Test1Facet.sol": {
+      "lastModificationDate": 1688696486191,
+      "contentHash": "26cbef9d53138ed7ee549a7600a34ec5",
+      "sourceName": "contracts/facets/Test1Facet.sol",
       "solcConfig": {
         "version": "0.8.10",
         "settings": {
@@ -363,199 +477,142 @@
         }
       },
       "imports": [
-        "../Election.sol",
-        "../resultCalculator/ResultCalculator.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "Ballot"
-      ]
-    },
-    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\ResultCalculator.sol": {
-      "lastModificationDate": 1685154060121,
-      "contentHash": "b98ea7294bf3f4f70ef41047cf8aaacb",
-      "sourceName": "contracts/facets/votingApp/resultCalculator/ResultCalculator.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../ballot/Ballot.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "ResultCalculator"
-      ]
-    },
-    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\Voter.sol": {
-      "lastModificationDate": 1685154060114,
-      "contentHash": "1dc90025b56685ebf8e45dbd02615076",
-      "sourceName": "contracts/facets/votingApp/Voter.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./Election.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "Voter"
-      ]
-    },
-    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ElectionStorage.sol": {
-      "lastModificationDate": 1688299157376,
-      "contentHash": "ad934ebb2836f2b62b287fad578556ad",
-      "sourceName": "contracts/facets/votingApp/ElectionStorage.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./Election.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "ElectionStorage"
-      ]
-    },
-    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ElectionOrganizer.sol": {
-      "lastModificationDate": 1688297449388,
-      "contentHash": "b78cfe8c0eac1aed56e0c9a1640e64e6",
-      "sourceName": "contracts/facets/votingApp/ElectionOrganizer.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./Election.sol",
-        "./ElectionStorage.sol",
-        "../../libraries/LibDiamond.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "ElectionOrganizer"
-      ]
-    },
-    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ElectionFactory.sol": {
-      "lastModificationDate": 1688298830875,
-      "contentHash": "ac1c0a2fe5e17bb51ce081c68e48bb40",
-      "sourceName": "contracts/facets/votingApp/ElectionFactory.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./Election.sol",
+        "../libraries/LibDiamond.sol",
         "./GetBallot.sol",
-        "./ballot/Ballot.sol",
+        "./votingApp/ballot/Ballot.sol",
         "./GetResultCalculator.sol",
-        "./resultCalculator/ResultCalculator.sol"
+        "./votingApp/resultCalculator/ResultCalculator.sol",
+        "./ElectionFactory.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Test1Facet"
+      ]
+    },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\GetBallot.sol": {
+      "lastModificationDate": 1688691914580,
+      "contentHash": "b9ee4874f15db1d1a3dabd001ff0b134",
+      "sourceName": "contracts/facets/GetBallot.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./votingApp/ballot/Ballot.sol",
+        "./votingApp/ballot/GeneralBallot.sol",
+        "./votingApp/ballot/PreferenceBallot.sol",
+        "./votingApp/ballot/BordaBallot.sol",
+        "./votingApp/ballot/Schulze.sol",
+        "./votingApp/ballot/InstantRunOff.sol",
+        "./votingApp/ballot/KemenyYoung.sol",
+        "../libraries/LibDiamond.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "GetBallot"
+      ]
+    },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\GetResultCalculator.sol": {
+      "lastModificationDate": 1688692004295,
+      "contentHash": "4cb0e46c36df3bf82eb9d8bb75bc5005",
+      "sourceName": "contracts/facets/GetResultCalculator.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./votingApp/resultCalculator/ResultCalculator.sol",
+        "./votingApp/resultCalculator/GeneralResults.sol",
+        "./votingApp/resultCalculator/Oklahoma.sol",
+        "./votingApp/resultCalculator/BordaResult.sol",
+        "./votingApp/resultCalculator/SchulzeResult.sol",
+        "./votingApp/resultCalculator/IRVResult.sol",
+        "./votingApp/resultCalculator/KemenyYoungResult.sol",
+        "../libraries/LibDiamond.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "GetResultCalculator"
+      ]
+    },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\ElectionFactory.sol": {
+      "lastModificationDate": 1691935533874,
+      "contentHash": "fcc7e023d2a3d262e93ed2ed2ae1f7cc",
+      "sourceName": "contracts/facets/ElectionFactory.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Election.sol",
+        "./votingApp/ballot/Ballot.sol",
+        "./votingApp/resultCalculator/ResultCalculator.sol",
+        "../libraries/LibDiamond.sol",
+        "./GetBallot.sol",
+        "./GetResultCalculator.sol"
       ],
       "versionPragmas": [
         ">=0.8.0"
@@ -565,8 +622,8 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\GeneralBallot.sol": {
-      "lastModificationDate": 1686709953816,
-      "contentHash": "8429c4d6cb1140a5a471d75d5d1cd76c",
+      "lastModificationDate": 1691935641353,
+      "contentHash": "1e46104ad9eb3398f04defa2039f66f9",
       "sourceName": "contracts/facets/votingApp/ballot/GeneralBallot.sol",
       "solcConfig": {
         "version": "0.8.10",
@@ -593,7 +650,7 @@
       },
       "imports": [
         "./Ballot.sol",
-        "../Election.sol"
+        "../../Election.sol"
       ],
       "versionPragmas": [
         ">=0.8.0"
@@ -603,8 +660,8 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\PreferenceBallot.sol": {
-      "lastModificationDate": 1686709953816,
-      "contentHash": "d6816f1058baa9cb3584ab1168f3245f",
+      "lastModificationDate": 1691935657014,
+      "contentHash": "a78816d97c2de5d7880338e055ad4794",
       "sourceName": "contracts/facets/votingApp/ballot/PreferenceBallot.sol",
       "solcConfig": {
         "version": "0.8.10",
@@ -631,7 +688,7 @@
       },
       "imports": [
         "./Ballot.sol",
-        "../Election.sol"
+        "../../Election.sol"
       ],
       "versionPragmas": [
         ">=0.8.0"
@@ -641,8 +698,8 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\BordaBallot.sol": {
-      "lastModificationDate": 1686709953816,
-      "contentHash": "8dd1df79d918f1ad6192d699b199d4ea",
+      "lastModificationDate": 1691935638435,
+      "contentHash": "5b541cb67432129b442411e804674f56",
       "sourceName": "contracts/facets/votingApp/ballot/BordaBallot.sol",
       "solcConfig": {
         "version": "0.8.10",
@@ -669,7 +726,7 @@
       },
       "imports": [
         "./Ballot.sol",
-        "../Election.sol"
+        "../../Election.sol"
       ],
       "versionPragmas": [
         ">=0.8.0"
@@ -678,8 +735,122 @@
         "BordaBallot"
       ]
     },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\Schulze.sol": {
+      "lastModificationDate": 1691935662255,
+      "contentHash": "b70fa3f19742abd4bedf5574a6eb17bf",
+      "sourceName": "contracts/facets/votingApp/ballot/Schulze.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Ballot.sol",
+        "../../Election.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "SchulzeBallot"
+      ]
+    },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\InstantRunOff.sol": {
+      "lastModificationDate": 1691935645660,
+      "contentHash": "b1a25af03bb379bd96bc19464b643f10",
+      "sourceName": "contracts/facets/votingApp/ballot/InstantRunOff.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Ballot.sol",
+        "../../Election.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "IRV"
+      ]
+    },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\KemenyYoung.sol": {
+      "lastModificationDate": 1691935650879,
+      "contentHash": "93674cef8a61fab117919b290cc0e904",
+      "sourceName": "contracts/facets/votingApp/ballot/KemenyYoung.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Ballot.sol",
+        "../../Election.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "KemenyYoung"
+      ]
+    },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\GeneralResults.sol": {
-      "lastModificationDate": 1686709953816,
+      "lastModificationDate": 1688302118212,
       "contentHash": "a1342629910813fdd8d4f2888a1829fe",
       "sourceName": "contracts/facets/votingApp/resultCalculator/GeneralResults.sol",
       "solcConfig": {
@@ -717,7 +888,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\Oklahoma.sol": {
-      "lastModificationDate": 1685154060120,
+      "lastModificationDate": 1688302118214,
       "contentHash": "f33a67dc18862622706e917938d4a492",
       "sourceName": "contracts/facets/votingApp/resultCalculator/Oklahoma.sol",
       "solcConfig": {
@@ -755,7 +926,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\BordaResult.sol": {
-      "lastModificationDate": 1686709953816,
+      "lastModificationDate": 1688302118211,
       "contentHash": "02e70c125bfa06e515b888df4710a4e6",
       "sourceName": "contracts/facets/votingApp/resultCalculator/BordaResult.sol",
       "solcConfig": {
@@ -792,8 +963,122 @@
         "BordaResult"
       ]
     },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\SchulzeResult.sol": {
+      "lastModificationDate": 1688793446294,
+      "contentHash": "70a622d561e474811d757d825106709f",
+      "sourceName": "contracts/facets/votingApp/resultCalculator/SchulzeResult.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ResultCalculator.sol",
+        "../ballot/Ballot.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "SchulzeResult"
+      ]
+    },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\IRVResult.sol": {
+      "lastModificationDate": 1689302608171,
+      "contentHash": "2e19b3e99a223255c9e65b0c46bc2647",
+      "sourceName": "contracts/facets/votingApp/resultCalculator/IRVResult.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ResultCalculator.sol",
+        "../ballot/Ballot.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "IRVResult"
+      ]
+    },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\KemenyYoungResult.sol": {
+      "lastModificationDate": 1688302118213,
+      "contentHash": "99ecf3479b4ea4db66c37e9f6d3ad999",
+      "sourceName": "contracts/facets/votingApp/resultCalculator/KemenyYoungResult.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ResultCalculator.sol",
+        "../ballot/Ballot.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "KemenyYoungResult"
+      ]
+    },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\ScoreBallot.sol": {
-      "lastModificationDate": 1686709953816,
+      "lastModificationDate": 1688302118210,
       "contentHash": "b003d09dc3bc803e54778864ec8e3db3",
       "sourceName": "contracts/facets/votingApp/ballot/ScoreBallot.sol",
       "solcConfig": {
@@ -829,8 +1114,160 @@
         "ScoreBallot"
       ]
     },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\Voter.sol": {
+      "lastModificationDate": 1691935701388,
+      "contentHash": "1dc90025b56685ebf8e45dbd02615076",
+      "sourceName": "contracts/facets/Voter.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Election.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "Voter"
+      ]
+    },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\Authentication.sol": {
+      "lastModificationDate": 1688696250892,
+      "contentHash": "e64c75b4ddd5c900959847ff0df5a12e",
+      "sourceName": "contracts/facets/Authentication.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ElectionOrganizer.sol",
+        "./Voter.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "Authentication"
+      ]
+    },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\ElectionOrganizer.sol": {
+      "lastModificationDate": 1691935490828,
+      "contentHash": "2e86908fcec4ba55c8a68f828b5823ee",
+      "sourceName": "contracts/facets/ElectionOrganizer.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Election.sol",
+        "./votingApp/ElectionStorage.sol",
+        "../libraries/LibDiamond.sol",
+        "./ElectionFactory.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "ElectionOrganizer"
+      ]
+    },
+    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ElectionStorage.sol": {
+      "lastModificationDate": 1691941928273,
+      "contentHash": "dd394ae30738cbffc81a0c9895e69697",
+      "sourceName": "contracts/facets/votingApp/ElectionStorage.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../Election.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "ElectionStorage"
+      ]
+    },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\OwnershipFacet.sol": {
-      "lastModificationDate": 1688174263974,
+      "lastModificationDate": 1688301980248,
       "contentHash": "b256e73c91935a9089d259fc04dfb164",
       "sourceName": "contracts/facets/OwnershipFacet.sol",
       "solcConfig": {
@@ -868,7 +1305,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\DiamondCutFacet.sol": {
-      "lastModificationDate": 1688174264200,
+      "lastModificationDate": 1688301980241,
       "contentHash": "2276f8474aa9269dcf44875a6d0b8ea5",
       "sourceName": "contracts/facets/DiamondCutFacet.sol",
       "solcConfig": {
@@ -905,118 +1342,8 @@
         "DiamondCutFacet"
       ]
     },
-    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\Authentication.sol": {
-      "lastModificationDate": 1688296894774,
-      "contentHash": "b5f8c3c6e5b111c09cc7bbcb232dc61d",
-      "sourceName": "contracts/facets/Authentication.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./votingApp/ElectionOrganizer.sol",
-        "./votingApp/Voter.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "Authentication"
-      ]
-    },
-    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\Test1Facet.sol": {
-      "lastModificationDate": 1688174411506,
-      "contentHash": "be485977b69102bc43338658922131e0",
-      "sourceName": "contracts/facets/Test1Facet.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./Test2Facet.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Test1Facet"
-      ]
-    },
-    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\Test2Facet.sol": {
-      "lastModificationDate": 1688174411623,
-      "contentHash": "35f74dde4dc676a94909b770bcd268a9",
-      "sourceName": "contracts/facets/Test2Facet.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Test2Facet"
-      ]
-    },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\BrightID.sol": {
-      "lastModificationDate": 1688176025367,
+      "lastModificationDate": 1688301980299,
       "contentHash": "f44d284b10d72b09e3d03ec636c3c3a5",
       "sourceName": "contracts/facets/votingApp/BrightID.sol",
       "solcConfig": {
@@ -1051,7 +1378,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\Migrations.sol": {
-      "lastModificationDate": 1688176025641,
+      "lastModificationDate": 1688301980330,
       "contentHash": "512a1ec84b6cadea223e57ea3601a1a9",
       "sourceName": "contracts/facets/votingApp/Migrations.sol",
       "solcConfig": {
@@ -1083,86 +1410,6 @@
       ],
       "artifacts": [
         "Migrations"
-      ]
-    },
-    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\GetBallot.sol": {
-      "lastModificationDate": 1688298704550,
-      "contentHash": "972ba987f099ba41cf5ef9d61fc04422",
-      "sourceName": "contracts/facets/votingApp/GetBallot.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./ballot/Ballot.sol",
-        "./ballot/GeneralBallot.sol",
-        "./ballot/PreferenceBallot.sol",
-        "./ballot/BordaBallot.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "GetBallot"
-      ]
-    },
-    "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\GetResultCalculator.sol": {
-      "lastModificationDate": 1688298792621,
-      "contentHash": "0090227872e9f3049e3f6fafc8c92865",
-      "sourceName": "contracts/facets/votingApp/GetResultCalculator.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./resultCalculator/ResultCalculator.sol",
-        "./resultCalculator/GeneralResults.sol",
-        "./resultCalculator/Oklahoma.sol",
-        "./resultCalculator/BordaResult.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "GetResultCalculator"
       ]
     }
   }
