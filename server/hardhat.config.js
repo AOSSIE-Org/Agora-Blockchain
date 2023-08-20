@@ -35,7 +35,7 @@ module.exports = {
     mumbai:{
       allowUnlimitedContractSize:true,
       url:"https://rpc-mumbai.maticvigil.com/",
-      accounts:["c1fb8fb8d4301e38669706d60e1aecc2eae798857d3eb63e9ff189f56801af90"],  //private key place here
+      accounts:["Your_Private_Key"],  //private key place here
     }
   },  
   mocha: {

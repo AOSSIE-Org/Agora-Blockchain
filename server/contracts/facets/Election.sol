@@ -225,7 +225,7 @@ contract Election {
     function updateCandidateInfo(string memory _name, string memory _description, uint index) external onlyOrganizerContract {
         require(getStatus() == Status.pending,"Cannot add candidates after election has started");
         uint len = candidates.length;
-        require(index < len);
+        require(index < len, "Candidate not found");
         candidates[index].name = _name;
         candidates[index].description = _description;
     }

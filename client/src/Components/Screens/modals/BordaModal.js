@@ -38,13 +38,10 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
     }
 
     const handleVoteSubmit = async (e) => {
-
-       
         e.preventDefault();
         setIsOpen(false);
         
         try{
-
             const { ethereum } = window;
             if (ethereum) {
               const provider = new ethers.providers.Web3Provider(ethereum);
@@ -56,31 +53,13 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
                 signer
               );            
             
-            console.log('voting')
-            // window.toastProvider.addMessage("Processing your voting request.", {
-            //     variant: "processing"
-            // })
-            console.log(CurrentElection)
-            console.log('candidateId',candidateId)
-            // let temp = [3,2,1];
-            console.log('arr',voteCount)
-
 
             let res  =await CurrentElection.vote(addr,1,4,voteCount);
-            // console.log('res',res);
-            // window.toastProvider.addMessage("Voted", {
-            //     secondaryMessage: "You have successfully voted! Thank you.",
-            //     variant: "success"
-            // });
             console.log('you have succesfully voted ')
             setCandidateId(null);
             setIsOpen(false);
         }
         } catch(err) {
-            // window.toastProvider.addMessage("Failed", {
-            //     secondaryMessage: "Transaction failed. Try again",
-            //     variant: "failure"
-            // });
             console.log(err)
         }
     }
@@ -94,7 +73,7 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
                     VOTE
                 </div>
                 :
-                <div className="voteButton voteButtonDisabled">
+                <div className="voteButton voteButtonDisabled" onClick={console.log("Election is not started yet")}>
                     VOTE
                 </div>
             }
@@ -114,7 +93,6 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
                     />
 
                     <div style={{margin: "10px", maxWidth: "700px", width: "96%"}}>
-                        {/* <h5>Choose candidates according to your preferences</h5> */}
                         <h3 style={{textAlign:"center" ,paddingTop:"24px" ,fontWeight:"bold" , fontFamily:"monospace"}}>Enter Rank of candidates</h3>
 
 
@@ -126,13 +104,10 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
                             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-around"}}>
                                 {
                                     candidates?.map((candidate) => (
-                                        // <label className="voteCandidate" >
-
                                             <div className='card' style={{display:"flex", marginLeft:"1%",marginRight:"1%",marginBottom:"2%",padding:"6%"}}>
                                             <Candidate name={candidate?.name} id={Number(candidate?.candidateID._hex)} about={candidate?.about} voteCount={candidate?.voteCount} ballotAddress={ballotAddress} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
                                             <input type="number" className='' placeholder="Rank.." id="borda_input" name={candidate?.candidateID}  onChange={(e)=>handleVoteChange(e)}/>
                                             </div>
-                                        // </label>
                                     ))
                                 }
                             </div>

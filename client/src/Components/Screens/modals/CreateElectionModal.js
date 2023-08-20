@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 import ElectionOrganiser from "../../../build/ElectionOrganizer.json";
 import "react-datepicker/dist/react-datepicker.css";
 
-export function CreateElectionModal(props) {
+export function CreateElectionModal({DashContractAddress, fetchElections}) {
   const [isOpen, setIsOpen] = useState(false);
   const [ballotType, setBallotType] = useState(1);
   const [resultCalculator, setResultCalculator] = useState(1);
@@ -101,7 +101,7 @@ const handleTypeChange = (e) => {
           const signer = provider.getSigner();
 
           const contract = new ethers.Contract(
-            props.DashContractAddress,
+            DashContractAddress,
             ElectionOrganiser.abi,
             signer
           );
@@ -122,7 +122,8 @@ const handleTypeChange = (e) => {
               resultCalculator,
             ]);
           });
-          
+          closeModal();
+          fetchElections();         
         }
       }
       else{
@@ -133,11 +134,11 @@ const handleTypeChange = (e) => {
       }
     } catch (err) {
       console.log(err);
+      closeModal();
     }
   };
 
-  const closeModal = (e) => {
-    e.preventDefault();
+  const closeModal = () => {
     setIsOpen(false);
   };
 

@@ -64,4 +64,8 @@ contract Authentication {
     function getAuthStatus(address _user) public view returns(bool) {
         return userAuthStatus[_user];
     }
+
+    function getElectionOrganizer() public view returns(ElectionOrganizer.OrganizerInfo[] memory){
+        return electionOrganizer.getElectionOrganizers();
+    }
 }

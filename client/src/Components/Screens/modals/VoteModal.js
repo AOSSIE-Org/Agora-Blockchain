@@ -27,13 +27,10 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
     }
 
     const handleVoteSubmit = async (e) => {
-
-       
         e.preventDefault();
         setIsOpen(false);
         
         try{
-
             const { ethereum } = window;
             if (ethereum) {
               const provider = new ethers.providers.Web3Provider(ethereum);
@@ -45,24 +42,12 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
                 signer
               );
             
-            
-            // window.toastProvider.addMessage("Processing your voting request.", {
-            //     variant: "processing"
-            // })
             let res  =await CurrentElection.vote(addr,candidateId,1,[]);
-            // window.toastProvider.addMessage("Voted", {
-            //     secondaryMessage: "You have successfully voted! Thank you.",
-            //     variant: "success"
-            // });
             console.log('you have succesfully voted ')
             setCandidateId(null);
             setIsOpen(false);
         }
         } catch(err) {
-            // window.toastProvider.addMessage("Failed", {
-            //     secondaryMessage: "Transaction failed. Try again",
-            //     variant: "failure"
-            // });
             console.log(err)
         }
     }
@@ -76,7 +61,7 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
                     VOTE
                 </div>
                 :
-                <div className="voteButton voteButtonDisabled">
+                <div className="voteButton voteButtonDisabled" onClick={console.log("Election is not started yet")}>
                     VOTE
                 </div>
             }

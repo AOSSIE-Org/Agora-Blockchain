@@ -144,7 +144,15 @@ contract ElectionOrganizer {
         return _election.getResult();
     }  
 
-    function addOrganizerToInviteBasedElection(address _organizerPublicAddress, address _election) external{
-        electionStorage.addOrganizerToInviteBasedElection(_organizerPublicAddress, _election);
+    function addOrganizerToInviteBasedElection(address _addOrganizer, address _election) public {
+        electionStorage.addOrganizerToInviteBasedElection(_addOrganizer, _election);
     }  
+
+    function getElectionOwner(address _election) public view returns (address) {
+        return electionStorage.getElectionOwner(_election);
+    }
+
+    function deleteElection (address _election) public {
+        electionStorage.deleteElection(_election);
+    }
 }

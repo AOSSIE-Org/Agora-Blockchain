@@ -15,13 +15,11 @@ import { CONTRACTADDRESS } from '../constants'
 
 import { ethers } from "ethers";
 import ElectionOrganiser from "../../build/ElectionOrganizer.json";
-import Authentication from "../../build/Authentication.sol/Authentication.json";
 import ElectionABI from '../../build/Election.sol/Election.json'
 
 // import BrightID from "./BrightID";
 
 const Dashboard = () => {
-  const AuthcontractAddress = CONTRACTADDRESS
   const DashContractAddress = CONTRACTADDRESS
   const [elections, getElections] = useState([]);
   const [organizerInfo, setOrganizerInfo] = useState({
@@ -32,7 +30,6 @@ const Dashboard = () => {
   const [detailedelection, setdetailedelection] = useState([]);
   const [search, setSearch] = useState("");
   const [type,setType] = useState("ALL");
-
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
@@ -100,13 +97,13 @@ const Dashboard = () => {
           name: data.name,
           publicAddress: data.publicAddress,
         });
-
+                
         const openBasedElections = await contract.getOpenBasedElections();
         const inviteBasedElections = await contract.getInviteBasedElections(data.publicAddress);
         const elections = await openBasedElections.concat(inviteBasedElections);
-        console.log(openBasedElections);
-        console.log(inviteBasedElections);
-        console.log(elections);
+        console.log("Open Based Elections - ",openBasedElections);
+        console.log("Invite Based Elections - ",inviteBasedElections);
+        console.log("Elections - ",elections);
         getElections(elections);
       }
     } catch (err) {
@@ -117,12 +114,15 @@ const Dashboard = () => {
   //to fetch all election details 
   const fetchDetailedElection = async() => {
     try{
-    const { ethereum } = window;
-   
+      const { ethereum } = window;
+
       const provider = new ethers.providers.Web3Provider(ethereum);
-      const signer = provider.getSigner();    
+      const signer = provider.getSigner();   
+
       let tempStats = [0, 0, 0, 0];
-       elections.map(async (address) => {
+      setdetailedelection([]);
+
+      elections.map(async (address) => {
         const electionContract = new ethers.Contract(
           address,
           ElectionABI.abi,
@@ -130,39 +130,38 @@ const Dashboard = () => {
         );
 
         let info = await electionContract.getElectionInfo();
-          let st = getStatus(info.startDate, info.endDate);
-          const data = {
-            electionID: parseInt(info.electionID % 1000),
-            name: info.name,
-            address: address,
-            startDate: new Date(info.startDate * 1000).toLocaleString(),
-            endDate: new Date(info.endDate * 1000).toLocaleString(),
-            status: st
-          }
+        let st = getStatus(info.startDate, info.endDate);
+        const data = {
+          electionID: parseInt(info.electionID % 1000),
+          name: info.name,
+          address: address,
+          startDate: new Date(info.startDate * 1000).toLocaleString(),
+          endDate: new Date(info.endDate * 1000).toLocaleString(),
+          status: st
+        }
 
-          
-          
-          // to set status 
-            if (st === "active") {
-              tempStats[1]++;
-            }
-            else if (st === "closed") {
-              tempStats[2]++;
-            }
-            else if (st === "pending") {
-              tempStats[3]++;
-            }
-          
-          setdetailedelection(detailedelection => [...detailedelection, data]);
-          let sum =(tempStats[1]+tempStats[2]+tempStats[3])
-          tempStats[0] = sum+1;
-          setStatistics(tempStats);        
-        })
-    
+        // to set status 
+        if (st === "active") {
+          tempStats[1]++;
+        }
+        else if (st === "closed") {
+          tempStats[2]++;
+        }
+        else if (st === "pending") {
+          tempStats[3]++;
+        }
 
-  }catch(err){
-    console.log(err)
-  }
+        setdetailedelection(detailedelection => [...detailedelection, data]);
+
+        let sum =(tempStats[1]+tempStats[2]+tempStats[3])
+        tempStats[0] = sum+1;
+        setStatistics(tempStats);        
+      })
+
+
+    } catch(err){
+      console.log(err)
+    }
   }
 
   const getTokens = () => {
@@ -193,13 +192,12 @@ const Dashboard = () => {
             </font>
           </div>
 
-          <div style={{ float: "right" }}>
-            <CreateElectionModal DashContractAddress={DashContractAddress} />
+          <div style={{ float: "right", marginLeft:10, marginBottom:10}}>
+            <CreateElectionModal DashContractAddress={DashContractAddress} fetchElections={fetchElections}/>
           </div>
           <a href="/brightid">
-          <div className="createElectionButton">Get BrightID Verified!
-          
-          </div></a>
+            <div className="createElectionButton">Get BrightID Verified!</div>
+          </a>
         </div>
 
         <br />

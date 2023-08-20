@@ -28,7 +28,6 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
 
     const handleVoteSubmit = async (e) => {
         e.preventDefault();
-        // setIsOpen(false);
         try {
 
             const { ethereum } = window;
@@ -58,14 +57,12 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                     temp =5;
                 }
 
-                // the order is reversed because in the logic of oklahoma the candidates votes gets divided by priority every time
-                // so the higher stars the lower priority in contract logic so to make it more intuitive we reversed the order
               let res  =await CurrentElection.vote(addr,id,temp,[]);
               console.log('res',res);
               }
 
             setCandidateId(null);
-            // setIsOpen(false);
+            setIsOpen(false);
         } catch (err) {
            console.log(err);
         }
@@ -82,7 +79,7 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                         VOTE
                     </div>
                     :
-                    <div className="voteButton voteButtonDisabled">
+                    <div className="voteButton voteButtonDisabled" onClick={console.log("Election is not started yet")}>
                         VOTE
                     </div>
             }

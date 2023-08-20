@@ -14,10 +14,14 @@ contract ElectionStorage {
     mapping(address => address[]) inviteBasedElections;
     //election => (organizer =>  bool)
     mapping(address => mapping(address => bool)) isOrganizerAddedToElection;
+    //election => organizer
+    mapping(address => address) electionOrganizer;
+    uint electionCount;
+
+
     // mapping(Election.Status=>address[]) electionsWithStatus;
     // mapping(address=>address[]) electionsOfOrganizer;
     // mapping(uint => address) electionWithID;
-    uint electionCount;
 
     // // ------------------------------------------------------------------------------------------------------
     // //                                            CONSTRUCTOR
@@ -30,6 +34,10 @@ contract ElectionStorage {
     // ------------------------------------------------------------------------------------------------------
     //                                            FUNCTIONS
     // ------------------------------------------------------------------------------------------------------
+
+    function getElectionOwner (address _election) public view returns(address) {
+        return electionOrganizer[_election];
+    }
 
     function getElectionCount() public view returns(uint){
         return electionCount;
@@ -81,10 +89,42 @@ contract ElectionStorage {
             inviteBasedElections[_organizer].push(address(_election));
             isOrganizerAddedToElection[election][_organizer] = true;
         }
+        electionOrganizer[election] = _organizer;
     }
 
-    function addOrganizerToInviteBasedElection(address _organizer, address _election) external{
-        require(isOrganizerAddedToElection[_election][_organizer] == false, "Organizer already added to this election");
-        isOrganizerAddedToElection[_election][_organizer] = true;
+    function removeElection(address[] memory _elections, address  _election) public pure returns(address[] memory) {
+
+    }
+
+    function deleteElection (address _election) external {
+        Election election = Election(_election);
+        require(election.getStatus() == Election.Status.pending, "Cannot delete election after election has started");
+
+        address[] memory oldElection = openBasedElections;
+        uint len = oldElection.length;
+        address[] memory newElection = new address[](len-1);
+        uint newIndex = 0;
+        uint currIndex = 0;
+        bool electionFound =false;
+
+        for(currIndex=0; currIndex<len; currIndex++){
+            if(oldElection[currIndex] != _election){
+                newElection[newIndex] = oldElection[currIndex];
+                newIndex++;
+            }
+            else if(electionFound == false){
+                _election = address(0);
+                electionFound = true;
+            }
+        }
+
+        require(electionFound, "Election not found");
+        openBasedElections = newElection;
+    }
+
+    function addOrganizerToInviteBasedElection(address _addOrganizer, address _election) external {
+        require(isOrganizerAddedToElection[_election][_addOrganizer] == false, "Organizer already added to this election");
+        isOrganizerAddedToElection[_election][_addOrganizer] = true;
+        inviteBasedElections[_addOrganizer].push(_election);
     }
 }

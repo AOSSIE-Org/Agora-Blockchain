@@ -53,13 +53,10 @@ export function SchulzeModal ({Candidate, status, candidates, CurrentElection, a
     
     const handleVoteSubmit = async (e) => {
         if(candidates.length == 0) throw  "No candidate is added"
-
-       
         e.preventDefault();
         setIsOpen(false);
         
         try{
- 
             const { ethereum } = window;
             if (ethereum) {
               const provider = new ethers.providers.Web3Provider(ethereum);
@@ -70,32 +67,12 @@ export function SchulzeModal ({Candidate, status, candidates, CurrentElection, a
                 ElectionABI.abi,
                 signer
               );  
-                        
-            
-            console.log('voting')
-            // window.toastProvider.addMessage("Processing your voting request.", {
-            //     variant: "processing"
-            // })
-            // console.log(CurrentElection)
-            // console.log('candidateId',candidateId)
-            // let temp = [3,2,1];
-            // console.log('arr',voteCount)
 
             let res  =await CurrentElection.vote(addr,1,4,preference);
-            // console.log('res',res);
-            // window.toastProvider.addMessage("Voted", {
-            //     secondaryMessage: "You have successfully voted! Thank you.",
-            //     variant: "success"
-            // });
             console.log('you have succesfully voted ')
-            // setCandidateId(null);
             setIsOpen(false);
         }
         } catch(err) {
-            // window.toastProvider.addMessage("Failed", {
-            //     secondaryMessage: "Transaction failed. Try again",
-            //     variant: "failure"
-            // });
             console.log(err)
         }
     }
@@ -126,7 +103,7 @@ export function SchulzeModal ({Candidate, status, candidates, CurrentElection, a
                     VOTE
                 </div>
                 :
-                <div className="voteButton voteButtonDisabled">
+                <div className="voteButton voteButtonDisabled" onClick={console.log("Election is not started yet")}>
                     VOTE
                 </div>
             }
