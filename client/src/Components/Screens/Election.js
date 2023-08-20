@@ -37,7 +37,6 @@ import { CONTRACTADDRESS } from "../constants";
 function Election() {
 	const [isAdmin, setAdmin] = useState(false);
 	const [status, setStatus] = useState(STATUS.PENDING)
-	const [candidateModalOpen, setCandidateModalOpen] = useState(false);
 
 	const search = useLocation().search;
 	const electionAddress = new URLSearchParams(search).get('contractAddress');
@@ -377,10 +376,6 @@ function Election() {
 									`The Kemeny–Young method is an electoral system that uses preferential ballots and pairwise comparison counts 
 									to identify the most popular choices in an election. It is a Condorcet method because if there is a 
 									Condorcet winner, it will always be ranked as the most popular choice.`}
-
-
-
-
 								
 							</font>
 						</div>
@@ -390,7 +385,7 @@ function Election() {
 						<div className="lhsHeader" style={{marginTop: "10px", display: 'flex', justifyContent: 'space-between'}}>
 							<h5 style={{width: "60%"}}>Candidates ({candidates.length})</h5>
 							{
-								isAdmin == publicAddress && status == STATUS.PENDING &&	<AddCandidateModal organizerAddress={organizerAddress}  electionAddress={electionAddress} />
+								isAdmin == publicAddress && status == STATUS.PENDING &&	<AddCandidateModal organizerAddress={organizerAddress}  electionAddress={electionAddress} functionCall={functionCall}/>
 							}
 						</div>
 

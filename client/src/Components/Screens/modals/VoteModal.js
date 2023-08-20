@@ -61,7 +61,7 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
                     VOTE
                 </div>
                 :
-                <div className="voteButton voteButtonDisabled" onClick={console.log("Election is not started yet")}>
+                <div className="voteButton voteButtonDisabled" onClick={() => {console.log("Election is not started yet")}}>
                     VOTE
                 </div>
             }

@@ -73,7 +73,7 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
                     VOTE
                 </div>
                 :
-                <div className="voteButton voteButtonDisabled" onClick={console.log("Election is not started yet")}>
+                <div className="voteButton voteButtonDisabled" onClick={() => {console.log("Election is not started yet")}}>
                     VOTE
                 </div>
             }

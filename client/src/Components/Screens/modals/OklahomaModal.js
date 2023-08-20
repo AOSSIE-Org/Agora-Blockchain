@@ -79,7 +79,7 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                         VOTE
                     </div>
                     :
-                    <div className="voteButton voteButtonDisabled" onClick={console.log("Election is not started yet")}>
+                    <div className="voteButton voteButtonDisabled" onClick={() => {console.log("Election is not started yet")}}>
                         VOTE
                     </div>
             }

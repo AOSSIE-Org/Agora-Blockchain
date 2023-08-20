@@ -101,7 +101,7 @@ export function KemengYoungModal ({Candidate, status, candidates, CurrentElectio
                             VOTE
                         </div>
                         :
-                        <div className="voteButton voteButtonDisabled" onClick={console.log("Election is not started yet")}>
+                        <div className="voteButton voteButtonDisabled" onClick={() => {console.log("Election is not started yet")}}>
                             VOTE
                         </div>
                     }

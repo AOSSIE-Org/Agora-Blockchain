@@ -3,7 +3,7 @@ import { Flex, Modal, Button, Card } from "rimble-ui";
 import { ethers } from "ethers";
 import ElectionOrganiser from "../../../build/ElectionOrganizer.json";
 
-export function AddCandidateModal({ organizerAddress, electionAddress }) {
+export function AddCandidateModal({ organizerAddress, electionAddress, functionCall }) {
     const [isOpen, setIsOpen] = useState(false);
     const [candidateDetail, setCandidateDetail] = useState({
         name: '',
@@ -40,9 +40,9 @@ export function AddCandidateModal({ organizerAddress, electionAddress }) {
               );
               await transaction.wait();
       
-              console.log("suceessss");
-              
-      
+              console.log("Successfully added candidate");
+              closeModal();
+              await functionCall();             
             }
           } catch(err) {
             console.log(err);
@@ -50,8 +50,7 @@ export function AddCandidateModal({ organizerAddress, electionAddress }) {
         
     }
 
-    const closeModal = e => {
-        e.preventDefault();
+    const closeModal = () => {
         setIsOpen(false);
     };
 
