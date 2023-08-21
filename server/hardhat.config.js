@@ -23,17 +23,31 @@
 // };
 
 /** @type import('hardhat/config').HardhatUserConfig */
+//require("hardhat-contract-sizer");
 require("@nomiclabs/hardhat-waffle");
 module.exports = {
-  solidity: "0.8.10",
-  solidity: {
-        version: "0.8.9",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
-          },
-        },
-      },
+  solidity: '0.8.10',
+  defaultNetwork:"mumbai",
+  networks:{
+    hardhat:{
+      allowUnlimitedContractSize:true
+    },
+    mumbai:{
+      allowUnlimitedContractSize:true,
+      url:"https://rpc-mumbai.maticvigil.com/",
+      accounts:["Your Private key"],  //private key place here
+    }
+  },  
+  mocha: {
+    timeout: 100000000
+  },
+  settings: {
+    optimizer: {
+      enabled: true
+    }
+  },
+  contractSizer:{
+    runOnCompile:true
+  }
 };
 
