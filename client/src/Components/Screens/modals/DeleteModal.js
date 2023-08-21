@@ -8,9 +8,7 @@ import ElectionOrganizer from '../../../build/ElectionOrganizer.json';
 export function DeleteModal({orgnizerAddress, electionAddress}) {
   const [showLoader, setShowLoader] = useState(false);
 
-  
-  
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   
   const closeModal = e => {

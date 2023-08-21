@@ -13,6 +13,7 @@ function Auth() {
     name: "",
   });
   const [newRegistered, setNewRegistered] = useState(false);
+  const [loggedInStatus, setLoggedInStatus] = useState(false);
   const contractAddress = CONTRACTADDRESS
 
   
@@ -26,32 +27,59 @@ function Auth() {
 
   const registerUser = async (e) => {
     e.preventDefault();
-    try {
-      const { ethereum } = window;
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
+    if((registered == false && loggedInStatus == false)){
+
+      try {
+        const { ethereum } = window;
+        if (ethereum) {
+          const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         console.log(signer);
         const contract = new ethers.Contract(
           contractAddress,
           Authentication.abi,
           signer
-        );
-        console.log(contract);
-        console.log(fullName.name);
-        const add  = await signer.getAddress();
-        // const tx = await contract.createUser(fullName.name);
+          );
+          console.log(fullName.name);
+          console.log(contract);
+          const add  = await signer.getAddress();
+          
+          
+          //changed hardcoded address to signer address
+          const tx = await contract.createUser([1,fullName.name,add], {gasLimit:800000});
+          await tx.wait();
+          console.log("suucce");
+          setNewRegistered(true);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
 
-        //changed hardcoded address to signer address
-        const tx = await contract.createUser([1,fullName.name,add]);
-        await tx.wait();
-        console.log("suucce");
-        setNewRegistered(true);
+  const SignInUser = async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const add  = await signer.getAddress();
+        const contract = new ethers.Contract(
+          contractAddress,
+          Authentication.abi,
+          signer
+        );
+
+        const loginResult = await contract.login(add);
+        await loginResult.wait();
+
+        const loggedStatus = await contract.getLoggedInStatus(add);      
+        setLoggedInStatus(loggedStatus);
       }
     } catch (err) {
       console.log(err);
     }
-  };
+  }
   const isRegistered = async () => {
     try {
       const { ethereum } = window;
@@ -71,11 +99,13 @@ function Auth() {
         //await contract.init(contractAddress)    //This step you have to do  one time
 
         //changed hardcoded address to signer address
+        const authStatus = await contract.getAuthStatus(add);
+        setRegistered(authStatus);
+        console.log(authStatus);
 
-        const tx = await contract.getAuthStatus(add);
-        console.log(tx);
-        setRegistered(tx);
-        // setRegistered(true);
+        const loggedStatus = await contract.getLoggedInStatus(add);
+        setLoggedInStatus(loggedStatus)
+        console.log(loggedStatus);
       }
     } catch (err) {
       console.log(err);
@@ -121,13 +151,25 @@ function Auth() {
               />
               <br />
               {
-                registered==true
+                (registered==true && loggedInStatus == true)
                 ?
                 <Navigate to='/dashboard' />
                 :
-                <button onClick={registerUser} className="authButtons">
-                  SIGN UP
-                </button>
+                <div>
+                  {
+                    (registered == true && loggedInStatus == false) && 
+                      <button onClick={SignInUser} className="authButtons">
+                        SIGN IN
+                      </button>
+                  }
+
+                  {
+                    (registered == false && loggedInStatus == false) &&
+                      <button onClick={registerUser} className="authButtons">
+                        SIGN UP
+                      </button>
+                  }
+                </div>
               }
             </form>
 

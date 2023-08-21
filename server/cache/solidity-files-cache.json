@@ -2,7 +2,7 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\Diamond.sol": {
-      "lastModificationDate": 1688301980237,
+      "lastModificationDate": 1692078271732,
       "contentHash": "f73264b3911016e08ea9dea82b980370",
       "sourceName": "contracts/Diamond.sol",
       "solcConfig": {
@@ -40,7 +40,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\libraries\\LibDiamond.sol": {
-      "lastModificationDate": 1691935587827,
+      "lastModificationDate": 1692078271795,
       "contentHash": "20702fa7e4a9edcceb547afefb62b698",
       "sourceName": "contracts/libraries/LibDiamond.sol",
       "solcConfig": {
@@ -80,7 +80,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\interfaces\\IDiamondCut.sol": {
-      "lastModificationDate": 1688301980384,
+      "lastModificationDate": 1692078271770,
       "contentHash": "3d267178319c5e7ba5621f8cd8340550",
       "sourceName": "contracts/interfaces/IDiamondCut.sol",
       "solcConfig": {
@@ -115,8 +115,8 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\Election.sol": {
-      "lastModificationDate": 1691935481107,
-      "contentHash": "1159492cee7657f171f07a97d9cd058f",
+      "lastModificationDate": 1692504716730,
+      "contentHash": "d7603dc66d59df2203c7445a99a23772",
       "sourceName": "contracts/facets/Election.sol",
       "solcConfig": {
         "version": "0.8.10",
@@ -153,7 +153,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\Ballot.sol": {
-      "lastModificationDate": 1691935636494,
+      "lastModificationDate": 1692078271753,
       "contentHash": "be978a0bbce56fe917ca96a34c14f46f",
       "sourceName": "contracts/facets/votingApp/ballot/Ballot.sol",
       "solcConfig": {
@@ -191,7 +191,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\ResultCalculator.sol": {
-      "lastModificationDate": 1688302118214,
+      "lastModificationDate": 1692078271767,
       "contentHash": "b98ea7294bf3f4f70ef41047cf8aaacb",
       "sourceName": "contracts/facets/votingApp/resultCalculator/ResultCalculator.sol",
       "solcConfig": {
@@ -228,7 +228,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\upgradeInitializers\\DiamondInit.sol": {
-      "lastModificationDate": 1688301980434,
+      "lastModificationDate": 1692078271797,
       "contentHash": "64bdac7c56bc05e8ba6e3bc5eb3c1217",
       "sourceName": "contracts/upgradeInitializers/DiamondInit.sol",
       "solcConfig": {
@@ -269,7 +269,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\interfaces\\IDiamondLoupe.sol": {
-      "lastModificationDate": 1688301980384,
+      "lastModificationDate": 1692078271771,
       "contentHash": "5c2fe4932744a1e3e72711627cbd7edf",
       "sourceName": "contracts/interfaces/IDiamondLoupe.sol",
       "solcConfig": {
@@ -304,7 +304,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\interfaces\\IERC173.sol": {
-      "lastModificationDate": 1688301980414,
+      "lastModificationDate": 1692078271794,
       "contentHash": "bb4c896ca0f6249adff834b3529636ef",
       "sourceName": "contracts/interfaces/IERC173.sol",
       "solcConfig": {
@@ -339,7 +339,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\interfaces\\IERC165.sol": {
-      "lastModificationDate": 1688301980384,
+      "lastModificationDate": 1692078271774,
       "contentHash": "77054f3cfef6c65157665ff1845a6461",
       "sourceName": "contracts/interfaces/IERC165.sol",
       "solcConfig": {
@@ -374,7 +374,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\DiamondLoupeFacet.sol": {
-      "lastModificationDate": 1688301980248,
+      "lastModificationDate": 1692078271737,
       "contentHash": "7f4c0502d1d006f23b2e8d474a462809",
       "sourceName": "contracts/facets/DiamondLoupeFacet.sol",
       "solcConfig": {
@@ -413,7 +413,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\Test2Facet.sol": {
-      "lastModificationDate": 1688526713551,
+      "lastModificationDate": 1692078271747,
       "contentHash": "eac6224d2792810930d4dab128635749",
       "sourceName": "contracts/facets/Test2Facet.sol",
       "solcConfig": {
@@ -450,7 +450,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\Test1Facet.sol": {
-      "lastModificationDate": 1688696486191,
+      "lastModificationDate": 1692078271746,
       "contentHash": "26cbef9d53138ed7ee549a7600a34ec5",
       "sourceName": "contracts/facets/Test1Facet.sol",
       "solcConfig": {
@@ -492,7 +492,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\GetBallot.sol": {
-      "lastModificationDate": 1688691914580,
+      "lastModificationDate": 1692078271744,
       "contentHash": "b9ee4874f15db1d1a3dabd001ff0b134",
       "sourceName": "contracts/facets/GetBallot.sol",
       "solcConfig": {
@@ -536,7 +536,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\GetResultCalculator.sol": {
-      "lastModificationDate": 1688692004295,
+      "lastModificationDate": 1692078271745,
       "contentHash": "4cb0e46c36df3bf82eb9d8bb75bc5005",
       "sourceName": "contracts/facets/GetResultCalculator.sol",
       "solcConfig": {
@@ -580,7 +580,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\ElectionFactory.sol": {
-      "lastModificationDate": 1691935533874,
+      "lastModificationDate": 1692078271740,
       "contentHash": "fcc7e023d2a3d262e93ed2ed2ae1f7cc",
       "sourceName": "contracts/facets/ElectionFactory.sol",
       "solcConfig": {
@@ -622,7 +622,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\GeneralBallot.sol": {
-      "lastModificationDate": 1691935641353,
+      "lastModificationDate": 1692078271756,
       "contentHash": "1e46104ad9eb3398f04defa2039f66f9",
       "sourceName": "contracts/facets/votingApp/ballot/GeneralBallot.sol",
       "solcConfig": {
@@ -660,7 +660,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\PreferenceBallot.sol": {
-      "lastModificationDate": 1691935657014,
+      "lastModificationDate": 1692078271761,
       "contentHash": "a78816d97c2de5d7880338e055ad4794",
       "sourceName": "contracts/facets/votingApp/ballot/PreferenceBallot.sol",
       "solcConfig": {
@@ -698,7 +698,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\BordaBallot.sol": {
-      "lastModificationDate": 1691935638435,
+      "lastModificationDate": 1692078271754,
       "contentHash": "5b541cb67432129b442411e804674f56",
       "sourceName": "contracts/facets/votingApp/ballot/BordaBallot.sol",
       "solcConfig": {
@@ -736,7 +736,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\Schulze.sol": {
-      "lastModificationDate": 1691935662255,
+      "lastModificationDate": 1692078271762,
       "contentHash": "b70fa3f19742abd4bedf5574a6eb17bf",
       "sourceName": "contracts/facets/votingApp/ballot/Schulze.sol",
       "solcConfig": {
@@ -774,7 +774,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\InstantRunOff.sol": {
-      "lastModificationDate": 1691935645660,
+      "lastModificationDate": 1692078271758,
       "contentHash": "b1a25af03bb379bd96bc19464b643f10",
       "sourceName": "contracts/facets/votingApp/ballot/InstantRunOff.sol",
       "solcConfig": {
@@ -812,7 +812,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\KemenyYoung.sol": {
-      "lastModificationDate": 1691935650879,
+      "lastModificationDate": 1692078271759,
       "contentHash": "93674cef8a61fab117919b290cc0e904",
       "sourceName": "contracts/facets/votingApp/ballot/KemenyYoung.sol",
       "solcConfig": {
@@ -850,7 +850,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\GeneralResults.sol": {
-      "lastModificationDate": 1688302118212,
+      "lastModificationDate": 1692078271764,
       "contentHash": "a1342629910813fdd8d4f2888a1829fe",
       "sourceName": "contracts/facets/votingApp/resultCalculator/GeneralResults.sol",
       "solcConfig": {
@@ -888,7 +888,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\Oklahoma.sol": {
-      "lastModificationDate": 1688302118214,
+      "lastModificationDate": 1692078271767,
       "contentHash": "f33a67dc18862622706e917938d4a492",
       "sourceName": "contracts/facets/votingApp/resultCalculator/Oklahoma.sol",
       "solcConfig": {
@@ -926,7 +926,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\BordaResult.sol": {
-      "lastModificationDate": 1688302118211,
+      "lastModificationDate": 1692078271763,
       "contentHash": "02e70c125bfa06e515b888df4710a4e6",
       "sourceName": "contracts/facets/votingApp/resultCalculator/BordaResult.sol",
       "solcConfig": {
@@ -964,7 +964,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\SchulzeResult.sol": {
-      "lastModificationDate": 1688793446294,
+      "lastModificationDate": 1692078271768,
       "contentHash": "70a622d561e474811d757d825106709f",
       "sourceName": "contracts/facets/votingApp/resultCalculator/SchulzeResult.sol",
       "solcConfig": {
@@ -1002,7 +1002,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\IRVResult.sol": {
-      "lastModificationDate": 1689302608171,
+      "lastModificationDate": 1692078271765,
       "contentHash": "2e19b3e99a223255c9e65b0c46bc2647",
       "sourceName": "contracts/facets/votingApp/resultCalculator/IRVResult.sol",
       "solcConfig": {
@@ -1040,7 +1040,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\resultCalculator\\KemenyYoungResult.sol": {
-      "lastModificationDate": 1688302118213,
+      "lastModificationDate": 1692078271766,
       "contentHash": "99ecf3479b4ea4db66c37e9f6d3ad999",
       "sourceName": "contracts/facets/votingApp/resultCalculator/KemenyYoungResult.sol",
       "solcConfig": {
@@ -1078,7 +1078,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ballot\\ScoreBallot.sol": {
-      "lastModificationDate": 1688302118210,
+      "lastModificationDate": 1692078271762,
       "contentHash": "b003d09dc3bc803e54778864ec8e3db3",
       "sourceName": "contracts/facets/votingApp/ballot/ScoreBallot.sol",
       "solcConfig": {
@@ -1115,7 +1115,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\Voter.sol": {
-      "lastModificationDate": 1691935701388,
+      "lastModificationDate": 1692078271748,
       "contentHash": "1dc90025b56685ebf8e45dbd02615076",
       "sourceName": "contracts/facets/Voter.sol",
       "solcConfig": {
@@ -1152,8 +1152,8 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\Authentication.sol": {
-      "lastModificationDate": 1688696250892,
-      "contentHash": "e64c75b4ddd5c900959847ff0df5a12e",
+      "lastModificationDate": 1692517524978,
+      "contentHash": "b24577a28ba46e1a7590556badff9d38",
       "sourceName": "contracts/facets/Authentication.sol",
       "solcConfig": {
         "version": "0.8.10",
@@ -1190,8 +1190,8 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\ElectionOrganizer.sol": {
-      "lastModificationDate": 1691935490828,
-      "contentHash": "2e86908fcec4ba55c8a68f828b5823ee",
+      "lastModificationDate": 1692518424834,
+      "contentHash": "b38657cb3211587b1b165785da30fbc1",
       "sourceName": "contracts/facets/ElectionOrganizer.sol",
       "solcConfig": {
         "version": "0.8.10",
@@ -1230,8 +1230,8 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\ElectionStorage.sol": {
-      "lastModificationDate": 1691941928273,
-      "contentHash": "dd394ae30738cbffc81a0c9895e69697",
+      "lastModificationDate": 1692518586428,
+      "contentHash": "205fab78ae8b80f131435a41ac713626",
       "sourceName": "contracts/facets/votingApp/ElectionStorage.sol",
       "solcConfig": {
         "version": "0.8.10",
@@ -1267,7 +1267,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\OwnershipFacet.sol": {
-      "lastModificationDate": 1688301980248,
+      "lastModificationDate": 1692078271745,
       "contentHash": "b256e73c91935a9089d259fc04dfb164",
       "sourceName": "contracts/facets/OwnershipFacet.sol",
       "solcConfig": {
@@ -1305,7 +1305,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\DiamondCutFacet.sol": {
-      "lastModificationDate": 1688301980241,
+      "lastModificationDate": 1692078271735,
       "contentHash": "2276f8474aa9269dcf44875a6d0b8ea5",
       "sourceName": "contracts/facets/DiamondCutFacet.sol",
       "solcConfig": {
@@ -1343,7 +1343,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\BrightID.sol": {
-      "lastModificationDate": 1688301980299,
+      "lastModificationDate": 1692078271749,
       "contentHash": "f44d284b10d72b09e3d03ec636c3c3a5",
       "sourceName": "contracts/facets/votingApp/BrightID.sol",
       "solcConfig": {
@@ -1378,7 +1378,7 @@
       ]
     },
     "C:\\Users\\yogen\\OneDrive\\Desktop\\Open Source\\GSOC 2023\\Agora\\DuringGSoc\\agora-blockchain\\server\\contracts\\facets\\votingApp\\Migrations.sol": {
-      "lastModificationDate": 1688301980330,
+      "lastModificationDate": 1692078271752,
       "contentHash": "512a1ec84b6cadea223e57ea3601a1a9",
       "sourceName": "contracts/facets/votingApp/Migrations.sol",
       "solcConfig": {
