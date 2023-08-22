@@ -203,14 +203,20 @@ function Election() {
 			  signer
 			);
 	
-			const loggedStatus = await contract.getLoggedInStatus(add);      
-			console.log('Auth Status - ',loggedStatus);
-			if(loggedStatus == false) {
+			const myPass = localStorage.getItem('hashedPassword');
+			if(myPass == null){ 
+			  navigate('/')
+			}
+			else{          
+			  const loggedStatus = await contract.getLoggedInStatus(add, myPass); 
+			  if(loggedStatus == false) {
 				navigate('/'); 
-			}
-			else {
+			  }
+			  else {
 				setAuthStatus(loggedStatus);
-			}
+			  }
+			  console.log('Auth Status - ',loggedStatus);
+			} 
 		  }
 		} catch (err) {
 		  console.log(err);

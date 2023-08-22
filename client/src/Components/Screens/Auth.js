@@ -5,12 +5,14 @@ import Authentication from "../../build/Authentication.json";
 import "../styles/Auth.scss";
 import { CONTRACTADDRESS } from '../constants'
 import { Navigate } from "react-router-dom";
+import CryptoJS from 'crypto-js';
 
 function Auth() {
   const [authMode, setAuthMode] = useState("signup");
-  const [registered, setRegistered] = useState("false");
+  const [registered, setRegistered] = useState(false);
   const [fullName, setFullName] = useState({
     name: "",
+    password : ""
   });
   const [newRegistered, setNewRegistered] = useState(false);
   const [loggedInStatus, setLoggedInStatus] = useState(false);
@@ -22,6 +24,15 @@ function Auth() {
       name: e.target.value,
     });
   };
+
+  const handlePasswordChange = (e) => {
+    setFullName({
+      ...fullName,
+      password: e.target.value,
+    });
+  };
+
+
 
   const registerUser = async (e) => {
     e.preventDefault();
@@ -38,12 +49,15 @@ function Auth() {
           signer
           );
           console.log(fullName.name);
+          let name = fullName.name;
+          let hashedPassword = CryptoJS.SHA256(fullName.password).toString();
           const add  = await signer.getAddress();
           
           
           //changed hardcoded address to signer address
-          const tx = await contract.createUser([1,fullName.name,add], {gasLimit:800000});
+          const tx = await contract.createUser([1,fullName.name,add], hashedPassword, {gasLimit:800000});
           await tx.wait();
+          localStorage.setItem('hashedPassword', hashedPassword);
           console.log("Successfully new User registered");
           setNewRegistered(true);
         }
@@ -66,11 +80,14 @@ function Auth() {
           signer
         );
 
-        const loginResult = await contract.login(add);
-        await loginResult.wait();
-
-        const loggedStatus = await contract.getLoggedInStatus(add);      
-        setLoggedInStatus(loggedStatus);
+        console.log(fullName);
+        let myPass = CryptoJS.SHA256(fullName.password).toString();
+        const loggedStatus = await contract.getLoggedInStatus(add, myPass);   
+        console.log(loggedStatus);   
+        if(loggedStatus == true){
+          localStorage.setItem('hashedPassword', myPass)
+          setLoggedInStatus(loggedStatus);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -97,7 +114,9 @@ function Auth() {
         setRegistered(authStatus);
         console.log('Register Status - ',authStatus);
 
-        const loggedStatus = await contract.getLoggedInStatus(add);
+        const myPass = localStorage.getItem('hashedPassword');
+        if(myPass == null) throw 'SignUp/SignIn to proceed'
+        const loggedStatus = await contract.getLoggedInStatus(add, myPass);
         setLoggedInStatus(loggedStatus)
         console.log("Auth Status - ",loggedStatus);
       }
@@ -127,14 +146,19 @@ function Auth() {
 
           <>
             <form onSubmit={registerUser} style={{ margin: "10px" }}>
-              <label className="form-label">Name</label>
-              <input
-                className="form-control"
-                placeholder="Enter your full name"
-                onChange={handleNameChange}
-                value={fullName.name}
-                type="text"
-              />
+              {
+                ((loggedInStatus == false && registered == false)) && 
+                  <>
+                    <label className="form-label">Name</label>
+                    <input
+                      className="form-control"
+                      placeholder="Enter your full name"
+                      onChange={handleNameChange}
+                      value={fullName.name}
+                      type="text"
+                      />
+                  </>
+               }
               <br />
 
               <label className="form-label">Wallet address</label>
@@ -145,6 +169,17 @@ function Auth() {
                 disabled
                 // value={initialized ? account : "Loading..."}
               />
+              <br />
+
+              <label className="form-label">Password</label>
+              <input
+                className="form-control"
+                placeholder="Enter your password"
+                onChange={handlePasswordChange}
+                value={fullName.password}
+                type="text"
+              />
+
               <br />
               {
                 (registered==true && loggedInStatus == true)

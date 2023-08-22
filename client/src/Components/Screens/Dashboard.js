@@ -185,14 +185,20 @@ const Dashboard = () => {
           signer
         );
 
-        const loggedStatus = await contract.getLoggedInStatus(add); 
-        if(loggedStatus == false) {
-          navigate('/'); 
+        const myPass = localStorage.getItem('hashedPassword');
+        if(myPass == null){ 
+          navigate('/')
         }
-        else {
-          setAuthStatus(loggedStatus);
-        }
-        console.log('Auth Status - ',loggedStatus);
+        else{          
+          const loggedStatus = await contract.getLoggedInStatus(add, myPass); 
+          if(loggedStatus == false) {
+            navigate('/'); 
+          }
+          else {
+            setAuthStatus(loggedStatus);
+          }
+          console.log('Auth Status - ',loggedStatus);
+        } 
       }
     } catch (err) {
       console.log(err);

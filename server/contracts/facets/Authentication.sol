@@ -19,7 +19,7 @@ contract Authentication {
 
     // Tells if a user is authenticated or not;
     mapping(address => bool)userAuthStatus;
-    mapping(address => bool) isloggedIn;
+    mapping(address => mapping(string => bool)) isloggedIn;
 
     // ------------------------------------------------------------------------------------------------------
     //                                          DEPENDENCIES
@@ -48,11 +48,11 @@ contract Authentication {
         voter = Voter(_diamond);   
     }
 
-    function createUser(ElectionOrganizer.OrganizerInfo memory _organizerInfo) public {
+    function createUser(ElectionOrganizer.OrganizerInfo memory _organizerInfo, string memory hashedPassword) public {
         require(getAuthStatus(_organizerInfo.publicAddress) == false, "User already registered");
         userAuthStatus[_organizerInfo.publicAddress] = true;
         electionOrganizer.addElectionOrganizer(_organizerInfo);
-        isloggedIn[_organizerInfo.publicAddress] = true;
+        isloggedIn[_organizerInfo.publicAddress][hashedPassword] = true;
     }
 
     function getElectionOrganizerContract() public view returns(address) {
@@ -67,22 +67,8 @@ contract Authentication {
         return userAuthStatus[_user];
     }
 
-    function getLoggedInStatus(address _user) public view returns (bool) {
-        return isloggedIn[_user];
-    }
-
-    function logout(address _user) public returns (bool) {
-        require(userAuthStatus[_user] == true, 'User should authenticate before login');
-        require(isloggedIn[_user] == true, 'User already Logged Out');
-        isloggedIn[_user] = false;
-        return isloggedIn[_user];
-    }
-
-    function login(address _user) public returns (bool){
-        require(userAuthStatus[_user] == true, 'User should authenticate before login');
-        require(isloggedIn[_user] == false, 'User already Logged In');
-        isloggedIn[_user] = true;
-        return isloggedIn[_user];
+    function getLoggedInStatus(address _user, string memory hashedPassword) public view returns (bool) {
+        return isloggedIn[_user][hashedPassword];
     }
 
     function getElectionOrganizer() public view returns(ElectionOrganizer.OrganizerInfo[] memory){

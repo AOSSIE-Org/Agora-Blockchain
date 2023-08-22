@@ -19,36 +19,18 @@ function Navbar({header, infoText, pictureUrl}) {
     const closeModal = () => {
         setIsOpen(false);
     }
+    
     const logout = async () => {
-        try {
-            const { ethereum } = window;
-            if (ethereum) {
-                const provider = new ethers.providers.Web3Provider(ethereum);
-                const signer = provider.getSigner();
-                const add  = await signer.getAddress();
-                const contract = new ethers.Contract(
-                    CONTRACTADDRESS,
-                    Authentication.abi,
-                    signer
-                );
-
-                const logoutResult = await contract.logout(add);
-                await logoutResult.wait();
-                console.log(logoutResult);
-
-                setTimeout(async () => {
-                    const redirect = async () => {
-                        closeModal();
-                        navigate('/');   
-                    }
-                    await redirect();
-                }, 1000);
-
+        localStorage.setItem('hashedPassword', null);
+        setTimeout(async () => {
+            const redirect = async () => {
+                closeModal();
+                navigate('/');   
             }
-          } catch (err) {
-            console.log(err);
-          }
+            await redirect();
+        }, 1000);
     }
+
 	return (
         <nav className="shadow-sm">
             <div className="navbarUserInfo">
