@@ -14,13 +14,17 @@ import "../styles/Dashboard.scss";
 import { CONTRACTADDRESS } from '../constants'
 
 import { ethers } from "ethers";
+import Authentication from '../../build/Authentication.json'
 import ElectionOrganiser from "../../build/ElectionOrganizer.json";
 import ElectionABI from '../../build/Election.sol/Election.json'
+import { useNavigate } from "react-router-dom";
 
 // import BrightID from "./BrightID";
 
 const Dashboard = () => {
-  const DashContractAddress = CONTRACTADDRESS
+  const DashContractAddress = CONTRACTADDRESS;
+  const navigate = useNavigate();
+  const [authStatus, setAuthStatus] = useState(false);
   const [elections, getElections] = useState([]);
   const [organizerInfo, setOrganizerInfo] = useState({
     name: "",
@@ -167,13 +171,47 @@ const Dashboard = () => {
   const getTokens = () => {
     window.open("https://faucet.avax-test.network/", "_blank");
   };
+
+  const getAuthStatus = async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const add  = await signer.getAddress();
+        const contract = new ethers.Contract(
+          CONTRACTADDRESS,
+          Authentication.abi,
+          signer
+        );
+
+        const loggedStatus = await contract.getLoggedInStatus(add); 
+        if(loggedStatus == false) {
+          navigate('/'); 
+        }
+        else {
+          setAuthStatus(loggedStatus);
+        }
+        console.log('Auth Status - ',loggedStatus);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   useEffect(() => {
-    fetchElections();
-  }, [DashContractAddress]);
+    if(authStatus == true){
+      fetchElections();
+    }
+    else {
+      getAuthStatus();
+    }
+  }, [authStatus]);
 
   useEffect(() => {
     fetchDetailedElection()
-    }, [elections])
+  }, [elections]);
+
   return (
     <div style={{ backgroundColor: "#f7f7f7", minHeight: "100%" }}>
       <Navbar

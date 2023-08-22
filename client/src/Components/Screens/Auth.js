@@ -1,10 +1,10 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
 import { ethers } from "ethers";
 import Authentication from "../../build/Authentication.json";
 import "../styles/Auth.scss";
 import { CONTRACTADDRESS } from '../constants'
+import { Navigate } from "react-router-dom";
 
 function Auth() {
   const [authMode, setAuthMode] = useState("signup");
@@ -16,8 +16,6 @@ function Auth() {
   const [loggedInStatus, setLoggedInStatus] = useState(false);
   const contractAddress = CONTRACTADDRESS
 
-  
-
   const handleNameChange = (e) => {
     setFullName({
       ...fullName,
@@ -28,7 +26,6 @@ function Auth() {
   const registerUser = async (e) => {
     e.preventDefault();
     if((registered == false && loggedInStatus == false)){
-
       try {
         const { ethereum } = window;
         if (ethereum) {
@@ -41,14 +38,13 @@ function Auth() {
           signer
           );
           console.log(fullName.name);
-          console.log(contract);
           const add  = await signer.getAddress();
           
           
           //changed hardcoded address to signer address
           const tx = await contract.createUser([1,fullName.name,add], {gasLimit:800000});
           await tx.wait();
-          console.log("suucce");
+          console.log("Successfully new User registered");
           setNewRegistered(true);
         }
       } catch (err) {
@@ -80,40 +76,40 @@ function Auth() {
       console.log(err);
     }
   }
+
   const isRegistered = async () => {
     try {
       const { ethereum } = window;
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const add  = await signer.getAddress();
-        console.log(signer);
+        const signer = provider.getSigner();        
         const contract = new ethers.Contract(
           contractAddress,
           Authentication.abi,
           signer
         );
-
-        console.log(contract)
-
+          
         //await contract.init(contractAddress)    //This step you have to do  one time
-
+          
         //changed hardcoded address to signer address
+        const add  = await signer.getAddress();
         const authStatus = await contract.getAuthStatus(add);
         setRegistered(authStatus);
-        console.log(authStatus);
+        console.log('Register Status - ',authStatus);
 
         const loggedStatus = await contract.getLoggedInStatus(add);
         setLoggedInStatus(loggedStatus)
-        console.log(loggedStatus);
+        console.log("Auth Status - ",loggedStatus);
       }
     } catch (err) {
       console.log(err);
     }
   };
+
   useEffect(() => {
     isRegistered();
   }, [newRegistered]);
+
   return (
     <div className="authDiv">
       <div className="description">

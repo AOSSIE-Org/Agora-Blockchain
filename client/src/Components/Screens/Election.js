@@ -1,10 +1,10 @@
 import React from "react";
 import { useTimer } from 'react-timer-hook';
 import { useState, useEffect } from 'react';
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import Authentication from '../../build/Authentication.json'
 import ElectionABI from '../../build/Election.json'
 import ElectionOrganiser from "../../build/ElectionOrganizer.json";
-
 import { ethers } from "ethers";
 
 
@@ -35,8 +35,10 @@ import { Update } from "rimble-ui";
 import { CONTRACTADDRESS } from "../constants";
 
 function Election() {
+	const navigate = useNavigate();
 	const [isAdmin, setAdmin] = useState(false);
 	const [status, setStatus] = useState(STATUS.PENDING)
+	const [authStatus, setAuthStatus] = useState(false);
 
 	const search = useLocation().search;
 	const electionAddress = new URLSearchParams(search).get('contractAddress');
@@ -188,14 +190,46 @@ function Election() {
 		}
 	}
 
+	const getAuthStatus = async () => {
+		try {
+		  const { ethereum } = window;
+		  if (ethereum) {
+			const provider = new ethers.providers.Web3Provider(ethereum);
+			const signer = provider.getSigner();
+			const add  = await signer.getAddress();
+			const contract = new ethers.Contract(
+			  CONTRACTADDRESS,
+			  Authentication.abi,
+			  signer
+			);
+	
+			const loggedStatus = await contract.getLoggedInStatus(add);      
+			console.log('Auth Status - ',loggedStatus);
+			if(loggedStatus == false) {
+				navigate('/'); 
+			}
+			else {
+				setAuthStatus(loggedStatus);
+			}
+		  }
+		} catch (err) {
+		  console.log(err);
+		}
+	  }
+
 	const functionCall = async () => {
-		await fetchElectionDetails();
-		await getElectionOrganizer();
+		if(authStatus){
+			await fetchElectionDetails();
+			await getElectionOrganizer();
+		}
+		else {
+			await getAuthStatus();
+		}
 	}
 
 	useEffect(() => {
 		functionCall();
-	},[electionAddress])
+	},[authStatus])
 
 	const MyTimer = ({ sdate, edate }) => {
 		sdate *= 1000;

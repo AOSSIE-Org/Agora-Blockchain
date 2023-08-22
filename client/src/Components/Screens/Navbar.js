@@ -6,6 +6,7 @@ import Authentication from "../../build/Authentication.json";
 import { CONTRACTADDRESS } from '../constants'
 import { useNavigate } from "react-router-dom";
 
+
 function Navbar({header, infoText, pictureUrl}) {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
