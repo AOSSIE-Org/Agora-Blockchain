@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Table, Button, EthAddress, display, zIndex } from "rimble-ui";
 
-import { CreateElectionModal } from "./modals/";
+import { CreateElectionModal ,PolygonIDVerifier} from "./modals/";
 
 import { STATUS } from "./constants";
 import { Status, CardItem, ElectionRow } from "./utilities";
@@ -24,6 +24,7 @@ import ElectionOrganiser from "../build/ElectionOrganizer.json";
 import Authentication from "../build/Authentication.json";
 import ElectionABI from '../build/Election.sol/Election.json'
 import { ToastContainer } from 'react-toastify';
+
 
 // import BrightID from "./BrightID";
 
@@ -231,10 +232,19 @@ const Dashboard = () => {
           <div style={{ float: "right" }}>
             <CreateElectionModal DashContractAddress={DashContractAddress} />
           </div>
-          <a href="/brightid">
-          <div className="createElectionButton">Get BrightID Verified!
-          
-          </div></a>
+          <PolygonIDVerifier
+                  publicServerURL={
+                    process.env.REACT_APP_VERIFICATION_SERVER_PUBLIC_URL
+                  }
+                  localServerURL={
+                    process.env.REACT_APP_VERIFICATION_SERVER_LOCAL_HOST_URL
+                  }
+                  credentialType={"KYCAgeCredential"}
+                  issuerOrHowToLink={
+                    "https://oceans404.notion.site/How-to-get-a-Verifiable-Credential-f3d34e7c98ec4147b6b2fae79066c4f6?pvs=4"
+                  }
+                  // onVerificationResult={setProvedAccessBirthday}
+                />
         </div>
 
         <br />

@@ -902,8 +902,8 @@
       ]
     },
     "/Users/harsh/Desktop/projects/agora-blockchain/server/contracts/OneVote.sol": {
-      "lastModificationDate": 1688618651757,
-      "contentHash": "020738d12d6a3a246085cb5243b2f795",
+      "lastModificationDate": 1692366199698,
+      "contentHash": "792a70fcad6fe2ff6d910f0f21b1d91c",
       "sourceName": "contracts/OneVote.sol",
       "solcConfig": {
         "version": "0.8.9",

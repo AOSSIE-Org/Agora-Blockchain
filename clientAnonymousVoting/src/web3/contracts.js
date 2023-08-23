@@ -6,8 +6,8 @@ import oneVoteAbi from '@/../../abi/OneVote.json';
 import oneVoteNetworks from '@/../../addresses/OneVote.json';
 import votingProcessAbi from '@/../../abi/VotingProcess.json';
 
-const semaphoreAddress = "0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d";
-const oneVoteAddress = "0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6";
+const semaphoreAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+const oneVoteAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
 
 const deployVotingProcess = async (name, description,startDate,endDate) => {
     console.log("One Vote testnet address: ", oneVoteAddress);

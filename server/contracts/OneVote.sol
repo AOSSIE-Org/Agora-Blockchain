@@ -2,26 +2,26 @@
 pragma solidity ^0.8.0;
 // pragma experimental ABIEncoderV2;
 
-import { VotingProcess } from './VotingProcess.sol';
-import { Semaphore } from './Semaphore.sol';
-import './Election.sol';
-import './ElectionStorage.sol';
-import './ElectionFactory.sol';
+import {VotingProcess} from "./VotingProcess.sol";
+import {Semaphore} from "./Semaphore.sol";
+import "./Election.sol";
+import "./ElectionStorage.sol";
+import "./ElectionFactory.sol";
 
 contract OneVote {
     mapping(uint => VotingProcess) public votingProcesses;
-    mapping(uint256 => bool)userAuthStatus;
+    mapping(uint256 => bool) userAuthStatus;
     uint processCounter;
 
     uint256[] public identityCommitments;
 
     // A mapping of all signals broadcasted
-    mapping (uint256 => bytes) public signalIndexToSignal;
+    mapping(uint256 => bytes) public signalIndexToSignal;
 
     // A mapping between signal indices to external nullifiers
-    mapping (uint256 => uint256) public signalIndexToExternalNullifier;
+    mapping(uint256 => uint256) public signalIndexToExternalNullifier;
 
-    mapping (uint232 => bytes[]) public signalsForNullifier;
+    mapping(uint232 => bytes[]) public signalsForNullifier;
 
     // The next index of the `signalIndexToSignal` mapping
     uint256 public nextSignalIndex = 0;
@@ -30,16 +30,17 @@ contract OneVote {
 
     event SignalBroadcastByClient(uint256 indexed signalIndex);
 
-
     function getNextSignalIndex() public view returns (uint256) {
         return nextSignalIndex;
     }
 
-    function getIdentityCommitments() public view returns (uint256 [] memory) {
+    function getIdentityCommitments() public view returns (uint256[] memory) {
         return identityCommitments;
     }
 
-    function getIdentityCommitment(uint256 _index) public view returns (uint256) {
+    function getIdentityCommitment(
+        uint256 _index
+    ) public view returns (uint256) {
         return identityCommitments[_index];
     }
 
@@ -51,7 +52,8 @@ contract OneVote {
         userAuthStatus[_leaf] = true;
         emit IdentityCommitment(_leaf);
     }
-    function getAuthStatus(uint256 _leaf) public view returns(bool) {
+
+    function getAuthStatus(uint256 _leaf) public view returns (bool) {
         return userAuthStatus[_leaf];
     }
 
@@ -70,7 +72,7 @@ contract OneVote {
         uint256[8] memory _proof,
         uint256 _root,
         uint256 _nullifiersHash,
-        uint232 _externalNullifier  //processId
+        uint232 _externalNullifier //processId
     ) public {
         // bool exist = false;
         // bytes[] memory proposals = votingProcesses[_externalNullifier].getProposals();
@@ -96,12 +98,18 @@ contract OneVote {
         votingProcesses[_externalNullifier].vote(_signal);
 
         // increment the signal index
-        nextSignalIndex ++;
+        nextSignalIndex++;
 
         emit Rooot(_root);
 
         // broadcast the signal
-        semaphore.broadcastSignal(_signal, _proof, _root, _nullifiersHash, _externalNullifier);
+        semaphore.broadcastSignal(
+            _signal,
+            _proof,
+            _root,
+            _nullifiersHash,
+            _externalNullifier
+        );
 
         emit SignalBroadcastByClient(signalIndex);
     }
@@ -110,11 +118,15 @@ contract OneVote {
      * Returns the external nullifier which a signal at _index broadcasted to
      * @param _index The index to use to look up the signalIndexToExternalNullifier mapping
      */
-    function getExternalNullifierBySignalIndex(uint256 _index) public view returns (uint256) {
+    function getExternalNullifierBySignalIndex(
+        uint256 _index
+    ) public view returns (uint256) {
         return signalIndexToExternalNullifier[_index];
     }
 
-    function getSignalBySignalIndex(uint256 _index) public view returns (bytes memory) {
+    function getSignalBySignalIndex(
+        uint256 _index
+    ) public view returns (bytes memory) {
         return signalIndexToSignal[_index];
     }
 
@@ -134,7 +146,13 @@ contract OneVote {
         uint _endDate
     ) public {
         //add new voting proposal
-        VotingProcess vp = new VotingProcess(processCounter, _name, _description, _startDate, _endDate);
+        VotingProcess vp = new VotingProcess(
+            processCounter,
+            _name,
+            _description,
+            _startDate,
+            _endDate
+        );
 
         addExternalNullifier(uint232(processCounter));
 
@@ -146,11 +164,11 @@ contract OneVote {
         votingProcesses[_processId].addProposal(_proposal);
     }
 
-    function getProcesses() public view returns(ProcessDTO[] memory){
+    function getProcesses() public view returns (ProcessDTO[] memory) {
         uint256 i = 0;
         ProcessDTO[] memory returnProcesses = new ProcessDTO[](processCounter);
 
-        for(i; i < processCounter; i++){
+        for (i; i < processCounter; i++) {
             returnProcesses[i] = ProcessDTO({
                 id: votingProcesses[i].id(),
                 name: votingProcesses[i].name(),
@@ -164,24 +182,24 @@ contract OneVote {
         return returnProcesses;
     }
 
-    function getProcess(uint id) public view returns (ProcessDTO memory){
+    function getProcess(uint id) public view returns (ProcessDTO memory) {
         VotingProcess votingProcess = votingProcesses[id];
-        return ProcessDTO({
-            id: votingProcess.id(),
-            name: votingProcess.name(),
-            description: votingProcess.description(),
-            proposals: votingProcess.getProposals(),
-            startDate: votingProcess.getStartDate(),
-            endDate: votingProcess.getEndDate()
-        });
+        return
+            ProcessDTO({
+                id: votingProcess.id(),
+                name: votingProcess.name(),
+                description: votingProcess.description(),
+                proposals: votingProcess.getProposals(),
+                startDate: votingProcess.getStartDate(),
+                endDate: votingProcess.getEndDate()
+            });
     }
 
-    function getRoots() public view returns (uint256[10] memory){
+    function getRoots() public view returns (uint256[10] memory) {
         return semaphore.getRoots();
     }
 
-    function getRootHistory(uint256 id) public view returns (bool){
+    function getRootHistory(uint256 id) public view returns (bool) {
         return semaphore.rootHistory(id);
     }
-
 }
