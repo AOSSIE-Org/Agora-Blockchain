@@ -41,6 +41,17 @@ const handleTypeChange = (e) => {
     setBallotType(2);
     setResultCalculator(1);
   }
+  else if(e.target.value === 'Schulze'){
+    setBallotType(5);
+    setResultCalculator(4);
+  }
+  else if(e.target.value === 'Instant Run-Off'){
+    setBallotType(6);
+    setResultCalculator(4);
+  }
+  else if(e.target.value === 'Kemeng Young'){
+    setBallotType(7);
+  }
   console.log('type',ballotType);
   console.log('type',resultCalculator);
 };
@@ -54,36 +65,51 @@ const handleTypeChange = (e) => {
     );
   };
 
+  const validateDetail = () => {
+    const { name, description } = nda;
+    const { startTime, endTime } = se;
+    const currTime = Date.now() / 1000;
+    return ( name.length && description.length && currTime < startTime && startTime < endTime );
+  }
+
   const handleSubmitNewElection = async (e) => {
     e.preventDefault();
     try {
-      const { ethereum } = window;
+      if(validateDetail()){
+        const { ethereum } = window;
 
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
+        if (ethereum) {
+          const provider = new ethers.providers.Web3Provider(ethereum);
+          const signer = provider.getSigner();
 
-        const contract = new ethers.Contract(
-          props.DashContractAddress,
-          ElectionOrganiser.abi,
-          signer
-        );
-        //function to deploy ballot,result
-        const transaction = await contract.createElection(
-          [1, nda.name, nda.description, se.startTime, se.endTime],
-          ballotType,resultCalculator
-        );
-        await transaction.wait();
-        console.log("suceessss", [
-          1,
-          nda.name,
-          nda.description,
-          se.startTime,
-          se.endTime,
-          ballotType,
-          resultCalculator,
-        ]);
-        
+          const contract = new ethers.Contract(
+            props.DashContractAddress,
+            ElectionOrganiser.abi,
+            signer
+          );
+          //function to deploy ballot,result
+          const transaction = await contract.createElection(
+            [1, nda.name, nda.description, se.startTime, se.endTime],
+            ballotType,resultCalculator
+          );
+          await transaction.wait();
+          console.log("suceessss", [
+            1,
+            nda.name,
+            nda.description,
+            se.startTime,
+            se.endTime,
+            ballotType,
+            resultCalculator,
+          ]);
+          
+        }
+      }
+      else{
+        if (nda.name.length === 0) alert("Name should not be empty");
+        if (nda.description.length === 0) alert("Description should not be empty");
+        if (se.startTime <= Date.now() / 1000) alert("Start Time error - Election must start in future");
+        if (se.startTime >= se.startTime) alert("End Time error - Election finish time must comes after the start time");
       }
     } catch (err) {
       console.log(err);
@@ -168,9 +194,11 @@ const handleTypeChange = (e) => {
                       placeholder="select branch"
                     >
                       <option value="General">General</option>
-                      <option value="Borda">Borda</option>
                       <option value="Oklahoma">Oklahoma</option>
-                      
+                      <option value="Borda">Borda</option>
+                      <option value="Schulze">Schulze</option>
+                      <option value="Instant Run-off">Instant Run-Off</option>
+                      <option value="Kemeng Young">Kemeng Young</option>                      
                     </select>
                   </div>
                   <br/>

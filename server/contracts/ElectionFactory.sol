@@ -8,6 +8,9 @@ import './ballot/Ballot.sol';
 import './ballot/GeneralBallot.sol';
 import './ballot/PreferenceBallot.sol';
 import './ballot/BordaBallot.sol';
+import './ballot/Schulze.sol';
+import './ballot/InstantRunOff.sol';
+import './ballot/KemenyYoung.sol';
 
 // import './ballot/ScoreBallot.sol';
 // New Ballots here
@@ -17,6 +20,9 @@ import './resultCalculator/ResultCalculator.sol';
 import './resultCalculator/GeneralResults.sol';
 import './resultCalculator/Oklahoma.sol';
 import './resultCalculator/BordaResult.sol';
+import './resultCalculator/SchulzeResult.sol';
+import './resultCalculator/IRVResult.sol';
+import './resultCalculator/KemenyYoungResult.sol';
 // New ResultCalculators here
 
 contract ElectionFactory {
@@ -107,6 +113,15 @@ contract ElectionFactory {
         else if (_ballotType == 4) {
             ballot = new BordaBallot();
         }
+        else if (_ballotType == 5) {
+            ballot = new SchulzeBallot();
+        }
+        else if (_ballotType == 6) {
+            ballot = new IRV();
+        }
+        else if (_ballotType == 7) {
+            ballot = new KemenyYoung();
+        }
         // New Ballots here
         else {
             ballot = new GeneralBallot();
@@ -130,6 +145,15 @@ contract ElectionFactory {
         }
         else if (_ballotType == 4) {
             getBordaResultCalculator();
+        }
+        else if (_ballotType == 5) {
+            resultCalculator = new SchulzeResult();
+        }
+        else if (_ballotType == 6) {
+            resultCalculator = new IRVResult();
+        }
+        else if (_ballotType == 7) {
+            resultCalculator = new KemenyYoungResult();
         }
         // New Ballots here
         else {
