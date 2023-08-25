@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { Modal, Button, Card } from "rimble-ui";
+import { useEffect } from 'react';
 
 import '../../styles/Modal.scss';
+import ballot from '../../../build/ballot/Ballot.sol/Ballot.json'
+import { ethers } from "ethers";
 
 export function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = false}) {
     const [isOpen, setIsOpen] = useState(false);
-
+    const [votes,setVotes] = useState(0);
+    // ballotAddress = "0xAea9A82DF040538a0b84D28384A0eC3004b9892F"
     const closeModal = e => {
         e.preventDefault();
         setIsOpen(false);
@@ -17,17 +21,47 @@ export function Candidate({name, id, about, voteCount, imageUrl, modalEnabled = 
             setIsOpen(true);
         }
     };
+    // const fetchVotes = async (e) => {
+    //     try{
 
-    const CandidateButton = () => {
+
+    //         const { ethereum } = window;
+    // 		if (ethereum) {
+    //             const provider = new ethers.providers.Web3Provider(ethereum);
+    //             console.log('ba',ballotAddress)
+    //             const signer = provider.getSigner();
+    //             const ballotContract = new ethers.Contract(
+    //                 ballotAddress,
+    //                 ballot.abi,
+    //                 signer
+    //                 );
+                    
+    //             let cvotes = await ballotContract.getVoteCount(Number(id),1);
+    //             setVotes(Number(cvotes._hex))
+                
+    //             }
+    //         }catch(err){
+    //             console.log(err)
+    //         }
+    //     }
+
+        // useEffect(() => {
+        //     fetchVotes()
+        // },[]);
+                
+                
+                
+        const CandidateButton = () => {
         return (
             <div style={{display: "flex", marginBottom: "20px", cursor: "pointer"}} onClick={openModal}>
                 <img src={imageUrl} style={{width: "40px", height: "40px", borderRadius: "25px"}} alt="profile-pic"/>
                 
-                <div style={{marginLeft: "10px", marginTop: "-4px"}}>
+                <div style={{marginLeft: "10px", marginTop: "6px"}}>
                     <font size="3">{name}</font>
-                    <font size="2" className="text-muted"> ({voteCount} votes)</font>
+                    {/* <font size="2" className="text-muted"> ({votes} votes)</font> */}
                     
-                    <br/>
+            
+
                     
                     <font size="2" className="text-muted">#{id}</font>
                 </div>

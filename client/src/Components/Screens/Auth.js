@@ -11,6 +11,7 @@ function Auth() {
   const [fullName, setFullName] = useState({
     name: "",
   });
+  const [newRegistered, setNewRegistered] = useState(false);
   const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
   const handleNameChange = (e) => {
@@ -34,10 +35,16 @@ function Auth() {
           signer
         );
         console.log(contract);
+        console.log(fullName.name);
+        const add  = await signer.getAddress();
         // const tx = await contract.createUser(fullName.name);
-        const tx = await contract.createUser([1,fullName.name,"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"]);
+
+        //changed hardcoded address to signer address
+        const tx = await contract.createUser([1,fullName.name,add
+        ]);
         await tx.wait();
         console.log("suucce");
+        setNewRegistered(true);
       }
     } catch (err) {
       console.log(err);
@@ -49,17 +56,20 @@ function Auth() {
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
-
+        const add  = await signer.getAddress();
+        console.log(signer);
         const contract = new ethers.Contract(
           contractAddress,
           Authentication.abi,
           signer
         );
-        const tx = await contract.getAuthStatus(
-          "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-        );
+
+        //changed hardcoded address to signer address
+
+        const tx = await contract.getAuthStatus(add);
         console.log(tx);
         setRegistered(tx);
+        // setRegistered(true);
       }
     } catch (err) {
       console.log(err);
@@ -67,7 +77,7 @@ function Auth() {
   };
   useEffect(() => {
     isRegistered();
-  }, []);
+  }, [newRegistered]);
   return (
     <div className="authDiv">
       <div className="description">
@@ -99,6 +109,7 @@ function Auth() {
               <input
                 className="form-control"
                 type="text"
+                value={window?.ethereum?.selectedAddress}
                 disabled
                 // value={initialized ? account : "Loading..."}
               />

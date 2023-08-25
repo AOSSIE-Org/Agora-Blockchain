@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { Flex, Modal, Button, Card } from "rimble-ui";
 import { ethers } from "ethers";
-// import ElectionOrganiser from "../../../build/ElectionOrganizer.json";
+import ElectionOrganiser from "../../../build/ElectionOrganizer.json";
+import {successtoast, dangertoast } from '../utilities/Toasts';
+import { toast } from "react-toastify";
 
-export function AddCandidateModal({ CurrentElection, account }) {
+export function AddCandidateModal({ organizerAddress, electionAddress }) {
     const [isOpen, setIsOpen] = useState(false);
     const [candidateDetail, setCandidateDetail] = useState({
         name: '',
         description: ''
     });
+
 
     const handleCandidateDetailChange = (e) => {
         const { name, value } = e.target;
@@ -17,37 +20,40 @@ export function AddCandidateModal({ CurrentElection, account }) {
             [name]: value
         });
     }
-    const contractAddress = "0x0165878A594ca255338adfa4d48449f69242Eb8F";
+    
 
-    // const handleSubmitCandidate = async (e) => {
-    //     e.preventDefault();
-    //     try {
-    //         const { ethereum } = window;
-    //         if (ethereum) {
-    //           const provider = new ethers.providers.Web3Provider(ethereum);
-    //           const signer = provider.getSigner();
-    //           const contract = new ethers.Contract(
-    //             contractAddress,
-    //             ElectionOrganiser.abi,
-    //             signer
-    //           );
-    //           console.log(contract);
-    //           const transaction = await contract.addCandidate(
-    //             "0x856e4424f806D16E8CBC702B3c0F2ede5468eae5",
-    //               [1,
-    //               "abc"]
-    //           );
-    //           await transaction.wait();
-      
-    //           console.log("suceessss");
+    const handleSubmitCandidate = async (e) => {
+        let id ;
+        e.preventDefault();
+        try {
+            const { ethereum } = window;
+            if (ethereum) {
+             id = toast.loading("Processing Your Transaction",{theme: "dark",position: "top-center"})
+              const provider = new ethers.providers.Web3Provider(ethereum);
+              const signer = provider.getSigner();
+              const contract = new ethers.Contract(
+                organizerAddress,
+                ElectionOrganiser.abi,
+                signer
+              );
+              const transaction = await contract.addCandidate(
+                electionAddress
+                ,
+                  [1,
+                  candidateDetail.name,candidateDetail.description]
+              );
+              await transaction.wait();
+              
+              successtoast(id, "Candidate Added Successfully")
               
       
-    //         }
-    //       } catch(err) {
-    //         console.log(err);
-    //       }
+            }
+          } catch(err) {
+            dangertoast(id ,"Candidate Addition Failed")
+            console.log(err);
+          }
         
-    // }
+    }
 
     const closeModal = e => {
         e.preventDefault();
@@ -122,7 +128,7 @@ export function AddCandidateModal({ CurrentElection, account }) {
                         justifyContent={"flex-end"}
                     >
                         <Button.Outline onClick={closeModal}>Cancel</Button.Outline>
-                        {/* <Button ml={3} type="submit" onClick={handleSubmitCandidate}>Confirm</Button> */}
+                        <Button ml={3} type="submit" onClick={handleSubmitCandidate}>Confirm</Button>
                     </Flex>
                 </Card>
             </Modal>

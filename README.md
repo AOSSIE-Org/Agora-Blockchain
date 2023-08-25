@@ -1,16 +1,18 @@
 # Agora Blockchain
 
+# Agora Blockchain
+
 ## Prerequisites (only for contributing)
 
 - Basic familarity with [Git](https://git-scm.com/), [NodeJS](https://nodejs.org/en) and [npm](https://www.npmjs.com/).
-- Basic familarity with [ReactJS](https://reactjs.org/), [React context APIs](https://reactjs.org/docs/context.html) and [Drizzle](https://www.trufflesuite.com/drizzle), if working on frontend part.
-- Basic familarity with Blockchain, [Solidity](https://docs.soliditylang.org/en/v0.8.6/) and [Truffle](https://www.trufflesuite.com/truffle), if working on blockchain part.
+- Basic familarity with [ReactJS](https://reactjs.org/), [React context APIs](https://reactjs.org/docs/context.html), if working on frontend part.
+- Basic familarity with Blockchain, [Solidity](https://docs.soliditylang.org/en/v0.8.6/) and [Hardhat](https://hardhat.org/), if working on blockchain part.
 
 ## Requirements
 
 - [NodeJS](https://nodejs.org/en) >= 10.16 and [npm](https://www.npmjs.com/) >= 5.6 installed.
 - [Git](https://git-scm.com/) installed in the system.
-- [Truffle](https://www.trufflesuite.com/truffle), which can be installed globally with `npm install -g truffle`
+- [Hardhat](https://hardhat.org/), which can be installed globally with `npm install --save-dev hardhat`
 - [Metamask](https://metamask.io) extension added to the browser.
 
 ## Development Guide
@@ -21,10 +23,10 @@
 git clone https://gitlab.com/aossie/agora-blockchain/
 ```
 
-**Switch to gsoc-2021 branch**
+**Switch to develop branch**
 
 ```bash
-git checkout gsoc-2021
+git checkout develop
 ```
 
 The frontend code is inside the `client` directory, whereas the smart contracts (solidity) is present inside `server` folder. You may proceed to `client` folder if you are here for enhancing frontend part of the Agora Blockchain. Else you can proceed to `server` folder for enhancing the efficiency or introducing new features in the blockchain part of the Agora.
@@ -75,13 +77,13 @@ npm run build
 
 Deploying the repository to **Heroku** would automatically serve production build of the client side. This is because, **Heroku** uses `npm run build` for deploying our application. Once the `build` is complete, it uses the `npm start` command. In the `package.json` file of root directory, you can see `node client/server.js` command against `start` script. This will serve the minified files from `build` direcotry.
 
-## Setting up Truffle project
+## Setting up Hardhat
 
 Smart contracts or blockchain codes and necessary config files for developing, testing and deploying them are present inside `server` directory. Inside the `server` folder, there is `contracts` directory which stores **Agora Blockchain**'s business logic i.e. the smart contracts. `migrations` folder contains files for migrating smart contracts to the blockchain network. Go through these smart contracts and start contributing.
 
 **About smart contracts**
 
-We use Trufflesuite (or Truffle) for compiling and deploying our smart contracts. Compiled smart contracts or build files are then stored inside the `/client/src` directory. This is necessary because, our React application can't use these build files if present outside the `src` folder.
+We use Hardhat for editing, compiling, debugging and deploying your smart contracts and dApps, all of which work together to create a complete development environment. Compiled smart contracts or build files are then stored inside the `/artifacts/contracts` directory. You need to copy the required files to the frontend after compiling.
 
 **Install server-side dependencies**
 
@@ -100,10 +102,10 @@ npm install
 
 **Compiling smart contracts**
 
-If we have altered the code within our Solidity files (.sol) or made new ones or just want generate build files for the client, we need to run `truffle compile` in the terminal. Build files are generated inside `client/src/blockchainBuild`.
+If we have altered the code within our Solidity files (.sol) or made new ones or just want generate build files for the client, we need to run `npx hardhat compile` in the terminal. Compiled files are generated inside `/artifacts/contracts/File_name/`.
 
 ```bash
-truffle compile
+npx hardhat compile
 ```
 
 **Create a .env file**
@@ -121,32 +123,21 @@ Also save your wallet's mnemonic phrase against the MNEMONIC in .env file, and d
 
 **Deploying smart contracts**
 
-Now its time to run migrations. Use the following command to deploy smart contracts.
+You can deploy the smart contracts in the localhost network following these steps:
+
+- Start a local node
 
 ```bash
-truffle migrate -f 2 --network rinkeby
+npx hardhat node
 ```
 
-If there is already the `build` files generated, then it will not migrate. To re-migrate use the following command.
+- Open a new terminal and deploy the smart contract in the localhost network.
+
 
 ```bash
-truffle migrate -f 2 --network rinkeby --reset
+npx hardhat run --network localhost scripts/deploy.js
 ```
 
-Instead of deploying on public test networks like Rinkeby, we may use local blockchain simulations like [Ganache](https://www.trufflesuite.com/ganache). To migrate on Ganache's development network we ignore the `--network` option, like shown below.
+The above line will print the contract addresses which are deployed, mentioned in `deploy.js`.
 
-```bash
-truffle migrate --reset
-```
-
-**Running test coverage**
-
-`Solidity-coverage` module has been configured in the config file to check how much of the code is being covered in test. To get the results of test coverage, follow the steps below.
-
-Migrate to the server folder and run the following commands on the terminal. Make sure to run `npm install`
-
-```bash
-truffle run coverage
-```
-
-This will generate the test results of all the solidity files in contracts folder. The results are displayed on the terminal and can also be found in `coverage.json` file.
+Replace the contract addresses printed in the terminal with the contract addresses hard coded in the frontend files.

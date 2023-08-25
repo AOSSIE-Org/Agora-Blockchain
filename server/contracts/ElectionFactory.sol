@@ -7,6 +7,8 @@ import './Election.sol';
 import './ballot/Ballot.sol';
 import './ballot/GeneralBallot.sol';
 import './ballot/PreferenceBallot.sol';
+import './ballot/BordaBallot.sol';
+
 // import './ballot/ScoreBallot.sol';
 // New Ballots here
 
@@ -14,6 +16,7 @@ import './ballot/PreferenceBallot.sol';
 import './resultCalculator/ResultCalculator.sol';
 import './resultCalculator/GeneralResults.sol';
 import './resultCalculator/Oklahoma.sol';
+import './resultCalculator/BordaResult.sol';
 // New ResultCalculators here
 
 contract ElectionFactory {
@@ -80,7 +83,7 @@ contract ElectionFactory {
         Election election;
         getBallot(_ballotType);
         getResultCalculator(_ballotType, _resultCalculatorType);
-        election = new Election(_electionInfo,ballot,resultCalculator,_electionOrganizer,_electionOrganizerContract);
+        election = new Election(_electionInfo,ballot,resultCalculator,_electionOrganizer,_electionOrganizerContract,_ballotType);
         return election;
     }
 
@@ -100,6 +103,9 @@ contract ElectionFactory {
         }
         else if (_ballotType == 3) {
             // ballot = new ScoreBallot();
+        }
+        else if (_ballotType == 4) {
+            ballot = new BordaBallot();
         }
         // New Ballots here
         else {
@@ -122,6 +128,9 @@ contract ElectionFactory {
         else if (_ballotType == 3) {
             getScoreResultCalculator(_resultCalculatorType);
         }
+        else if (_ballotType == 4) {
+            getBordaResultCalculator();
+        }
         // New Ballots here
         else {
             getGeneralResultCalculator(_resultCalculatorType);
@@ -129,6 +138,10 @@ contract ElectionFactory {
 
         return resultCalculator;
     }
+
+    function getBordaResultCalculator() internal {  
+            resultCalculator = new BordaResult();
+       }
 
     // ResultCalculator for GeneralBallot
     function getGeneralResultCalculator(uint _generalResultCalculatorType) internal {

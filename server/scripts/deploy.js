@@ -9,7 +9,7 @@ async function main() {
     const contract1 = await auth.deploy();   
     await contract1.deployed();
     
-    console.log("Contract deployed to address:", contract1.address);
+    console.log("Auth contract deployed to address:", contract1.address);
 
     // const contract2 = await org.deploy();   
     // await contract2.deployed();

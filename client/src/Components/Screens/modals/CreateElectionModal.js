@@ -4,9 +4,13 @@ import DatePicker from "react-datepicker";
 import { ethers } from "ethers";
 import ElectionOrganiser from "../../../build/ElectionOrganizer.json";
 import "react-datepicker/dist/react-datepicker.css";
+import { toast } from "react-toastify";
+import { successtoast, dangertoast } from "../utilities/Toasts";
 
 export function CreateElectionModal(props) {
   const [isOpen, setIsOpen] = useState(false);
+  const [ballotType, setBallotType] = useState(1);
+  const [resultCalculator, setResultCalculator] = useState(1);
 
   const [nda, setNda] = useState({
     name: "",
@@ -25,6 +29,23 @@ export function CreateElectionModal(props) {
       [name]: value,
     });
   };
+const handleTypeChange = (e) => {
+  console.log('type',e.target.value);
+  if(e.target.value === 'Borda'){
+    setBallotType(4);
+    setResultCalculator(4);
+  }
+  if(e.target.value === 'General'){
+    setBallotType(1);
+    setResultCalculator(1);
+  }
+  if(e.target.value === 'Oklahoma'){
+    setBallotType(2);
+    setResultCalculator(1);
+  }
+  console.log('type',ballotType);
+  console.log('type',resultCalculator);
+};
 
   const handleSeChange = (e, type) => {
     console.log(e, Date.now(), Date.parse(e));
@@ -37,6 +58,7 @@ export function CreateElectionModal(props) {
 
   const handleSubmitNewElection = async (e) => {
     e.preventDefault();
+    let id
     try {
       const { ethereum } = window;
 
@@ -44,6 +66,7 @@ export function CreateElectionModal(props) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
 
+        id  = toast.loading("Processing Your Transaction",{theme: "dark",position: "top-center"})
         const contract = new ethers.Contract(
           props.DashContractAddress,
           ElectionOrganiser.abi,
@@ -52,20 +75,23 @@ export function CreateElectionModal(props) {
         //function to deploy ballot,result
         const transaction = await contract.createElection(
           [1, nda.name, nda.description, se.startTime, se.endTime],
-          1,1
+          ballotType,resultCalculator
         );
-        await transaction.wait();
-
+        // await transaction.wait();
         console.log("suceessss", [
           1,
           nda.name,
           nda.description,
           se.startTime,
           se.endTime,
+          ballotType,
+          resultCalculator,
         ]);
+       successtoast(id, "Election Created Successfully")
         
       }
     } catch (err) {
+      dangertoast(id, "Election Creation Failed");
       console.log(err);
     }
   };
@@ -137,6 +163,23 @@ export function CreateElectionModal(props) {
                 onChange={handleNdaChange}
               />
               <br />
+
+              <div className="">
+                    <label className="labels UP_labels">Select Election Type</label>
+                    <select
+                      onChange={(e) => handleTypeChange(e)}
+                      type="text"
+                      name="ac"
+                      className="form-control"
+                      placeholder="select branch"
+                    >
+                      <option value="General">General</option>
+                      <option value="Borda">Borda</option>
+                      <option value="Oklahoma">Oklahoma</option>
+                      
+                    </select>
+                  </div>
+                  <br/>
 
               <div style={{ display: "flex" }}>
                 <div>

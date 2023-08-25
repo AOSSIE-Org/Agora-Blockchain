@@ -14,7 +14,7 @@ contract ScoreBallot is Ballot{
     // ------------------------------------------------------------------------------------------------------
     //                                              STATE
     // ------------------------------------------------------------------------------------------------------
-
+   
     mapping(uint=>uint)scores;
     uint scoreRange;
 
@@ -33,8 +33,10 @@ contract ScoreBallot is Ballot{
     // ------------------------------------------------------------------------------------------------------
     //                                            FUNCTIONS
     // ------------------------------------------------------------------------------------------------------
-    
-    function vote(address _voter, uint _candidate, uint _score) external override{
+
+
+
+    function vote(address _voter, uint _candidate, uint _score,uint[] memory voteArr) override external {
         require(voteStatus[_voter]==false,"Voter already voted");
         require(voterCandidateVoteStatus[_voter][_candidate]==false,"Voter already voted for this candidate");
         require(voterVoteCount[_voter]<candidates.length,"Max votes already casted by voter");
@@ -50,5 +52,9 @@ contract ScoreBallot is Ballot{
     function getVoteCount(uint _candidate, uint _weight)external override view returns(uint){
         _weight = 1;
         return scores[_candidate];
+    }
+      function getVoteArr() external override returns(uint[][] memory  ){
+        uint [][] memory arr;
+        return arr;
     }
 }

@@ -55,5 +55,15 @@ module.exports = {
     solc: {
       version: "0.8.0",
     },
+  
+  },
+  solidity: {
+    version: "0.8.9",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
   },
 };

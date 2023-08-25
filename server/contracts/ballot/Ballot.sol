@@ -28,7 +28,7 @@ abstract contract Ballot {
         return voteStatus[_voter];
     }
 
-    function vote(address _voter, uint _candidate, uint _weight)external virtual;
+    function vote(address _voter, uint _candidate, uint _weight,uint[] memory voteArr)external virtual;
     
     /*
     Here the weight resembles the preference for preferential voting, in which case the function returns 
@@ -37,5 +37,6 @@ abstract contract Ballot {
     Else it just returns the vote count or score count.
     */
     function getVoteCount(uint _candidate, uint _weight)external virtual view returns(uint);
+    function getVoteArr() external virtual  returns(uint [][] memory votes);
 
 }

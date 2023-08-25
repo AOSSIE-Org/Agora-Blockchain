@@ -1,0 +1,15 @@
+.howItWorks {
+    /* display: flex; */
+    justify-content: center;
+    text-align: center;
+    font-size: calc(12px + 0.6vw);
+}
+
+.bigBtn {
+    font-size: calc(15px + 2vw);
+    font-weight: 700;
+    font-style: oblique;
+    color: #f1356d;
+    margin-top: 2em;
+    
+}

@@ -36,6 +36,9 @@ contract Election {
     address electionOrganizerContract;
 
     uint voterCount;
+    
+    uint ballotType;
+
 
     enum Status {
         active,
@@ -79,7 +82,7 @@ contract Election {
     //                                            CONSTRUCTOR
     // ------------------------------------------------------------------------------------------------------
 
-    constructor(ElectionInfo memory _electionInfo, Ballot _ballot, ResultCalculator _resultCalculator,address _electionOrganizer, address _electionOrganizerContract) {
+    constructor(ElectionInfo memory _electionInfo, Ballot _ballot, ResultCalculator _resultCalculator,address _electionOrganizer, address _electionOrganizerContract,uint _ballotType) {
         
         electionOrganizer = _electionOrganizer;
         electionOrganizerContract = _electionOrganizerContract;
@@ -94,6 +97,7 @@ contract Election {
         candidateCount = 1000;
         voterCount = 0;
         resultDeclared = false;
+        ballotType = _ballotType;
 
     }
 
@@ -179,12 +183,12 @@ contract Election {
         In invite based elections, a condidition to check if voter is authenticated
 
     */
-    function vote(address _voter, uint _candidateID, uint weight) external {
+    function vote(address _voter, uint _candidateID, uint weight,uint[] memory voteArr) external {
         require(getStatus() == Status.active, "Election needs to be active to vote");
         // if (electionInfo.electionType==0) {
         //     require(isAuthenticated(msg.Sender),"Voter must be authenticated to cast vote");
         // }
-        ballot.vote(_voter,_candidateID, weight);
+        ballot.vote(_voter,_candidateID, weight,voteArr);
         voterCount++;
         emit VoteCasted(address(ballot),candidateWithID[_candidateID],weight);
     }
@@ -205,5 +209,15 @@ contract Election {
             return getWinners();
         }
     }
+
+    function getBallotType() external view returns(uint){
+        return ballotType;
+    }
+
+    function updateElectionInfo(ElectionInfo memory _electionInfo) external  onlyOrganizer{
+        require(getStatus() == Status.pending,"Cannot update election info after election has started");
+        electionInfo = _electionInfo;
+
+    }   
 
 }
