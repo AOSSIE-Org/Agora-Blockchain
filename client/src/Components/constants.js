@@ -16,3 +16,5 @@ export const AVATARS = [
     '/assets/avatar3.png',
     '/assets/avatar4.png'
 ]
+
+export const CONTRACTADDRESS = "0xD91648F8A1d9637Fc32a4DB119b4327853DFD40A"

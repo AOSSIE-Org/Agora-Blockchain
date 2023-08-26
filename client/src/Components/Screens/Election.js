@@ -16,6 +16,8 @@ import {
 	UpdateElectionModal,
 } from './modals'
 
+import {UpdateCandidateModal} from "./modals/UpdateCandidateModal";
+
 import { OklahomaModal } from "./modals/OklahomaModal";
 import { BordaModal } from './modals/BordaModal';
 import { SchulzeModal } from "./modals/SchulzeModal";
@@ -35,6 +37,7 @@ import { Update } from "rimble-ui";
 function Election() {
 	const [isAdmin, setAdmin] = useState(false);
 	const [status, setStatus] = useState(STATUS.PENDING)
+	const [candidateModalOpen, setCandidateModalOpen] = useState(false);
 
 	const search = useLocation().search;
 	const contractAddress = new URLSearchParams(search).get('contractAddress');
@@ -83,6 +86,7 @@ function Election() {
 			//fetched all candidates
 			const cand =await electionContract.getCandidates();
 			setCandidates(cand);
+			console.log(cand);
 			
 
 			const no  = await electionContract.getVoterCount();
@@ -100,9 +104,7 @@ function Election() {
 
 
 
-	const [winnerDetails, setWinnerDetails] = useState([
-		
-	]);
+	const [winnerDetails, setWinnerDetails] = useState([]);
 
 	const getWinnerDetails = async () => {
 		const { ethereum } = window;
@@ -117,7 +119,13 @@ function Election() {
 		  let _winnerDetails = [];
 		  let winners = await electionContract.getWinners();
 		  console.log('winner',winners);
-		  setWinnerDetails(winners);
+		  for(let winner of winners){
+			console.log(Number(winner))
+		  }
+		  _winnerDetails.push(Number(winners[0]))
+		  console.log("set winner", Number(winners[0]))
+
+		  setWinnerDetails(_winnerDetails);
 		}
 	}
 
@@ -133,7 +141,7 @@ function Election() {
 			ElectionABI.abi,
 			signer
 		  );
-		  electionContract.getResult();	
+		  await electionContract.getResult();	
 		}
 		
 		}
@@ -158,7 +166,6 @@ function Election() {
 		}
 	}
 
-	
 	useEffect(() => {
 		fetchElectionDetails();
 	},[contractAddress])
@@ -217,6 +224,7 @@ function Election() {
 						<MyTimer style={{marginRight:"15%"}} sdate = {electionDetails.startDate} edate = {electionDetails.endDate}/>
 						<DeleteModal Candidate = {Candidate} isAdmin = {isAdmin} isPending = {true}/>
 						<UpdateElectionModal contractAddress={contractAddress} electionDetails={electionDetails} election/>
+						
 						{ballotType===4 &&
 							<BordaModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
 						}
@@ -281,13 +289,11 @@ function Election() {
 									
 											<Candidate
 												name={candidate?.name}
-												id={supportVar+ Number(candidate?._hex)}
+												id={candidate}
 												about={candidate?.about}
 												voteCount={candidate?.voteCount}
 												imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}
 												modalEnabled="true"
-												ballotAddress = {ballotAddress}
-												ballotType = {ballotType}
 											/> 
 										))
 									}	
@@ -356,14 +362,17 @@ function Election() {
 							<h5 style={{width: "60%"}}>Candidates ({candidates.length})</h5>
 							{
 								// isAdmin && status == STATUS.PENDING &&
+								<div>
 								<AddCandidateModal organizerAddress={organizerAddress}  electionAddress={contractAddress} />
+								<UpdateCandidateModal candidates={candidates} organizerAddress={organizerAddress} electionAddress={contractAddress}/>
+								</div>
 							}
 						</div>
 
 						<br/>
 
 						{
-							candidates?.map((candidate) => (
+							candidates?.map((candidate, index) => (
 								<Candidate
 									name={candidate?.name}
 									id={Number(candidate?.candidateID._hex)}
@@ -371,7 +380,11 @@ function Election() {
 									voteCount={candidate?.voteCount}
 									imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}
 									modalEnabled="true"
-									ballotAddress={ballotAddress}
+									candidateModalOpen={candidateModalOpen} 
+									setCandidateModalOpen={setCandidateModalOpen}
+									OrganizerAddress={organizerAddress}
+									electionAddress={contractAddress}
+									index={index}
 								/> 
 							))
 						}

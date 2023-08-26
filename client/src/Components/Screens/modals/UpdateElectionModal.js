@@ -6,8 +6,8 @@ import ElectionABI from '../../../build/Election.sol/Election.json'
 
 import "react-datepicker/dist/react-datepicker.css";
 
-export function UpdateElectionModal({contractAddress,electionDetails}) {
-  console.log(contractAddress,electionDetails)
+export function UpdateElectionModal({electionAddress, electionDetails}) {
+  console.log(electionAddress, electionDetails)
   const [isOpen, setIsOpen] = useState(false);  
   const [nda, setNda] = useState({
     name: electionDetails?.name,
@@ -42,32 +42,26 @@ export function UpdateElectionModal({contractAddress,electionDetails}) {
     e.preventDefault();
     try {
       const { ethereum } = window;
-
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
 
         const contract = new ethers.Contract(
-          contractAddress,
+          electionAddress,
           ElectionABI.abi,
           signer
         );
-        //function to deploy ballot,result
-        const transaction = await contract.updateElectionInfo(
-          [Number(electionDetails.electionID), nda?.name || electionDetails.name,
-            nda?.description || electionDetails.description,
-            se?.startTime || electionDetails.startDate,
-            se?.endTime || electionDetails.endDate,]
-        );
-        await transaction.wait();
-        console.log("suceessss", [
-          1,
+        
+        let currElectionDetail = [Number(electionDetails.electionID), 
           nda?.name || electionDetails.name,
           nda?.description || electionDetails.description,
           se?.startTime || electionDetails.startDate,
-          se?.endTime || electionDetails.endDate,
-        ]);
-        
+          se?.endTime || electionDetails.endDate,]
+
+        const transaction = await contract.updateElectionInfo(currElectionDetail);
+        await transaction.wait();
+
+        console.log("suceessss", currElectionDetail);        
       }
     } catch (err) {
       console.log(err);

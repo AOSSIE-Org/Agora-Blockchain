@@ -11,17 +11,19 @@ import Navbar from "./Navbar";
 
 import "../styles/Layout.scss";
 import "../styles/Dashboard.scss";
+import { CONTRACTADDRESS } from '../constants'
 
 import { ethers } from "ethers";
 import ElectionOrganiser from "../../build/ElectionOrganizer.json";
-import Authentication from "../../build/Authentication.json";
+import Authentication from "../../build/Authentication.sol/Authentication.json";
 import ElectionABI from '../../build/Election.sol/Election.json'
 
 // import BrightID from "./BrightID";
 
 const Dashboard = () => {
+  const AuthcontractAddress = CONTRACTADDRESS
+  const DashContractAddress = CONTRACTADDRESS
   const [elections, getElections] = useState([]);
-  const [DashContractAddress, setDashContractAddress] = useState("");
   const [organizerInfo, setOrganizerInfo] = useState({
     name: "",
     publicAddress: "",
@@ -75,8 +77,6 @@ const Dashboard = () => {
       return STATUS.CLOSED;
     }
   };
-  const AuthcontractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-  // const DashcontractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
   const fetchElections = async () => {
     try {
@@ -89,46 +89,20 @@ const Dashboard = () => {
         //to fetch signers address
         const add = await signer.getAddress();
        
-
-        if(DashContractAddress !== ""){
         const contract = new ethers.Contract(
           DashContractAddress,
           ElectionOrganiser.abi,
           signer
         );
 
-        //removed the hardcoded address
-        const data = await contract.getElectionOrganizerByAddress(
-          add
-        );
-        
-       
+        const data = await contract.getElectionOrganizerByAddress(add);       
         setOrganizerInfo({
           name: data.name,
           publicAddress: data.publicAddress,
         });
+
         const elections = await contract.getElections(); //get elections
         getElections(elections);
-      }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const fetchContract = async () => {
-    try {
-      const { ethereum } = window;
-
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const contract = new ethers.Contract(
-          AuthcontractAddress,
-          Authentication.abi,
-          signer
-        );
-        const data = await contract.getElectionOrganizerContract(); //get elections
-        setDashContractAddress(data);
       }
     } catch (err) {
       console.log(err);
@@ -177,9 +151,7 @@ const Dashboard = () => {
           setdetailedelection(detailedelection => [...detailedelection, data]);
           let sum =(tempStats[1]+tempStats[2]+tempStats[3])
           tempStats[0] = sum+1;
-          setStatistics(tempStats);
-         
-       
+          setStatistics(tempStats);        
         })
     
 
@@ -192,7 +164,6 @@ const Dashboard = () => {
     window.open("https://faucet.avax-test.network/", "_blank");
   };
   useEffect(() => {
-    fetchContract();
     fetchElections();
   }, [DashContractAddress]);
 
