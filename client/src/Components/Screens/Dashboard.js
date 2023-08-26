@@ -11,18 +11,23 @@ import Navbar from "./Navbar";
 
 import "../styles/Layout.scss";
 import "../styles/Dashboard.scss";
+import { CONTRACTADDRESS } from '../constants'
 
 import { ethers } from "ethers";
+import Authentication from '../../build/Authentication.json'
 import ElectionOrganiser from "../../build/ElectionOrganizer.json";
-import Authentication from "../../build/Authentication.json";
 import ElectionABI from '../../build/Election.sol/Election.json'
 import { ToastContainer } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 // import BrightID from "./BrightID";
 
 const Dashboard = () => {
+  const DashContractAddress = CONTRACTADDRESS;
+  const navigate = useNavigate();
+  const [authStatus, setAuthStatus] = useState(false);
+  const [address, setAddress] = useState();
   const [elections, getElections] = useState([]);
-  const [DashContractAddress, setDashContractAddress] = useState("");
   const [organizerInfo, setOrganizerInfo] = useState({
     name: "",
     publicAddress: "",
@@ -75,8 +80,6 @@ const Dashboard = () => {
       return STATUS.CLOSED;
     }
   };
-  const AuthcontractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-  // const DashcontractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
   const fetchElections = async () => {
     try {
@@ -89,46 +92,25 @@ const Dashboard = () => {
         //to fetch signers address
         const add = await signer.getAddress();
        
-
-        if(DashContractAddress !== ""){
         const contract = new ethers.Contract(
           DashContractAddress,
           ElectionOrganiser.abi,
           signer
         );
 
-        //removed the hardcoded address
-        const data = await contract.getElectionOrganizerByAddress(
-          add
-        );
-        
-       
+        const data = await contract.getElectionOrganizerByAddress(add);       
         setOrganizerInfo({
           name: data.name,
           publicAddress: data.publicAddress,
         });
-        const elections = await contract.getElections(); //get elections
+                
+        const openBasedElections = await contract.getOpenBasedElections();
+        const inviteBasedElections = await contract.getInviteBasedElections(data.publicAddress);
+        const elections = await openBasedElections.concat(inviteBasedElections);
+        console.log("Open Based Elections - ",openBasedElections);
+        console.log("Invite Based Elections - ",inviteBasedElections);
+        console.log("Elections - ",elections);
         getElections(elections);
-      }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const fetchContract = async () => {
-    try {
-      const { ethereum } = window;
-
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const contract = new ethers.Contract(
-          AuthcontractAddress,
-          Authentication.abi,
-          signer
-        );
-        const data = await contract.getElectionOrganizerContract(); //get elections
-        setDashContractAddress(data);
       }
     } catch (err) {
       console.log(err);
@@ -138,12 +120,15 @@ const Dashboard = () => {
   //to fetch all election details 
   const fetchDetailedElection = async() => {
     try{
-    const { ethereum } = window;
-   
+      const { ethereum } = window;
+
       const provider = new ethers.providers.Web3Provider(ethereum);
-      const signer = provider.getSigner();    
+      const signer = provider.getSigner();   
+
       let tempStats = [0, 0, 0, 0];
-       elections.map(async (address) => {
+      setdetailedelection([]);
+
+      elections.map(async (address) => {
         const electionContract = new ethers.Contract(
           address,
           ElectionABI.abi,
@@ -151,54 +136,92 @@ const Dashboard = () => {
         );
 
         let info = await electionContract.getElectionInfo();
-          let st = getStatus(info.startDate, info.endDate);
-          const data = {
-            electionID: parseInt(info.electionID % 1000),
-            name: info.name,
-            address: address,
-            startDate: new Date(info.startDate * 1000).toLocaleString(),
-            endDate: new Date(info.endDate * 1000).toLocaleString(),
-            status: st
-          }
+        let st = getStatus(info.startDate, info.endDate);
+        const data = {
+          electionID: parseInt(info.electionID % 1000),
+          name: info.name,
+          address: address,
+          startDate: new Date(info.startDate * 1000).toLocaleString(),
+          endDate: new Date(info.endDate * 1000).toLocaleString(),
+          status: st
+        }
 
-          
-          
-          // to set status 
-            if (st === "active") {
-              tempStats[1]++;
-            }
-            else if (st === "closed") {
-              tempStats[2]++;
-            }
-            else if (st === "pending") {
-              tempStats[3]++;
-            }
-          
-          setdetailedelection(detailedelection => [...detailedelection, data]);
-          let sum =(tempStats[1]+tempStats[2]+tempStats[3])
-          tempStats[0] = sum+1;
-          setStatistics(tempStats);
-         
-       
-        })
-    
+        // to set status 
+        if (st === "active") {
+          tempStats[1]++;
+        }
+        else if (st === "closed") {
+          tempStats[2]++;
+        }
+        else if (st === "pending") {
+          tempStats[3]++;
+        }
 
-  }catch(err){
-    console.log(err)
-  }
+        setdetailedelection(detailedelection => [...detailedelection, data]);
+
+        let sum =(tempStats[1]+tempStats[2]+tempStats[3])
+        tempStats[0] = sum+1;
+        setStatistics(tempStats);        
+      })
+
+
+    } catch(err){
+      console.log(err)
+    }
   }
 
   const getTokens = () => {
     window.open("https://faucet.avax-test.network/", "_blank");
   };
+
+  const getAuthStatus = async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const add  = await signer.getAddress();
+        const contract = new ethers.Contract(
+          CONTRACTADDRESS,
+          Authentication.abi,
+          signer
+        );
+
+        setAddress(add);
+
+        const myPass = localStorage.getItem(add);
+        if(myPass == null){ 
+          navigate('/')
+        }
+        else{          
+          const loggedStatus = await contract.getLoggedInStatus(add, myPass); 
+          if(loggedStatus == false) {
+            navigate('/'); 
+          }
+          else {
+            setAuthStatus(loggedStatus);
+          }
+          console.log('Auth Status - ',loggedStatus);
+        } 
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   useEffect(() => {
-    fetchContract();
-    fetchElections();
-  }, [DashContractAddress]);
+    if(authStatus == true){
+      fetchElections();
+    }
+    else {
+      getAuthStatus();
+    }
+  }, [authStatus]);
 
   useEffect(() => {
     fetchDetailedElection()
-    }, [elections])
+  }, [elections]);
+
   return (
     <div style={{ backgroundColor: "#f7f7f7", minHeight: "100%" }}>
       <ToastContainer style={{zIndex:"99999"}}/>
@@ -206,6 +229,7 @@ const Dashboard = () => {
         header={organizerInfo.name}
         infoText={organizerInfo.publicAddress}
         pictureUrl="/assets/avatar.png"
+        address = {address}
       />
 
       <div style={{ padding: "30px" }}>
@@ -218,13 +242,12 @@ const Dashboard = () => {
             </font>
           </div>
 
-          <div style={{ float: "right" }}>
-            <CreateElectionModal DashContractAddress={DashContractAddress} />
+          <div style={{ float: "right", marginLeft:10, marginBottom:10}}>
+            <CreateElectionModal DashContractAddress={DashContractAddress} fetchElections={fetchElections}/>
           </div>
           <a href="/brightid">
-          <div className="createElectionButton">Get BrightID Verified!
-          
-          </div></a>
+            <div className="createElectionButton">Get BrightID Verified!</div>
+          </a>
         </div>
 
         <br />

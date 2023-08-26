@@ -33,42 +33,31 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
         let notif ;
         // setIsOpen(false);
         try {
-
             const { ethereum } = window;
             if (ethereum) {
-              const provider = new ethers.providers.Web3Provider(ethereum);
-              const signer = provider.getSigner();
-              const addr = await signer.getAddress();
-              const CurrentElection = new ethers.Contract(
-                contractAddress,
-                ElectionABI.abi,
-                signer
-              );
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                const signer = provider.getSigner();
+                const addr = await signer.getAddress();
+                const CurrentElection = new ethers.Contract(
+                    contractAddress,
+                    ElectionABI.abi,
+                    signer
+                );
                 let temp;
-                if(val===5){
-                    temp =1;
-                }
-                else if(val===4){
-                    temp =2;
-                }
-                else if(val===3){
-                    temp =3;
-                }
-                else if(val===2){
-                    temp =4;
-                }
-                else if(val===1){
-                    temp =5;
-                }
+                if(val===5){ temp = 1; }
+                else if(val===4){ temp = 2; }
+                else if(val===3){ temp = 3; }
+                else if(val===2){ temp = 4; }
+                else if(val===1){ temp = 5; }
                 // the order is reversed because in the logic of oklahoma the candidates votes gets divided by priority every time
                 // so the higher stars the lower priority in contract logic so to make it more intuitive we reversed the order
                 notif = toast.loading("Processing Your Transaction",{theme: "dark",position: "top-center"})
-              let res  =await CurrentElection.vote(addr,id,temp,[]);
-               successtoast(notif,"you have succesfully voted for candidate ID #"+id);
+                let res  =await CurrentElection.vote(addr,id,temp,[]);
+                successtoast(notif,"you have succesfully voted for candidate ID #"+id);
 
-            setCandidateId(null);
-        }
-            // setIsOpen(false);
+                setCandidateId(null);
+                setIsOpen(false);
+            }
         } catch (err) {
             dangertoast(notif,"Voting Failed. Try again");
            console.log(err);
@@ -86,7 +75,7 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                         VOTE
                     </div>
                     :
-                    <div className="voteButton voteButtonDisabled">
+                    <div className="voteButton voteButtonDisabled" onClick={() => {console.log("Election is not started yet")}}>
                         VOTE
                     </div>
             }

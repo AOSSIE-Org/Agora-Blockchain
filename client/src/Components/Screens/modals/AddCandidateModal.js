@@ -5,7 +5,7 @@ import ElectionOrganiser from "../../../build/ElectionOrganizer.json";
 import {successtoast, dangertoast } from '../utilities/Toasts';
 import { toast } from "react-toastify";
 
-export function AddCandidateModal({ organizerAddress, electionAddress }) {
+export function AddCandidateModal({ organizerAddress, electionAddress, functionCall }) {
     const [isOpen, setIsOpen] = useState(false);
     const [candidateDetail, setCandidateDetail] = useState({
         name: '',
@@ -44,9 +44,10 @@ export function AddCandidateModal({ organizerAddress, electionAddress }) {
               );
               await transaction.wait();
               
-              successtoast(id, "Candidate Added Successfully")
-              
-      
+              successtoast(id, "Candidate Added Successfully")                 
+              console.log("Successfully added candidate");
+              closeModal();
+              await functionCall();             
             }
           } catch(err) {
             dangertoast(id ,"Candidate Addition Failed")
@@ -55,8 +56,7 @@ export function AddCandidateModal({ organizerAddress, electionAddress }) {
         
     }
 
-    const closeModal = e => {
-        e.preventDefault();
+    const closeModal = () => {
         setIsOpen(false);
     };
 
