@@ -148,13 +148,13 @@ I hope our contributions to this project were valuable and would help someone wh
 ---
 ### Merge Requests
 
-1. [Merge request! 199](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/119) - **Open**
+1. [Merge request! 119](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/119) - **Open**
    
    - Implemented three voting algorithm.
    - Integrated backend with the frontend.
    - Add election modal for all algorithm.
 
-2. [Merge request !117](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/117) - **Open**
+2. [Merge request !125](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/125) - **Open**
     - Implement EIP 2535(Diamond Structure) with backend and Integrate with frontend.
 
 3. [Merge request !118](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/118) - **Open**
