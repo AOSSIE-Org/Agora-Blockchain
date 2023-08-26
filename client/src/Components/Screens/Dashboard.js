@@ -25,6 +25,7 @@ const Dashboard = () => {
   const DashContractAddress = CONTRACTADDRESS;
   const navigate = useNavigate();
   const [authStatus, setAuthStatus] = useState(false);
+  const [address, setAddress] = useState();
   const [elections, getElections] = useState([]);
   const [organizerInfo, setOrganizerInfo] = useState({
     name: "",
@@ -185,7 +186,9 @@ const Dashboard = () => {
           signer
         );
 
-        const myPass = localStorage.getItem('hashedPassword');
+        setAddress(add);
+
+        const myPass = localStorage.getItem(add);
         if(myPass == null){ 
           navigate('/')
         }
@@ -224,6 +227,7 @@ const Dashboard = () => {
         header={organizerInfo.name}
         infoText={organizerInfo.publicAddress}
         pictureUrl="/assets/avatar.png"
+        address = {address}
       />
 
       <div style={{ padding: "30px" }}>

@@ -52,12 +52,13 @@ function Auth() {
           let name = fullName.name;
           let hashedPassword = CryptoJS.SHA256(fullName.password).toString();
           const add  = await signer.getAddress();
+        
           
           
           //changed hardcoded address to signer address
           const tx = await contract.createUser([1,fullName.name,add], hashedPassword, {gasLimit:800000});
           await tx.wait();
-          localStorage.setItem('hashedPassword', hashedPassword);
+          localStorage.setItem(add, hashedPassword);
           console.log("Successfully new User registered");
           setNewRegistered(true);
         }
@@ -85,7 +86,7 @@ function Auth() {
         const loggedStatus = await contract.getLoggedInStatus(add, myPass);   
         console.log(loggedStatus);   
         if(loggedStatus == true){
-          localStorage.setItem('hashedPassword', myPass)
+          localStorage.setItem(add, myPass)
           setLoggedInStatus(loggedStatus);
         }
       }
@@ -114,7 +115,7 @@ function Auth() {
         setRegistered(authStatus);
         console.log('Register Status - ',authStatus);
 
-        const myPass = localStorage.getItem('hashedPassword');
+        const myPass = localStorage.getItem(add);
         if(myPass == null) throw 'SignUp/SignIn to proceed'
         const loggedStatus = await contract.getLoggedInStatus(add, myPass);
         setLoggedInStatus(loggedStatus)

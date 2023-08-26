@@ -39,6 +39,7 @@ function Election() {
 	const [isAdmin, setAdmin] = useState(false);
 	const [status, setStatus] = useState(STATUS.PENDING)
 	const [authStatus, setAuthStatus] = useState(false);
+	const [address, setAddress] = useState();
 
 	const search = useLocation().search;
 	const electionAddress = new URLSearchParams(search).get('contractAddress');
@@ -197,13 +198,14 @@ function Election() {
 			const provider = new ethers.providers.Web3Provider(ethereum);
 			const signer = provider.getSigner();
 			const add  = await signer.getAddress();
+			setAddress(add);
 			const contract = new ethers.Contract(
 			  CONTRACTADDRESS,
 			  Authentication.abi,
 			  signer
 			);
 	
-			const myPass = localStorage.getItem('hashedPassword');
+			const myPass = localStorage.getItem(add);
 			if(myPass == null){ 
 			  navigate('/')
 			}
@@ -270,7 +272,7 @@ function Election() {
 
 	return (
 		<div style={{backgroundColor: "#f7f7f7", minHeight: "100%"}}>
-			<Navbar header={name} infoText={publicAddress} organizerAddress={organizerAddress} pictureUrl="/assets/avatar.png"/>
+			<Navbar header={name} infoText={publicAddress} organizerAddress={organizerAddress} pictureUrl="/assets/avatar.png" address={address}/>
 			
 			<div style={{padding: "30px"}}>
 				<div style={{width: "100%"}}>

@@ -7,7 +7,8 @@ import { CONTRACTADDRESS } from '../constants'
 import { useNavigate } from "react-router-dom";
 
 
-function Navbar({header, infoText, pictureUrl}) {
+function Navbar({header, infoText, pictureUrl, address}) {
+    console.log('Addredd - ', address);
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
@@ -21,7 +22,7 @@ function Navbar({header, infoText, pictureUrl}) {
     }
     
     const logout = async () => {
-        localStorage.setItem('hashedPassword', null);
+        localStorage.setItem(address, null);
         setTimeout(async () => {
             const redirect = async () => {
                 closeModal();
