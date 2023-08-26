@@ -1,13 +1,10 @@
-import { useState,useEffect } from "react";
+import { useState } from "react";
 import { Flex, Modal, Button, Card } from "rimble-ui";
 import DatePicker from "react-datepicker";
 import { ethers } from "ethers";
-import ElectionABI from '../../../build/Election.sol/Election.json'
+import ElectionABI from '../../../build/Election.json'
 
-import "react-datepicker/dist/react-datepicker.css";
-
-export function UpdateElectionModal({electionAddress, electionDetails}) {
-  console.log(electionAddress, electionDetails)
+export function UpdateElectionModal({contractAddress, electionDetails, functionCall}) {
   const [isOpen, setIsOpen] = useState(false);  
   const [nda, setNda] = useState({
     name: electionDetails?.name,
@@ -46,11 +43,14 @@ export function UpdateElectionModal({electionAddress, electionDetails}) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
 
+        console.log(signer);
         const contract = new ethers.Contract(
-          electionAddress,
+          contractAddress,
           ElectionABI.abi,
           signer
-        );
+          );
+          console.log(contract);
+
         
         let currElectionDetail = [Number(electionDetails.electionID), 
           nda?.name || electionDetails.name,
@@ -61,15 +61,16 @@ export function UpdateElectionModal({electionAddress, electionDetails}) {
         const transaction = await contract.updateElectionInfo(currElectionDetail);
         await transaction.wait();
 
-        console.log("suceessss", currElectionDetail);        
+        console.log("suceessss", currElectionDetail); 
+        closeModal();
+        functionCall();     
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const closeModal = (e) => {
-    e.preventDefault();
+  const closeModal = () => {
     setIsOpen(false);
   };
 

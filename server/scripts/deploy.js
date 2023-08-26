@@ -38,8 +38,7 @@ async function deployDiamond () {
     'Voter',
     'ElectionFactory',
     'GetBallot',
-    'GetResultCalculator',
-    'Test1Facet'
+    'GetResultCalculator'
   ]
   const cut = []
    for (const FacetName of FacetNames) {

@@ -27,7 +27,7 @@
 require("@nomiclabs/hardhat-waffle");
 module.exports = {
   solidity: '0.8.10',
-  defaultNetwork:"hardhat",
+  defaultNetwork:"mumbai",
   networks:{
     hardhat:{
       allowUnlimitedContractSize:true
@@ -35,7 +35,7 @@ module.exports = {
     mumbai:{
       allowUnlimitedContractSize:true,
       url:"https://rpc-mumbai.maticvigil.com/",
-      accounts:[],  //private key place here
+      accounts:["Your_Private_Key"],  //private key place here
     }
   },  
   mocha: {

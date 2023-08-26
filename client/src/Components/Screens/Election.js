@@ -2,7 +2,7 @@ import React from "react";
 import { useTimer } from 'react-timer-hook';
 import { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
-import ElectionABI from '../../build/Election.sol/Election.json'
+import ElectionABI from '../../build/Election.json'
 import ElectionOrganiser from "../../build/ElectionOrganizer.json";
 
 import { ethers } from "ethers";
@@ -14,9 +14,8 @@ import {
 	VoteModal,
 	DeleteModal,
 	UpdateElectionModal,
+	InviteOrganizer
 } from './modals'
-
-import {UpdateCandidateModal} from "./modals/UpdateCandidateModal";
 
 import { OklahomaModal } from "./modals/OklahomaModal";
 import { BordaModal } from './modals/BordaModal';
@@ -33,14 +32,14 @@ import Navbar from './Navbar';
 import '../styles/Election.scss';
 import '../styles/Layout.scss';
 import { Update } from "rimble-ui";
+import { CONTRACTADDRESS } from "../constants";
 
 function Election() {
 	const [isAdmin, setAdmin] = useState(false);
 	const [status, setStatus] = useState(STATUS.PENDING)
-	const [candidateModalOpen, setCandidateModalOpen] = useState(false);
 
 	const search = useLocation().search;
-	const contractAddress = new URLSearchParams(search).get('contractAddress');
+	const electionAddress = new URLSearchParams(search).get('contractAddress');
 	const organizerAddress = new URLSearchParams(search).get('organizerAddress');
 	const name = new URLSearchParams(search).get('name');
 	const publicAddress = new URLSearchParams(search).get('publicAddress');
@@ -51,52 +50,59 @@ function Election() {
 	const [ballotType,setBallotType] = useState(-1);
 	//to support Borda Election
 	const [supportVar,setSupportVar] = useState(0);
+	const [winnerDetails, setWinnerDetails] = useState([]);
 
+	const [electionAlgorithm, setElectionAlgorithm] = useState('General');
+	const [isOpenBasedElection, setIsOpenBasedElection] = useState(false);
+	
 
 
 	const fetchElectionDetails = async () => {
 		try{
-
 			const { ethereum } = window;
     		if (ethereum) {
-      		const provider = new ethers.providers.Web3Provider(ethereum);
-      		const signer = provider.getSigner();
-			  const electionContract = new ethers.Contract(
-				contractAddress,
-				ElectionABI.abi,
-				signer
-			  );
+				const provider = new ethers.providers.Web3Provider(ethereum);
+				const signer = provider.getSigner();
+				const electionContract = new ethers.Contract(
+					electionAddress,
+					ElectionABI.abi,
+					signer
+				);
+						
+				//fetched election details
+				const electionDetail =await electionContract.getElectionInfo();
+				console.log(electionDetail);
+				setElectionDetails(electionDetail);
 
-			//fetched election details
-			const electionDetail =await electionContract.getElectionInfo();
-			updateStatus(Number(electionDetail.startDate._hex), Number(electionDetail.endDate._hex));
+				//Election Type - Open/Invite
+				const electionType  = await electionContract.getElectionType();
+				console.log("Election Type - ",electionType ? "Open " : "Invite ", "Based Election");
+				setIsOpenBasedElection(electionType);
 
-			const ballotType = await electionContract.getBallotType();
-			setBallotType(Number(ballotType._hex));
-			if(Number(ballotType._hex) === 4){
-				setSupportVar(1001);
+				//set election status
+				updateStatus(Number(electionDetail.startDate._hex), Number(electionDetail.endDate._hex));
+
+				//set ballot type and algorithm type
+				const ballotType = Number((await electionContract.getBallotType())._hex);
+				setBallotType(ballotType);
+				console.log("Ballot Type - ", ballotType);
+				if(ballotType == 2) setElectionAlgorithm("Okalhoma");
+				else if(ballotType == 4) setElectionAlgorithm("Borda");
+				else if(ballotType == 5) setElectionAlgorithm("Schulze");
+				else if(ballotType == 6) setElectionAlgorithm("Instant Run Off");
+				else if(ballotType == 6) setElectionAlgorithm("Kemeny Young");
+				else setElectionAlgorithm("General");
+
+
+				//fetched all candidates
+				const cand =await electionContract.getCandidates();
+				setCandidates(cand);
+				console.log("Candidate Details - ", cand);
+				
+				//total voters
+				const no  = await electionContract.getVoterCount();
+				setVotersCount(Number(no._hex));	
 			}
-			setElectionDetails(electionDetail);
-
-			//fetch ballot address
-			// const ballot_add = await electionContract.getBallot();
-			// setBallotAddress(ballot_add);
-
-
-			//fetched all candidates
-			const cand =await electionContract.getCandidates();
-			setCandidates(cand);
-			console.log(cand);
-			
-
-			const no  = await electionContract.getVoterCount();
-
-			//total voters
-			setVotersCount(Number(no._hex));	
-			
-			
-			}
-
 		}catch(err){
 			console.log(err);
 		}
@@ -104,7 +110,30 @@ function Election() {
 
 
 
-	const [winnerDetails, setWinnerDetails] = useState([]);
+	const getElectionOrganizer = async () => {
+		try{
+			const { ethereum } = window;
+    		if (ethereum) {
+				const provider = new ethers.providers.Web3Provider(ethereum);
+				const signer = provider.getSigner();
+				const organizerContract = new ethers.Contract(
+					CONTRACTADDRESS,
+					ElectionOrganiser.abi,
+					signer
+				);
+						
+				//fetched election details
+				const electionOrg =await organizerContract.getElectionOwner(electionAddress);
+				console.log("Election Organizer - ",electionOrg);
+				setAdmin(electionOrg);
+			}
+		}catch(err){
+			console.log(err);
+		}
+	}
+
+
+
 
 	const getWinnerDetails = async () => {
 		const { ethereum } = window;
@@ -112,7 +141,7 @@ function Election() {
 		  const provider = new ethers.providers.Web3Provider(ethereum);
 		  const signer = provider.getSigner();
 		  const electionContract = new ethers.Contract(
-			contractAddress,
+			electionAddress,
 			ElectionABI.abi,
 			signer
 		  );
@@ -132,26 +161,19 @@ function Election() {
 	const getResults = async () => {
 		const edate = electionDetails.endDate;
 		if(Date.now() >= edate) {
-		const { ethereum } = window;
-		if (ethereum) {
-		  const provider = new ethers.providers.Web3Provider(ethereum);
-		  const signer = provider.getSigner();
-		  const electionContract = new ethers.Contract(
-			contractAddress,
-			ElectionABI.abi,
-			signer
-		  );
-		  await electionContract.getResult();	
-		}
-		
+			const { ethereum } = window;
+			if (ethereum) {
+			const provider = new ethers.providers.Web3Provider(ethereum);
+			const signer = provider.getSigner();
+			const electionContract = new ethers.Contract(
+				electionAddress,
+				ElectionABI.abi,
+				signer
+			);
+			await electionContract.getResult();	
+			}		
 		}
 	}
-
-	useEffect(() => {
-		if(1) {
-			setAdmin(true);
-		}
-	}, [])
 
 	const updateStatus = (sdate,edate) => {
 		sdate = sdate * 1000;
@@ -166,9 +188,14 @@ function Election() {
 		}
 	}
 
+	const functionCall = async () => {
+		await fetchElectionDetails();
+		await getElectionOrganizer();
+	}
+
 	useEffect(() => {
-		fetchElectionDetails();
-	},[contractAddress])
+		functionCall();
+	},[electionAddress])
 
 	const MyTimer = ({ sdate, edate }) => {
 		sdate *= 1000;
@@ -194,7 +221,6 @@ function Election() {
 		
 		useEffect(() => {
 			start();
-			// updateStatus((electionDetails?.startDate._hex), Number(electionDetails?.endDate._hex)); 
 		}, [expiryTimestamp])
 		
 		return (
@@ -210,38 +236,42 @@ function Election() {
 				<div style={{width: "100%"}}>
 					<div style={{float: "left"}}>
 						<div style={{display: "flex"}}>
-							<h5 style={{marginBottom: "0px", width: "max-content"}}>{"Test Election"}</h5>
+							<h5 style={{marginBottom: "0px", width: "max-content"}}>{electionDetails.name}</h5>
 							<Status
 								status={status}
 								text={status.charAt(0).toUpperCase() + status.slice(1)}
 							/>
 						</div>
-						<font size="2" className="text-muted" style={{marginTop: "0px"}}>{contractAddress}</font>
+						<font size="2" className="text-muted" style={{marginTop: "0px"}}>{electionAddress}</font>
 					</div>
-
 
 					<div style={{float: "right", display: "flex"}}>
 						<MyTimer style={{marginRight:"15%"}} sdate = {electionDetails.startDate} edate = {electionDetails.endDate}/>
-						<DeleteModal Candidate = {Candidate} isAdmin = {isAdmin} isPending = {true}/>
-						<UpdateElectionModal contractAddress={contractAddress} electionDetails={electionDetails} election/>
+						{isAdmin === publicAddress && status == STATUS.PENDING &&
+							<div style={{display:'flex'}}>
+								{isOpenBasedElection == true && <DeleteModal orgnizerAddress={organizerAddress} electionAddress={electionAddress}/>}
+								<UpdateElectionModal contractAddress={electionAddress} electionDetails={electionDetails} functionCall={functionCall}/>
+								<InviteOrganizer organizerAddress={organizerAddress} electionAddress={electionAddress}/>
+							</div>
+						}
 						
-						{ballotType===4 &&
-							<BordaModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
+						{ballotType===1 &&
+							<VoteModal Candidate = {Candidate} candidates = { candidates } status = { status } contractAddress = {electionAddress} ballotAddress={ballotAddress}/>
 						}
 						{ballotType===2 &&
-							<OklahomaModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
+							<OklahomaModal Candidate = {Candidate} candidates = { candidates } status = { status } contractAddress = {electionAddress} ballotAddress={ballotAddress}/>
 						}
-						{ballotType===1 &&
-							<VoteModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
+						{ballotType===4 &&
+							<BordaModal Candidate = {Candidate} candidates = { candidates } status = { status } contractAddress = {electionAddress} ballotAddress={ballotAddress}/>
 						}
 						{ballotType===5 &&
-							<SchulzeModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
+							<SchulzeModal Candidate = {Candidate} candidates = { candidates } status = { status } contractAddress = {electionAddress} ballotAddress={ballotAddress}/>
 						}
 						{ballotType===6 &&
-							<IRVModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
+							<IRVModal Candidate = {Candidate} candidates = { candidates } status = { status } contractAddress = {electionAddress} ballotAddress={ballotAddress}/>
 						}
 						{ballotType===7 &&
-							<KemengYoungModal Candidate = {Candidate} candidates = { candidates } status = { STATUS.ACTIVE } contractAddress = {contractAddress} ballotAddress={ballotAddress}/>
+							<KemengYoungModal Candidate = {Candidate} candidates = { candidates } status = { status } contractAddress = {electionAddress} ballotAddress={ballotAddress}/>
 						}
 					</div>
 				</div>
@@ -249,7 +279,7 @@ function Election() {
 				<br/><br/><br/>
 
 				<div className="cardContainer row">
-					<CardItem headerValue={ballotType===1?"general":ballotType==2?"Oklahoma":"Borda"} descriptor="Algorithm" imgUrl="/assets/totalElections.png"/>
+					<CardItem headerValue={electionAlgorithm} descriptor="Algorithm" imgUrl="/assets/totalElections.png"/>
 
 					<CardItem headerValue={new Date(electionDetails?.startDate * 1000).toLocaleString()} descriptor="Start date" imgUrl="/assets/activeElections.png" imgBackground="#eaffe8"/>
 
@@ -269,7 +299,7 @@ function Election() {
 							</div>
 
 							:
-								<span onClick={getResults} className="voteButton voteButtonDisabled" style={{float: "right", marginTop: "10px", width: "100px"}}>Get Result</span>
+							<span onClick={() => {console.log("Result only calculated after election ends");}} className="voteButton voteButtonDisabled" style={{float: "right", marginTop: "10px", width: "100px"}}>Get Result</span>
 						}
 
 						{
@@ -291,9 +321,7 @@ function Election() {
 												name={candidate?.name}
 												id={candidate}
 												about={candidate?.about}
-												voteCount={candidate?.voteCount}
 												imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}
-												modalEnabled="true"
 											/> 
 										))
 									}	
@@ -316,7 +344,7 @@ function Election() {
 
 							<br/>
 
-							<h5>About {ballotType===1?"general":ballotType==2?"Oklahoma":"Borda"} Algorithm</h5>
+							<h5>About {electionAlgorithm} Algorithm</h5>
 							<font size="2" className="text-muted">
 								{ballotType===1?`In General or Regular voting algorithm, winner(s) is(are) chosen
 								from the list of candidates according to the number of votes they
@@ -348,10 +376,6 @@ function Election() {
 									`The Kemeny–Young method is an electoral system that uses preferential ballots and pairwise comparison counts 
 									to identify the most popular choices in an election. It is a Condorcet method because if there is a 
 									Condorcet winner, it will always be ranked as the most popular choice.`}
-
-
-
-
 								
 							</font>
 						</div>
@@ -361,11 +385,7 @@ function Election() {
 						<div className="lhsHeader" style={{marginTop: "10px", display: 'flex', justifyContent: 'space-between'}}>
 							<h5 style={{width: "60%"}}>Candidates ({candidates.length})</h5>
 							{
-								// isAdmin && status == STATUS.PENDING &&
-								<div>
-								<AddCandidateModal organizerAddress={organizerAddress}  electionAddress={contractAddress} />
-								<UpdateCandidateModal candidates={candidates} organizerAddress={organizerAddress} electionAddress={contractAddress}/>
-								</div>
+								isAdmin == publicAddress && status == STATUS.PENDING &&	<AddCandidateModal organizerAddress={organizerAddress}  electionAddress={electionAddress} functionCall={functionCall}/>
 							}
 						</div>
 
@@ -377,15 +397,12 @@ function Election() {
 									name={candidate?.name}
 									id={Number(candidate?.candidateID._hex)}
 									about={candidate?.description}
-									voteCount={candidate?.voteCount}
 									imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}
-									modalEnabled="true"
-									candidateModalOpen={candidateModalOpen} 
-									setCandidateModalOpen={setCandidateModalOpen}
-									OrganizerAddress={organizerAddress}
-									electionAddress={contractAddress}
 									index={index}
+									electionAddress={electionAddress}
+									functionCall = {functionCall}
 								/> 
+								//name, id, about, imageUrl, index, electionAddress, functionCall
 							))
 						}
 					</div>
