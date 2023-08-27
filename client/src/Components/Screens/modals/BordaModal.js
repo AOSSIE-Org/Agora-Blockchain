@@ -27,9 +27,6 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
         setIsOpen(true);
     };
 
-    const handleCandidateIdChange = (e) => {
-        setCandidateId(e.target.value);
-    }
     const handleVoteChange = (e) => {
         console.log('value',e.target.value);
         console.log('cid',typeof(Number(e.target.name)))
@@ -40,36 +37,26 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
     }
 
     const handleVoteSubmit = async (e) => {
-
-       let id ;
+        let id ;
         e.preventDefault();
         setIsOpen(false);
-        
         try{
-
             const { ethereum } = window;
             if (ethereum) {
-              id = toast.loading("Processing your voting request",{theme: "dark",position: "top-center"})
-              const provider = new ethers.providers.Web3Provider(ethereum);
-              const signer = provider.getSigner();
-              const addr = await signer.getAddress();
-              const CurrentElection = new ethers.Contract(
-                contractAddress,
-                ElectionABI.abi,
-                signer
-              );            
-            
-            console.log('voting')
-           
-            console.log(CurrentElection)
-            console.log('candidateId',candidateId)
-            console.log('arr',voteCount)
-
-
-            let res  =await CurrentElection.vote(addr,1,4,voteCount);
-
-			successtoast(id,"you have succesfully voted ");
-        }
+                id = toast.loading("Processing your voting request",{theme: "dark",position: "top-center"})
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                const signer = provider.getSigner();
+                const addr = await signer.getAddress();
+                const CurrentElection = new ethers.Contract(
+                    contractAddress,
+                    ElectionABI.abi,
+                    signer
+                );            
+                let res  =await CurrentElection.vote(addr,1,4,voteCount);
+                successtoast(id,"you have succesfully voted ");
+                setCandidateId(null);
+                setIsOpen(false);
+            }
         } catch(err) {
             dangertoast(id,"Voting failed. Try again");
             console.log(err)
@@ -85,7 +72,7 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
                     VOTE
                 </div>
                 :
-                <div className="voteButton voteButtonDisabled">
+                <div className="voteButton voteButtonDisabled" onClick={() => {console.log("Election is not started yet")}}>
                     VOTE
                 </div>
             }
@@ -105,7 +92,6 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
                     />
 
                     <div style={{margin: "10px", maxWidth: "700px", width: "96%"}}>
-                        {/* <h5>Choose candidates according to your preferences</h5> */}
                         <h3 style={{textAlign:"center" ,paddingTop:"24px" ,fontWeight:"bold" , fontFamily:"monospace"}}>Enter Rank of candidates</h3>
 
 
@@ -117,13 +103,10 @@ export function BordaModal({Candidate, status, candidates, CurrentElection, acco
                             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-around"}}>
                                 {
                                     candidates?.map((candidate) => (
-                                        // <label className="voteCandidate" >
-
                                             <div className='card' style={{display:"flex", marginLeft:"1%",marginRight:"1%",marginBottom:"2%",padding:"6%"}}>
                                             <Candidate name={candidate?.name} id={Number(candidate?.candidateID._hex)} about={candidate?.about} voteCount={candidate?.voteCount} ballotAddress={ballotAddress} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
                                             <input type="number" className='' placeholder="Rank.." id="borda_input" name={candidate?.candidateID}  onChange={(e)=>handleVoteChange(e)}/>
                                             </div>
-                                        // </label>
                                     ))
                                 }
                             </div>

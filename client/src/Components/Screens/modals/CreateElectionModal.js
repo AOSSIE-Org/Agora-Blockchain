@@ -7,7 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { successtoast, dangertoast } from "../utilities/Toasts";
 
-export function CreateElectionModal(props) {
+export function CreateElectionModal({DashContractAddress, fetchElections}) {
   const [isOpen, setIsOpen] = useState(false);
   const [ballotType, setBallotType] = useState(1);
   const [resultCalculator, setResultCalculator] = useState(1);
@@ -16,6 +16,7 @@ export function CreateElectionModal(props) {
     name: "",
     description: "",
     algorithm: "General",
+    electionType:true
   });
   const [se, setSe] = useState({
     startTime: parseInt(Date.now() / 1000),
@@ -43,6 +44,17 @@ const handleTypeChange = (e) => {
     setBallotType(2);
     setResultCalculator(1);
   }
+  else if(e.target.value === 'Schulze'){
+    setBallotType(5);
+    setResultCalculator(4);
+  }
+  else if(e.target.value === 'Instant Run-Off'){
+    setBallotType(6);
+    setResultCalculator(4);
+  }
+  else if(e.target.value === 'Kemeng Young'){
+    setBallotType(7);
+  }
   console.log('type',ballotType);
   console.log('type',resultCalculator);
 };
@@ -56,48 +68,83 @@ const handleTypeChange = (e) => {
     );
   };
 
+  const handleElectionTypeChange = (e) => {
+    e.preventDefault();
+    console.log(e.target.value);
+    if(e.target.value == "Invite Based Election"){
+      setNda({
+        ...nda,
+        ["electionType"]: false,
+      });
+    }
+    if(e.target.value == "Open Based Election"){
+      setNda({
+        ...nda,
+        ["electionType"]: true,
+      });
+    }
+  }
+
+  const validateDetail = () => {
+    const { name, description } = nda;
+    const { startTime, endTime } = se;
+    const currTime = Date.now() / 1000;
+    return ( name.length && description.length && currTime < startTime && startTime < endTime );
+  }
+
   const handleSubmitNewElection = async (e) => {
     e.preventDefault();
     let id
     try {
-      const { ethereum } = window;
-
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-
+      if(validateDetail()){
         id  = toast.loading("Processing Your Transaction",{theme: "dark",position: "top-center"})
-        const contract = new ethers.Contract(
-          props.DashContractAddress,
-          ElectionOrganiser.abi,
-          signer
-        );
-        //function to deploy ballot,result
-        const transaction = await contract.createElection(
-          [1, nda.name, nda.description, se.startTime, se.endTime],
-          ballotType,resultCalculator
-        );
-        // await transaction.wait();
-        console.log("suceessss", [
-          1,
-          nda.name,
-          nda.description,
-          se.startTime,
-          se.endTime,
-          ballotType,
-          resultCalculator,
-        ]);
-       successtoast(id, "Election Created Successfully")
-        
+        const { ethereum } = window;
+
+        if (ethereum) {
+          const provider = new ethers.providers.Web3Provider(ethereum);
+          const signer = provider.getSigner();
+
+          const contract = new ethers.Contract(
+            DashContractAddress,
+            ElectionOrganiser.abi,
+            signer
+          );
+
+          //function to deploy ballot,result
+          const transaction = await contract.createElection(
+            [1, nda.name, nda.description, se.startTime, se.endTime, nda.electionType],
+            ballotType,resultCalculator
+          );
+          await transaction.wait().then(() => {
+            console.log("suceessss", [
+              1,
+              nda.name,
+              nda.description,
+              se.startTime,
+              se.endTime,
+              ballotType,
+              resultCalculator,
+            ]);
+          });
+          successtoast(id, "Election Created Successfully")
+          closeModal();
+          fetchElections();         
+        }
+      }
+      else{
+        if (nda.name.length === 0) alert("Name should not be empty");
+        if (nda.description.length === 0) alert("Description should not be empty");
+        if (se.startTime <= Date.now() / 1000) alert("Start Time error - Election must start in future");
+        if (se.startTime >= se.startTime) alert("End Time error - Election finish time must comes after the start time");
       }
     } catch (err) {
       dangertoast(id, "Election Creation Failed");
       console.log(err);
+      closeModal();
     }
   };
 
-  const closeModal = (e) => {
-    e.preventDefault();
+  const closeModal = () => {
     setIsOpen(false);
   };
 
@@ -164,22 +211,39 @@ const handleTypeChange = (e) => {
               />
               <br />
 
-              <div className="">
-                    <label className="labels UP_labels">Select Election Type</label>
-                    <select
-                      onChange={(e) => handleTypeChange(e)}
-                      type="text"
-                      name="ac"
-                      className="form-control"
-                      placeholder="select branch"
-                    >
-                      <option value="General">General</option>
-                      <option value="Borda">Borda</option>
-                      <option value="Oklahoma">Oklahoma</option>
-                      
-                    </select>
-                  </div>
-                  <br/>
+              <div>
+                <label className="labels UP_labels">Select Election Type</label>
+                <select
+                  onChange={(e) => handleTypeChange(e)}
+                  type="text"
+                  name="ac"
+                  className="form-control"
+                  placeholder="select branch"
+                >
+                  <option value="General">General</option>
+                  <option value="Oklahoma">Oklahoma</option>
+                  <option value="Borda">Borda</option>
+                  <option value="Schulze">Schulze</option>
+                  <option value="Instant Run-off">Instant Run-Off</option>
+                  <option value="Kemeng Young">Kemeng Young</option>                      
+                </select>
+              </div>
+              <br />
+              <div>
+              <label className="labels UP_labels">Select Open/Invite Election Type</label>
+                <select
+                  onChange={(e) => handleElectionTypeChange(e)}
+                  type="text"
+                  name="ac"
+                  className="form-control"
+                  placeholder="select branch"
+                >
+                  <option value="Invite Based Election">Invite Based Election</option>                      
+                  <option value="Open Based Election" selected>Open Based Election</option>
+                </select>
+
+              </div>
+              <br/>
 
               <div style={{ display: "flex" }}>
                 <div>

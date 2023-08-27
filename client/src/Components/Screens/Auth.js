@@ -1,18 +1,22 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
 import { ethers } from "ethers";
 import Authentication from "../../build/Authentication.json";
 import "../styles/Auth.scss";
+import { CONTRACTADDRESS } from '../constants'
+import { Navigate } from "react-router-dom";
+import CryptoJS from 'crypto-js';
 
 function Auth() {
   const [authMode, setAuthMode] = useState("signup");
-  const [registered, setRegistered] = useState("false");
+  const [registered, setRegistered] = useState(false);
   const [fullName, setFullName] = useState({
     name: "",
+    password : ""
   });
   const [newRegistered, setNewRegistered] = useState(false);
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  const [loggedInStatus, setLoggedInStatus] = useState(false);
+  const contractAddress = CONTRACTADDRESS
 
   const handleNameChange = (e) => {
     setFullName({
@@ -21,63 +25,111 @@ function Auth() {
     });
   };
 
+  const handlePasswordChange = (e) => {
+    setFullName({
+      ...fullName,
+      password: e.target.value,
+    });
+  };
+
+
+
   const registerUser = async (e) => {
     e.preventDefault();
-    try {
-      const { ethereum } = window;
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
+    if((registered == false && loggedInStatus == false)){
+      try {
+        const { ethereum } = window;
+        if (ethereum) {
+          const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         console.log(signer);
         const contract = new ethers.Contract(
           contractAddress,
           Authentication.abi,
           signer
-        );
-        console.log(contract);
-        console.log(fullName.name);
-        const add  = await signer.getAddress();
-        // const tx = await contract.createUser(fullName.name);
+          );
+          console.log(fullName.name);
+          let name = fullName.name;
+          let hashedPassword = CryptoJS.SHA256(fullName.password).toString();
+          const add  = await signer.getAddress();
+        
+          
+          
+          //changed hardcoded address to signer address
+          const tx = await contract.createUser([1,fullName.name,add], hashedPassword, {gasLimit:800000});
+          await tx.wait();
+          localStorage.setItem(add, hashedPassword);
+          console.log("Successfully new User registered");
+          setNewRegistered(true);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
 
-        //changed hardcoded address to signer address
-        const tx = await contract.createUser([1,fullName.name,add
-        ]);
-        await tx.wait();
-        console.log("suucce");
-        setNewRegistered(true);
+  const SignInUser = async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const add  = await signer.getAddress();
+        const contract = new ethers.Contract(
+          contractAddress,
+          Authentication.abi,
+          signer
+        );
+
+        console.log(fullName);
+        let myPass = CryptoJS.SHA256(fullName.password).toString();
+        const loggedStatus = await contract.getLoggedInStatus(add, myPass);   
+        console.log(loggedStatus);   
+        if(loggedStatus == true){
+          localStorage.setItem(add, myPass)
+          setLoggedInStatus(loggedStatus);
+        }
       }
     } catch (err) {
       console.log(err);
     }
-  };
+  }
+
   const isRegistered = async () => {
     try {
       const { ethereum } = window;
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const add  = await signer.getAddress();
-        console.log(signer);
+        const signer = provider.getSigner();        
         const contract = new ethers.Contract(
           contractAddress,
           Authentication.abi,
           signer
         );
-
+          
+        //await contract.init(contractAddress)    //This step you have to do  one time
+          
         //changed hardcoded address to signer address
+        const add  = await signer.getAddress();
+        const authStatus = await contract.getAuthStatus(add);
+        setRegistered(authStatus);
+        console.log('Register Status - ',authStatus);
 
-        const tx = await contract.getAuthStatus(add);
-        console.log(tx);
-        setRegistered(tx);
-        // setRegistered(true);
+        const myPass = localStorage.getItem(add);
+        if(myPass == null) throw 'SignUp/SignIn to proceed'
+        const loggedStatus = await contract.getLoggedInStatus(add, myPass);
+        setLoggedInStatus(loggedStatus)
+        console.log("Auth Status - ",loggedStatus);
       }
     } catch (err) {
       console.log(err);
     }
   };
+
   useEffect(() => {
     isRegistered();
   }, [newRegistered]);
+
   return (
     <div className="authDiv">
       <div className="description">
@@ -95,14 +147,19 @@ function Auth() {
 
           <>
             <form onSubmit={registerUser} style={{ margin: "10px" }}>
-              <label className="form-label">Name</label>
-              <input
-                className="form-control"
-                placeholder="Enter your full name"
-                onChange={handleNameChange}
-                value={fullName.name}
-                type="text"
-              />
+              {
+                ((loggedInStatus == false && registered == false)) && 
+                  <>
+                    <label className="form-label">Name</label>
+                    <input
+                      className="form-control"
+                      placeholder="Enter your full name"
+                      onChange={handleNameChange}
+                      value={fullName.name}
+                      type="text"
+                      />
+                  </>
+               }
               <br />
 
               <label className="form-label">Wallet address</label>
@@ -114,14 +171,37 @@ function Auth() {
                 // value={initialized ? account : "Loading..."}
               />
               <br />
+
+              <label className="form-label">Password</label>
+              <input
+                className="form-control"
+                placeholder="Enter your password"
+                onChange={handlePasswordChange}
+                value={fullName.password}
+                type="text"
+              />
+
+              <br />
               {
-                registered==true
+                (registered==true && loggedInStatus == true)
                 ?
                 <Navigate to='/dashboard' />
                 :
-                <button onClick={registerUser} className="authButtons">
-                  SIGN UP
-                </button>
+                <div>
+                  {
+                    (registered == true && loggedInStatus == false) && 
+                      <button onClick={SignInUser} className="authButtons">
+                        SIGN IN
+                      </button>
+                  }
+
+                  {
+                    (registered == false && loggedInStatus == false) &&
+                      <button onClick={registerUser} className="authButtons">
+                        SIGN UP
+                      </button>
+                  }
+                </div>
               }
             </form>
 
