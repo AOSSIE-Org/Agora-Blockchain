@@ -28,7 +28,6 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
 
     const handleVoteSubmit = async (e) => {
         e.preventDefault();
-        // setIsOpen(false);
         try {
 
             const { ethereum } = window;
@@ -64,7 +63,7 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
               }
 
             setCandidateId(null);
-            // setIsOpen(false);
+            setIsOpen(false);
         } catch (err) {
            console.log(err);
         }
@@ -81,7 +80,7 @@ export function OklahomaModal({ Candidate, status, candidates, CurrentElection, 
                         VOTE
                     </div>
                     :
-                    <div className="voteButton voteButtonDisabled">
+                    <div className="voteButton voteButtonDisabled" onClick={() => {console.log("Election is not started yet")}}>
                         VOTE
                     </div>
             }

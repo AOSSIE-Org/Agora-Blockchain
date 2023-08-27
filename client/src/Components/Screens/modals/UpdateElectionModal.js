@@ -1,13 +1,10 @@
-import { useState,useEffect } from "react";
+import { useState } from "react";
 import { Flex, Modal, Button, Card } from "rimble-ui";
 import DatePicker from "react-datepicker";
 import { ethers } from "ethers";
-import ElectionABI from '../../../build/Election.sol/Election.json'
+import ElectionABI from '../../../build/Election.json'
 
-import "react-datepicker/dist/react-datepicker.css";
-
-export function UpdateElectionModal({contractAddress,electionDetails}) {
-  console.log(contractAddress,electionDetails)
+export function UpdateElectionModal({contractAddress, electionDetails, functionCall}) {
   const [isOpen, setIsOpen] = useState(false);  
   const [nda, setNda] = useState({
     name: electionDetails?.name,
@@ -42,40 +39,38 @@ export function UpdateElectionModal({contractAddress,electionDetails}) {
     e.preventDefault();
     try {
       const { ethereum } = window;
-
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
 
+        console.log(signer);
         const contract = new ethers.Contract(
           contractAddress,
           ElectionABI.abi,
           signer
-        );
-        //function to deploy ballot,result
-        const transaction = await contract.updateElectionInfo(
-          [Number(electionDetails.electionID), nda?.name || electionDetails.name,
-            nda?.description || electionDetails.description,
-            se?.startTime || electionDetails.startDate,
-            se?.endTime || electionDetails.endDate,]
-        );
-        await transaction.wait();
-        console.log("suceessss", [
-          1,
+          );
+          console.log(contract);
+
+        
+        let currElectionDetail = [Number(electionDetails.electionID), 
           nda?.name || electionDetails.name,
           nda?.description || electionDetails.description,
           se?.startTime || electionDetails.startDate,
-          se?.endTime || electionDetails.endDate,
-        ]);
-        
+          se?.endTime || electionDetails.endDate,]
+
+        const transaction = await contract.updateElectionInfo(currElectionDetail);
+        await transaction.wait();
+
+        console.log("suceessss", currElectionDetail); 
+        closeModal();
+        functionCall();     
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const closeModal = (e) => {
-    e.preventDefault();
+  const closeModal = () => {
     setIsOpen(false);
   };
 

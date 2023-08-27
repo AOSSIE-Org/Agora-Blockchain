@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 import ElectionOrganiser from "../../../build/ElectionOrganizer.json";
 import "react-datepicker/dist/react-datepicker.css";
 
-export function CreateElectionModal(props) {
+export function CreateElectionModal({DashContractAddress, fetchElections}) {
   const [isOpen, setIsOpen] = useState(false);
   const [ballotType, setBallotType] = useState(1);
   const [resultCalculator, setResultCalculator] = useState(1);
@@ -14,6 +14,7 @@ export function CreateElectionModal(props) {
     name: "",
     description: "",
     algorithm: "General",
+    electionType:true
   });
   const [se, setSe] = useState({
     startTime: parseInt(Date.now() / 1000),
@@ -65,6 +66,23 @@ const handleTypeChange = (e) => {
     );
   };
 
+  const handleElectionTypeChange = (e) => {
+    e.preventDefault();
+    console.log(e.target.value);
+    if(e.target.value == "Invite Based Election"){
+      setNda({
+        ...nda,
+        ["electionType"]: false,
+      });
+    }
+    if(e.target.value == "Open Based Election"){
+      setNda({
+        ...nda,
+        ["electionType"]: true,
+      });
+    }
+  }
+
   const validateDetail = () => {
     const { name, description } = nda;
     const { startTime, endTime } = se;
@@ -83,26 +101,29 @@ const handleTypeChange = (e) => {
           const signer = provider.getSigner();
 
           const contract = new ethers.Contract(
-            props.DashContractAddress,
+            DashContractAddress,
             ElectionOrganiser.abi,
             signer
           );
+
           //function to deploy ballot,result
           const transaction = await contract.createElection(
-            [1, nda.name, nda.description, se.startTime, se.endTime],
+            [1, nda.name, nda.description, se.startTime, se.endTime, nda.electionType],
             ballotType,resultCalculator
           );
-          await transaction.wait();
-          console.log("suceessss", [
-            1,
-            nda.name,
-            nda.description,
-            se.startTime,
-            se.endTime,
-            ballotType,
-            resultCalculator,
-          ]);
-          
+          await transaction.wait().then(() => {
+            console.log("suceessss", [
+              1,
+              nda.name,
+              nda.description,
+              se.startTime,
+              se.endTime,
+              ballotType,
+              resultCalculator,
+            ]);
+          });
+          closeModal();
+          fetchElections();         
         }
       }
       else{
@@ -113,11 +134,11 @@ const handleTypeChange = (e) => {
       }
     } catch (err) {
       console.log(err);
+      closeModal();
     }
   };
 
-  const closeModal = (e) => {
-    e.preventDefault();
+  const closeModal = () => {
     setIsOpen(false);
   };
 
@@ -184,24 +205,39 @@ const handleTypeChange = (e) => {
               />
               <br />
 
-              <div className="">
-                    <label className="labels UP_labels">Select Election Type</label>
-                    <select
-                      onChange={(e) => handleTypeChange(e)}
-                      type="text"
-                      name="ac"
-                      className="form-control"
-                      placeholder="select branch"
-                    >
-                      <option value="General">General</option>
-                      <option value="Oklahoma">Oklahoma</option>
-                      <option value="Borda">Borda</option>
-                      <option value="Schulze">Schulze</option>
-                      <option value="Instant Run-off">Instant Run-Off</option>
-                      <option value="Kemeng Young">Kemeng Young</option>                      
-                    </select>
-                  </div>
-                  <br/>
+              <div>
+                <label className="labels UP_labels">Select Election Type</label>
+                <select
+                  onChange={(e) => handleTypeChange(e)}
+                  type="text"
+                  name="ac"
+                  className="form-control"
+                  placeholder="select branch"
+                >
+                  <option value="General">General</option>
+                  <option value="Oklahoma">Oklahoma</option>
+                  <option value="Borda">Borda</option>
+                  <option value="Schulze">Schulze</option>
+                  <option value="Instant Run-off">Instant Run-Off</option>
+                  <option value="Kemeng Young">Kemeng Young</option>                      
+                </select>
+              </div>
+              <br />
+              <div>
+              <label className="labels UP_labels">Select Open/Invite Election Type</label>
+                <select
+                  onChange={(e) => handleElectionTypeChange(e)}
+                  type="text"
+                  name="ac"
+                  className="form-control"
+                  placeholder="select branch"
+                >
+                  <option value="Invite Based Election">Invite Based Election</option>                      
+                  <option value="Open Based Election" selected>Open Based Election</option>
+                </select>
+
+              </div>
+              <br/>
 
               <div style={{ display: "flex" }}>
                 <div>

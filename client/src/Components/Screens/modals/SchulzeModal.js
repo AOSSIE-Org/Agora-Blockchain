@@ -52,13 +52,11 @@ export function SchulzeModal ({Candidate, status, candidates, CurrentElection, a
       }
     
     const handleVoteSubmit = async (e) => {
-
-       
+        if(candidates.length == 0) throw  "No candidate is added"
         e.preventDefault();
         setIsOpen(false);
         
         try{
-
             const { ethereum } = window;
             if (ethereum) {
               const provider = new ethers.providers.Web3Provider(ethereum);
@@ -68,43 +66,28 @@ export function SchulzeModal ({Candidate, status, candidates, CurrentElection, a
                 contractAddress,
                 ElectionABI.abi,
                 signer
-              );            
-            
-            console.log('voting')
-            // window.toastProvider.addMessage("Processing your voting request.", {
-            //     variant: "processing"
-            // })
-            // console.log(CurrentElection)
-            // console.log('candidateId',candidateId)
-            // let temp = [3,2,1];
-            // console.log('arr',voteCount)
+              );  
 
             let res  =await CurrentElection.vote(addr,1,4,preference);
-            // console.log('res',res);
-            // window.toastProvider.addMessage("Voted", {
-            //     secondaryMessage: "You have successfully voted! Thank you.",
-            //     variant: "success"
-            // });
             console.log('you have succesfully voted ')
-            // setCandidateId(null);
             setIsOpen(false);
         }
         } catch(err) {
-            // window.toastProvider.addMessage("Failed", {
-            //     secondaryMessage: "Transaction failed. Try again",
-            //     variant: "failure"
-            // });
             console.log(err)
         }
     }
 
     useEffect(() => {
-        setoptions(candidates);        
-        let arr = [];
-        for(let i=0; i<candidates.length; i++){
-            arr.push(i);
+        if(options.length === 0){
+            setoptions(candidates);
         }
-        setpreference(arr);
+        if(preference.length === 0){        
+            let arr = [];
+            for(let i=0; i<candidates.length; i++){
+                arr.push(i);
+            }  
+            setpreference(arr);
+        }
     }, [])
     
 
@@ -117,7 +100,7 @@ export function SchulzeModal ({Candidate, status, candidates, CurrentElection, a
                     VOTE
                 </div>
                 :
-                <div className="voteButton voteButtonDisabled">
+                <div className="voteButton voteButtonDisabled" onClick={() => {console.log("Election is not started yet")}}>
                     VOTE
                 </div>
             }
@@ -128,7 +111,7 @@ export function SchulzeModal ({Candidate, status, candidates, CurrentElection, a
                         icononly
                         icon={"Close"}
                         color={"moon-gray"}
-                        position={"absolute"}
+                        position={"absolute"} 
                         top={0}
                         right={0}
                         mt={3}
@@ -142,27 +125,33 @@ export function SchulzeModal ({Candidate, status, candidates, CurrentElection, a
                         <p style={{textAlign:"center"}}>Move up/down the card to give preference</p>
 
 
-                        <br/>
 
-        
-
-                        <div>
-                           
-
-                            <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-around"}}>
-                                {
-                                    options?.map((candidate, index) => (                                 
-                                        <div className='card' style={{display:"flex", marginLeft:"1%",marginRight:"1%",marginBottom:"2%",padding:"6%"}}>
-                                            <Candidate name={candidate?.name} id={Number(candidate?.candidateID._hex)} about={candidate?.about} voteCount={candidate?.voteCount} ballotAddress={ballotAddress} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
-                                            {/* <input type="number" className='' placeholder="Rank.." id="borda_input" name={candidate?.candidateID}  onChange={(e)=>handleVoteChange(e)}/> */}
-                                            <button style={{borderRadius:"15px", height:"30px", width: "101px", margin:"5px", textAlign:"center"}} onClick={() => MoveUp(index)}>Move Up</button>
-                                            <button style={{borderRadius:"15px", height:"30px", width: "101px", margin:"5px", textAlign:"center"}} onClick={() => MoveDown(index)}>Move Down</button>
-                                        </div>
-                                        
-                                    ))
-                                }
+                        {candidates.length === 0 ? 
+                            <div>
+                                <br /><br /><br /><br /><br />
+                                <h2 style={{textAlign:"center", color:"red"}}>Warning : No candidate is added</h2>
+                                <br /><br /><br /><br /><br /><br />
                             </div>
+                            :
+                            <div>
+                                <br/>     
+                                <div>                       
+                                    <div style={{display: "flex", flexWrap: "wrap", overflow:"scroll", height:"300px"}}>
+                                        {
+                                            options?.map((candidate, index) => (                                 
+                                                <div className='card' style={{width:"30%", marginLeft:"1%",marginRight:"1%",marginBottom:"2%",padding:"6%"}}>
+                                                    <Candidate name={candidate?.name} id={Number(candidate?.candidateID._hex)} about={candidate?.about} voteCount={candidate?.voteCount} ballotAddress={ballotAddress} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
+                                                    {/* <input type="number" className='' placeholder="Rank.." id="borda_input" name={candidate?.candidateID}  onChange={(e)=>handleVoteChange(e)}/> */}
+                                                    <button style={{borderRadius:"15px", height:"30px", width: "101px", margin:"5px", textAlign:"center"}} onClick={() => MoveUp(index)}>Move Up</button>
+                                                    <button style={{borderRadius:"15px", height:"30px", width: "101px", margin:"5px", textAlign:"center"}} onClick={() => MoveDown(index)}>Move Down</button>
+                                                </div>
+                                                
+                                            ))
+                                        }
+                                    </div>
+                                </div>
                         </div>
+                        }
                     </div>
 
                     <Flex
