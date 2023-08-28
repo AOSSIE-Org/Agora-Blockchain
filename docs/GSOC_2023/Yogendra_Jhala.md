@@ -78,9 +78,9 @@ An open election is a type of election where any eligible voter can participate,
 
 ---
 
-## Phases of development (GSoC 2021)
+## Phases of development (GSoC 2023)
 
-### Community bonding period (May 20 - June 12)
+### Community bonding period (May 4 - May 28)
 
 During the community bonding period, we discussed our regular meeting schedules for the coming days, technologies to be used, development, and deployment strategies. We identified our tasks to be done in GSoC'23, so that, we could get a headstart from the first week of the coding period. It didn't involve any coding work, rather we have to get in touch with our mentors and fellow developers and learn more about the organization.
 
@@ -159,19 +159,19 @@ I hope our contributions to this project were valuable and would help someone wh
 
 ### Merge Requests
 
-1. [Merge request! 119](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/119) - **Open**
-
-   - Implemented three voting algorithm.
-   - Integrated backend with the frontend.
-   - Add election modal for all algorithm.
-2. [Merge request !125](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/125) - **Open**
-
-   - Implement EIP 2535(Diamond Structure) with backend and Integrate with frontend.
-3. [Merge request !118](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/118) - **Open**
+1. [Merge request !118](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/118) - **Merged**
 
    - Implement CRUD Operation to election as well as to candidate and Integrate to frontedn in REactJS.
    - Implement on Open/Invite Based Election feature to smart contract and Integrate to frontend.
    - Fix UI and UX of overall DAPP.
+2. [Merge request! 119](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/119) - **Merged**
+
+   - Implemented three voting algorithm.
+   - Integrated backend with the frontend.
+   - Add election modal for all algorithm.
+   - Implement EIP 2535(Diamond Structure) with backend and Integrate with frontend.
+
+
 4. [Merge request !121](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/121) - **Open**
 
    - Add Login and Logout feature to Dapp.
@@ -181,3 +181,7 @@ I hope our contributions to this project were valuable and would help someone wh
    - Add Loader modal to improve User Experience.
    - Remove all unneccessary variable and console logs.
    - Remove all eslint compilation error.
+6. [Merge request !127](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/127) - **Open**
+
+   - Add Loader modal to improve User Experience.
+
