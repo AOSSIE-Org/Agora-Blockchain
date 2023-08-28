@@ -42,7 +42,7 @@ For developing the front end of the code and integrating it with blockchain (bac
 
 ## Phases of development (GSoC 2023)
 
-### Community bonding period
+### Community bonding period(May 4 - May 28)
 
 In the phase of community bonding, we outlined our upcoming regular meeting timetable, agreed upon the technologies we would employ, discussed strategies for development and deployment. We also delineated our GSoC'23 tasks, aiming to initiate them in the initial week of the coding period. This phase was primarily focused on establishing connections with mentors and fellow developers and familiarizing ourselves with the organization, without directly involving any coding tasks.
 
@@ -73,7 +73,7 @@ The workflow was divided as:
     - Development of server side web app for handling asynchronous request for verification
     - Integration of existing application with polygon id
 
-### Phase 1 (June 13 - July 29)
+### Phase 1 (May 29 - July 10)
 
 1. Started to work upon borda algorithm and various ways to implement it.
 2. Started developing the smart contract with the Borda algotithm logic.
@@ -97,7 +97,7 @@ The workflow was divided as:
 20. Integration of POC to Current Application.
 21. Writing Deployment scripts of newly developed Anonymous voting contracts.
 
-### Phase 2 (July 30 - September 12)
+### Phase 2 (July 14 - August 21)
 
 I worked on the following tasks during the second phase -
 
@@ -134,7 +134,15 @@ Our endeavors unlock a realm of potential applications, notably enabling the man
 
 ### Merge Requests
 
-1. [Merge request !116](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/116) - **Open**
+1. [Merge request !79](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/79) - **Closed**
+
+- Implemented Borda Algorithm
+- This MR was later integrated with MR 116 and a single PR for both borda and anonymnous voting was created
+
+- ## Video Links
+  - Borda Algo : https://youtu.be/pplfC5o7PLk
+
+2. [Merge request !116](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/116) - **Open**
 
    - Implemented Borda Algorithm
    - Implemeted the Anonymous Voting
@@ -142,10 +150,11 @@ Our endeavors unlock a realm of potential applications, notably enabling the man
    - Integrated backend with the frontend.
 
 - ## Video Links
+  - Video link of all algorithms Working together : https://youtu.be/VJ0BMjlRxBo
   - Borda Algo : https://youtu.be/pplfC5o7PLk
   - Anonymous Voting : https://www.youtube.com/watch?v=SdrdMFAOEW0&ab_channel=kumarharsh
 
-2. [Merge request !122](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/122) - **Open**
+3. [Merge request !122](https://gitlab.com/aossie/agora-blockchain/-/merge_requests/122) - **Open**
 
    - Deevlopment of logic of proof request
    - Development of Server to handle the Verification Requests
