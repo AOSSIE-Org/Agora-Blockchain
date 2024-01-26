@@ -8,6 +8,7 @@ node_modules
 # testing
 server/coverage
 server/coverage.json
+server/cache
 
 # misc
 .DS_Store
