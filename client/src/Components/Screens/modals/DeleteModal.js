@@ -3,29 +3,29 @@ import { Modal, Button, Card } from "rimble-ui";
 import { ethers } from "ethers";
 import { useNavigate } from "react-router-dom";
 import { Oval } from 'react-loader-spinner';
-import ElectionOrganizer from '../../../build/ElectionOrganizer.json';
+import ElectionOrganizer from "../../../artifacts/contracts/facets/ElectionOrganizer.sol/ElectionOrganizer.json";
 
-export function DeleteModal({orgnizerAddress, electionAddress}) {
-  const [showLoader, setShowLoader] = useState(false);
+export function DeleteModal({ orgnizerAddress, electionAddress }) {
+    const [showLoader, setShowLoader] = useState(false);
 
-  const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
-  
-  const closeModal = e => {
-      setIsOpen(false);
+    const navigate = useNavigate();
+    const [isOpen, setIsOpen] = useState(false);
+
+    const closeModal = e => {
+        setIsOpen(false);
     };
-    
+
     const openModal = e => {
         e.preventDefault();
         setIsOpen(true);
     };
-    
+
     const handleClick = () => {
-      setShowLoader(true);
+        setShowLoader(true);
     };
 
     const handleDelete = async () => {
-        try {            
+        try {
             const { ethereum } = window;
             if (ethereum) {
                 const provider = new ethers.providers.Web3Provider(ethereum);
@@ -34,41 +34,41 @@ export function DeleteModal({orgnizerAddress, electionAddress}) {
                     orgnizerAddress,
                     ElectionOrganizer.abi,
                     signer
-                    );
+                );
                 const overrides = {
                     gasLimit: 8000000 // Specify the gas limit here
                 };
-                
+
                 await electionOrgContract.deleteElection(electionAddress).then((data) => {
                     console.log(data);
                 })
 
                 handleClick();
-                
+
                 setTimeout(async () => {
                     const redirect = async () => {
                         closeModal();
                         setShowLoader(false);
-                        navigate('/dashboard');   
+                        navigate('/dashboard');
                     }
                     await redirect();
                 }, 15000);
-                }
-                } catch (error) {
-                    console.log(error)
-                }
             }
-            
-            return (
-                <div>
-            <div className="voteButton deleteButton" style={{marginLeft:"15%"}} onClick={openModal}>
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    return (
+        <div>
+            <div className="voteButton deleteButton" style={{ marginLeft: "15%" }} onClick={openModal}>
                 DELETE
             </div>
 
             <Modal isOpen={isOpen}>
-                {showLoader ? 
+                {showLoader ?
                     <div>
-                        <div style={{marginLeft:90}}>
+                        <div style={{ marginLeft: 90 }}>
                             <Oval
                                 ariaLabel="loading-indicator"
                                 height={100}
@@ -77,18 +77,18 @@ export function DeleteModal({orgnizerAddress, electionAddress}) {
                                 strokeWidthSecondary={1}
                                 color="blue"
                                 secondaryColor="white"
-                            /> 
+                            />
                         </div>
                         <br />
                         <br />
                         <div>
-                            <span style={{color:'white'}}>Redirecting to dashboard in 15 seconds...</span>
+                            <span style={{ color: 'white' }}>Redirecting to dashboard in 15 seconds...</span>
                         </div>
                     </div>
                     :
-                    <Card width={"90%"} height={"80%"} p={0} style={{maxWidth: "500px", maxHeight: "300px"}}>
+                    <Card width={"90%"} height={"80%"} p={0} style={{ maxWidth: "500px", maxHeight: "300px" }}>
                         <Button.Text
-                            style={{margin: "0px"}}
+                            style={{ margin: "0px" }}
                             icononly
                             icon={"Close"}
                             color={"moon-gray"}
@@ -100,20 +100,20 @@ export function DeleteModal({orgnizerAddress, electionAddress}) {
                             onClick={closeModal}
                         />
 
-                        <h5 style={{margin: "10px", maxWidth: "500px", width: "90%"}}>Delete this election?</h5>
+                        <h5 style={{ margin: "10px", maxWidth: "500px", width: "90%" }}>Delete this election?</h5>
 
-                        <div style={{margin: "20px 10px"}}>
+                        <div style={{ margin: "20px 10px" }}>
                             <div>
                                 <div>
                                     Are your sure, you want to delete this election? Once this transaction is confirmed, this cannot be undone.
                                 </div>
                             </div>
                         </div>
-            
+
                         <div className="modalButtons">
                             <Button.Outline onClick={closeModal}>Cancel</Button.Outline>
                             <Button ml={3} onClick={handleDelete}>Confirm</Button>
-                        </div> 
+                        </div>
                     </Card>
                 }
             </Modal>

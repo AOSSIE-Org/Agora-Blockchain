@@ -14,9 +14,9 @@ import "../styles/Dashboard.scss";
 import { CONTRACTADDRESS } from '../constants'
 
 import { ethers } from "ethers";
-import Authentication from '../../build/Authentication.json'
-import ElectionOrganiser from "../../build/ElectionOrganizer.json";
-import ElectionABI from '../../build/Election.sol/Election.json'
+import Authentication from "../../artifacts/contracts/facets/Authentication.sol/Authentication.json";
+import ElectionOrganiser from "../../artifacts/contracts/facets/ElectionOrganizer.sol/ElectionOrganizer.json";
+import ElectionABI from '../../artifacts/contracts/facets/Election.sol/Election.json'
 import { ToastContainer } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 
@@ -35,7 +35,7 @@ const Dashboard = () => {
   const [statistics, setStatistics] = useState([0, 0, 0, 0]);
   const [detailedelection, setdetailedelection] = useState([]);
   const [search, setSearch] = useState("");
-  const [type,setType] = useState("ALL");
+  const [type, setType] = useState("ALL");
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
@@ -49,20 +49,20 @@ const Dashboard = () => {
   //helper function to filter the elections
   const filtercheck = (elections) => {
     console.log(elections);
-    console.log('type',type ,'status',elections.status);
-    console.log(type===elections.status);
-      if(search === "" && type === "ALL"){
-        return true;
-      }
-      if(search ===elections.name && type === "ALL"){
-        return true;
-      }
-      if(search ==="" && type == elections.status){
-        return true;
-      }
-      if(search ===elections.name && type == elections.status){
-        return true;
-      }
+    console.log('type', type, 'status', elections.status);
+    console.log(type === elections.status);
+    if (search === "" && type === "ALL") {
+      return true;
+    }
+    if (search === elections.name && type === "ALL") {
+      return true;
+    }
+    if (search === "" && type == elections.status) {
+      return true;
+    }
+    if (search === elections.name && type == elections.status) {
+      return true;
+    }
 
   }
 
@@ -87,29 +87,29 @@ const Dashboard = () => {
 
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer =  provider.getSigner();
+        const signer = provider.getSigner();
 
         //to fetch signers address
         const add = await signer.getAddress();
-       
+
         const contract = new ethers.Contract(
           DashContractAddress,
           ElectionOrganiser.abi,
           signer
         );
 
-        const data = await contract.getElectionOrganizerByAddress(add);       
+        const data = await contract.getElectionOrganizerByAddress(add);
         setOrganizerInfo({
           name: data.name,
           publicAddress: data.publicAddress,
         });
-                
+
         const openBasedElections = await contract.getOpenBasedElections();
         const inviteBasedElections = await contract.getInviteBasedElections(data.publicAddress);
         const elections = await openBasedElections.concat(inviteBasedElections);
-        console.log("Open Based Elections - ",openBasedElections);
-        console.log("Invite Based Elections - ",inviteBasedElections);
-        console.log("Elections - ",elections);
+        console.log("Open Based Elections - ", openBasedElections);
+        console.log("Invite Based Elections - ", inviteBasedElections);
+        console.log("Elections - ", elections);
         getElections(elections);
       }
     } catch (err) {
@@ -118,12 +118,12 @@ const Dashboard = () => {
   };
 
   //to fetch all election details 
-  const fetchDetailedElection = async() => {
-    try{
+  const fetchDetailedElection = async () => {
+    try {
       const { ethereum } = window;
 
       const provider = new ethers.providers.Web3Provider(ethereum);
-      const signer = provider.getSigner();   
+      const signer = provider.getSigner();
 
       let tempStats = [0, 0, 0, 0];
       setdetailedelection([]);
@@ -159,13 +159,13 @@ const Dashboard = () => {
 
         setdetailedelection(detailedelection => [...detailedelection, data]);
 
-        let sum =(tempStats[1]+tempStats[2]+tempStats[3])
-        tempStats[0] = sum+1;
-        setStatistics(tempStats);        
+        let sum = (tempStats[1] + tempStats[2] + tempStats[3])
+        tempStats[0] = sum + 1;
+        setStatistics(tempStats);
       })
 
 
-    } catch(err){
+    } catch (err) {
       console.log(err)
     }
   }
@@ -180,7 +180,7 @@ const Dashboard = () => {
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
-        const add  = await signer.getAddress();
+        const add = await signer.getAddress();
         const contract = new ethers.Contract(
           CONTRACTADDRESS,
           Authentication.abi,
@@ -190,19 +190,19 @@ const Dashboard = () => {
         setAddress(add);
 
         const myPass = localStorage.getItem(add);
-        if(myPass == null){ 
+        if (myPass == null) {
           navigate('/')
         }
-        else{          
-          const loggedStatus = await contract.getLoggedInStatus(add, myPass); 
-          if(loggedStatus == false) {
-            navigate('/'); 
+        else {
+          const loggedStatus = await contract.getLoggedInStatus(add, myPass);
+          if (loggedStatus == false) {
+            navigate('/');
           }
           else {
             setAuthStatus(loggedStatus);
           }
-          console.log('Auth Status - ',loggedStatus);
-        } 
+          console.log('Auth Status - ', loggedStatus);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -210,7 +210,7 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    if(authStatus == true){
+    if (authStatus == true) {
       fetchElections();
     }
     else {
@@ -224,12 +224,12 @@ const Dashboard = () => {
 
   return (
     <div style={{ backgroundColor: "#f7f7f7", minHeight: "100%" }}>
-      <ToastContainer style={{zIndex:"99999"}}/>
+      <ToastContainer style={{ zIndex: "99999" }} />
       <Navbar
         header={organizerInfo.name}
         infoText={organizerInfo.publicAddress}
         pictureUrl="/assets/avatar.png"
-        address = {address}
+        address={address}
       />
 
       <div style={{ padding: "30px" }}>
@@ -242,8 +242,8 @@ const Dashboard = () => {
             </font>
           </div>
 
-          <div style={{ float: "right", marginLeft:10, marginBottom:10}}>
-            <CreateElectionModal DashContractAddress={DashContractAddress} fetchElections={fetchElections}/>
+          <div style={{ float: "right", marginLeft: 10, marginBottom: 10 }}>
+            <CreateElectionModal DashContractAddress={DashContractAddress} fetchElections={fetchElections} />
           </div>
           <a href="/brightid">
             <div className="createElectionButton">Get BrightID Verified!</div>
@@ -288,29 +288,29 @@ const Dashboard = () => {
 
         <div className="layoutBody row">
           <div className="lhsLayout">
-            <div className="lhsHeader" style={{ marginTop: "10px", display:"flex" ,justifyContent:"space-between" }}>
-              <div style={{display:"flex" , alignItems:"Center"}}>
-              <h5 style={{lineHeight:0}}>Elections</h5>
+            <div className="lhsHeader" style={{ marginTop: "10px", display: "flex", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "Center" }}>
+                <h5 style={{ lineHeight: 0 }}>Elections</h5>
               </div>
-              <div style={{display:"flex"}}>
-              <input onChange={(e)=>handleSearchChange(e)} placeholder= "Search Election" style={{marginRight:"10px", padding:"5px"}}/>
-                    <div className="">
-                    <select style={{ width: "100px" }}
-                      onChange={(e) => handleTypeChange(e)}
-                      type="text"
-                      className="form-control"
-                      placeholder="Filter by type"
-                    >
-                      <option value="ALL">ALL</option>
-                      <option value="pending">Pending</option>
-                      <option value="active">Active</option>
-                      <option value="closed">Closed</option>
-                      
-                    </select>
-                    </div>
+              <div style={{ display: "flex" }}>
+                <input onChange={(e) => handleSearchChange(e)} placeholder="Search Election" style={{ marginRight: "10px", padding: "5px" }} />
+                <div className="">
+                  <select style={{ width: "100px" }}
+                    onChange={(e) => handleTypeChange(e)}
+                    type="text"
+                    className="form-control"
+                    placeholder="Filter by type"
+                  >
+                    <option value="ALL">ALL</option>
+                    <option value="pending">Pending</option>
+                    <option value="active">Active</option>
+                    <option value="closed">Closed</option>
 
-                  </div>
+                  </select>
+                </div>
+
               </div>
+            </div>
 
 
             <br />
@@ -329,7 +329,7 @@ const Dashboard = () => {
                 <tbody style={{ fontSize: "13px" }}>
                   {
                     (detailedelection.length > 0) &&
-                    detailedelection.filter((e)=>filtercheck(e)).map((electionData) => (
+                    detailedelection.filter((e) => filtercheck(e)).map((electionData) => (
                       <ElectionRow
                         DashContractAddress={DashContractAddress}
                         id={parseInt(electionData.ID)}
@@ -339,7 +339,7 @@ const Dashboard = () => {
                         startDate={electionData.startDate}
                         endDate={electionData.endDate}
                         status={electionData.status}
-                        organizerInfo= {organizerInfo}
+                        organizerInfo={organizerInfo}
                       />
                     ))
                   }

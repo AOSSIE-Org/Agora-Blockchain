@@ -3,14 +3,14 @@ import QRCode from "react-qr-code";
 
 import { useState, useEffect } from "react";
 import { Flex, Modal, Button, Card } from "rimble-ui";
-import Brightid from "../../build/BrightID.json";
+import Brightid from "../../artifacts/BrightID.json";
 import { ethers } from "ethers";
 
 import background from "../assets/bg.jpg";
 import brightidimg from "../assets/brightid.jpeg";
 
 function BrightID() {
-    // const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
   const [verified, setVerified] = useState(false);
   const [data, setData] = useState({
     addresses: [],
@@ -25,15 +25,15 @@ function BrightID() {
   let detail;
   const contractAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
 
-//   const closeModal = (e) => {
-//     e.preventDefault();
-//     setIsOpen(false);
-//   };
+  //   const closeModal = (e) => {
+  //     e.preventDefault();
+  //     setIsOpen(false);
+  //   };
 
-//   const openModal = async (e) => {
-//     e.preventDefault();
-//     if (verified == false) setIsOpen(true);
-//   };
+  //   const openModal = async (e) => {
+  //     e.preventDefault();
+  //     if (verified == false) setIsOpen(true);
+  //   };
 
   const value = `brightid://link-verification/http:%2f%2fnode.brightid.org/snapshot/0xa1C2668091b30CA136F065883bF8bE744bF6b37A`;
 
@@ -134,7 +134,7 @@ function BrightID() {
   useEffect(() => {
     brightid();
     getVerifiers();
-  },[]);
+  }, []);
   console.log("verifiers -> ", verifiers);
   return (
     <div>
@@ -162,21 +162,21 @@ function BrightID() {
           style={{ height: "550px", width: "300px", margin: "10px" }}
         />
 
-        <h2 style={{margin:"10px"}}>Step 2 : Join A BrightID Verification Meeting. </h2>
+        <h2 style={{ margin: "10px" }}>Step 2 : Join A BrightID Verification Meeting. </h2>
         <b>You can find out the next meeting <a href="https://meet.brightid.org/#/">over here.</a></b>
-        <h2 style={{margin:"10px"}}>Step 3 : Link your account to our App. </h2>
-        <h2 style={{margin:"10px"}}>Step 4 : Get Sponsored.. </h2>
-        <h2 style={{margin:"10px"}}>Step 5 : Confirm Verification. </h2>
+        <h2 style={{ margin: "10px" }}>Step 3 : Link your account to our App. </h2>
+        <h2 style={{ margin: "10px" }}>Step 4 : Get Sponsored.. </h2>
+        <h2 style={{ margin: "10px" }}>Step 5 : Confirm Verification. </h2>
         <div>
-            <p>Scan the QR Code to link to the BrightID!</p>
+          <p>Scan the QR Code to link to the BrightID!</p>
 
-            <br />
-          </div>
+          <br />
+        </div>
 
-          <QRCode title="snapshot" value={value} />
-          <Button ml={3} type="submit" onClick={provehumanity}>
-            Confirm Verification!
-          </Button>
+        <QRCode title="snapshot" value={value} />
+        <Button ml={3} type="submit" onClick={provehumanity}>
+          Confirm Verification!
+        </Button>
       </div>
       <br /> <br />
     </div>

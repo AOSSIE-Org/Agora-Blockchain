@@ -27,17 +27,20 @@
 require("@nomiclabs/hardhat-waffle");
 module.exports = {
   solidity: '0.8.10',
-  defaultNetwork:"mumbai",
-  networks:{
-    hardhat:{
-      allowUnlimitedContractSize:true
+  defaultNetwork: "mumbai",
+  paths: {
+    artifacts: "../client/src/artifacts"
+  },
+  networks: {
+    hardhat: {
+      allowUnlimitedContractSize: true
     },
-    mumbai:{
-      allowUnlimitedContractSize:true,
-      url:"https://rpc-mumbai.maticvigil.com/",
-      accounts:["e820e413ccda5073b7997a35cd9973d6a991a4d981408aa52f09222f39f6ec3e"],  //private key place here
+    mumbai: {
+      allowUnlimitedContractSize: true,
+      url: "https://rpc-mumbai.maticvigil.com/",
+      accounts: ["e820e413ccda5073b7997a35cd9973d6a991a4d981408aa52f09222f39f6ec3e"],  //private key place here
     }
-  },  
+  },
   mocha: {
     timeout: 100000000
   },
@@ -46,8 +49,8 @@ module.exports = {
       enabled: true
     }
   },
-  contractSizer:{
-    runOnCompile:true
+  contractSizer: {
+    runOnCompile: true
   }
 };
 

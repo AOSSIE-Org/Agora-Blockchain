@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { Flex, Modal, Button, Card } from "rimble-ui";
 import { ethers } from "ethers";
-import ElectionABI from '../../../build/Election.sol/Election.json'
-import { successtoast,dangertoast } from "../utilities/Toasts";
+import ElectionABI from '../../../artifacts/contracts/facets/Election.sol/Election.json'
+import { successtoast, dangertoast } from "../utilities/Toasts";
 import { ToastContainer, toast } from "react-toastify";
 import '../../styles/Modal.scss';
 
 import { AVATARS, STATUS } from '../../constants';
 
-export function VoteModal({Candidate, status, candidates, CurrentElection, account,contractAddress,ballotAddress}) {
+export function VoteModal({ Candidate, status, candidates, CurrentElection, account, contractAddress, ballotAddress }) {
     const [isOpen, setIsOpen] = useState(false);
     const [candidateId, setCandidateId] = useState(null);
-    
+
 
     const closeModal = e => {
         e.preventDefault();
@@ -31,28 +31,28 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
         let id
         e.preventDefault();
         setIsOpen(false);
-        try{
+        try {
             const { ethereum } = window;
             if (ethereum) {
-              const provider = new ethers.providers.Web3Provider(ethereum);
-              const signer = provider.getSigner();
-              const addr = await signer.getAddress();
-              const CurrentElection = new ethers.Contract(
-                contractAddress,
-                ElectionABI.abi,
-                signer
-              );
-            
-            id = toast.loading("Processing Your Vote Request",{theme: "dark",position: "top-center"})
-            let res  =await CurrentElection.vote(addr,candidateId,1,[]);
-		 
-            successtoast(id,"you have succesfully voted for candidate ID #"+candidateId);
-            console.log('you have succesfully voted ')
-            setCandidateId(null);
-            setIsOpen(false);
-        }
-        } catch(err) {
-            dangertoast(id,"Voting failed. Try again");
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                const signer = provider.getSigner();
+                const addr = await signer.getAddress();
+                const CurrentElection = new ethers.Contract(
+                    contractAddress,
+                    ElectionABI.abi,
+                    signer
+                );
+
+                id = toast.loading("Processing Your Vote Request", { theme: "dark", position: "top-center" })
+                let res = await CurrentElection.vote(addr, candidateId, 1, []);
+
+                successtoast(id, "you have succesfully voted for candidate ID #" + candidateId);
+                console.log('you have succesfully voted ')
+                setCandidateId(null);
+                setIsOpen(false);
+            }
+        } catch (err) {
+            dangertoast(id, "Voting failed. Try again");
             console.log(err)
         }
     }
@@ -61,19 +61,19 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
         <div>
             {
                 status === STATUS.ACTIVE
-                ?
-                <div className="voteButton" onClick={openModal}>
-                    VOTE
-                </div>
-                :
-                <div className="voteButton voteButtonDisabled" onClick={() => {console.log("Election is not started yet")}}>
-                    VOTE
-                </div>
+                    ?
+                    <div className="voteButton" onClick={openModal}>
+                        VOTE
+                    </div>
+                    :
+                    <div className="voteButton voteButtonDisabled" onClick={() => { console.log("Election is not started yet") }}>
+                        VOTE
+                    </div>
             }
             <Modal isOpen={isOpen}>
-                <Card width={"90%"} height={"80%"} p={0} style={{maxWidth: "700px", borderRadius: "5px"}}>
+                <Card width={"90%"} height={"80%"} p={0} style={{ maxWidth: "700px", borderRadius: "5px" }}>
                     <Button.Text
-                        style={{margin: "0px"}}
+                        style={{ margin: "0px" }}
                         icononly
                         icon={"Close"}
                         color={"moon-gray"}
@@ -85,29 +85,29 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
                         onClick={closeModal}
                     />
 
-                    <div style={{margin: "10px", maxWidth: "700px", width: "96%"}}>
-                        <h3 style={{textAlign:"center" ,paddingTop:"24px" ,fontWeight:"bold" , fontFamily:"monospace"}}>Choose candidates according to your preferences</h3>
+                    <div style={{ margin: "10px", maxWidth: "700px", width: "96%" }}>
+                        <h3 style={{ textAlign: "center", paddingTop: "24px", fontWeight: "bold", fontFamily: "monospace" }}>Choose candidates according to your preferences</h3>
                         <div>
-                            
-                            <br/>
 
-                            <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-around"}}>
+                            <br />
+
+                            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-around" }}>
                                 {
                                     candidates?.map((candidate) => (
-                                        <div className="card"  style={{display:"flex", marginLeft:"1%",marginRight:"1%",marginBottom:"2%",padding:"2%" ,paddingTop:"0.4%"}}>
-                                           
-                                            <div>
+                                        <div className="card" style={{ display: "flex", marginLeft: "1%", marginRight: "1%", marginBottom: "2%", padding: "2%", paddingTop: "0.4%" }}>
 
                                             <div>
-                                            <input type="radio" name="candidate" value={candidate?.candidateID} onChange={handleCandidateIdChange} className="voteCandiateInput"/>
-                                            </div>
-                                            <div style={{padding:"1.9rem"}}>
 
-                                            <Candidate name={candidate?.name} id={Number(candidate?.candidateID._hex)} about={candidate?.about} voteCount={candidate?.voteCount} ballotAddress={ballotAddress} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'}/> 
-                                            </div>
+                                                <div>
+                                                    <input type="radio" name="candidate" value={candidate?.candidateID} onChange={handleCandidateIdChange} className="voteCandiateInput" />
+                                                </div>
+                                                <div style={{ padding: "1.9rem" }}>
+
+                                                    <Candidate name={candidate?.name} id={Number(candidate?.candidateID._hex)} about={candidate?.about} voteCount={candidate?.voteCount} ballotAddress={ballotAddress} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'} />
+                                                </div>
                                             </div>
 
-                                      
+
                                         </div>
                                     ))
                                 }
@@ -122,7 +122,7 @@ export function VoteModal({Candidate, status, candidates, CurrentElection, accou
                     >
                         <Button.Outline onClick={closeModal}>Cancel</Button.Outline>
                         <Button ml={3} type="submit" onClick={handleVoteSubmit}>Confirm</Button>
-                    </Flex>                
+                    </Flex>
                 </Card>
             </Modal>
         </div>

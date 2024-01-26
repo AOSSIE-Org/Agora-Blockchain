@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Flex, Modal, Button, Card } from "rimble-ui";
 import DatePicker from "react-datepicker";
 import { ethers } from "ethers";
-import { successtoast,dangertoast } from "../utilities/Toasts";
+import { successtoast, dangertoast } from "../utilities/Toasts";
 import { toast } from "react-toastify";
-import ElectionABI from '../../../build/Election.json'
+import ElectionABI from '../../../artifacts/contracts/facets/Election.sol/Election.json'
 
-export function UpdateElectionModal({contractAddress, electionDetails, functionCall}) {
-  const [isOpen, setIsOpen] = useState(false);  
+export function UpdateElectionModal({ contractAddress, electionDetails, functionCall }) {
+  const [isOpen, setIsOpen] = useState(false);
   const [nda, setNda] = useState({
     name: electionDetails?.name,
     description: electionDetails?.description,
@@ -23,7 +23,7 @@ export function UpdateElectionModal({contractAddress, electionDetails, functionC
       ...nda,
       [name]: value,
     });
-    console.log(nda); 
+    console.log(nda);
   };
 
 
@@ -51,26 +51,26 @@ export function UpdateElectionModal({contractAddress, electionDetails, functionC
           ElectionABI.abi,
           signer
         );
-                
-        let currElectionDetail = [Number(electionDetails.electionID), 
-          nda?.name || electionDetails.name,
-          nda?.description || electionDetails.description,
-          se?.startTime || electionDetails.startDate,
-          se?.endTime || electionDetails.endDate,]
 
-        id = toast.loading("Processing Your Update Request",{theme: "dark",position: "top-center"})
-        
+        let currElectionDetail = [Number(electionDetails.electionID),
+        nda?.name || electionDetails.name,
+        nda?.description || electionDetails.description,
+        se?.startTime || electionDetails.startDate,
+        se?.endTime || electionDetails.endDate,]
+
+        id = toast.loading("Processing Your Update Request", { theme: "dark", position: "top-center" })
+
         //Contract call
         const transaction = await contract.updateElectionInfo(currElectionDetail);
         await transaction.wait();
-        
+
         successtoast(id, "Election Updated Successfully")
-        console.log("suceessss", currElectionDetail); 
+        console.log("suceessss", currElectionDetail);
         closeModal();
-        functionCall();     
+        functionCall();
       }
     } catch (err) {
-      dangertoast(id,"Election Updation Failed");
+      dangertoast(id, "Election Updation Failed");
       console.log(err);
     }
   };
@@ -87,7 +87,7 @@ export function UpdateElectionModal({contractAddress, electionDetails, functionC
   return (
     <form>
       <div className="voteButton" onClick={openModal}>
-        Update 
+        Update
       </div>
 
       <Modal isOpen={isOpen}>
@@ -152,7 +152,7 @@ export function UpdateElectionModal({contractAddress, electionDetails, functionC
                       className="form-control"
                       name="startTime"
                       // selected={se.startTime * 1000}
-                      selected={se.startTime*1000 || electionDetails.startDate * 1000}
+                      selected={se.startTime * 1000 || electionDetails.startDate * 1000}
                       onChange={(date) => handleSeChange(date, "start")}
                     />
                   </div>
@@ -167,7 +167,7 @@ export function UpdateElectionModal({contractAddress, electionDetails, functionC
                       dateFormat="yyyy/MM/dd hh:mm:ss"
                       className="form-control"
                       name="endTime"
-                      selected={se.endTime*1000 || electionDetails.endDate * 1000}
+                      selected={se.endTime * 1000 || electionDetails.endDate * 1000}
                       onChange={(date) => handleSeChange(date, "end")}
                     />
                   </div>

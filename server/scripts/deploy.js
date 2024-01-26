@@ -3,7 +3,7 @@
 
 const { getSelectors, FacetCutAction } = require('./libraries/diamond.js')
 
-async function deployDiamond () {
+async function deployDiamond() {
   const accounts = await ethers.getSigners()
   const contractOwner = accounts[0]
 
@@ -41,7 +41,7 @@ async function deployDiamond () {
     'GetResultCalculator'
   ]
   const cut = []
-   for (const FacetName of FacetNames) {
+  for (const FacetName of FacetNames) {
     const Facet = await ethers.getContractFactory(FacetName)
     const facet = await Facet.deploy()
     await facet.deployed()
@@ -67,7 +67,16 @@ async function deployDiamond () {
   if (!receipt.status) {
     throw Error(`Diamond upgrade failed: ${tx.hash}`)
   }
+
   console.log('Completed diamond cut')
+
+  try {
+    const auth = await ethers.getContractAt('Authentication', diamond.address);
+    await auth.init(diamond.address);
+    console.log("Initialized Contracts !");
+  } catch (error) {
+    console.log("Error", error);
+  }
   console.log("diamond address - ", diamond.address)
   return diamond.address
 }
