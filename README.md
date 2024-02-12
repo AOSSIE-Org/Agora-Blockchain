@@ -23,7 +23,8 @@
 git clone https://gitlab.com/aossie/agora-blockchain/
 ```
 
-**Switch to develop branch**
+**Switch to develop branch** if you want to view previous code.
+**Switch to contributions-gsoc24 branch** if you want to start contributing to GSoC-2024.
 
 ```bash
 git checkout develop
