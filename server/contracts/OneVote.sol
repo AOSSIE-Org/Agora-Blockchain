@@ -4,9 +4,6 @@ pragma solidity ^0.8.0;
 
 import {VotingProcess} from "./VotingProcess.sol";
 import {Semaphore} from "./Semaphore.sol";
-import "./facets/Election.sol";
-import "./facets/votingApp/ElectionStorage.sol";
-import "./facets/ElectionFactory.sol";
 
 contract OneVote {
     mapping(uint => VotingProcess) public votingProcesses;
