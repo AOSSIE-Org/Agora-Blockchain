@@ -1,96 +1,41 @@
-//SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.0;
+//SPDX-License-Identifier: MIT
+pragma solidity ^0.8.4;
+
 // pragma experimental ABIEncoderV2;
 
-import { Semaphore } from './Semaphore.sol';
-
-contract VotingProcess{
+contract VotingProcess {
     uint public id;
     string public name;
     string public description;
-    uint startDate;
-    uint endDate;
-    
-    bytes[] public proposals;
-
-    mapping (bytes => uint256) public votesPerProposal;
-
-    bytes winningProposal;
+    uint public startDate;
+    uint public endDate;
 
 
-    enum Status {
-        active,
-        pending,
-        closed
+    uint canidateCounter;
+    bytes32[] public candidates;
+    mapping(uint256 =>bytes32) public candidateIdToCandidate;
+    mapping(bytes32 => uint256) public votesPerCandidate;
+
+    enum Status { Pending, Active, Closed }
+    Status public currentStatus;
+
+    address private owner;
+
+    event CandidateAdded(bytes32 candidate);
+    event Voted(bytes32 candidate);
+    event ElectionStatusChanged(Status newStatus);
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not authorized");
+        _;
     }
 
-    struct VoteProposal {
-        bytes proposal;
-        uint256 numberOfVotes;
+    modifier inStatus(Status requiredStatus) {
+        currentStatus=getStatus();
+        require(currentStatus == requiredStatus, "Invalid election status");
+        _;
     }
 
-    function getStatus() public view returns (Status) {
-
-        if(block.timestamp < startDate) {
-            return Status.pending;
-        } 
-        
-        else if(block.timestamp < endDate) {
-            return Status.active;
-        } 
-        
-        else {
-            return Status.closed;
-        }
-    }
-
-    function getProposals() view public returns (bytes[] memory){
-        return proposals;
-    }
-
-    function getVotesPerProposal() view public returns (VoteProposal[] memory){
-        uint256 i = 0;
-        VoteProposal[] memory returnVotes = new VoteProposal[](proposals.length);
-
-        for(i; i < proposals.length; i++){
-            returnVotes[i] = VoteProposal({
-                proposal: proposals[i],
-                numberOfVotes: votesPerProposal[proposals[i]]
-            });
-        }
-        return returnVotes;
-    }
-    function getWinningProposal() view public returns (VoteProposal memory){
-
-    require(getStatus() == Status.closed, "Results are declared only after the election ends");
-
-        uint256 i = 0;
-        VoteProposal memory winningVote;
-        winningVote.numberOfVotes = 0;
-
-        for(i; i < proposals.length; i++){
-            if(votesPerProposal[proposals[i]] > winningVote.numberOfVotes){
-                winningVote.proposal = proposals[i];
-                winningVote.numberOfVotes = votesPerProposal[proposals[i]];
-            }
-        }
-        return winningVote;
-    }
-    function getStartDate() view public returns (uint){
-        return startDate;
-    }
-    function getEndDate() view public returns (uint){
-        return endDate;
-    }
-
-    function vote(bytes memory signal) public {
-        require(getStatus() == Status.active, "Election needs to be active to vote");
-        votesPerProposal[signal] += 1;
-    }
-    function addProposal(bytes memory _proposal) public {
-        require(getStatus() == Status.pending, "Election needs to be pending to add proposals");
-        proposals.push(_proposal);
-    }
 
     constructor(
         uint _id,
@@ -98,11 +43,71 @@ contract VotingProcess{
         string memory _description,
         uint _startDate,
         uint _endDate
-    ) public{
+    ) {
+        require(_endDate > _startDate, "End date must be after start date");
+        owner = msg.sender;
         id = _id;
         name = _name;
         description = _description;
         startDate = _startDate;
         endDate = _endDate;
+        currentStatus = Status.Pending;
+        canidateCounter=0;
+    }
+
+    function getStatus() public view returns (Status) {
+        if (block.timestamp < startDate) {
+            return Status.Pending;
+        } else if (block.timestamp >= startDate && block.timestamp < endDate) {
+            return Status.Active;
+        } else {
+            return Status.Closed;
+        }
+    }
+
+    function getCandidates() public view returns (bytes32[] memory) {
+        return candidates;
+    }
+
+    function getVotesPerCandidate() public view returns (bytes32[] memory, uint256[] memory) {
+        uint256[] memory votes = new uint256[](candidates.length);
+        for (uint256 i = 0; i < candidates.length; i++) {
+            votes[i] = votesPerCandidate[candidates[i]];
+        }
+        return (candidates, votes);
+    }
+
+    function getWinningCandidate() public inStatus(Status.Closed) returns (bytes32 candidate, uint256 votes) {
+        uint256 highestVoteCount = 0;
+        bytes32 winningCandidate;
+        for (uint256 i = 0; i < candidates.length; i++) {
+            if (votesPerCandidate[candidates[i]] > highestVoteCount) {
+                winningCandidate = candidates[i];
+                highestVoteCount = votesPerCandidate[candidates[i]];
+            }
+        }
+        return (winningCandidate, highestVoteCount);
+    }
+
+    function getStartDate() public view returns (uint) {
+        return startDate;
+    }
+
+    function getEndDate() public view returns (uint) {
+        return endDate;
+    }
+
+    function vote(uint256 candidateId) public inStatus(Status.Active) {
+        bytes32 candidate = candidateIdToCandidate[candidateId];
+        require(votesPerCandidate[candidate] < type(uint256).max, "Vote count overflow");
+        votesPerCandidate[candidate] += 1;
+        emit Voted(candidate);
+    }
+
+    function addCandidate(bytes32 candidate) public onlyOwner inStatus(Status.Pending) {
+        candidates.push(candidate);
+        candidateIdToCandidate[canidateCounter]=candidate;
+        canidateCounter++;
+        emit CandidateAdded(candidate);
     }
 }

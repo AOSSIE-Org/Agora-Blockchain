@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@semaphore-protocol/contracts": "^3.15.2",
+    "@semaphore-protocol/hardhat": "^3.15.2",
     "@truffle/hdwallet-provider": "^1.4.1",
     "dotenv": "^10.0.0",
     "ethers": "^5.7.0",

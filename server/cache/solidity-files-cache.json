@@ -6,8 +6,9 @@
       "contentHash": "af15bfcd430491a3798ccb3620024d02",
       "sourceName": "contracts/Diamond.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -44,8 +45,9 @@
       "contentHash": "7e343fbeac027ddc8ff478a5a93ad48b",
       "sourceName": "contracts/libraries/LibDiamond.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -84,8 +86,9 @@
       "contentHash": "707e073af69d132ebdc36f0b766ed4d2",
       "sourceName": "contracts/interfaces/IDiamondCut.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -119,8 +122,9 @@
       "contentHash": "a6ccdd11a87f9633b7bb73f5340fe897",
       "sourceName": "contracts/facets/Election.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -157,8 +161,9 @@
       "contentHash": "eede87e6ebd5041d2699296d5756582b",
       "sourceName": "contracts/facets/votingApp/ballot/Ballot.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -195,8 +200,9 @@
       "contentHash": "fc2dde1d9d1504dfea2a3eb864991a45",
       "sourceName": "contracts/facets/votingApp/resultCalculator/ResultCalculator.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -232,8 +238,9 @@
       "contentHash": "a721ceb583ffa12ad799996378bcf846",
       "sourceName": "contracts/upgradeInitializers/DiamondInit.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -273,8 +280,9 @@
       "contentHash": "a471cd6a18e337530aa0fb37a1dd2294",
       "sourceName": "contracts/interfaces/IDiamondLoupe.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -308,8 +316,9 @@
       "contentHash": "65e379207bc221335d0eedfe7b077af6",
       "sourceName": "contracts/interfaces/IERC173.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -343,8 +352,9 @@
       "contentHash": "f8f9ee2c76e1678bfead7a3fad131934",
       "sourceName": "contracts/interfaces/IERC165.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -378,8 +388,9 @@
       "contentHash": "ea3b2e64013d792244d705627a7d1aa9",
       "sourceName": "contracts/facets/DiamondLoupeFacet.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -412,13 +423,14 @@
         "DiamondLoupeFacet"
       ]
     },
-    "/workspaces/Agora-Blockchain/server/contracts/facets/Test2Facet.sol": {
+    "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/resultCalculator/SchulzeResult.sol": {
       "lastModificationDate": 1707757500211,
-      "contentHash": "af7087feac382e485d3540a06597bf19",
-      "sourceName": "contracts/facets/Test2Facet.sol",
+      "contentHash": "809f61872cda2ed12fe13538feaf1377",
+      "sourceName": "contracts/facets/votingApp/resultCalculator/SchulzeResult.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -440,13 +452,254 @@
         }
       },
       "imports": [
+        "./ResultCalculator.sol",
+        "../ballot/Ballot.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "SchulzeResult"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/resultCalculator/Oklahoma.sol": {
+      "lastModificationDate": 1707757500211,
+      "contentHash": "5bda4aa0d7f5beed19154c70a73d22ad",
+      "sourceName": "contracts/facets/votingApp/resultCalculator/Oklahoma.sol",
+      "solcConfig": {
+        "version": "0.8.23",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ResultCalculator.sol",
+        "../ballot/Ballot.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "Oklahoma"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/contracts/facets/GetResultCalculator.sol": {
+      "lastModificationDate": 1707757500211,
+      "contentHash": "2845e9103a079ef72e3f8957e4ffd668",
+      "sourceName": "contracts/facets/GetResultCalculator.sol",
+      "solcConfig": {
+        "version": "0.8.23",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./votingApp/resultCalculator/ResultCalculator.sol",
+        "./votingApp/resultCalculator/GeneralResults.sol",
+        "./votingApp/resultCalculator/Oklahoma.sol",
+        "./votingApp/resultCalculator/BordaResult.sol",
+        "./votingApp/resultCalculator/SchulzeResult.sol",
+        "./votingApp/resultCalculator/IRVResult.sol",
+        "./votingApp/resultCalculator/KemenyYoungResult.sol",
         "../libraries/LibDiamond.sol"
       ],
       "versionPragmas": [
-        "^0.8.0"
+        ">=0.8.0"
       ],
       "artifacts": [
-        "Test2Facet"
+        "GetResultCalculator"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/resultCalculator/GeneralResults.sol": {
+      "lastModificationDate": 1707757500211,
+      "contentHash": "93acdc55e47a88d8c3e7b0a65645e06d",
+      "sourceName": "contracts/facets/votingApp/resultCalculator/GeneralResults.sol",
+      "solcConfig": {
+        "version": "0.8.23",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ResultCalculator.sol",
+        "../ballot/Ballot.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "GeneralResults"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/resultCalculator/BordaResult.sol": {
+      "lastModificationDate": 1707757500211,
+      "contentHash": "2c2bec9b0624e048fc4a78a0dca6c00f",
+      "sourceName": "contracts/facets/votingApp/resultCalculator/BordaResult.sol",
+      "solcConfig": {
+        "version": "0.8.23",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ResultCalculator.sol",
+        "../ballot/Ballot.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "BordaResult"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/resultCalculator/IRVResult.sol": {
+      "lastModificationDate": 1707757500211,
+      "contentHash": "98ade5500cd4231b46144cdf22e17c98",
+      "sourceName": "contracts/facets/votingApp/resultCalculator/IRVResult.sol",
+      "solcConfig": {
+        "version": "0.8.23",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ResultCalculator.sol",
+        "../ballot/Ballot.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "IRVResult"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/resultCalculator/KemenyYoungResult.sol": {
+      "lastModificationDate": 1707757500211,
+      "contentHash": "97229f94d37b6bb892e4281d6767ab1d",
+      "sourceName": "contracts/facets/votingApp/resultCalculator/KemenyYoungResult.sol",
+      "solcConfig": {
+        "version": "0.8.23",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ResultCalculator.sol",
+        "../ballot/Ballot.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "KemenyYoungResult"
       ]
     },
     "/workspaces/Agora-Blockchain/server/contracts/facets/Test1Facet.sol": {
@@ -454,8 +707,9 @@
       "contentHash": "f0fc7eff55b44283c31bba93887737c0",
       "sourceName": "contracts/facets/Test1Facet.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -496,8 +750,9 @@
       "contentHash": "8f6ebddff996182b098e37c3e0e99c1f",
       "sourceName": "contracts/facets/GetBallot.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -535,57 +790,14 @@
         "GetBallot"
       ]
     },
-    "/workspaces/Agora-Blockchain/server/contracts/facets/GetResultCalculator.sol": {
-      "lastModificationDate": 1707757500211,
-      "contentHash": "2845e9103a079ef72e3f8957e4ffd668",
-      "sourceName": "contracts/facets/GetResultCalculator.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./votingApp/resultCalculator/ResultCalculator.sol",
-        "./votingApp/resultCalculator/GeneralResults.sol",
-        "./votingApp/resultCalculator/Oklahoma.sol",
-        "./votingApp/resultCalculator/BordaResult.sol",
-        "./votingApp/resultCalculator/SchulzeResult.sol",
-        "./votingApp/resultCalculator/IRVResult.sol",
-        "./votingApp/resultCalculator/KemenyYoungResult.sol",
-        "../libraries/LibDiamond.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "GetResultCalculator"
-      ]
-    },
     "/workspaces/Agora-Blockchain/server/contracts/facets/ElectionFactory.sol": {
       "lastModificationDate": 1707757500211,
       "contentHash": "2be4495c7f1f0f2e2f5bdfe63fcf7b60",
       "sourceName": "contracts/facets/ElectionFactory.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -626,8 +838,9 @@
       "contentHash": "f2facd34d6151ea196f900ae41ce9df2",
       "sourceName": "contracts/facets/votingApp/ballot/GeneralBallot.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -664,8 +877,9 @@
       "contentHash": "befca542fa0650cb955a03d5c39ca976",
       "sourceName": "contracts/facets/votingApp/ballot/PreferenceBallot.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -702,8 +916,9 @@
       "contentHash": "c970d93482a7e3a0445964f6b7922731",
       "sourceName": "contracts/facets/votingApp/ballot/BordaBallot.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -740,8 +955,9 @@
       "contentHash": "29f3ac0915238f6cb6fa4e52d622656c",
       "sourceName": "contracts/facets/votingApp/ballot/Schulze.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -778,8 +994,9 @@
       "contentHash": "12265b06a4128c76d3569e1dc1920002",
       "sourceName": "contracts/facets/votingApp/ballot/InstantRunOff.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -816,8 +1033,9 @@
       "contentHash": "63166d1409163841708979358efad603",
       "sourceName": "contracts/facets/votingApp/ballot/KemenyYoung.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -849,13 +1067,14 @@
         "KemenyYoung"
       ]
     },
-    "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/resultCalculator/GeneralResults.sol": {
+    "/workspaces/Agora-Blockchain/server/contracts/facets/ElectionOrganizer.sol": {
       "lastModificationDate": 1707757500211,
-      "contentHash": "93acdc55e47a88d8c3e7b0a65645e06d",
-      "sourceName": "contracts/facets/votingApp/resultCalculator/GeneralResults.sol",
+      "contentHash": "7dfc6c855dd5c9ade4754cdb041c6975",
+      "sourceName": "contracts/facets/ElectionOrganizer.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -877,321 +1096,16 @@
         }
       },
       "imports": [
-        "./ResultCalculator.sol",
-        "../ballot/Ballot.sol"
+        "./Election.sol",
+        "./votingApp/ElectionStorage.sol",
+        "../libraries/LibDiamond.sol",
+        "./ElectionFactory.sol"
       ],
       "versionPragmas": [
         ">=0.8.0"
       ],
       "artifacts": [
-        "GeneralResults"
-      ]
-    },
-    "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/resultCalculator/Oklahoma.sol": {
-      "lastModificationDate": 1707757500211,
-      "contentHash": "5bda4aa0d7f5beed19154c70a73d22ad",
-      "sourceName": "contracts/facets/votingApp/resultCalculator/Oklahoma.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./ResultCalculator.sol",
-        "../ballot/Ballot.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "Oklahoma"
-      ]
-    },
-    "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/resultCalculator/BordaResult.sol": {
-      "lastModificationDate": 1707757500211,
-      "contentHash": "2c2bec9b0624e048fc4a78a0dca6c00f",
-      "sourceName": "contracts/facets/votingApp/resultCalculator/BordaResult.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./ResultCalculator.sol",
-        "../ballot/Ballot.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "BordaResult"
-      ]
-    },
-    "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/resultCalculator/SchulzeResult.sol": {
-      "lastModificationDate": 1707757500211,
-      "contentHash": "809f61872cda2ed12fe13538feaf1377",
-      "sourceName": "contracts/facets/votingApp/resultCalculator/SchulzeResult.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./ResultCalculator.sol",
-        "../ballot/Ballot.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "SchulzeResult"
-      ]
-    },
-    "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/resultCalculator/IRVResult.sol": {
-      "lastModificationDate": 1707757500211,
-      "contentHash": "98ade5500cd4231b46144cdf22e17c98",
-      "sourceName": "contracts/facets/votingApp/resultCalculator/IRVResult.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./ResultCalculator.sol",
-        "../ballot/Ballot.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "IRVResult"
-      ]
-    },
-    "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/resultCalculator/KemenyYoungResult.sol": {
-      "lastModificationDate": 1707757500211,
-      "contentHash": "97229f94d37b6bb892e4281d6767ab1d",
-      "sourceName": "contracts/facets/votingApp/resultCalculator/KemenyYoungResult.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./ResultCalculator.sol",
-        "../ballot/Ballot.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "KemenyYoungResult"
-      ]
-    },
-    "/workspaces/Agora-Blockchain/server/contracts/OneVote.sol": {
-      "lastModificationDate": 1707758099399,
-      "contentHash": "01a52a415f5dec9b5559e6f4abd714a1",
-      "sourceName": "contracts/OneVote.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./VotingProcess.sol",
-        "./Semaphore.sol",
-        "./facets/Election.sol",
-        "./facets/votingApp/ElectionStorage.sol",
-        "./facets/ElectionFactory.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "OneVote"
-      ]
-    },
-    "/workspaces/Agora-Blockchain/server/contracts/VotingProcess.sol": {
-      "lastModificationDate": 1707757500211,
-      "contentHash": "cc12eb2ce2ff8d2ec0bf8b38557f4b27",
-      "sourceName": "contracts/VotingProcess.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./Semaphore.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "VotingProcess"
-      ]
-    },
-    "/workspaces/Agora-Blockchain/server/contracts/Semaphore.sol": {
-      "lastModificationDate": 1707757500211,
-      "contentHash": "b415137d892d75b22832f4e6c5245b91",
-      "sourceName": "contracts/Semaphore.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./verifier.sol",
-        "./IncrementalMerkleTree.sol",
-        "./Ownable.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Semaphore"
+        "ElectionOrganizer"
       ]
     },
     "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/ElectionStorage.sol": {
@@ -1199,8 +1113,9 @@
       "contentHash": "662b3418698e0d3c9ca8e2357eede8d2",
       "sourceName": "contracts/facets/votingApp/ElectionStorage.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -1231,156 +1146,14 @@
         "ElectionStorage"
       ]
     },
-    "/workspaces/Agora-Blockchain/server/contracts/verifier.sol": {
-      "lastModificationDate": 1707757500211,
-      "contentHash": "81fbcbf595239e2aa155bfb907311c73",
-      "sourceName": "contracts/verifier.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Pairing",
-        "Verifier"
-      ]
-    },
-    "/workspaces/Agora-Blockchain/server/contracts/IncrementalMerkleTree.sol": {
-      "lastModificationDate": 1707757500211,
-      "contentHash": "10e87c9d07a2ecaa1ecada990dbe6e13",
-      "sourceName": "contracts/IncrementalMerkleTree.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./MiMC.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IncrementalMerkleTree"
-      ]
-    },
-    "/workspaces/Agora-Blockchain/server/contracts/Ownable.sol": {
-      "lastModificationDate": 1707757500211,
-      "contentHash": "7e6ec30dae049d6a6f88e47367196ba1",
-      "sourceName": "contracts/Ownable.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Ownable"
-      ]
-    },
-    "/workspaces/Agora-Blockchain/server/contracts/MiMC.sol": {
-      "lastModificationDate": 1707757500211,
-      "contentHash": "dff4f7f14e4586d5b06803b7704380ba",
-      "sourceName": "contracts/MiMC.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "MiMC"
-      ]
-    },
     "/workspaces/Agora-Blockchain/server/contracts/facets/Voter.sol": {
       "lastModificationDate": 1707757500211,
       "contentHash": "e0810448fb75293da08c32864dea4fcb",
       "sourceName": "contracts/facets/Voter.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -1416,8 +1189,9 @@
       "contentHash": "e74117acedbfc32bd9a67cc9c4032fc8",
       "sourceName": "contracts/facets/Authentication.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -1449,53 +1223,14 @@
         "Authentication"
       ]
     },
-    "/workspaces/Agora-Blockchain/server/contracts/facets/ElectionOrganizer.sol": {
-      "lastModificationDate": 1707757500211,
-      "contentHash": "7dfc6c855dd5c9ade4754cdb041c6975",
-      "sourceName": "contracts/facets/ElectionOrganizer.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./Election.sol",
-        "./votingApp/ElectionStorage.sol",
-        "../libraries/LibDiamond.sol",
-        "./ElectionFactory.sol"
-      ],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "ElectionOrganizer"
-      ]
-    },
     "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/ballot/ScoreBallot.sol": {
       "lastModificationDate": 1707757500211,
       "contentHash": "cc97ebbb92b192a716a425ff648b48bc",
       "sourceName": "contracts/facets/votingApp/ballot/ScoreBallot.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -1526,13 +1261,14 @@
         "ScoreBallot"
       ]
     },
-    "/workspaces/Agora-Blockchain/server/contracts/SemaphoreClient.sol": {
+    "/workspaces/Agora-Blockchain/server/contracts/facets/Test2Facet.sol": {
       "lastModificationDate": 1707757500211,
-      "contentHash": "52f2cde6fd5af1507a31d30287fdb20e",
-      "sourceName": "contracts/SemaphoreClient.sol",
+      "contentHash": "af7087feac382e485d3540a06597bf19",
+      "sourceName": "contracts/facets/Test2Facet.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -1554,13 +1290,13 @@
         }
       },
       "imports": [
-        "./Semaphore.sol"
+        "../libraries/LibDiamond.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "SemaphoreClient"
+        "Test2Facet"
       ]
     },
     "/workspaces/Agora-Blockchain/server/contracts/facets/OwnershipFacet.sol": {
@@ -1568,8 +1304,9 @@
       "contentHash": "3ecfa87738e59d567e6c44c1708b9a7d",
       "sourceName": "contracts/facets/OwnershipFacet.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -1606,8 +1343,9 @@
       "contentHash": "e4ef88a55e3f841c72e68872d39d12a5",
       "sourceName": "contracts/facets/DiamondCutFacet.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -1639,13 +1377,233 @@
         "DiamondCutFacet"
       ]
     },
+    "/workspaces/Agora-Blockchain/server/node_modules/@openzeppelin/contracts/utils/Context.sol": {
+      "lastModificationDate": 1708194419652,
+      "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
+      "sourceName": "@openzeppelin/contracts/utils/Context.sol",
+      "solcConfig": {
+        "version": "0.8.23",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Context"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/node_modules/@zk-kit/incremental-merkle-tree.sol/IncrementalBinaryTree.sol": {
+      "lastModificationDate": 1708194418964,
+      "contentHash": "d3f0b432245395d5c823c923346d3f20",
+      "sourceName": "@zk-kit/incremental-merkle-tree.sol/IncrementalBinaryTree.sol",
+      "solcConfig": {
+        "version": "0.8.23",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Hashes.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "IncrementalBinaryTree"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/node_modules/@zk-kit/incremental-merkle-tree.sol/Hashes.sol": {
+      "lastModificationDate": 1708194418964,
+      "contentHash": "5608c306e4611be06d045d9399f44a58",
+      "sourceName": "@zk-kit/incremental-merkle-tree.sol/Hashes.sol",
+      "solcConfig": {
+        "version": "0.8.23",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "PoseidonT3",
+        "PoseidonT6"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/node_modules/@semaphore-protocol/contracts/base/Pairing.sol": {
+      "lastModificationDate": 1708194419296,
+      "contentHash": "bd50b6f2d69669fd8b79500df617c7e6",
+      "sourceName": "@semaphore-protocol/contracts/base/Pairing.sol",
+      "solcConfig": {
+        "version": "0.8.23",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "Pairing"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/base/Pairing.sol": {
+      "lastModificationDate": 1708195099720,
+      "contentHash": "d1e4a6f0652882cf680f8656e609a13c",
+      "sourceName": "contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/base/Pairing.sol",
+      "solcConfig": {
+        "version": "0.8.23",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@semaphore-protocol/contracts/base/Pairing.sol"
+      ],
+      "versionPragmas": [
+        ">0.0.0"
+      ],
+      "artifacts": []
+    },
+    "/workspaces/Agora-Blockchain/server/contracts/VotingProcess.sol": {
+      "lastModificationDate": 1708195090220,
+      "contentHash": "9d9f6651128d1fbf2a8148acf5ff403b",
+      "sourceName": "contracts/VotingProcess.sol",
+      "solcConfig": {
+        "version": "0.8.23",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "VotingProcess"
+      ]
+    },
     "/workspaces/Agora-Blockchain/server/contracts/facets/votingApp/BrightID.sol": {
       "lastModificationDate": 1707757500211,
       "contentHash": "1240cba663283f0b80faa58c9dc86d9c",
       "sourceName": "contracts/facets/votingApp/BrightID.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -1679,8 +1637,9 @@
       "contentHash": "c6aec7ec5b933461ec4302b4f7fdc380",
       "sourceName": "contracts/facets/votingApp/Migrations.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.23",
         "settings": {
+          "evmVersion": "paris",
           "optimizer": {
             "enabled": false,
             "runs": 200
@@ -1709,12 +1668,50 @@
         "Migrations"
       ]
     },
-    "/workspaces/Agora-Blockchain/server/contracts/SnarkConstants.sol": {
-      "lastModificationDate": 1707757500211,
-      "contentHash": "763785b4796a1cc38976a361a0830a31",
-      "sourceName": "contracts/SnarkConstants.sol",
+    "/workspaces/Agora-Blockchain/server/contracts/OneVote.sol": {
+      "lastModificationDate": 1708194461528,
+      "contentHash": "1362ab689fcb022d468a60d0d2f16190",
+      "sourceName": "contracts/OneVote.sol",
       "solcConfig": {
-        "version": "0.8.10",
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./VotingProcess.sol",
+        "@semaphore-protocol/contracts/interfaces/ISemaphore.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "OneVote"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/node_modules/@semaphore-protocol/contracts/interfaces/ISemaphore.sol": {
+      "lastModificationDate": 1708194419368,
+      "contentHash": "3248c49905e3372089ce0a4e9c1834c7",
+      "sourceName": "@semaphore-protocol/contracts/interfaces/ISemaphore.sol",
+      "solcConfig": {
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -1738,11 +1735,268 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.0"
+        "0.8.4"
       ],
       "artifacts": [
-        "SnarkConstants"
+        "ISemaphore"
       ]
+    },
+    "/workspaces/Agora-Blockchain/server/node_modules/@semaphore-protocol/contracts/Semaphore.sol": {
+      "lastModificationDate": 1708194419292,
+      "contentHash": "58b6c06aa17f508972c768ace8ac413d",
+      "sourceName": "@semaphore-protocol/contracts/Semaphore.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./interfaces/ISemaphore.sol",
+        "./interfaces/ISemaphoreVerifier.sol",
+        "./base/SemaphoreGroups.sol"
+      ],
+      "versionPragmas": [
+        "0.8.4"
+      ],
+      "artifacts": [
+        "Semaphore"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/node_modules/@semaphore-protocol/contracts/interfaces/ISemaphoreVerifier.sol": {
+      "lastModificationDate": 1708194419400,
+      "contentHash": "73a35727a985e0ac5d42f6ecc36b1d87",
+      "sourceName": "@semaphore-protocol/contracts/interfaces/ISemaphoreVerifier.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../base/Pairing.sol"
+      ],
+      "versionPragmas": [
+        "0.8.4"
+      ],
+      "artifacts": [
+        "ISemaphoreVerifier"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/node_modules/@semaphore-protocol/contracts/base/SemaphoreGroups.sol": {
+      "lastModificationDate": 1708194419300,
+      "contentHash": "687d10202358011f6ce57353c4a56108",
+      "sourceName": "@semaphore-protocol/contracts/base/SemaphoreGroups.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/ISemaphoreGroups.sol",
+        "@zk-kit/incremental-merkle-tree.sol/IncrementalBinaryTree.sol",
+        "@openzeppelin/contracts/utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "0.8.4"
+      ],
+      "artifacts": [
+        "SemaphoreGroups"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/node_modules/@semaphore-protocol/contracts/interfaces/ISemaphoreGroups.sol": {
+      "lastModificationDate": 1708194419392,
+      "contentHash": "f628b32b4135df8b061d2aa3829f45af",
+      "sourceName": "@semaphore-protocol/contracts/interfaces/ISemaphoreGroups.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.4"
+      ],
+      "artifacts": [
+        "ISemaphoreGroups"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/node_modules/@semaphore-protocol/contracts/base/SemaphoreVerifier.sol": {
+      "lastModificationDate": 1708194419328,
+      "contentHash": "399adcd5f98d0f330927e3a938df8ae5",
+      "sourceName": "@semaphore-protocol/contracts/base/SemaphoreVerifier.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/ISemaphoreVerifier.sol"
+      ],
+      "versionPragmas": [
+        "0.8.4"
+      ],
+      "artifacts": [
+        "SemaphoreVerifier"
+      ]
+    },
+    "/workspaces/Agora-Blockchain/server/contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/base/SemaphoreVerifier.sol": {
+      "lastModificationDate": 1708195099724,
+      "contentHash": "a10e1fdad7ef19ca8e8e427a85d0ff7d",
+      "sourceName": "contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/base/SemaphoreVerifier.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@semaphore-protocol/contracts/base/SemaphoreVerifier.sol"
+      ],
+      "versionPragmas": [
+        ">0.0.0"
+      ],
+      "artifacts": []
+    },
+    "/workspaces/Agora-Blockchain/server/contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/Semaphore.sol": {
+      "lastModificationDate": 1708195099724,
+      "contentHash": "628edd6f0b4baacf2ec370c8ca211acd",
+      "sourceName": "contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/Semaphore.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@semaphore-protocol/contracts/Semaphore.sol"
+      ],
+      "versionPragmas": [
+        ">0.0.0"
+      ],
+      "artifacts": []
     }
   }
 }
