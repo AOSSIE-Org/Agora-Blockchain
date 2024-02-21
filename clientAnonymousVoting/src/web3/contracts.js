@@ -1,113 +1,88 @@
 import * as ethers from 'ethers'
 import { Contract } from 'ethers';
-// import semaphoreAbi from '@/../../abi/Semaphore.json';
-// import semaphoreNetworks from '@/../../addresses/Semaphore.json';
-// import oneVoteAbi from '@/../../abi/OneVote.json';
-// import oneVoteNetworks from '@/../../addresses/OneVote.json';
-// import votingProcessAbi from '@/../../abi/VotingProcess.json';
+import { oneVoteAddress, } from "../constants/contractAddresses";
+import oneVoteAbi from "../abis/contracts/OneVote.sol/OneVote.json";
 
-const semaphoreAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
-const oneVoteAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-
-const deployVotingProcess = async (name, description,startDate,endDate) => {
-    console.log("One Vote testnet address: ", oneVoteAddress);
+const getProviderAndSigner = () => {
     const { ethereum } = window;
+    if (!ethereum) {
+        console.error("Ethereum object not found, you need to install MetaMask!");
+        return;
+    }
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
+    return { provider, signer };
+};
 
-    const args = [
-        name, description,startDate,endDate
-    ];
-
+const createVotingProcess = async (name, description, startDate, endDate) => {
+    const { signer } = getProviderAndSigner();
     const oneVoteContract = new Contract(oneVoteAddress, oneVoteAbi.abi, signer);
-    const result = await oneVoteContract.createVotingProcess(...args)
-    await result.wait()
-    
-    console.log("Result of create voting process: ", result);
-    return result;
-}
+    const tx = await oneVoteContract.createVotingProcess(name, description, startDate, endDate);
+    await tx.wait();
+    console.log("Voting process created:", tx);
+};
 
-const getVotingProcesses = async () => {
-    const { ethereum } = window;
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
+const addVoter = async (identityCommitment,debug=false) => {
+    const { signer } = getProviderAndSigner();
     const oneVoteContract = new Contract(oneVoteAddress, oneVoteAbi.abi, signer);
-    const votingProcesses = await oneVoteContract.getProcesses();
-    console.log("Voting processes: ", votingProcesses);
-    return votingProcesses;
-}
+    const tx = await oneVoteContract.addVoter(identityCommitment);
+    const recipt=await tx.wait();
+    console.log("Voter added:", tx);
+    if(debug){
+        console.log(recipt);
+    }
+};
 
-const getAuthStatus = async (identityCommitment) => {
-    const { ethereum } = window;
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
+// TODO: Should call the backend.
+const vote = async (vote, nullifierHash, pollId, merkleTreeRoot, proof) => {
+    const { signer } = getProviderAndSigner();
     const oneVoteContract = new Contract(oneVoteAddress, oneVoteAbi.abi, signer);
-    console.log("Identity commitment: ", identityCommitment);
-    const authStatus = await oneVoteContract.getAuthStatus(identityCommitment);
-    console.log("Voting processes: ", authStatus);
-    return authStatus;
-}
+    const tx = await oneVoteContract.vote(vote, nullifierHash, pollId, merkleTreeRoot, proof);
+    await tx.wait();
+    console.log("Vote cast:", tx);
+};
 
-const getVotingProcess = async (id) => {
-    const { ethereum } = window;
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
-    const oneVoteContract = new Contract(oneVoteAddress, oneVoteAbi.abi, signer);
-    const votingProcess = await oneVoteContract.getProcess(id);
-    
-    console.log("Voting process: ", votingProcess);
-    return votingProcess;
-}
 
-const getVotingProcessContract = async (id) => {
-    const { ethereum } = window;
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
+const getUserAuthStatus = async (identityCommitment) => {
+    const { provider } = getProviderAndSigner();
+    const oneVoteContract = new Contract(oneVoteAddress, oneVoteAbi.abi, provider);
+    const status = await oneVoteContract.getUserAuthStatus(identityCommitment);
+    console.log("User authorization status:", status);
+    return status;
+};
+
+
+const addCandidate = async (processId, candidate) => {
+    const { signer } = getProviderAndSigner();
     const oneVoteContract = new Contract(oneVoteAddress, oneVoteAbi.abi, signer);
-    const votingProcessAddress = await oneVoteContract.votingProcesses(id);
-    const votingProcessContract = new Contract(votingProcessAddress, votingProcessAbi.abi, signer);
-    console.log("Voting process contract: ", votingProcessContract);
-    return votingProcessContract;
-}
+    const tx = await oneVoteContract.addCandidate(processId, candidate);
+    await tx.wait();
+    console.log("Candidate added:", tx);
+};
+
 
 const getOneVoteContract = async () => {
-    const { ethereum } = window;
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
+    const {provider,signer} = getProviderAndSigner();
     const oneVoteContract = new ethers.Contract(oneVoteAddress, oneVoteAbi.abi, signer);
-
     return oneVoteContract;
 }
 
-const getSignalsForNullifier = async (id) => {
-    const { ethereum } = window;
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
-    const oneVoteContract = new Contract(oneVoteAddress, oneVoteAbi.abi, signer);
-    const votingProcessAddress = await oneVoteContract.votingProcesses(id);
-    const votingProcessContract = new Contract(votingProcessAddress, votingProcessAbi.abi, signer);
-    const result = await votingProcessContract.getVotesPerProposal();
-    console.log("Votes per proposal: ", result);
-    return result;
-}
+const getVotingProcessContract = async (processId) => {
+    const { provider } = getProviderAndSigner();
+    const oneVoteContract = new Contract(oneVoteAddress, oneVoteAbi.abi, provider);
+    const address = await oneVoteContract.votingProcesses(processId);
+    const votingProcessContract = new Contract(address, votingProcessAbi.abi, provider);
+    console.log("Voting Process Contract:", votingProcessContract);
+    return votingProcessContract;
+};
 
-const addProposal = async (id,proposal) => {
-    const { ethereum } = window;
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
-    const oneVoteContract = new Contract(oneVoteAddress, oneVoteAbi.abi, signer);
-    const result =oneVoteContract.addProposal(id,proposal);
-    return result;
-}
 
 
 export {
-    addProposal,
-    deployVotingProcess,
-    getVotingProcesses,
-    getVotingProcess,
+    createVotingProcess,
+    addVoter,
+    getUserAuthStatus,
+    vote,
+    addCandidate,
     getVotingProcessContract,
-    getOneVoteContract,
-    getSignalsForNullifier,
-    getAuthStatus
 }
