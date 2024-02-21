@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Flex, Modal, Button, Card } from "rimble-ui";
 import DatePicker from "react-datepicker";
-import { ethers } from "ethers";
 import "react-datepicker/dist/react-datepicker.css";
-import { toast } from "react-toastify";
-import { successtoast, dangertoast } from "../utilities/Toasts";
+import { dangertoast } from "../utilities/Toasts";
 import { createVotingProcess } from "../../web3/contracts";
 import "../styles/Modal.scss"
 

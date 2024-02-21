@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { Modal, Button, Card } from "rimble-ui";
-import { useEffect } from 'react';
 
 import '../styles/Modal.scss';
-import ballot from '../../build/ballot/Ballot.sol/Ballot.json'
-import { ethers } from "ethers";
 
 export function Candidate({ name, id, about, voteCount, imageUrl, modalEnabled = true }) {
     const [isOpen, setIsOpen] = useState(false);
     const [votes, setVotes] = useState(0);
-    // ballotAddress = "0xAea9A82DF040538a0b84D28384A0eC3004b9892F"
+
     const closeModal = e => {
         e.preventDefault();
         setIsOpen(false);

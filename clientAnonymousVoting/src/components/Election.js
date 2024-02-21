@@ -147,6 +147,7 @@ function Election() {
 	useEffect(() => {
 		fetchUserAddress();
 		fetchElectionDetails();
+		fetchAllCandidates();
 	}, [])
 
 
@@ -230,7 +231,7 @@ function Election() {
 							<OklahomaModal Candidate={Candidate} candidates={candidates} status={STATUS.ACTIVE} ballotAddress={ballotAddress} />
 						}
 						{ballotType === 1 &&
-							<VoteModal electionId={electionDetails.id ? parseInt(electionDetails.id._hex):0} status={STATUS.ACTIVE} ballotAddress={ballotAddress} />
+							<VoteModal electionAddress={electionAddress} candidates={candidates}/>
 						}
 					</div>
 				</div>
@@ -275,7 +276,6 @@ function Election() {
 										winnerDetails?.map((candidate) => (
 											candidate?.name !== ""
 											&&
-
 											<Candidate
 												name={candidate?.name}
 												id={supportVar + Number(candidate?._hex)}
@@ -343,22 +343,11 @@ function Election() {
 								<AddCandidateModal electionAddress={electionAddress} callback={fetchAllCandidates}/>
 							}
 						</div>
-
 						<br />
-
 						{
-
 							candidates?.map((candidate, index) => (
-								// <div style={{padding:"1rem", display:"flex" , justifyContent:"space-around"}}>
 								<Candidate name={ethers.utils.parseBytes32String(candidate)} id={index} voteCount={votesPerProposal == null ? 0 : votesPerProposal[index][1]._hex} imageUrl={AVATARS[candidate?.id % AVATARS?.length] || '/assets/avatar.png'} />
-								// {/* { */}
-								// 	// votesPerProposal == null ? <div>0</div> :
-								// 	// <div>votes:{parseInt(votesPerProposal[index][1]._hex)}</div>
-								// // }
-								// </div>
 							))
-
-
 						}
 					</div>
 				</div>
