@@ -77,6 +77,10 @@ const getVotingProcessContract = async (processId) => {
 };
 
 
+const getAllVotingProcesses = async () =>{
+    // TODO
+}
+
 
 export {
     createVotingProcess,
@@ -85,4 +89,5 @@ export {
     vote,
     addCandidate,
     getVotingProcessContract,
+    getAllVotingProcesses,
 }

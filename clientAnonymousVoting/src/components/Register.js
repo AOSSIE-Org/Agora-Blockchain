@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
 import { Identity } from "@semaphore-protocol/identity"
 import { ethers } from 'ethers';
-import { getOneVoteContract, getAuthStatus } from '../web3/contracts';
+import { addVoter, getUserAuthStatus } from '../web3/contracts';
 import "./styles/Auth.scss";
 
 
@@ -37,12 +37,11 @@ const Register = () => {
             if (address) {
                 const signature = await signer.signMessage(message);
                 const identity = new Identity(signature);
-                const oneVote = await getOneVoteContract();
+                setIdentityCommitment(identity.commitment);
                 console.log("Commitment: ", identityCommitment);
                 try {
                     setPending(true);
-                    const tx = await oneVote.insertIdentityAsClient(identity.commitment);
-                    const receipt = await tx.wait();
+                    await addVoter(identity.commitment,true);
                     setPending(false);
                     console.log(receipt);
                     if (receipt.status === 1) {
@@ -61,11 +60,11 @@ const Register = () => {
     const isRegistered = async () => {
         try {
             if (identityCommitment != null) {
-                const tx = await getAuthStatus(identityCommitment);
-                console.log(tx);
-                setRegistered(tx);
+                const status = await getUserAuthStatus(identityCommitment);
+                setRegistered(status);
+            }else{
+                setRegistered(false);
             }
-            // setRegistered(true);
         } catch (err) {
             console.log(err);
         }

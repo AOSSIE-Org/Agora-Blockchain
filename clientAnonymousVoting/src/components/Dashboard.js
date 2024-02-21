@@ -7,7 +7,7 @@ import { CreateElectionModal ,PolygonIDVerifier} from "./modals/";
 import { STATUS } from "./constants";
 import { Status, CardItem, ElectionRow } from "./utilities";
 
-import { getVotingProcesses } from '../web3/contracts';
+import { getAllVotingProcesses } from '../web3/contracts';
 
 import { useDispatch, useSelector } from 'react-redux'
 import { selectHasRegistered, selectTestState, setTestState } from '../store/home.slice';
@@ -89,7 +89,6 @@ const Dashboard = () => {
   const fetchElections = async () => {
     try {
       const { ethereum } = window;
-
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer =  provider.getSigner();
@@ -151,12 +150,9 @@ const Dashboard = () => {
       const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();    
       let tempStats = [0, 0, 0, 0];
-      let info = await getVotingProcesses();
+      let info = await getAllVotingProcesses();
       console.log('all elections ',info);
        info.map(async (it) => {
-      
-
-        
         console.log('current election ',it);
         let st = getStatus(parseInt(it.startDate._hex), parseInt(it.endDate));
         console.log('startdate',(it.startDate._hex),'enddate',(it.endDate));
@@ -199,6 +195,8 @@ const Dashboard = () => {
   const getTokens = () => {
     window.open("https://faucet.avax-test.network/", "_blank");
   };
+
+
   useEffect(() => {
     fetchContract();
     fetchElections();
@@ -206,11 +204,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchDetailedElection()
-    }, [])
+  }, []);
 
 
+  
   return (
-
     <div style={{ backgroundColor: "#f7f7f7", minHeight: "100%" }}>
       <ToastContainer style={{zIndex:"99999"}}/>
       <Navbar
