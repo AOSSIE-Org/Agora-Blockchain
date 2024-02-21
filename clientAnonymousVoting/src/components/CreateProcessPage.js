@@ -5,7 +5,7 @@ import styles from './CreateProcessPage.module.css';
 import {ethers} from 'ethers';
 
 //web3 imports
-import { deployVotingProcess, deployTestContract, getTestContract } from '../web3/contracts'
+import { createVotingProcess } from '../web3/contracts'
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,7 +42,7 @@ const CreateProcess = () => {
         setPending(true);
         refValue.current = true;
         //deploy new process contract
-        const result = await deployVotingProcess(name, description, proposalArray,1000000,1000000);
+        const result = await createVotingProcess(name, description,1000000,1000000);
         setTransactionResult(result);
 
         refValue.current = false;
@@ -93,15 +93,6 @@ const CreateProcess = () => {
                         required
                         value = {description}
                         onChange={(e) => setDescription(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Proposals (separated with ","):</label>
-                    <input 
-                        type="text"
-                        required
-                        value = {proposals}
-                        onChange={(e) => setProposals(e.target.value)}
                     />
                 </div>
                 <div>

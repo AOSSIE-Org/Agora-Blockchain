@@ -2,6 +2,7 @@ import * as ethers from 'ethers'
 import { Contract } from 'ethers';
 import { oneVoteAddress, } from "../constants/contractAddresses";
 import oneVoteAbi from "../abis/contracts/OneVote.sol/OneVote.json";
+import votingProcessAbi from "../abis/contracts/VotingProcess.sol/VotingProcess.json";
 
 const getProviderAndSigner = () => {
     const { ethereum } = window;
@@ -20,6 +21,7 @@ const createVotingProcess = async (name, description, startDate, endDate) => {
     const tx = await oneVoteContract.createVotingProcess(name, description, startDate, endDate);
     await tx.wait();
     console.log("Voting process created:", tx);
+    return tx;
 };
 
 const addVoter = async (identityCommitment,debug=false) => {
@@ -31,6 +33,7 @@ const addVoter = async (identityCommitment,debug=false) => {
     if(debug){
         console.log(recipt);
     }
+    return recipt;
 };
 
 // TODO: Should call the backend.
@@ -77,9 +80,14 @@ const getVotingProcessContract = async (processId) => {
 };
 
 
-const getAllVotingProcesses = async () =>{
-    // TODO
-}
+const getAllVotingProcesses = async () => {
+    const { provider } = getProviderAndSigner();
+    const oneVoteContract = new Contract(oneVoteAddress, oneVoteAbi.abi, provider);
+    const processes = await oneVoteContract.getAllVotingProcesses();
+    console.log("All Voting Processes:", processes);
+    return processes;
+};
+
 
 
 export {
@@ -90,4 +98,5 @@ export {
     addCandidate,
     getVotingProcessContract,
     getAllVotingProcesses,
+    getProviderAndSigner,
 }

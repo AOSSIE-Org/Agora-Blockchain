@@ -7,6 +7,7 @@ import { Identity } from "@semaphore-protocol/identity"
 import { ethers } from 'ethers';
 import { addVoter, getUserAuthStatus } from '../web3/contracts';
 import "./styles/Auth.scss";
+import { redirect } from "react-router-dom";
 
 
 import styles from './Register.module.css';
@@ -18,6 +19,7 @@ const Register = () => {
     const [connectWallet, setConnectWallet] = useState('');
     const [pending, setPending] = useState(false);
     const [registered, setRegistered] = useState(false);
+    
 
     const handleRegisterClick = async () => {
         const { ethereum } = window;
@@ -25,7 +27,6 @@ const Register = () => {
             setConnectWallet("Please install a web3 wallet first.");
             return;
         }
-
         const provider = new ethers.providers.Web3Provider(ethereum);
 
         provider.send("eth_requestAccounts", []).then(async () => {
@@ -33,15 +34,19 @@ const Register = () => {
             const address = await signer.getAddress();
 
             const message = `I am signing this message to confirm my identity: ${address}`;
-
+            
             if (address) {
                 const signature = await signer.signMessage(message);
                 const identity = new Identity(signature);
+                const authStatus = await getUserAuthStatus(identity.commitment);
                 setIdentityCommitment(identity.commitment);
                 console.log("Commitment: ", identityCommitment);
                 try {
+                    if(authStatus){
+                        return;
+                    }
                     setPending(true);
-                    await addVoter(identity.commitment,true);
+                    const receipt=await addVoter(identity.commitment,true);
                     setPending(false);
                     console.log(receipt);
                     if (receipt.status === 1) {
@@ -62,6 +67,7 @@ const Register = () => {
             if (identityCommitment != null) {
                 const status = await getUserAuthStatus(identityCommitment);
                 setRegistered(status);
+                return redirect('/dashboard')
             }else{
                 setRegistered(false);
             }

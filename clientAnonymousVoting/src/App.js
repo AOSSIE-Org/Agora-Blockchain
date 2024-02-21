@@ -15,45 +15,44 @@ import { useSelector } from 'react-redux';
 import { selectHasRegistered } from './store/home.slice';
 
 function App() {
-    const hasRegistered = useSelector(selectHasRegistered);
+    const hasRegistered = false;
 
     const renderRoutes = () => {
         let ret;
-        if (!hasRegistered) {
-            ret =
-                <Routes>
-                    <Route path="/auth" element={<Register />} />
-                    <Route path="/howItWorks" element={<HowItWorks />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/election" element={<Election />} />
+        // if (!hasRegistered){
+        //   ret = 
+        //   <Routes>
+        //     <Route path="/auth" element={<Register/>} />
+        //     <Route path="/howItWorks" element={<HowItWorks/>} />
+        //     <Route path="/dashboard" element={<Dashboard/>} />
+        //     <Route path="/election" element={<Election />} />
 
-                </Routes>
-        } else {
-            ret =
-                <Routes>
-                    <Route path="/" element={<Navigate to="/auth" />} />
-                    <Route path="/auth" element={<Register />} />
-                    <Route path="/voting/:id" element={<VotingPage />} />
-                    <Route path="/createProcess" element={<CreateProcess />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/election" element={<Election />} />
-                </Routes>
-            // }
-            return ret;
-        }
-
-        return (
-            <Router>
-                <>
-                    {/* <Navbar /> */}
-                    <div className="" style={{ height: "100%" }}>
-                        {renderRoutes()}
-                    </div>
-                    {/* <Footer />   */}
-                </>
-            </Router>
-        );
+        //   </Routes>
+        // }else{
+        ret =
+            <Routes>
+                <Route path="/" element={<Navigate to="/auth" />} />
+                <Route path="/auth" element={<Register />} />
+                <Route path="/voting/:id" element={<VotingPage />} />
+                <Route path="/createProcess" element={<CreateProcess />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/election" element={<Election />} />
+            </Routes>
+        // }
+        return ret;
     }
+
+    return (
+        <Router>
+            <>
+                {/* <Navbar /> */}
+                <div className="" style={{ height: "100%" }}>
+                    {renderRoutes()}
+                </div>
+                {/* <Footer />   */}
+            </>
+        </Router>
+    );
 }
 
 export default App;

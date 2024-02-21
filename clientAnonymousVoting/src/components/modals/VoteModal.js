@@ -5,7 +5,7 @@ import ElectionABI from '../../build/Election.sol/Election.json'
 import { successtoast,dangertoast } from "../utilities/Toasts";
 import { ToastContainer, toast } from "react-toastify";
 import '../styles/Modal.scss';
-import { getVotingProcess, getOneVoteContract, getSignalsForNullifier, getVotingProcessContract } from '../../web3/contracts';
+// import { getVotingProcess, getOneVoteContract, getSignalsForNullifier, getVotingProcessContract } from '../../web3/contracts';
 import styles from '../VotingPage.module.css';
 import Spinner from 'react-bootstrap/Spinner';
 import * as snarkjs from 'snarkjs'
@@ -163,16 +163,16 @@ export function VoteModal({electionId,status}) {
 
 
     useEffect(() => {
-        getVotingProcess(electionId).then((result) => {
-            console.log("Voting process electionId: ", electionId);
-            console.log("Voting process: ", result);
-            setVotingProcess(result);
-        })
-        getSignalsForNullifier(electionId).then((result) => {
-            console.log("Votes per proposal at 0: ", parseInt(result[2][1]._hex));
-            setVotesPerProposal(result);
-            console.log("Votes per proposal: ", votesPerProposal[0][1]);
-        });
+        // getVotingProcess(electionId).then((result) => {
+        //     console.log("Voting process electionId: ", electionId);
+        //     console.log("Voting process: ", result);
+        //     setVotingProcess(result);
+        // })
+        // getSignalsForNullifier(electionId).then((result) => {
+        //     console.log("Votes per proposal at 0: ", parseInt(result[2][1]._hex));
+        //     setVotesPerProposal(result);
+        //     console.log("Votes per proposal: ", votesPerProposal[0][1]);
+        // });
     }, []);
 
     const fetchWithoutCache = (

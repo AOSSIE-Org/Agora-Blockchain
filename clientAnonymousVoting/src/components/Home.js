@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import VotingProcess from './VotingProcess';
 
-import { getVotingProcesses } from '../web3/contracts';
+// import { getVotingProcesses } from '../web3/contracts';
 
 import { useDispatch, useSelector } from 'react-redux'
 import { selectHasRegistered, selectTestState, setTestState } from '../store/home.slice';
@@ -13,11 +13,11 @@ const Home = () => {
     const hasRegistered = useSelector(selectHasRegistered);
 
     useEffect(() => {
-        getVotingProcesses().then(
-            res => {
-                setVotingProcesses(res);
-            }
-        );
+        // getVotingProcesses().then(
+        //     res => {
+        //         setVotingProcesses(res);
+        //     }
+        // );
     }, [])
 
     const renderProcesses = () => {
