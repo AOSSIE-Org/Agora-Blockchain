@@ -8,36 +8,11 @@ import Spinner from 'react-bootstrap/Spinner';
 import {ethers} from 'ethers';
 import * as snarkjs from 'snarkjs'
 
-import {
-    Identity,
-    genIdentity,
-    genIdentityCommitment,
-    genCircuit,
-    serialiseIdentity,
-	genWitness,
-    genExternalNullifier,
-    genProof,
-    genPublicSignals,
-    genBroadcastSignalParams,
-} from 'libsemaphore-no-test';
-
-import {
-    initStorage,
-    storeId,
-    retrieveId,
-    hasId,
-} from '../web3/semaphoreStorage';
 
 // const fs = require('fs');
 
 
 const VotingPage = () => {
-
-    const circuitUrl = "http://127.0.0.1:5000/circuit.json"
-    const provingKeyUrl = "http://127.0.0.1:5000/proving_key.bin"
-    // const circuitUrl = "https://semaphoreui.blob.core.windows.net/snarks/circuit.json"
-    // const provingKeyUrl = "https://semaphoreui.blob.core.windows.net/snarks/proving_key.bin"
-
 
     const { id } = useParams()
 
@@ -63,143 +38,143 @@ const VotingPage = () => {
     }
 
     const handleVoteClick = async () => {
-        try{
-            //get checked radio button
-            var radios = document.getElementsByName('vote');
-            let voteLocal;
+        // try{
+        //     //get checked radio button
+        //     var radios = document.getElementsByName('vote');
+        //     let voteLocal;
 
-            for (var i = 0, length = radios.length; i < length; i++) {
-                if (radios[i].checked) {
-                    console.log("Selected vote: ", radios[i].value);
-                    setVote(radios[i].value);
-                    voteLocal = radios[i].value;//setvote doesn't update imediately
-                    // only one radio can be logically checked, don't check the rest
-                    break;
-                }
-            }
+        //     for (var i = 0, length = radios.length; i < length; i++) {
+        //         if (radios[i].checked) {
+        //             console.log("Selected vote: ", radios[i].value);
+        //             setVote(radios[i].value);
+        //             voteLocal = radios[i].value;//setvote doesn't update imediately
+        //             // only one radio can be logically checked, don't check the rest
+        //             break;
+        //         }
+        //     }
 
-            if(voteLocal == '' || voteLocal == undefined){
-                setProofStatus("You need to select option");
-                return;
-            }
+        //     if(voteLocal == '' || voteLocal == undefined){
+        //         setProofStatus("You need to select option");
+        //         return;
+        //     }
 
-            console.log("Vote", voteLocal);
+        //     console.log("Vote", voteLocal);
             
-            const oneVoteContract = await getOneVoteContract();
+        //     const oneVoteContract = await getOneVoteContract();
 
-            // const idCommitments = await oneVoteContract.identityCommitments(0);
-            // console.log("Identity commitments: ", idCommitments)
+        //     // const idCommitments = await oneVoteContract.identityCommitments(0);
+        //     // console.log("Identity commitments: ", idCommitments)
 
-            // const roots = await oneVoteContract.getRoots();
-            // console.log("Tree roots: ", roots);
+        //     // const roots = await oneVoteContract.getRoots();
+        //     // console.log("Tree roots: ", roots);
 
-            // const rootHistory = await oneVoteContract.getRootHistory(0);
-            // console.log("Root history: ", rootHistory);
+        //     // const rootHistory = await oneVoteContract.getRootHistory(0);
+        //     // console.log("Root history: ", rootHistory);
 
-            setProofStatus('Downloading leaves')
-            const leaves = await oneVoteContract.getIdentityCommitments()
-            console.log('Leaves:', leaves)
-            console.log("Downloading Circuit")
-            setProofStatus('Downloading circuit')
-            var cirDef;
-            // const cirDef = JSON.parse(fs.readFileSync(PATH_TO_CIRCUIT, "utf8").toString())
-            try{
-                cirDef = await (await fetchWithoutCache(circuitUrl)).json() 
-            }
-            catch(e){
-                console.log("Error while downloading circuit: ", e);
-                setProofStatus("Error while voting");
-                return;
-            }
+        //     setProofStatus('Downloading leaves')
+        //     const leaves = await oneVoteContract.getIdentityCommitments()
+        //     console.log('Leaves:', leaves)
+        //     console.log("Downloading Circuit")
+        //     setProofStatus('Downloading circuit')
+        //     var cirDef;
+        //     // const cirDef = JSON.parse(fs.readFileSync(PATH_TO_CIRCUIT, "utf8").toString())
+        //     try{
+        //         cirDef = await (await fetchWithoutCache(circuitUrl)).json() 
+        //     }
+        //     catch(e){
+        //         console.log("Error while downloading circuit: ", e);
+        //         setProofStatus("Error while voting");
+        //         return;
+        //     }
 
-            console.log("Downloaded circuit: ", cirDef);
-            const circuit = genCircuit(cirDef)
-            console.log("Generated circuit: ", circuit);
+        //     console.log("Downloaded circuit: ", cirDef);
+        //     const circuit = genCircuit(cirDef)
+        //     console.log("Generated circuit: ", circuit);
 
-            setProofStatus('Downloading proving key')
-            const toBuffer = function(ab) {
-                const buf = Buffer.alloc(ab.byteLength);
-                const view = new Uint8Array(ab);
-                for (let i = 0; i < buf.length; ++i) {
-                    buf[i] = view[i];
-                }
-                return buf;
-            }
-            const provingKey = toBuffer((await (await fetch(provingKeyUrl)).arrayBuffer()))
-            console.log("Proving key: ", provingKey);
+        //     setProofStatus('Downloading proving key')
+        //     const toBuffer = function(ab) {
+        //         const buf = Buffer.alloc(ab.byteLength);
+        //         const view = new Uint8Array(ab);
+        //         for (let i = 0; i < buf.length; ++i) {
+        //             buf[i] = view[i];
+        //         }
+        //         return buf;
+        //     }
+        //     const provingKey = toBuffer((await (await fetch(provingKeyUrl)).arrayBuffer()))
+        //     console.log("Proving key: ", provingKey);
 
-            const identity = retrieveId();
-            console.log("identity",identity);
-            setProofStatus('Generating witness')
-            var result,witness;
-            console.log("Vote: ", vote)
-            console.log("leaves: ", leaves)
-            try{
-             result = await genWitness(
-                vote,
-                circuit,
-                identity,
-                leaves,
-                20,//config.chain.semaphoreTreeDepth,
-                snarkjs.bigInt(id),
-                )
-                console.log("b");
+        //     const identity = retrieveId();
+        //     console.log("identity",identity);
+        //     setProofStatus('Generating witness')
+        //     var result,witness;
+        //     console.log("Vote: ", vote)
+        //     console.log("leaves: ", leaves)
+        //     try{
+        //      result = await genWitness(
+        //         vote,
+        //         circuit,
+        //         identity,
+        //         leaves,
+        //         20,//config.chain.semaphoreTreeDepth,
+        //         snarkjs.bigInt(id),
+        //         )
+        //         console.log("b");
                 
-                 witness = result.witness
-                console.log("Witness: ", witness);
-             } catch(e){
-                console.log("Error while generating witness: ", e);
-                setProofStatus("Error while voting");
-                return;
-             }
+        //          witness = result.witness
+        //         console.log("Witness: ", witness);
+        //      } catch(e){
+        //         console.log("Error while generating witness: ", e);
+        //         setProofStatus("Error while voting");
+        //         return;
+        //      }
             
-            setProofStatus('Generating proof')
-            const proof = await genProof(witness, provingKey)
-            console.log('Generated proof: ', proof);
+        //     setProofStatus('Generating proof')
+        //     const proof = await genProof(witness, provingKey)
+        //     console.log('Generated proof: ', proof);
             
-            setProofStatus('Voting');
-            const publicSignals = genPublicSignals(witness, circuit);
-            const params = genBroadcastSignalParams(result, proof, publicSignals);
-            console.log("Params: ", params);
-            const voteBytes = ethers.utils.toUtf8Bytes(voteLocal);
-            console.log("Vote: ", voteLocal);
+        //     setProofStatus('Voting');
+        //     const publicSignals = genPublicSignals(witness, circuit);
+        //     const params = genBroadcastSignalParams(result, proof, publicSignals);
+        //     console.log("Params: ", params);
+        //     const voteBytes = ethers.utils.toUtf8Bytes(voteLocal);
+        //     console.log("Vote: ", voteLocal);
 
 
-            console.log("Proof root: ", ethers.BigNumber.from(params.root));
-            console.log("hi")
-            // console.log("Signal: ", ethers.utils.toUtf8Bytes(params?.signal));
-            console.log("hi again")
+        //     console.log("Proof root: ", ethers.BigNumber.from(params.root));
+        //     console.log("hi")
+        //     // console.log("Signal: ", ethers.utils.toUtf8Bytes(params?.signal));
+        //     console.log("hi again")
 
-            try{
-                console.log("connecting to contract");
-                // const vp = await getVotingProcessContract(id);
-                // const vpRes = await vp.vote(voteLocal);
-                // console.log("Voted: ", vpRes);
-                // console.log("Vote decision: ", ethers.utils.toUtf8Bytes(voteLocal))
-                console.log('vote',voteLocal,params.proof,'root', ethers.BigNumber.from(params.root),'nullifier hash',params.nullifiersHash,'external nullifier',params.externalNullifier)
-                const tx = await oneVoteContract.vote(
-                    //ethers.utils.toUtf8Bytes(params.signal),
-                    voteLocal,
-                    params.proof,
-                    ethers.BigNumber.from(params.root),
-                    params.nullifiersHash,
-                    params.externalNullifier,
-                )
-                console.log("tx: ", tx);
-                const receipt = await tx.wait()
-                console.log("Voting result: ", receipt);
-                setProofStatus("Successful vote");
-                getSignalsForNullifier(id).then((result) => {
-                    setVotesPerProposal(result);
-                });
-            } catch (error){
-                console.log("Internal error happened: ", error);
-                window.alert(error.data.message);
-                setProofStatus("Error while voting")
-            }
-        } catch(er){
-            setProofStatus("Error while voting");
-        }
+        //     try{
+        //         console.log("connecting to contract");
+        //         // const vp = await getVotingProcessContract(id);
+        //         // const vpRes = await vp.vote(voteLocal);
+        //         // console.log("Voted: ", vpRes);
+        //         // console.log("Vote decision: ", ethers.utils.toUtf8Bytes(voteLocal))
+        //         console.log('vote',voteLocal,params.proof,'root', ethers.BigNumber.from(params.root),'nullifier hash',params.nullifiersHash,'external nullifier',params.externalNullifier)
+        //         const tx = await oneVoteContract.vote(
+        //             //ethers.utils.toUtf8Bytes(params.signal),
+        //             voteLocal,
+        //             params.proof,
+        //             ethers.BigNumber.from(params.root),
+        //             params.nullifiersHash,
+        //             params.externalNullifier,
+        //         )
+        //         console.log("tx: ", tx);
+        //         const receipt = await tx.wait()
+        //         console.log("Voting result: ", receipt);
+        //         setProofStatus("Successful vote");
+        //         getSignalsForNullifier(id).then((result) => {
+        //             setVotesPerProposal(result);
+        //         });
+        //     } catch (error){
+        //         console.log("Internal error happened: ", error);
+        //         window.alert(error.data.message);
+        //         setProofStatus("Error while voting")
+        //     }
+        // } catch(er){
+        //     setProofStatus("Error while voting");
+        // }
     }
 
     const renderVotingStatus = () => {

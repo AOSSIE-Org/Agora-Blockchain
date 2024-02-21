@@ -1,6 +1,112 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
+    "/workspaces/Agora-Blockchain/server/contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/base/Pairing.sol": {
+      "lastModificationDate": 1708511300393,
+      "contentHash": "d1e4a6f0652882cf680f8656e609a13c",
+      "sourceName": "contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/base/Pairing.sol",
+      "solcConfig": {
+        "version": "0.8.23",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@semaphore-protocol/contracts/base/Pairing.sol"
+      ],
+      "versionPragmas": [
+        ">0.0.0"
+      ],
+      "artifacts": []
+    },
+    "/workspaces/Agora-Blockchain/server/contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/base/SemaphoreVerifier.sol": {
+      "lastModificationDate": 1708511300393,
+      "contentHash": "a10e1fdad7ef19ca8e8e427a85d0ff7d",
+      "sourceName": "contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/base/SemaphoreVerifier.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@semaphore-protocol/contracts/base/SemaphoreVerifier.sol"
+      ],
+      "versionPragmas": [
+        ">0.0.0"
+      ],
+      "artifacts": []
+    },
+    "/workspaces/Agora-Blockchain/server/contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/Semaphore.sol": {
+      "lastModificationDate": 1708511300393,
+      "contentHash": "628edd6f0b4baacf2ec370c8ca211acd",
+      "sourceName": "contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/Semaphore.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@semaphore-protocol/contracts/Semaphore.sol"
+      ],
+      "versionPragmas": [
+        ">0.0.0"
+      ],
+      "artifacts": []
+    },
     "/workspaces/Agora-Blockchain/server/contracts/Diamond.sol": {
       "lastModificationDate": 1707757500211,
       "contentHash": "af15bfcd430491a3798ccb3620024d02",
@@ -1524,45 +1630,9 @@
         "Pairing"
       ]
     },
-    "/workspaces/Agora-Blockchain/server/contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/base/Pairing.sol": {
-      "lastModificationDate": 1708195099720,
-      "contentHash": "d1e4a6f0652882cf680f8656e609a13c",
-      "sourceName": "contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/base/Pairing.sol",
-      "solcConfig": {
-        "version": "0.8.23",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@semaphore-protocol/contracts/base/Pairing.sol"
-      ],
-      "versionPragmas": [
-        ">0.0.0"
-      ],
-      "artifacts": []
-    },
     "/workspaces/Agora-Blockchain/server/contracts/VotingProcess.sol": {
-      "lastModificationDate": 1708195090220,
-      "contentHash": "9d9f6651128d1fbf2a8148acf5ff403b",
+      "lastModificationDate": 1708229089667,
+      "contentHash": "22aed0110a9a91c48d4e171e98edeb77",
       "sourceName": "contracts/VotingProcess.sol",
       "solcConfig": {
         "version": "0.8.23",
@@ -1669,8 +1739,8 @@
       ]
     },
     "/workspaces/Agora-Blockchain/server/contracts/OneVote.sol": {
-      "lastModificationDate": 1708194461528,
-      "contentHash": "1362ab689fcb022d468a60d0d2f16190",
+      "lastModificationDate": 1708229052247,
+      "contentHash": "60f9a589f7e53521efdca4c1e81c0bc2",
       "sourceName": "contracts/OneVote.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -1927,76 +1997,6 @@
       "artifacts": [
         "SemaphoreVerifier"
       ]
-    },
-    "/workspaces/Agora-Blockchain/server/contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/base/SemaphoreVerifier.sol": {
-      "lastModificationDate": 1708195099724,
-      "contentHash": "a10e1fdad7ef19ca8e8e427a85d0ff7d",
-      "sourceName": "contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/base/SemaphoreVerifier.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@semaphore-protocol/contracts/base/SemaphoreVerifier.sol"
-      ],
-      "versionPragmas": [
-        ">0.0.0"
-      ],
-      "artifacts": []
-    },
-    "/workspaces/Agora-Blockchain/server/contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/Semaphore.sol": {
-      "lastModificationDate": 1708195099724,
-      "contentHash": "628edd6f0b4baacf2ec370c8ca211acd",
-      "sourceName": "contracts/hardhat-dependency-compiler/@semaphore-protocol/contracts/Semaphore.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@semaphore-protocol/contracts/Semaphore.sol"
-      ],
-      "versionPragmas": [
-        ">0.0.0"
-      ],
-      "artifacts": []
     }
   }
 }

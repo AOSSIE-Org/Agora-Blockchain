@@ -1,11 +1,10 @@
 import { useDispatch } from 'react-redux'
 import { setHasRegistered } from '../store/home.slice';
 import { useState, useEffect } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
-
+import { Identity } from "@semaphore-protocol/identity"
 import { ethers } from 'ethers';
-import { initLocalStorage, generateIdentityCommitment } from '../web3/semaphore';
 import { getOneVoteContract, getAuthStatus } from '../web3/contracts';
 import "./styles/Auth.scss";
 
@@ -32,18 +31,20 @@ const Register = () => {
         provider.send("eth_requestAccounts", []).then(async () => {
             const signer = provider.getSigner();
             const address = await signer.getAddress();
+
+            const message = `I am signing this message to confirm my identity: ${address}`;
+
             if (address) {
+                const signature = await signer.signMessage(message);
+                const identity = new Identity(signature);
                 const oneVote = await getOneVoteContract();
                 console.log("Commitment: ", identityCommitment);
                 try {
                     setPending(true);
-                    console.log('big no', ethers.BigNumber.from(identityCommitment))
-
-                    const tx = await oneVote.insertIdentityAsClient(ethers.BigNumber.from(identityCommitment))
+                    const tx = await oneVote.insertIdentityAsClient(identity.commitment);
                     const receipt = await tx.wait();
                     setPending(false);
                     console.log(receipt);
-
                     if (receipt.status === 1) {
                         setRegistered(true);
                         dispatch(setHasRegistered(true));
@@ -71,10 +72,7 @@ const Register = () => {
     };
 
     useEffect(() => {
-        initLocalStorage();
-        setIdentityCommitment(generateIdentityCommitment());
         isRegistered();
-        console.log("Identity commitment: ", identityCommitment);
     }, [identityCommitment]);
 
     return (

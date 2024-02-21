@@ -1,10 +1,10 @@
 import * as ethers from 'ethers'
 import { Contract } from 'ethers';
-import semaphoreAbi from '@/../../abi/Semaphore.json';
-import semaphoreNetworks from '@/../../addresses/Semaphore.json';
-import oneVoteAbi from '@/../../abi/OneVote.json';
-import oneVoteNetworks from '@/../../addresses/OneVote.json';
-import votingProcessAbi from '@/../../abi/VotingProcess.json';
+// import semaphoreAbi from '@/../../abi/Semaphore.json';
+// import semaphoreNetworks from '@/../../addresses/Semaphore.json';
+// import oneVoteAbi from '@/../../abi/OneVote.json';
+// import oneVoteNetworks from '@/../../addresses/OneVote.json';
+// import votingProcessAbi from '@/../../abi/VotingProcess.json';
 
 const semaphoreAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 const oneVoteAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";

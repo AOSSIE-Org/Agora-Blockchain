@@ -10,25 +10,7 @@ import styles from '../VotingPage.module.css';
 import Spinner from 'react-bootstrap/Spinner';
 import * as snarkjs from 'snarkjs'
 import { Candidate } from './Candidate';
-import {
-    Identity,
-    genIdentity,
-    genIdentityCommitment,
-    genCircuit,
-    serialiseIdentity,
-	genWitness,
-    genExternalNullifier,
-    genProof,
-    genPublicSignals,
-    genBroadcastSignalParams,
-} from 'libsemaphore-no-test';
 
-import {
-    initStorage,
-    storeId,
-    retrieveId,
-    hasId,
-} from '../../web3/semaphoreStorage';
 
 
 import { AVATARS, STATUS } from '../constants';
@@ -67,113 +49,113 @@ export function VoteModal({electionId,status}) {
        
         
         
-        try{
-            console.log("Candidate ID: ", candidateId)
+        // try{
+        //     console.log("Candidate ID: ", candidateId)
 
-            const oneVoteContract = await getOneVoteContract();
-            setProofStatus('Downloading leaves')
-            const leaves = await oneVoteContract.getIdentityCommitments()
-            console.log('Leaves:', leaves)
-            console.log("Downloading Circuit")
-            setProofStatus('Downloading circuit')
-            var cirDef;
-            // const cirDef = JSON.parse(fs.readFileSync(PATH_TO_CIRCUIT, "utf8").toString())
-            try{
-                cirDef = await (await fetchWithoutCache(circuitUrl)).json() 
-            }
-            catch(e){
-                console.log("Error while downloading circuit: ", e);
-                setProofStatus("Error while voting");
-                return;
-            }
+        //     const oneVoteContract = await getOneVoteContract();
+        //     setProofStatus('Downloading leaves')
+        //     const leaves = await oneVoteContract.getIdentityCommitments()
+        //     console.log('Leaves:', leaves)
+        //     console.log("Downloading Circuit")
+        //     setProofStatus('Downloading circuit')
+        //     var cirDef;
+        //     // const cirDef = JSON.parse(fs.readFileSync(PATH_TO_CIRCUIT, "utf8").toString())
+        //     try{
+        //         cirDef = await (await fetchWithoutCache(circuitUrl)).json() 
+        //     }
+        //     catch(e){
+        //         console.log("Error while downloading circuit: ", e);
+        //         setProofStatus("Error while voting");
+        //         return;
+        //     }
 
-            console.log("Downloaded circuit: ", cirDef);
-            const circuit = genCircuit(cirDef)
-            console.log("Generated circuit: ", circuit);
+        //     console.log("Downloaded circuit: ", cirDef);
+        //     const circuit = genCircuit(cirDef)
+        //     console.log("Generated circuit: ", circuit);
 
-            setProofStatus('Downloading proving key')
-            const toBuffer = function(ab) {
-                const buf = Buffer.alloc(ab.byteLength);
-                const view = new Uint8Array(ab);
-                for (let i = 0; i < buf.length; ++i) {
-                    buf[i] = view[i];
-                }
-                return buf;
-            }
-            const provingKey = toBuffer((await (await fetch(provingKeyUrl)).arrayBuffer()))
-            console.log("Proving key: ", provingKey);
+        //     setProofStatus('Downloading proving key')
+        //     const toBuffer = function(ab) {
+        //         const buf = Buffer.alloc(ab.byteLength);
+        //         const view = new Uint8Array(ab);
+        //         for (let i = 0; i < buf.length; ++i) {
+        //             buf[i] = view[i];
+        //         }
+        //         return buf;
+        //     }
+        //     const provingKey = toBuffer((await (await fetch(provingKeyUrl)).arrayBuffer()))
+        //     console.log("Proving key: ", provingKey);
 
-            const identity = retrieveId();
-            console.log("identity: ", identity);
-            setProofStatus('Generating witness')
-            var result,witness;
+        //     const identity = retrieveId();
+        //     console.log("identity: ", identity);
+        //     setProofStatus('Generating witness')
+        //     var result,witness;
             
-            console.log("Vote: ", vote)
-            console.log("leaves: ", leaves)
-            try{
-             result = await genWitness(
-                candidateId,
-                circuit,
-                identity,
-                leaves,
-                20,//config.chain.semaphoreTreeDepth,
-                snarkjs.bigInt(id),
-                )
-                console.log("b");
+        //     console.log("Vote: ", vote)
+        //     console.log("leaves: ", leaves)
+        //     try{
+        //      result = await genWitness(
+        //         candidateId,
+        //         circuit,
+        //         identity,
+        //         leaves,
+        //         20,//config.chain.semaphoreTreeDepth,
+        //         snarkjs.bigInt(id),
+        //         )
+        //         console.log("b");
                 
-                 witness = result.witness
-                console.log("Witness: ", witness);
-             } catch(e){
-                console.log("Error while generating witness: ", e);
-                setProofStatus("Error while voting");
-                return;
-             }
+        //          witness = result.witness
+        //         console.log("Witness: ", witness);
+        //      } catch(e){
+        //         console.log("Error while generating witness: ", e);
+        //         setProofStatus("Error while voting");
+        //         return;
+        //      }
             
-            setProofStatus('Generating proof')
-            const proof = await genProof(witness, provingKey)
-            console.log('Generated proof: ', proof);
+        //     setProofStatus('Generating proof')
+        //     const proof = await genProof(witness, provingKey)
+        //     console.log('Generated proof: ', proof);
             
-            setProofStatus('Voting');
-            const publicSignals = genPublicSignals(witness, circuit);
-            const params = genBroadcastSignalParams(result, proof, publicSignals);
-            console.log("Params: ", params);
-            const voteBytes = ethers.utils.toUtf8Bytes(candidateId);
-            console.log("Vote: ", candidateId);
+        //     setProofStatus('Voting');
+        //     const publicSignals = genPublicSignals(witness, circuit);
+        //     const params = genBroadcastSignalParams(result, proof, publicSignals);
+        //     console.log("Params: ", params);
+        //     const voteBytes = ethers.utils.toUtf8Bytes(candidateId);
+        //     console.log("Vote: ", candidateId);
 
 
-            console.log("Proof root: ", ethers.BigNumber.from(params.root));
+        //     console.log("Proof root: ", ethers.BigNumber.from(params.root));
        
 
-            try{
-                console.log("connecting to contract");
+        //     try{
+        //         console.log("connecting to contract");
                 
-                console.log('vote',candidateId,params.proof,'root', ethers.BigNumber.from(params.root),'nullifier hash',params.nullifiersHash,'external nullifier',params.externalNullifier)
-                const tx = await oneVoteContract.vote(
-                    candidateId,
-                    params.proof,
-                    ethers.BigNumber.from(params.root),
-                    params.nullifiersHash,
-                    params.externalNullifier,
-                )
-                console.log("tx: ", tx);
-                const receipt = await tx.wait()
-                console.log("Voting result: ", receipt);
-                setProofStatus("Successful vote");
-                getSignalsForNullifier(id).then((result) => {
-                    setVotesPerProposal(result);
-                });
+        //         console.log('vote',candidateId,params.proof,'root', ethers.BigNumber.from(params.root),'nullifier hash',params.nullifiersHash,'external nullifier',params.externalNullifier)
+        //         const tx = await oneVoteContract.vote(
+        //             candidateId,
+        //             params.proof,
+        //             ethers.BigNumber.from(params.root),
+        //             params.nullifiersHash,
+        //             params.externalNullifier,
+        //         )
+        //         console.log("tx: ", tx);
+        //         const receipt = await tx.wait()
+        //         console.log("Voting result: ", receipt);
+        //         setProofStatus("Successful vote");
+        //         getSignalsForNullifier(id).then((result) => {
+        //             setVotesPerProposal(result);
+        //         });
 
 
-            } catch (error){
-                console.log("Internal error happened: ", error);
-                window.alert(error.data.message);
-                setProofStatus("Error while voting")
-            }
+        //     } catch (error){
+        //         console.log("Internal error happened: ", error);
+        //         window.alert(error.data.message);
+        //         setProofStatus("Error while voting")
+        //     }
 
 
-        } catch(er){
-            setProofStatus("Error while voting");
-        }
+        // } catch(er){
+        //     setProofStatus("Error while voting");
+        // }
         e.preventDefault();
         setIsOpen(false);
 

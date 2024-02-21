@@ -5,7 +5,6 @@ const HowItWorks = () => {
         <div className={styles.howItWorks}>
             <h1>How it works?</h1>
             <div>
-                
                 OneVote utilizes zero knowledge proofs to achieve anonymity while voting.
             </div>
             <div>

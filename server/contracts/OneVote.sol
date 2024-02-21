@@ -9,7 +9,7 @@ contract OneVote {
 
     mapping(uint => VotingProcess) public votingProcesses;
     mapping(VotingProcess=>address) public votingProcessAdmins;
-    mapping(uint256 => bool) userAuthStatus; // TODO
+    mapping(uint256 => bool) public userAuthStatus; 
     uint private processCounter;
     uint256 private groupId;
 
@@ -27,6 +27,10 @@ contract OneVote {
         userAuthStatus[identityCommitment]=true;
     }
 
+    function getUserAuthStatus(uint256 indentityCommitment) public view returns(bool){
+        return userAuthStatus[indentityCommitment];
+    }
+ 
     function vote(
         uint256 _vote,  // candidate id.
         uint256 nullifierHash,

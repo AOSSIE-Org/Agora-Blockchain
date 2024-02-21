@@ -58,6 +58,10 @@ module.exports = {
   },
   contractSizer:{
     runOnCompile:true
-  }
+  },
+  paths: {
+		artifacts: "../clientAnonymousVoting/src/abis",
+	},
+
 };
 

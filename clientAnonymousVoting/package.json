@@ -6,6 +6,7 @@
     "@chakra-ui/icons": "^2.1.0",
     "@chakra-ui/react": "^2.8.0",
     "@reduxjs/toolkit": "^1.7.1",
+    "@semaphore-protocol/identity": "^3.15.2",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -17,10 +18,10 @@
     "libsemaphore": "^0.0.10",
     "libsemaphore-no-test": "^1.0.0",
     "path-browserify": "^1.0.1",
-    "react": "^17.0.2",
+    "react": "^18.2.0",
     "react-bootstrap": "^2.1.1",
     "react-datepicker": "^4.14.1",
-    "react-dom": "^17.0.2",
+    "react-dom": "^18.2.0",
     "react-qr-code": "^2.0.12",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.1",
@@ -36,8 +37,8 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-  "build": "react-app-rewired build",
-  "test": "react-app-rewired test",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

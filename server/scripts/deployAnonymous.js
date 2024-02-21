@@ -1,33 +1,11 @@
-const { genExternalNullifier } = require('../utils');
+const SEMAPHORE_ADDRESS="0x3889927F0B5Eb1a02C6E2C20b39a1Bd4EAd76131";
 
 async function main() {
-  const depth = 20;
-  const externalNullifier = genExternalNullifier('test-voting');
 
   const OneVote = await ethers.getContractFactory('OneVote');
 
-  // Deploy MiMC contract
-  const MiMC = await ethers.getContractFactory('MiMC');
-  const mimc = await MiMC.deploy();
-  await mimc.deployed();
-  console.log('MiMC deployed:', mimc.address);
-
-
-  // Deploy Semaphore contract
-  const Semaphore= await ethers.getContractFactory("Semaphore", {
-  libraries: {
-    MiMC: mimc.address,
-  },
-});
-  // Link MiMC library to Semaphore contract
-  const semaphore = await Semaphore.deploy(depth, externalNullifier);
-  await semaphore.deployed();
-  console.log('Semaphore deployed:', semaphore.address);
-  console.log('MiMC library linked to Semaphore contract.');
-
-
   // Deploy OneVote contract
-  const oneVote = await OneVote.deploy(semaphore.address);
+  const oneVote = await OneVote.deploy(SEMAPHORE_ADDRESS,1223);
   await oneVote.deployed();
   console.log('OneVote deployed:', oneVote.address);
 }

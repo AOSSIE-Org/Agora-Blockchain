@@ -5,6 +5,10 @@ module.exports = function override(config) {
     crypto: require.resolve('crypto-browserify'),
     stream: require.resolve('stream-browserify'),
     worker_threads: false,
+    http:false,
+    https:false,
+    zlib:false,
+    url:false,
   });
   config.resolve.fallback = fallback;
   config.plugins = (config.plugins || []).concat([
