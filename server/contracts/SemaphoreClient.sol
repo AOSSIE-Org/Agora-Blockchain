@@ -38,8 +38,11 @@ contract SemaphoreClient {
     Semaphore public semaphore;
 
     event SignalBroadcastByClient(uint256 indexed signalIndex);
-    event ProofOfParticipation(address indexed voter, uint256 indexed voteId, uint256 timestamp);
-
+    event ProofOfParticipation(
+        address indexed voter,
+        uint256 indexed voteId,
+        uint256 timestamp
+    );
 
     constructor(Semaphore _semaphore) public {
         semaphore = _semaphore;
