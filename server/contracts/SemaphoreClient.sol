@@ -21,16 +21,16 @@
 
 pragma solidity ^0.8.0;
 
-import { Semaphore } from './Semaphore.sol';
+import {Semaphore} from "./Semaphore.sol";
 
 contract SemaphoreClient {
     uint256[] public identityCommitments;
 
     // A mapping of all signals broadcasted
-    mapping (uint256 => bytes) public signalIndexToSignal;
+    mapping(uint256 => bytes) public signalIndexToSignal;
 
     // A mapping between signal indices to external nullifiers
-    mapping (uint256 => uint256) public signalIndexToExternalNullifier;
+    mapping(uint256 => uint256) public signalIndexToExternalNullifier;
 
     // The next index of the `signalIndexToSignal` mapping
     uint256 public nextSignalIndex = 0;
@@ -38,6 +38,8 @@ contract SemaphoreClient {
     Semaphore public semaphore;
 
     event SignalBroadcastByClient(uint256 indexed signalIndex);
+    event ProofOfParticipation(address indexed voter, uint256 indexed voteId, uint256 timestamp);
+
 
     constructor(Semaphore _semaphore) public {
         semaphore = _semaphore;
@@ -47,11 +49,13 @@ contract SemaphoreClient {
         return nextSignalIndex;
     }
 
-    function getIdentityCommitments() public view returns (uint256 [] memory) {
+    function getIdentityCommitments() public view returns (uint256[] memory) {
         return identityCommitments;
     }
 
-    function getIdentityCommitment(uint256 _index) public view returns (uint256) {
+    function getIdentityCommitment(
+        uint256 _index
+    ) public view returns (uint256) {
         return identityCommitments[_index];
     }
 
@@ -80,23 +84,34 @@ contract SemaphoreClient {
         signalIndexToExternalNullifier[nextSignalIndex] = _externalNullifier;
 
         // increment the signal index
-        nextSignalIndex ++;
+        nextSignalIndex++;
 
         // broadcast the signal
-        semaphore.broadcastSignal(_signal, _proof, _root, _nullifiersHash, _externalNullifier);
+        semaphore.broadcastSignal(
+            _signal,
+            _proof,
+            _root,
+            _nullifiersHash,
+            _externalNullifier
+        );
 
         emit SignalBroadcastByClient(signalIndex);
+        emit ProofOfParticipation(msg.sender, signalIndex, block.timestamp);
     }
 
     /*
      * Returns the external nullifier which a signal at _index broadcasted to
      * @param _index The index to use to look up the signalIndexToExternalNullifier mapping
      */
-    function getExternalNullifierBySignalIndex(uint256 _index) public view returns (uint256) {
+    function getExternalNullifierBySignalIndex(
+        uint256 _index
+    ) public view returns (uint256) {
         return signalIndexToExternalNullifier[_index];
     }
 
-    function getSignalByIndex(uint256 _index) public view returns (bytes memory) {
+    function getSignalByIndex(
+        uint256 _index
+    ) public view returns (bytes memory) {
         return signalIndexToSignal[_index];
     }
 }
