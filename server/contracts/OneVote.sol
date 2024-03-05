@@ -4,9 +4,12 @@ pragma solidity ^0.8.0;
 
 import {VotingProcess} from "./VotingProcess.sol";
 import {Semaphore} from "./Semaphore.sol";
-import "./Election.sol";
-import "./ElectionStorage.sol";
-import "./ElectionFactory.sol";
+
+import "./ParticipationProofs.sol";
+
+// import "./Election.sol";
+// import "./ElectionStorage.sol";
+// import "./ElectionFactory.sol";
 
 contract OneVote {
     mapping(uint => VotingProcess) public votingProcesses;
@@ -27,6 +30,8 @@ contract OneVote {
     uint256 public nextSignalIndex = 0;
 
     Semaphore public semaphore;
+
+    ParticipationProofs public participationProofs;
 
     event SignalBroadcastByClient(uint256 indexed signalIndex);
 
@@ -61,8 +66,12 @@ contract OneVote {
         semaphore.addExternalNullifier(_externalNullifier);
     }
 
-    constructor(Semaphore _semaphore) public {
+    constructor(
+        Semaphore _semaphore,
+        ParticipationProofs _participationProofs
+    ) public {
         semaphore = _semaphore;
+        participationProofs = _participationProofs;
     }
 
     event Rooot(uint256 root);
@@ -151,7 +160,8 @@ contract OneVote {
             _name,
             _description,
             _startDate,
-            _endDate
+            _endDate,
+            participationProofs
         );
 
         addExternalNullifier(uint232(processCounter));

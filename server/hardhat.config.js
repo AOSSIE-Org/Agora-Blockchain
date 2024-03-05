@@ -1,5 +1,5 @@
 // /** @type import('hardhat/config').HardhatUserConfig */
-// require("dotenv").config();
+require("dotenv").config();
 
 // require("@nomiclabs/hardhat-waffle");
 
@@ -24,30 +24,35 @@
 
 /** @type import('hardhat/config').HardhatUserConfig */
 //require("hardhat-contract-sizer");
+
 require("@nomiclabs/hardhat-waffle");
+
+const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL;
+const SEPOLIA_PRIVATE_KEY = process.env.SEPOLIA_PRIVATE_KEY;
+
 module.exports = {
-  solidity: '0.8.10',
-  defaultNetwork:"mumbai",
-  networks:{
-    hardhat:{
-      allowUnlimitedContractSize:true
+  solidity: "0.8.10",
+  defaultNetwork: "sepolia",
+  networks: {
+    hardhat: {
+      allowUnlimitedContractSize: true,
     },
-    mumbai:{
-      allowUnlimitedContractSize:true,
-      url:"https://rpc-mumbai.maticvigil.com/",
-      accounts:["e820e413ccda5073b7997a35cd9973d6a991a4d981408aa52f09222f39f6ec3e"],  //private key place here
-    }
-  },  
+    sepolia: {
+      url: SEPOLIA_RPC_URL,
+      accounts: [SEPOLIA_PRIVATE_KEY],
+      chainId: 11155111,
+      blockConfirmations: 6,
+    },
+  },
   mocha: {
-    timeout: 100000000
+    timeout: 100000000,
   },
   settings: {
     optimizer: {
-      enabled: true
-    }
+      enabled: true,
+    },
   },
-  contractSizer:{
-    runOnCompile:true
-  }
+  contractSizer: {
+    runOnCompile: true,
+  },
 };
-
