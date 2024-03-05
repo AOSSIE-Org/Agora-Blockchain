@@ -1525,8 +1525,8 @@
       ]
     },
     "/home/lyj/Agora-Blockchain/server/contracts/VotingProcess.sol": {
-      "lastModificationDate": 1709609203652,
-      "contentHash": "cc12eb2ce2ff8d2ec0bf8b38557f4b27",
+      "lastModificationDate": 1709613120691,
+      "contentHash": "27436d27d7fdfafb63929bdc11c38056",
       "sourceName": "contracts/VotingProcess.sol",
       "solcConfig": {
         "version": "0.8.10",
@@ -1552,7 +1552,8 @@
         }
       },
       "imports": [
-        "./Semaphore.sol"
+        "./Semaphore.sol",
+        "./ParticipationProofs.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -1562,8 +1563,8 @@
       ]
     },
     "/home/lyj/Agora-Blockchain/server/contracts/OneVote.sol": {
-      "lastModificationDate": 1709609589362,
-      "contentHash": "965d0544c31ccb6b89b0a7fd65e55a51",
+      "lastModificationDate": 1709613609771,
+      "contentHash": "88184c6c6dbe596954832812c38a9e16",
       "sourceName": "contracts/OneVote.sol",
       "solcConfig": {
         "version": "0.8.10",
@@ -1590,7 +1591,8 @@
       },
       "imports": [
         "./VotingProcess.sol",
-        "./Semaphore.sol"
+        "./Semaphore.sol",
+        "./ParticipationProofs.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -1600,8 +1602,8 @@
       ]
     },
     "/home/lyj/Agora-Blockchain/server/contracts/SemaphoreClient.sol": {
-      "lastModificationDate": 1709610011722,
-      "contentHash": "4ef5ce133cc116585a5ad5411c0c7819",
+      "lastModificationDate": 1709612989601,
+      "contentHash": "97d0e4c334b9e93184de48dc9c613c5f",
       "sourceName": "contracts/SemaphoreClient.sol",
       "solcConfig": {
         "version": "0.8.10",
@@ -1739,6 +1741,78 @@
       ],
       "artifacts": [
         "Migrations"
+      ]
+    },
+    "/home/lyj/Agora-Blockchain/server/contracts/ParticipationProofs.sol": {
+      "lastModificationDate": 1709613110171,
+      "contentHash": "d8dc18c47e8bed53fe8ecbc0ce8c9ced",
+      "sourceName": "contracts/ParticipationProofs.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./interfaces/IParticipationProofs.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ParticipationProofs"
+      ]
+    },
+    "/home/lyj/Agora-Blockchain/server/contracts/interfaces/IParticipationProofs.sol": {
+      "lastModificationDate": 1709613105271,
+      "contentHash": "b9ce56a49a8bd80f406609aad3bf92fd",
+      "sourceName": "contracts/interfaces/IParticipationProofs.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IParticipationProofs"
       ]
     }
   }
