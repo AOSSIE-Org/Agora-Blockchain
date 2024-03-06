@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Flex, Modal, Button, Card } from "rimble-ui";
 import DatePicker from "react-datepicker";
 import { ethers } from "ethers";
-import ElectionOrganiser from "../../../build/ElectionOrganizer.json";
+import ElectionOrganizer from "../../../artifacts/contracts/facets/ElectionOrganizer.sol/ElectionOrganizer.json";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { successtoast, dangertoast } from "../utilities/Toasts";
 
-export function CreateElectionModal({DashContractAddress, fetchElections}) {
+export function CreateElectionModal({ DashContractAddress, fetchElections }) {
   const [isOpen, setIsOpen] = useState(false);
   const [ballotType, setBallotType] = useState(1);
   const [resultCalculator, setResultCalculator] = useState(1);
@@ -16,7 +16,7 @@ export function CreateElectionModal({DashContractAddress, fetchElections}) {
     name: "",
     description: "",
     algorithm: "General",
-    electionType:true
+    electionType: true
   });
   const [se, setSe] = useState({
     startTime: parseInt(Date.now() / 1000),
@@ -30,34 +30,34 @@ export function CreateElectionModal({DashContractAddress, fetchElections}) {
       [name]: value,
     });
   };
-const handleTypeChange = (e) => {
-  console.log('type',e.target.value);
-  if(e.target.value === 'Borda'){
-    setBallotType(4);
-    setResultCalculator(4);
-  }
-  if(e.target.value === 'General'){
-    setBallotType(1);
-    setResultCalculator(1);
-  }
-  if(e.target.value === 'Oklahoma'){
-    setBallotType(2);
-    setResultCalculator(1);
-  }
-  else if(e.target.value === 'Schulze'){
-    setBallotType(5);
-    setResultCalculator(4);
-  }
-  else if(e.target.value === 'Instant Run-Off'){
-    setBallotType(6);
-    setResultCalculator(4);
-  }
-  else if(e.target.value === 'Kemeng Young'){
-    setBallotType(7);
-  }
-  console.log('type',ballotType);
-  console.log('type',resultCalculator);
-};
+  const handleTypeChange = (e) => {
+    console.log('type', e.target.value);
+    if (e.target.value === 'Borda') {
+      setBallotType(4);
+      setResultCalculator(4);
+    }
+    if (e.target.value === 'General') {
+      setBallotType(1);
+      setResultCalculator(1);
+    }
+    if (e.target.value === 'Oklahoma') {
+      setBallotType(2);
+      setResultCalculator(1);
+    }
+    else if (e.target.value === 'Schulze') {
+      setBallotType(5);
+      setResultCalculator(4);
+    }
+    else if (e.target.value === 'Instant Run-Off') {
+      setBallotType(6);
+      setResultCalculator(4);
+    }
+    else if (e.target.value === 'Kemeng Young') {
+      setBallotType(7);
+    }
+    console.log('type', ballotType);
+    console.log('type', resultCalculator);
+  };
 
   const handleSeChange = (e, type) => {
     console.log(e, Date.now(), Date.parse(e));
@@ -71,13 +71,13 @@ const handleTypeChange = (e) => {
   const handleElectionTypeChange = (e) => {
     e.preventDefault();
     console.log(e.target.value);
-    if(e.target.value == "Invite Based Election"){
+    if (e.target.value == "Invite Based Election") {
       setNda({
         ...nda,
         ["electionType"]: false,
       });
     }
-    if(e.target.value == "Open Based Election"){
+    if (e.target.value == "Open Based Election") {
       setNda({
         ...nda,
         ["electionType"]: true,
@@ -89,15 +89,15 @@ const handleTypeChange = (e) => {
     const { name, description } = nda;
     const { startTime, endTime } = se;
     const currTime = Date.now() / 1000;
-    return ( name.length && description.length && currTime < startTime && startTime < endTime );
+    return (name.length && description.length && currTime < startTime && startTime < endTime);
   }
 
   const handleSubmitNewElection = async (e) => {
     e.preventDefault();
     let id
     try {
-      if(validateDetail()){
-        id  = toast.loading("Processing Your Transaction",{theme: "dark",position: "top-center"})
+      if (validateDetail()) {
+        id = toast.loading("Processing Your Transaction", { theme: "dark", position: "top-center" })
         const { ethereum } = window;
 
         if (ethereum) {
@@ -106,14 +106,14 @@ const handleTypeChange = (e) => {
 
           const contract = new ethers.Contract(
             DashContractAddress,
-            ElectionOrganiser.abi,
+            ElectionOrganizer.abi,
             signer
           );
 
           //function to deploy ballot,result
           const transaction = await contract.createElection(
             [1, nda.name, nda.description, se.startTime, se.endTime, nda.electionType],
-            ballotType,resultCalculator
+            ballotType, resultCalculator
           );
           await transaction.wait().then(() => {
             console.log("suceessss", [
@@ -128,10 +128,10 @@ const handleTypeChange = (e) => {
           });
           successtoast(id, "Election Created Successfully")
           closeModal();
-          fetchElections();         
+          fetchElections();
         }
       }
-      else{
+      else {
         if (nda.name.length === 0) alert("Name should not be empty");
         if (nda.description.length === 0) alert("Description should not be empty");
         if (se.startTime <= Date.now() / 1000) alert("Start Time error - Election must start in future");
@@ -225,12 +225,12 @@ const handleTypeChange = (e) => {
                   <option value="Borda">Borda</option>
                   <option value="Schulze">Schulze</option>
                   <option value="Instant Run-off">Instant Run-Off</option>
-                  <option value="Kemeng Young">Kemeng Young</option>                      
+                  <option value="Kemeng Young">Kemeng Young</option>
                 </select>
               </div>
               <br />
               <div>
-              <label className="labels UP_labels">Select Open/Invite Election Type</label>
+                <label className="labels UP_labels">Select Open/Invite Election Type</label>
                 <select
                   onChange={(e) => handleElectionTypeChange(e)}
                   type="text"
@@ -238,12 +238,12 @@ const handleTypeChange = (e) => {
                   className="form-control"
                   placeholder="select branch"
                 >
-                  <option value="Invite Based Election">Invite Based Election</option>                      
+                  <option value="Invite Based Election">Invite Based Election</option>
                   <option value="Open Based Election" selected>Open Based Election</option>
                 </select>
 
               </div>
-              <br/>
+              <br />
 
               <div style={{ display: "flex" }}>
                 <div>
