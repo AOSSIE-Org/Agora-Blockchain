@@ -3,7 +3,7 @@ import QRCode from "react-qr-code";
 
 import { useState, useEffect } from "react";
 import { Flex, Modal, Button, Card } from "rimble-ui";
-import Brightid from "../../artifacts/BrightID.json";
+import Brightid from "../../blockchainBuild/BrightID.json";
 import { ethers } from "ethers";
 
 import background from "../assets/bg.jpg";
