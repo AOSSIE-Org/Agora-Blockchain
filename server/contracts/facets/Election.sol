@@ -188,13 +188,13 @@ contract Election {
         In invite based elections, a condidition to check if voter is authenticated
 
     */
-    function vote(address _voter, uint _candidateID, uint weight,uint[] memory voteArr) external {
+    function vote(uint _candidateID, uint weight,uint[] memory voteArr) external {
         require(getStatus() == Status.active, "Election needs to be active to vote");
         // if (electionInfo.electionType==0) {
         //     require(isAuthenticated(msg.Sender),"Voter must be authenticated to cast vote");
         // }
         require(authContract.getAuthStatus(msg.sender), "Voter must be authenticated to cast vote");
-        ballot.vote(_voter,_candidateID, weight,voteArr);
+        ballot.vote(msg.sender,_candidateID, weight,voteArr);
         voterCount++;
         emit VoteCasted(address(ballot),candidateWithID[_candidateID],weight);
     }
