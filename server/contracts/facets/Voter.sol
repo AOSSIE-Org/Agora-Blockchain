@@ -18,7 +18,7 @@ contract Voter{
 
     function castVote(Election _election,uint _candidateID, uint _weight,uint[] memory voteArr ) public {
         require(_election.getVoteStatus(msg.sender)==false,"Already voted");
-        _election.vote(msg.sender,_candidateID, _weight,voteArr);
+        _election.vote(_candidateID, _weight,voteArr);
         emit VoteCasted(address(_election),_candidateID,_weight);
 
         /* 
