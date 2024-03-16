@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "AuthData",
+  "sourceName": "contracts/facets/storage/AuthData.sol",
+  "abi": [],
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220a5ff73db868e4dcd9920358d51a55a99bb6e0e8cf70aa5b1de1784f54ba053a264736f6c634300080a0033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220a5ff73db868e4dcd9920358d51a55a99bb6e0e8cf70aa5b1de1784f54ba053a264736f6c634300080a0033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

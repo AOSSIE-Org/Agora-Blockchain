@@ -1,18 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.0;
 
-import './Election.sol';
-import './votingApp/ElectionStorage.sol';
-import '../libraries/LibDiamond.sol';
-import './ElectionFactory.sol';
+import "./Election.sol";
+import "./votingApp/ElectionStorage.sol";
+import "../libraries/LibDiamond.sol";
+import "./ElectionFactory.sol";
 
 contract ElectionOrganizer {
-
     // ------------------------------------------------------------------------------------------------------
     //                                              STATE
     // ------------------------------------------------------------------------------------------------------
-    
-    struct OrganizerInfo{
+
+    struct OrganizerInfo {
         uint organizerID;
         string name;
         address publicAddress;
@@ -20,7 +19,7 @@ contract ElectionOrganizer {
     OrganizerInfo[] organizers;
     mapping(address => OrganizerInfo) organizerWithAddress;
     mapping(uint => OrganizerInfo) organizerWithID;
-    uint organizerCount=100;
+    uint organizerCount = 100;
 
     mapping(address => bool) organizerAuthStatus;
 
@@ -43,12 +42,18 @@ contract ElectionOrganizer {
     // ------------------------------------------------------------------------------------------------------
 
     modifier onlyOrganizer() {
-        require(organizerAuthStatus[msg.sender],"Only accessible by users regisetered as organizers");
+        require(
+            organizerAuthStatus[msg.sender],
+            "Only accessible by users regisetered as organizers"
+        );
         _;
     }
 
     modifier onlyCorrespondingOrganizer(address _organizer) {
-        require(msg.sender == _organizer, "Only accessible by the corresponding election organizer");
+        require(
+            msg.sender == _organizer,
+            "Only accessible by the corresponding election organizer"
+        );
         _;
     }
 
@@ -70,15 +75,17 @@ contract ElectionOrganizer {
         electionStorage = new ElectionStorage();
     }
 
-    function getElectionStorage() public view returns(address) {
+    function getElectionStorage() public view returns (address) {
         return address(electionStorage);
     }
 
-    function getElectionFactory() public view returns(address) {
-        return LibDiamond.addressStorage().diamond;        
+    function getElectionFactory() public view returns (address) {
+        return LibDiamond.addressStorage().diamond;
     }
 
-    function addElectionOrganizer(OrganizerInfo memory _organizerInfo) external {
+    function addElectionOrganizer(
+        OrganizerInfo memory _organizerInfo
+    ) external {
         uint id = organizerCount + 1;
         _organizerInfo.organizerID = id;
         organizers.push(_organizerInfo);
@@ -88,41 +95,61 @@ contract ElectionOrganizer {
         organizerCount++;
     }
 
-    function getElectionOrganizers() public view returns(OrganizerInfo[] memory) {
+    function getElectionOrganizers()
+        public
+        view
+        returns (OrganizerInfo[] memory)
+    {
         return organizers;
     }
-    
-    function getElectionOrganizerByID(uint _organizerID) public view returns(OrganizerInfo memory) {
+
+    function getElectionOrganizerByID(
+        uint _organizerID
+    ) public view returns (OrganizerInfo memory) {
         return organizerWithID[_organizerID];
     }
 
-    function getElectionOrganizerByAddress(address _address) public view returns(OrganizerInfo memory) {
+    function getElectionOrganizerByAddress(
+        address _address
+    ) public view returns (OrganizerInfo memory) {
         return organizerWithAddress[_address];
     }
 
-    function createElection(Election.ElectionInfo memory _electionInfo, uint _ballotType, uint _resultCalculatorType) public onlyOrganizer {
+    function createElection(
+        Election.ElectionInfo memory _electionInfo,
+        uint _ballotType,
+        uint _resultCalculatorType
+    ) public onlyOrganizer {
         address electionFactoryAddress = LibDiamond.addressStorage().diamond;
         uint id = electionStorage.getElectionCount() + 1;
         _electionInfo.electionID = id;
-        ElectionFactory(electionFactoryAddress).getElectionFromFactory(_electionInfo, _ballotType, _resultCalculatorType, msg.sender, address(this));
+        ElectionFactory(electionFactoryAddress).getElectionFromFactory(
+            _electionInfo,
+            _ballotType,
+            _resultCalculatorType,
+            msg.sender,
+            address(this)
+        );
         // save in ElectionStorage
         address _election = address(LibDiamond.electionStorage().election);
         electionStorage.addElection(_election, msg.sender);
         emit CreatedElection(_election);
     }
 
-    function getOpenBasedElections() public view returns(address[] memory) {
+    function getOpenBasedElections() public view returns (address[] memory) {
         return electionStorage.getOpenBasedElections();
     }
 
-    function getInviteBasedElections(address _organizer) public view returns(address[] memory) {
+    function getInviteBasedElections(
+        address _organizer
+    ) public view returns (address[] memory) {
         return electionStorage.getInviteBasedElections(_organizer);
     }
 
     // function getElectionByID(uint _electionID) public view returns(address) {
     //     return electionStorage.getElectionByID(_electionID);
     // }
-    
+
     // function getElectionByStatus(uint _status) public view returns(Election) {
     //     return electionStorage.getElectionByStatus(_status);
     // }
@@ -131,28 +158,42 @@ contract ElectionOrganizer {
     //     return electionStorage.getElectionsOfOrganizer(msg.sender);
     // }
 
-    function addCandidate(Election _election, Election.Candidate memory _candidate)public onlyCorrespondingOrganizer(_election.getElectionOrganizer()) {
+    function addCandidate(
+        Election _election,
+        Election.Candidate memory _candidate
+    ) public onlyCorrespondingOrganizer(_election.getElectionOrganizer()) {
         _election.addCandidate(_candidate);
-        emit CandidateAdded(address(_election),_candidate);
+        emit CandidateAdded(address(_election), _candidate);
     }
 
-    function updateCandidateInfo(Election _election, string memory _name, string memory _description, uint index)public onlyCorrespondingOrganizer(_election.getElectionOrganizer()) {
+    function updateCandidateInfo(
+        Election _election,
+        string memory _name,
+        string memory _description,
+        uint index
+    ) public onlyCorrespondingOrganizer(_election.getElectionOrganizer()) {
         _election.updateCandidateInfo(_name, _description, index);
     }
-    
-    function getResult(Election _election) public returns(uint[] memory) {
-        return _election.getResult();
-    }  
 
-    function addOrganizerToInviteBasedElection(address _addOrganizer, address _election) public {
-        electionStorage.addOrganizerToInviteBasedElection(_addOrganizer, _election);
-    }  
+    function getResult(Election _election) public returns (uint[] memory) {
+        return _election.getResult();
+    }
+
+    function addOrganizerToInviteBasedElection(
+        address _addOrganizer,
+        address _election
+    ) public {
+        electionStorage.addOrganizerToInviteBasedElection(
+            _addOrganizer,
+            _election
+        );
+    }
 
     function getElectionOwner(address _election) public view returns (address) {
         return electionStorage.getElectionOwner(_election);
     }
 
-    function deleteElection (address _election) public {
+    function deleteElection(address _election) public {
         electionStorage.deleteElection(_election);
     }
 }
