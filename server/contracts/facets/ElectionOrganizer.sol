@@ -100,11 +100,11 @@ contract ElectionOrganizer {
         return organizerWithAddress[_address];
     }
 
-    function createElection(Election.ElectionInfo memory _electionInfo, uint _ballotType, uint _resultCalculatorType) public onlyOrganizer {
+    function createElection(Election.ElectionInfo memory _electionInfo, uint _ballotType, uint _resultCalculatorType, address _authContractAddress) public onlyOrganizer {
         address electionFactoryAddress = LibDiamond.addressStorage().diamond;
         uint id = electionStorage.getElectionCount() + 1;
         _electionInfo.electionID = id;
-        ElectionFactory(electionFactoryAddress).getElectionFromFactory(_electionInfo, _ballotType, _resultCalculatorType, msg.sender, address(this));
+        ElectionFactory(electionFactoryAddress).getElectionFromFactory(_electionInfo, _ballotType, _resultCalculatorType, msg.sender, address(this), _authContractAddress);
         // save in ElectionStorage
         address _election = address(LibDiamond.electionStorage().election);
         electionStorage.addElection(_election, msg.sender);

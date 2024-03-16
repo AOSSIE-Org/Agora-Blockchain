@@ -62,13 +62,13 @@ contract ElectionFactory {
     //                                            FUNCTIONS
     // ------------------------------------------------------------------------------------------------------
 
-    function getElectionFromFactory(Election.ElectionInfo memory _electionInfo, uint _ballotType, uint _resultCalculatorType, address _electionOrganizer, address _electionOrganizerContract) external  {
+    function getElectionFromFactory(Election.ElectionInfo memory _electionInfo, uint _ballotType, uint _resultCalculatorType, address _electionOrganizer, address _electionOrganizerContract, address _authContractAddress) external  {
         Election _election;
         address diamond = LibDiamond.addressStorage().diamond;
         GetBallot(diamond).getNewBallot(_ballotType);
         GetResultCalculator(diamond).getNewResultCalculator(_ballotType);   
         LibDiamond.ElectionStorage memory es = LibDiamond.electionStorage();     
-        _election = new Election(_electionInfo, es.ballot, es.resultCalculator, _electionOrganizer, _electionOrganizerContract, _ballotType);
+        _election = new Election(_electionInfo, es.ballot, es.resultCalculator, _electionOrganizer, _electionOrganizerContract, _ballotType, _authContractAddress);
         LibDiamond.electionStorage().election = _election;
     }
 

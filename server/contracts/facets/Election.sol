@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 
 import './votingApp/ballot/Ballot.sol';
 import './votingApp/resultCalculator/ResultCalculator.sol';
-
+import "./Authentication.sol";
 
 contract Election {
 
@@ -54,6 +54,7 @@ contract Election {
     
     Ballot ballot;
     ResultCalculator resultCalculator;
+    Authentication authContract;
 
     // ------------------------------------------------------------------------------------------------------
     //                                              EVENTS
@@ -82,7 +83,7 @@ contract Election {
     //                                            CONSTRUCTOR
     // ------------------------------------------------------------------------------------------------------
 
-    constructor(ElectionInfo memory _electionInfo, Ballot _ballot, ResultCalculator _resultCalculator,address _electionOrganizer, address _electionOrganizerContract,uint _ballotType) {
+    constructor(ElectionInfo memory _electionInfo, Ballot _ballot, ResultCalculator _resultCalculator,address _electionOrganizer, address _electionOrganizerContract,uint _ballotType, address _authContractAddress) {
         
         electionOrganizer = _electionOrganizer;
         electionOrganizerContract = _electionOrganizerContract;
@@ -98,6 +99,7 @@ contract Election {
         voterCount = 0;
         resultDeclared = false;
         ballotType = _ballotType;
+        authContract = Authentication(_authContractAddress);
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -191,6 +193,7 @@ contract Election {
         // if (electionInfo.electionType==0) {
         //     require(isAuthenticated(msg.Sender),"Voter must be authenticated to cast vote");
         // }
+        require(authContract.getAuthStatus(msg.sender), "Voter must be authenticated to cast vote");
         ballot.vote(_voter,_candidateID, weight,voteArr);
         voterCount++;
         emit VoteCasted(address(ballot),candidateWithID[_candidateID],weight);
