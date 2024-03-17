@@ -252,7 +252,7 @@ const handleTypeChange = (e) => {
                     <DatePicker
                       required
                       showTimeSelect
-                      dateFormat="yyyy/MM/dd hh:mm:ss"
+                      dateFormat="yyyy/MM/dd HH:mm:ss"
                       className="form-control"
                       name="startTime"
                       selected={se.startTime * 1000}
@@ -267,7 +267,7 @@ const handleTypeChange = (e) => {
                     <DatePicker
                       required
                       showTimeSelect
-                      dateFormat="yyyy/MM/dd hh:mm:ss"
+                      dateFormat="yyyy/MM/dd HH:mm:ss"
                       className="form-control"
                       name="endTime"
                       selected={se.endTime * 1000}
