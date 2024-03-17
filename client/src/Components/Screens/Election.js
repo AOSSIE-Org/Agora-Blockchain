@@ -153,9 +153,9 @@ function Election() {
 				console.log('winner',winners);
 				for(let winner of winners){
 					console.log(Number(winner))
+					_winnerDetails.push(Number(winner))
 				}
-				_winnerDetails.push(Number(winners[0]))
-				console.log("set winner", Number(winners[0]))
+				console.log("set winner", _winnerDetails)
 
 				setWinnerDetails(_winnerDetails);
 				successtoast(id ,"Winner Details has been fetched");
