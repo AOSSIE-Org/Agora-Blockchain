@@ -35,7 +35,6 @@ async function deployDiamond() {
     'OwnershipFacet',
     'Authentication',
     'ElectionOrganizer',
-    'Voter',
     'ElectionFactory',
     'GetBallot',
     'GetResultCalculator'

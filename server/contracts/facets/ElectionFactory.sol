@@ -23,7 +23,7 @@ contract ElectionFactory {
     modifier onlyOrganizerContract() {
         require(msg.sender == electionOrganizerContract,"Must be called from the election organizer contract");
         _;
-    }  
+    }
 
     // ------------------------------------------------------------------------------------------------------
     //                                            CONSTRUCTOR
@@ -66,9 +66,9 @@ contract ElectionFactory {
         Election _election;
         address diamond = LibDiamond.addressStorage().diamond;
         GetBallot(diamond).getNewBallot(_ballotType);
-        GetResultCalculator(diamond).getNewResultCalculator(_ballotType);   
-        LibDiamond.ElectionStorage memory es = LibDiamond.electionStorage();     
-        _election = new Election(_electionInfo, es.ballot, es.resultCalculator, _electionOrganizer, _electionOrganizerContract, _ballotType);
+        GetResultCalculator(diamond).getNewResultCalculator(_ballotType);
+        LibDiamond.ElectionStorage memory es = LibDiamond.electionStorage();
+        _election = new Election(_electionInfo,es.ballot,es.resultCalculator,_electionOrganizer,_electionOrganizerContract,_ballotType,diamond);
         LibDiamond.electionStorage().election = _election;
     }
 

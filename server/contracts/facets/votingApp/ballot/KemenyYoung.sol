@@ -15,7 +15,7 @@ contract KemenyYoung is Ballot {
     //                                            FUNCTIONS
     // ------------------------------------------------------------------------------------------------------
 
-    function vote(address _voter, uint _candidate, uint _weight, uint[] memory voteArr) external override {
+    function vote(address _voter, uint _candidate, uint _weight, uint[] memory voteArr) onlyOrganizerContract external override {
         require(voteStatus[_voter] == false, "Voter already voted");
         _candidate;
         uint len = voteArr.length;

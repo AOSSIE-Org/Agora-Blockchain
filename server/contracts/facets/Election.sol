@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 
 import './votingApp/ballot/Ballot.sol';
 import './votingApp/resultCalculator/ResultCalculator.sol';
-
+import "./Authentication.sol";
 
 contract Election {
 
@@ -21,7 +21,7 @@ contract Election {
         // Election type: 0 for invite based 1 for open
     }
     ElectionInfo electionInfo;
-
+    Authentication public authentication;
     struct Candidate {
         uint candidateID;
         string name;
@@ -36,7 +36,7 @@ contract Election {
     address electionOrganizerContract;
 
     uint voterCount;
-    
+
     uint ballotType;
 
 
@@ -51,7 +51,7 @@ contract Election {
     // ------------------------------------------------------------------------------------------------------
     //                                          DEPENEDENCIES
     // ------------------------------------------------------------------------------------------------------
-    
+
     Ballot ballot;
     ResultCalculator resultCalculator;
 
@@ -70,42 +70,46 @@ contract Election {
     modifier onlyOrganizerContract() {
         require(msg.sender == electionOrganizerContract,"Must be called from the election organizer contract");
         _;
-    }    
+    }
 
     modifier onlyOrganizer() {
         require(msg.sender == electionOrganizer,"Caller must be the election organizer");
         _;
     }
 
-    
+
     // ------------------------------------------------------------------------------------------------------
     //                                            CONSTRUCTOR
     // ------------------------------------------------------------------------------------------------------
 
-    constructor(ElectionInfo memory _electionInfo, Ballot _ballot, ResultCalculator _resultCalculator,address _electionOrganizer, address _electionOrganizerContract,uint _ballotType) {
-        
+    constructor(ElectionInfo memory _electionInfo,Ballot _ballot,ResultCalculator _resultCalculator,address _electionOrganizer,address _electionOrganizerContract,uint _ballotType,address _authentication) {
         electionOrganizer = _electionOrganizer;
         electionOrganizerContract = _electionOrganizerContract;
         electionInfo = _electionInfo;
         ballot = _ballot;
         resultCalculator = _resultCalculator;
         // if(block.timestamp < _electionInfo.startDate) {
-        //     status = Status.pending;
-        // } else {
+        //     status = Status.pending; // } else {
         //     status = Status.active;
         // }
         candidateCount = 1000;
         voterCount = 0;
         resultDeclared = false;
         ballotType = _ballotType;
+        authentication = Authentication(_authentication);
+        ballot.initialize(address(this));
     }
 
     // ------------------------------------------------------------------------------------------------------
     //                                            FUNCTIONS
     // ------------------------------------------------------------------------------------------------------
 
-    function getStatus() public view returns (Status) {
+    function getUserStatusForVote(address _user) internal view returns (bool) {
+        return authentication.getAuthStatus(_user);
+    }
 
+    function getStatus() public view returns (Status) {
+        
         if(block.timestamp < electionInfo.startDate) {
             return Status.pending;
         } 
@@ -142,7 +146,7 @@ contract Election {
     function getElectionOrganizer() public view returns (address) {
         return electionOrganizer;
     }
-    
+
     //Add candidate to election as well as ballot
     function addCandidate(Candidate memory _candidate) external onlyOrganizerContract {
         require(getStatus() == Status.pending,"Cannot add candidates after election has started");
@@ -154,7 +158,7 @@ contract Election {
         candidateCount++;
         emit CandidateAdded(address(this),address(ballot),_candidate);
     }
-    
+
     function getCandidateCount() public view returns(uint) {
         return candidateCount;
     }
@@ -180,26 +184,27 @@ contract Election {
         require(resultDeclared == true,"Results aren't declared yet");
         return winners;
     }
-    
+
     // Performs vote in ballot and updates voterCount
     /*
         In invite based elections, a condidition to check if voter is authenticated
 
     */
-    function vote(address _voter, uint _candidateID, uint weight,uint[] memory voteArr) external {
-        require(getStatus() == Status.active, "Election needs to be active to vote");
+    function vote(uint _candidateID,uint weight,uint[] memory voteArr) external {
+        // require(getStatus() == Status.active,"Election needs to be active to vote");
+        require(getUserStatusForVote(msg.sender), "User Not Authenticated");
         // if (electionInfo.electionType==0) {
         //     require(isAuthenticated(msg.Sender),"Voter must be authenticated to cast vote");
         // }
-        ballot.vote(_voter,_candidateID, weight,voteArr);
+        ballot.vote(msg.sender, _candidateID, weight, voteArr);
         voterCount++;
-        emit VoteCasted(address(ballot),candidateWithID[_candidateID],weight);
+        emit VoteCasted(address(ballot), candidateWithID[_candidateID], weight);
     }
 
     // function getTimeStamps()public;
     //                  ->this can be depracated, since time stamps are easily available from ElectionInfo
-    
 
+    
     function getResult() external returns(uint[] memory){
         require(getStatus() == Status.closed, "Results are declared only after the election ends");
         if (resultDeclared == false) {
@@ -220,7 +225,7 @@ contract Election {
     function updateElectionInfo(ElectionInfo memory _electionInfo) external  onlyOrganizer{
         require(getStatus() == Status.pending, "Cannot update election info after election has started");
         electionInfo = _electionInfo;
-    }   
+    }
 
     function updateCandidateInfo(string memory _name, string memory _description, uint index) external onlyOrganizerContract {
         require(getStatus() == Status.pending,"Cannot add candidates after election has started");

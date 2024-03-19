@@ -11,6 +11,22 @@ abstract contract Ballot {
     uint[] candidates;
 
     mapping(address=>bool)voteStatus;
+    address electionOrganizerContract;
+    bool isInitialized;
+    
+    modifier onlyOrganizerContract() {
+        require(
+            msg.sender == electionOrganizerContract,
+            "Must be called from the election organizer contract"
+        );
+        _;
+    }
+
+    function initialize( address _contractOwner) external {
+        require(isInitialized == false, "Already Initialized");
+        electionOrganizerContract = _contractOwner;
+        isInitialized = true;
+    }
 
     // ------------------------------------------------------------------------------------------------------
     //                                            FUNCTIONS

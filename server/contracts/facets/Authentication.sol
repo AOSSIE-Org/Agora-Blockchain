@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0;
 
 import './ElectionOrganizer.sol';
-import './Voter.sol';
 
 contract Authentication {
 
@@ -26,7 +25,6 @@ contract Authentication {
     // ------------------------------------------------------------------------------------------------------
 
     ElectionOrganizer electionOrganizer;
-    Voter voter;
 
     // ------------------------------------------------------------------------------------------------------
     //                                            CONSTRUCTOR
@@ -45,7 +43,6 @@ contract Authentication {
         LibDiamond.addressStorage().diamond = _diamond;
         electionOrganizer =  ElectionOrganizer(_diamond);
         electionOrganizer.electionOrganizerInit();
-        voter = Voter(_diamond);   
     }
 
     function createUser(ElectionOrganizer.OrganizerInfo memory _organizerInfo, string memory hashedPassword) public {
@@ -57,10 +54,6 @@ contract Authentication {
 
     function getElectionOrganizerContract() public view returns(address) {
         return address(electionOrganizer);
-    }
-
-    function getVoterContract() public view returns(address) {
-        return address(voter);
     }
 
     function getAuthStatus(address _user) public view returns(bool) {
