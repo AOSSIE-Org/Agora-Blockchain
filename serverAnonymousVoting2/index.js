@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const oneVote = require("./abis/contracts/OneVote.sol/OneVote.json");
-const { Contract, providers, Wallet } =requre("ethers");
+const { Contract, providers, Wallet } =require("ethers");
 require("dotenv").config();
 
 const app = express(); 
@@ -17,6 +17,7 @@ const contractAddress = process.env.ONEVOTE_ADDRESS;
 
 
 app.post("/vote",async (req,res)=>{
+    console.log("Trying to vote!");
     const provider = new providers.AlchemyProvider(ethereumNetwork, RPC_PROVIDER);
     const signer = new Wallet(PRIVATE_KEY,provider);
     const contract = new Contract(contractAddress,oneVote.abi,signer);

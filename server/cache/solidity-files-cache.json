@@ -1631,8 +1631,8 @@
       ]
     },
     "/workspaces/Agora-Blockchain/server/contracts/VotingProcess.sol": {
-      "lastModificationDate": 1708229089667,
-      "contentHash": "22aed0110a9a91c48d4e171e98edeb77",
+      "lastModificationDate": 1711023038954,
+      "contentHash": "1a47853f78fbe37f6de5c91690d455db",
       "sourceName": "contracts/VotingProcess.sol",
       "solcConfig": {
         "version": "0.8.23",

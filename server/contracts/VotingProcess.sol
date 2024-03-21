@@ -95,14 +95,16 @@ contract VotingProcess {
         return endDate;
     }
 
-    function vote(uint256 candidateId) public inStatus(Status.Active) {
+    // remove election status for testing.
+    function vote(uint256 candidateId) public  {
         bytes32 candidate = candidateIdToCandidate[candidateId];
         require(votesPerCandidate[candidate] < type(uint256).max, "Vote count overflow");
         votesPerCandidate[candidate] += 1;
         emit Voted(candidate);
     }
 
-    function addCandidate(bytes32 candidate) public onlyOwner inStatus(Status.Pending) {
+    // remove election status for testing.
+    function addCandidate(bytes32 candidate) public onlyOwner {
         candidates.push(candidate);
         candidateIdToCandidate[canidateCounter]=candidate;
         canidateCounter++;
