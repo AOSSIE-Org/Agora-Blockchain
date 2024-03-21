@@ -28,7 +28,6 @@ export function AddCandidateModal({ electionAddress,callback}) {
             const { provider } = getProviderAndSigner();
             const votingProcessContract = new Contract(electionAddress, votingProcessAbi.abi, provider);
             const id = await votingProcessContract.id();
-            console.log();
             await addCandidate(id,ethers.utils.formatBytes32String(candidateDetail.name.trim()));
             await callback();
             setIsOpen(false)

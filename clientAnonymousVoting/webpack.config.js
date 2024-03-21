@@ -354,8 +354,11 @@ module.exports = function (webpackEnv) {
         "stream": require.resolve("stream-browserify"),
         "path": require.resolve("path-browserify"),
         "worker_threads": false,
-        "buffer": false //require.resolve("buffer"),
-        
+        "buffer": false,//require.resolve("buffer"),
+        "process": require.resolve("process/browser"),
+      },
+      alias:{
+        process:"process/browser",
       }
     },
     module: {

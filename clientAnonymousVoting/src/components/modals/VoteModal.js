@@ -9,13 +9,14 @@ import { AVATARS } from '../constants';
 import { generateProof } from "@semaphore-protocol/proof";
 import { Identity } from "@semaphore-protocol/identity";
 import { Group } from "@semaphore-protocol/group";
-import { getProviderAndSigner } from "../../web3/contracts";
-
+import { getProviderAndSigner, getUserAuthStatus } from "../../web3/contracts";
+import votingProcessAbi from "../../abis/contracts/VotingProcess.sol/VotingProcess.json";
 
 export function VoteModal({ electionAddress, candidates }) {
 
     const [isOpen, setIsOpen] = useState(false);
     const [candidateId, setCandidateId] = useState(null);
+    const [pending, setPending] = useState(false);
 
 
     const closeModal = e => {
@@ -38,26 +39,33 @@ export function VoteModal({ electionAddress, candidates }) {
         const vote = ethers.BigNumber.from(candidateId).toString();
         const { signer } = getProviderAndSigner();
         const address = await signer.getAddress();
-        const message = `I am signing this message to confirm my identity: ${address}`
+        const message = `I am signing this message to confirm my identity: ${address}`;
         if (address) {
             const signature = await signer.signMessage(message);
             const identity = new Identity(signature);
+            console.log(identity);
             const authStatus = await getUserAuthStatus(identity.commitment);
             try {
                 if (!authStatus) {
                     return;
                 }
                 // the group id specified while deploying the smart contract.
-                const group = new Group(122332);
+                const group = new Group(1223333);
+                console.log(group);
+                console.log("We have a group now!");
+                const { provider } = getProviderAndSigner();
+		        const votingProcessContract = new Contract(electionAddress, votingProcessAbi.abi, provider);
+		        
+                const electionId = await votingProcessContract.id();
+                console.log(electionId.toNumber());
                 const { proof, merkleTreeRoot, nullifierHash } = await generateProof(
                     identity,
                     group,
-                    122332,
+                    electionId.toNumber(),
                     vote
                 );
-                const { provider } = getProviderAndSigner();
-		        const votingProcessContract = new Contract(electionAddress, votingProcessAbi.abi, provider);
-		        const electionId = await votingProcessContract.id();
+                console.log("Proof generated!",proof);
+              
                 let response;
                 response = await fetch("http://localhost:4000/vote", {
                     method: "POST",
@@ -76,12 +84,10 @@ export function VoteModal({ electionAddress, candidates }) {
                     setIsOpen(false);
                 }
             } catch (e) {
+                console.log(e);
                 setPending(false);
             }
         }
-
-
-        const { proof, merkleTreeRoot, nullifierHash } = await generateProof();
     }
 
 
