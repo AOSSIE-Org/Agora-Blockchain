@@ -12,6 +12,7 @@ import { redirect } from "react-router-dom";
 
 import styles from './Register.module.css';
 import votingImage from '../assets/voting.svg';
+import { useWeb3Modal } from '@web3modal/ethers5/react';
 
 const Register = () => {
     const dispatch = useDispatch()
@@ -19,9 +20,12 @@ const Register = () => {
     const [connectWallet, setConnectWallet] = useState('');
     const [pending, setPending] = useState(false);
     const [registered, setRegistered] = useState(false);
+    const { open } = useWeb3Modal()
     
 
     const handleRegisterClick = async () => {
+        open()
+        return
         const { ethereum } = window;
         if (!ethereum) {
             setConnectWallet("Please install a web3 wallet first.");
