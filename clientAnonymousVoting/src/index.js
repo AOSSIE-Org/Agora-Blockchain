@@ -9,6 +9,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <App />
+      {/* klasdlkas */}
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

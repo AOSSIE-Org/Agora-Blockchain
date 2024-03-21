@@ -7,7 +7,7 @@ function Navbar({header, infoText, pictureUrl}) {
             <div className="navbarUserInfo">
                 <img src={pictureUrl} alt="profile-pic" className="navbarProfilePic"/>
                 <font size = "2" className="navbarUserText">
-                    <span>{header}</span>
+                    <span>Wallet Address</span>
                     <span className="text-muted navbarAddress">{infoText}</span>
                 </font>
             </div>
