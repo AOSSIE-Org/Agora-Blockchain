@@ -13,7 +13,7 @@ const PORT = 4000;
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const RPC_PROVIDER = process.env.RPC_PROVIDER;
-const contractAddress = "0x350dcF2a6D1067271Ca0dEf92E1Aca2A1bb81621";
+const contractAddress = process.env.ONEVOTE_ADDRESS;
 
 
 app.post("/vote",async (req,res)=>{

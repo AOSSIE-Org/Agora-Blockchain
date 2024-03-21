@@ -7,7 +7,9 @@ async function main() {
   const OneVote = await ethers.getContractFactory('OneVote');
 
   // Deploy OneVote contract
-  const oneVote = await OneVote.deploy(SEMAPHORE_ADDRESS,122332);
+  const oneVote = await OneVote.deploy(SEMAPHORE_ADDRESS,122332,{
+    gasLimit: 10000000
+  });
   await oneVote.deployed();
   console.log('OneVote deployed:', oneVote.address);
 

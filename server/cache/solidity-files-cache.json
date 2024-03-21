@@ -1739,7 +1739,7 @@
       ]
     },
     "/workspaces/Agora-Blockchain/server/contracts/OneVote.sol": {
-      "lastModificationDate": 1708518519018,
+      "lastModificationDate": 1710981736701,
       "contentHash": "46e2e52965f9cdde86d6b9c6d417584c",
       "sourceName": "contracts/OneVote.sol",
       "solcConfig": {
