@@ -51,12 +51,12 @@ export function VoteModal({ electionAddress, candidates }) {
                 }
                 // the group id specified while deploying the smart contract.
                 const group = new Group(1223333);
-                console.log(group);
                 console.log("We have a group now!");
                 const { provider } = getProviderAndSigner();
 		        const votingProcessContract = new Contract(electionAddress, votingProcessAbi.abi, provider);
 		        
                 const electionId = await votingProcessContract.id();
+                group.addMember(identity.commitment);
                 console.log(electionId.toNumber());
                 const { proof, merkleTreeRoot, nullifierHash } = await generateProof(
                     identity,
