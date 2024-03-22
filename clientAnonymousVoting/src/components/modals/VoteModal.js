@@ -35,7 +35,6 @@ export function VoteModal({ electionAddress, candidates }) {
 
     const handleVoteSubmit = async (e) => {
         e.preventDefault();
-        console.log(candidateId);
         const vote = ethers.BigNumber.from(candidateId).toString();
         const { signer } = getProviderAndSigner();
         const address = await signer.getAddress();
@@ -51,13 +50,11 @@ export function VoteModal({ electionAddress, candidates }) {
                 }
                 // the group id specified while deploying the smart contract.
                 const group = new Group(1223333);
-                console.log("We have a group now!");
                 const { provider } = getProviderAndSigner();
 		        const votingProcessContract = new Contract(electionAddress, votingProcessAbi.abi, provider);
 		        
                 const electionId = await votingProcessContract.id();
                 group.addMember(identity.commitment);
-                console.log(electionId.toNumber());
                 const { proof, merkleTreeRoot, nullifierHash } = await generateProof(
                     identity,
                     group,
@@ -65,7 +62,6 @@ export function VoteModal({ electionAddress, candidates }) {
                     vote
                 );
                 console.log("Proof generated!",proof);
-              
                 let response;
                 response = await fetch("http://localhost:4000/vote", {
                     method: "POST",
