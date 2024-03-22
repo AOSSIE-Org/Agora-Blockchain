@@ -1,41 +1,38 @@
 // /** @type import('hardhat/config').HardhatUserConfig */
-// require("dotenv").config();
+require("dotenv").config();
+require("@semaphore-protocol/hardhat");
+require("@nomiclabs/hardhat-waffle");
 
-// require("@nomiclabs/hardhat-waffle");
-
-// module.exports = {
-//   solidity: "0.8.9",
-//   networks: {
-//     goerli: {
-//       network_id: 5,
-//       url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
-//       accounts: [process.env.GOERLI_PRIVATE_KEY]
-//     }
-//   }, solidity: {
-//     version: "0.8.9",
-//     settings: {
-//       optimizer: {
-//         enabled: true,
-//         runs: 200,
-//       },
-//     },
-//   },
-// };
 
 /** @type import('hardhat/config').HardhatUserConfig */
 //require("hardhat-contract-sizer");
-require("@nomiclabs/hardhat-waffle");
 module.exports = {
-  solidity: '0.8.10',
-  defaultNetwork:"mumbai",
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.4",
+      },
+      {
+        version: "0.8.23",
+        settings: {},
+      },
+    ],
+  },
+  defaultNetwork:"sepoli",
   networks:{
     hardhat:{
       allowUnlimitedContractSize:true
     },
     mumbai:{
       allowUnlimitedContractSize:true,
-      url:"https://rpc-mumbai.maticvigil.com/",
-      accounts:["e820e413ccda5073b7997a35cd9973d6a991a4d981408aa52f09222f39f6ec3e"],  //private key place here
+      url:process.env.MUMBAI_RPC_URL || "https://rpc-mumbai.maticvigil.com/",
+      accounts:[process.env.PRIVATE_KEY],  //private key place here
+    },
+    sepoli:{
+      allowUnlimitedContractSize:true,
+      
+      url:process.env.SEPOLI_RPC_URL || "https://rpc-mumbai.maticvigil.com/",
+      accounts:[process.env.PRIVATE_KEY],  //private key place here
     }
   },  
   mocha: {
@@ -48,6 +45,10 @@ module.exports = {
   },
   contractSizer:{
     runOnCompile:true
-  }
+  },
+  paths: {
+		artifacts: "../clientAnonymousVoting/src/abis",
+	},
+
 };
 
