@@ -3,7 +3,7 @@ const webpack = require('webpack');
 module.exports = function override(config) {
   const webpackVersion = webpack.version;
   console.log('webpack version:', webpackVersion);
-
+  config.ignoreWarnings = [/Failed to parse source map/];
   const fallback = config.resolve.fallback || {};
   Object.assign(fallback, {
     "crypto": require.resolve('crypto-browserify'),

@@ -1,14 +1,16 @@
 import { Link } from "react-router-dom";
 import './styles/Navbar.scss';
+import { useWeb3ModalAccount } from "@web3modal/ethers5/react";
 
-function Navbar({header, infoText, pictureUrl}) {
+function Navbar({pictureUrl}) {
+    const { address, } = useWeb3ModalAccount()
 	return (
         <nav className="shadow-sm">
             <div className="navbarUserInfo">
                 <img src={pictureUrl} alt="profile-pic" className="navbarProfilePic"/>
                 <font size = "2" className="navbarUserText">
                     <span>Wallet Address</span>
-                    <span className="text-muted navbarAddress">{infoText}</span>
+                    <span className="text-muted navbarAddress">{address}</span>
                 </font>
             </div>
 

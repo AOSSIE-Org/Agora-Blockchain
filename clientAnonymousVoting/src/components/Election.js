@@ -206,7 +206,7 @@ function Election() {
 	return (
 		<div style={{ backgroundColor: "#f7f7f7", minHeight: "100%" }}>
 			<ToastContainer style={{ zIndex: "99999" }} />
-			<Navbar header={''} infoText={signerAddress} pictureUrl="/assets/avatar.png" />
+			<Navbar pictureUrl="/assets/avatar.png" />
 			<div style={{ padding: "30px" }}>
 				<div style={{ width: "100%" }}>
 					<div style={{ float: "left" }}>
@@ -239,7 +239,7 @@ function Election() {
 				<br /><br /><br />
 
 				<div className="cardContainer row">
-					<CardItem headerValue={ballotType === 1 ? "general" : ballotType == 2 ? "Oklahoma" : "Borda"} descriptor="Algorithm" imgUrl="/assets/totalElections.png" />
+					<CardItem headerValue={ballotType === 1 ? "general" : ballotType === 2 ? "Oklahoma" : "Borda"} descriptor="Algorithm" imgUrl="/assets/totalElections.png" />
 
 					<CardItem headerValue={new Date(electionDetails?.startDate * 1000).toLocaleString()} descriptor="Start date" imgUrl="/assets/activeElections.png" imgBackground="#eaffe8" />
 
@@ -251,7 +251,7 @@ function Election() {
 				<div className="layoutBody row">
 					<div className="lhsLayout" style={{ overflowY: "scroll" }}>
 						{
-							status == STATUS.CLOSED
+							status === STATUS.CLOSED
 								?
 								<div>
 									<span onClick={() => { }} className="voteButton" style={{ float: "right", marginTop: "10px", width: "100px" }}>Get Results</span>

@@ -11,7 +11,7 @@ const projectId = "8e778482126e2af936e44f9cdfb08c37";
 const sepolia = {
   chainId:11155111,
   name:"Sepolia",
-  rpcUrl:"https://sepolia.infura.io/v3/",
+  rpcUrl:"https://eth-sepolia.g.alchemy.com/v2/bOWZwPZQpppSliRgqTvwjqPPSLTnuzPW",
   currency:"ETH",
   explorerUrl: 'https://sepolia.etherscan.io/',
 }

@@ -12,33 +12,23 @@ import { redirect } from "react-router-dom";
 
 import styles from './Register.module.css';
 import votingImage from '../assets/voting.svg';
-import { useWeb3Modal } from '@web3modal/ethers5/react';
+import { useWeb3Modal, useWeb3ModalAccount,useWeb3ModalProvider } from '@web3modal/ethers5/react';
 
 const Register = () => {
     const dispatch = useDispatch()
     const [identityCommitment, setIdentityCommitment] = useState(null);
-    const [connectWallet, setConnectWallet] = useState('');
+    const { address, chainId, isConnected } = useWeb3ModalAccount()
     const [pending, setPending] = useState(false);
     const [registered, setRegistered] = useState(false);
-    const { open } = useWeb3Modal()
-    
+    const { open } = useWeb3Modal();
+    const { walletProvider } = useWeb3ModalProvider()
 
-    const handleRegisterClick = async () => {
-        open()
-        return
-        const { ethereum } = window;
-        if (!ethereum) {
-            setConnectWallet("Please install a web3 wallet first.");
-            return;
-        }
-        const provider = new ethers.providers.Web3Provider(ethereum);
 
-        provider.send("eth_requestAccounts", []).then(async () => {
+    const register = async () => {
+        if(isConnected){
+            const provider = new ethers.providers.Web3Provider(walletProvider);
             const signer = provider.getSigner();
-            const address = await signer.getAddress();
-
             const message = `I am signing this message to confirm my identity: ${address}`;
-            
             if (address) {
                 const signature = await signer.signMessage(message);
                 const identity = new Identity(signature);
@@ -61,9 +51,14 @@ const Register = () => {
                     setPending(false);
                 }
             }
-
-        })
+        }
     }
+
+    useEffect(()=>{
+        if(isConnected){
+            register();
+        }
+    },[isConnected])
 
 
     const isRegistered = async () => {
@@ -115,11 +110,11 @@ const Register = () => {
                                         ?
                                         <Navigate to='/dashboard' />
                                         :
-                                        <button onClick={handleRegisterClick} className="authButtons">
+                                        <button onClick={()=>open()} className="authButtons">
                                             Register
                                         </button>
                                 }
-                                <h2 style={{ color: "red", marginTop: "1em" }}>{connectWallet}</h2>
+                                
                             </div>
                             {
                                 pending && (

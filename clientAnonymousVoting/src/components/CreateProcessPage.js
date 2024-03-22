@@ -98,7 +98,7 @@ const CreateProcess = () => {
                 <div>
                     <button className="baseButton">Create new process</button>
                 </div>
-                {refValue.current == true && <div style={{marginTop: "2em"}}>
+                {refValue.current === true && <div style={{marginTop: "2em"}}>
                     <Spinner animation="border" />
                 </div>}
             </form>

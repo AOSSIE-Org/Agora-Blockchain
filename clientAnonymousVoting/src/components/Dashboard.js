@@ -134,11 +134,7 @@ const Dashboard = () => {
     return (
         <div style={{ backgroundColor: "#f7f7f7", minHeight: "100%" }}>
             <ToastContainer style={{ zIndex: "99999" }} />
-            <Navbar
-                header={"Wallet Address"}
-                infoText={organizerInfo}
-                pictureUrl="/assets/avatar.png"
-            />
+            <Navbar pictureUrl="/assets/avatar.png"/>
 
             <div style={{ padding: "30px" }}>
                 <div style={{ width: "100%" }}>
