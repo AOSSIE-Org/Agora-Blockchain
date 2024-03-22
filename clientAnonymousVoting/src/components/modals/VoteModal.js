@@ -49,7 +49,7 @@ export function VoteModal({ electionAddress, candidates }) {
                     return;
                 }
                 // the group id specified while deploying the smart contract.
-                const group = new Group(1223333);
+                const group = new Group(1223338);
                 const { provider } = getProviderAndSigner();
 		        const votingProcessContract = new Contract(electionAddress, votingProcessAbi.abi, provider);
 		        
