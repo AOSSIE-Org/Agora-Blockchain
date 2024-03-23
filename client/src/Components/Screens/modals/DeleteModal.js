@@ -3,8 +3,9 @@ import { Modal, Button, Card } from "rimble-ui";
 import { ethers } from "ethers";
 import { useNavigate } from "react-router-dom";
 import { Oval } from 'react-loader-spinner';
+import { CONTRACTADDRESS } from "../../constants";
 import ElectionOrganizer from "../../../artifacts/contracts/facets/ElectionOrganizer.sol/ElectionOrganizer.json";
-
+import ElectionStorage from "../../../artifacts/contracts/facets/votingApp/ElectionStorage.sol/ElectionStorage.json";
 export function DeleteModal({ orgnizerAddress, electionAddress }) {
     const [showLoader, setShowLoader] = useState(false);
 
@@ -30,9 +31,15 @@ export function DeleteModal({ orgnizerAddress, electionAddress }) {
             if (ethereum) {
                 const provider = new ethers.providers.Web3Provider(ethereum);
                 const signer = provider.getSigner();
+                const organizerContract = new ethers.Contract(
+					CONTRACTADDRESS,
+					ElectionOrganizer.abi,
+					signer
+				);
+                const storageAddress = await organizerContract.getElectionStorage();
                 const electionOrgContract = new ethers.Contract(
-                    orgnizerAddress,
-                    ElectionOrganizer.abi,
+                    storageAddress,
+                    ElectionStorage.abi,
                     signer
                 );
                 const overrides = {

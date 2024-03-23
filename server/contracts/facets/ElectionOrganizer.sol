@@ -152,7 +152,4 @@ contract ElectionOrganizer {
         return electionStorage.getElectionOwner(_election);
     }
 
-    function deleteElection (address _election) public {
-        electionStorage.deleteElection(_election);
-    }
 }
