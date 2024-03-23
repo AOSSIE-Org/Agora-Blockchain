@@ -7,7 +7,7 @@ import "../../Election.sol";
 contract SchulzeBallot is Ballot {
     uint[][] votes;
 
-    function vote(address _voter, uint _candidate, uint _weight, uint[] memory prefernceVote) external override {
+    function vote(address _voter, uint _candidate, uint _weight, uint[] memory prefernceVote) onlyOrganizerContract external override {
         require(voteStatus[_voter] == false, "Voter already voted");
         _candidate;
         _weight;

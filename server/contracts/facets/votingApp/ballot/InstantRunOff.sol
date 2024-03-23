@@ -6,7 +6,7 @@ import '../../Election.sol';
 contract IRV is Ballot{
     uint[][] Votes;
 
-    function vote(address _voter, uint _candidate, uint _score,uint[] memory voteArr) override external {
+    function vote(address _voter, uint _candidate, uint _score,uint[] memory voteArr) onlyOrganizerContract override external {
         _voter;
         _candidate;
         _score;

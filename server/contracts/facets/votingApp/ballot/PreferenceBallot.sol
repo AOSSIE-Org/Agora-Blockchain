@@ -27,7 +27,7 @@ contract PreferenceBallot is Ballot{
     //                                            FUNCTIONS
     // ------------------------------------------------------------------------------------------------------
     
-    function vote(address _voter, uint _candidate, uint _preference,uint[] memory voteArr) external  override{
+    function vote(address _voter, uint _candidate, uint _preference,uint[] memory voteArr) external onlyOrganizerContract override{
         require(voteStatus[_voter]==false,"Voter already voted");
         require(voterCandidateVoteStatus[_voter][_candidate]==false,"Voter already voted for this candidate");
         require(voterVoteCount[_voter]<candidates.length,"Max votes already casted by voter");

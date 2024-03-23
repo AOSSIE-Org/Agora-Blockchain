@@ -31,7 +31,7 @@ contract BordaBallot is Ballot{
         return votes;
     }
 
-    function vote(address _voter, uint _candidate, uint _preference,uint[] memory voteArr) external  override {
+    function vote(address _voter, uint _candidate, uint _preference,uint[] memory voteArr) onlyOrganizerContract external  override {
         require(voteStatus[_voter]==false,"Voter already voted");
         
         votes.push(voteArr);
