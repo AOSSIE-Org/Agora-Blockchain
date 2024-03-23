@@ -97,6 +97,7 @@ contract ElectionStorage {
     }
 
     function deleteElection (address _election) external {
+        require(getElectionOwner (_election) == msg.sender,"Only Owner Can Delete Election");
         Election election = Election(_election);
         require(election.getStatus() == Election.Status.pending, "Cannot delete election after election has started");
 
