@@ -18,6 +18,7 @@ contract Election {
         uint startDate;
         uint endDate;
         bool electionType;
+        uint256 electionGroupId;
         // Election type: 0 for invite based 1 for open
     }
     ElectionInfo electionInfo;
@@ -86,14 +87,9 @@ contract Election {
         
         electionOrganizer = _electionOrganizer;
         electionOrganizerContract = _electionOrganizerContract;
-        electionInfo = _electionInfo;
+        electionInfo = _electionInfo; 
         ballot = _ballot;
         resultCalculator = _resultCalculator;
-        // if(block.timestamp < _electionInfo.startDate) {
-        //     status = Status.pending;
-        // } else {
-        //     status = Status.active;
-        // }
         candidateCount = 1000;
         voterCount = 0;
         resultDeclared = false;

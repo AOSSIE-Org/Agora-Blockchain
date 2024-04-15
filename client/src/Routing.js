@@ -15,7 +15,6 @@ const Routing = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/election" element={<Election />} />
         <Route path="/brightid" element={<BrightID />} />
-
       </Routes>
 
     // <BrowserRouter>

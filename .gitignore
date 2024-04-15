@@ -18,3 +18,6 @@ server/coverage.json
 .env.production.local
 
 npm-debug.log*
+build-info
+
+cache

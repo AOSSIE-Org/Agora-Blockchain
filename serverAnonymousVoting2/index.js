@@ -12,13 +12,13 @@ app.use(cors());
 const PORT = 4000;
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
-const RPC_PROVIDER = process.env.RPC_PROVIDER;
+const RPC_PROVIDER = process.env.SEPOLI_RPC_URL;
 const contractAddress = process.env.ONEVOTE_ADDRESS;
 
 
 app.post("/vote",async (req,res)=>{
     console.log("Trying to vote!");
-    const provider = new providers.AlchemyProvider(ethereumNetwork, RPC_PROVIDER);
+    const provider = new providers.JsonRpcProvider(RPC_PROVIDER);
     const signer = new Wallet(PRIVATE_KEY,provider);
     const contract = new Contract(contractAddress,oneVote.abi,signer);
     const { vote, merkleTreeRoot, nullifierHash, proof,electionId} = req.body;
