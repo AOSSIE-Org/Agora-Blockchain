@@ -8,16 +8,12 @@ import { ethers } from 'ethers';
 import { addVoter, getUserAuthStatus } from '../web3/contracts';
 import "./styles/Auth.scss";
 import { redirect } from "react-router-dom";
-
-
-import styles from './Register.module.css';
-import votingImage from '../assets/voting.svg';
 import { useWeb3Modal, useWeb3ModalAccount,useWeb3ModalProvider } from '@web3modal/ethers5/react';
 
 const Register = () => {
     const dispatch = useDispatch()
     const [identityCommitment, setIdentityCommitment] = useState(null);
-    const { address, chainId, isConnected } = useWeb3ModalAccount()
+    const { address, chainId, isConnected } = useWeb3ModalAccount();
     const [pending, setPending] = useState(false);
     const [registered, setRegistered] = useState(false);
     const { open } = useWeb3Modal();
@@ -83,6 +79,9 @@ const Register = () => {
         <div className='authDiv'>
             <div className="description">
                 <img src="/assets/aossie.png" alt="aossie" className="aossieLogo" />
+                <a href='/howItWorks' className='howitworks'>
+                    How it works?
+                </a>
             </div>
 
             <div className="authCardHolder">
