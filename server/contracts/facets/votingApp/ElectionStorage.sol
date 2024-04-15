@@ -117,7 +117,6 @@ contract ElectionStorage {
                 electionFound = true;
             }
         }
-
         require(electionFound, "Election not found");
         openBasedElections = newElection;
     }
