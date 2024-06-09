@@ -97,13 +97,13 @@ contract Election is Initializable {
     function getResult() external onlyOwner returns (uint) {
         bytes memory payload = abi.encodeWithSignature("getVotes()");
 
-        (bool success, bytes memory returnData) = address(ballot).staticcall(
+        (bool success, bytes memory allVotes) = address(ballot).staticcall(
             payload
         );
 
         require(success, "Call to getVotes failed");
 
-        uint _winner = resultCalculator.getResults(returnData, resultType);
+        uint _winner = resultCalculator.getResults(allVotes, resultType);
         winner = _winner;
         return _winner;
     }
