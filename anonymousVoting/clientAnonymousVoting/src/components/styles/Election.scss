@@ -1,0 +1,37 @@
+.voteButton {
+    color: white;
+    float: right;
+    width: 80px;
+    height: 35px;
+    background: #593cda;
+    border-radius: 4px;
+    font-weight: bolder;
+    font-size: 15px;
+    cursor: pointer;
+
+    transition: all ease 0.3s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 30px;
+}
+
+.voteButtonDisabled {
+    background: #593cda69;
+    cursor: not-allowed;
+}
+
+.deleteButton {
+    background: #FF4C61;
+}
+
+.voteCandidate {
+    display: flex;
+    cursor: pointer;
+    width: 50%;
+}
+
+.voteCandiateInput {
+    margin: 10px 10px 0px 0px !important;
+}

@@ -1,0 +1,20 @@
+{
+  "name": "vc-verifier",
+  "version": "1.0.0",
+  "description": "Polygon ID Verifiable Credential (VC) verifier",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Steph",
+  "license": "MIT",
+  "dependencies": {
+    "@iden3/js-iden3-auth": "^1.0.0-beta.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.1.3",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22",
+    "socket.io": "^4.6.2"
+  }
+}
