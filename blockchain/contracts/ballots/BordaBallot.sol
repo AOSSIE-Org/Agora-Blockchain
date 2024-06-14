@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import "./interface/IBallot.sol";
 
-contract IRV is IBallot {
+contract BordaBallot is IBallot {
     error OwnerPermissioned();
 
     address public electionContract;
@@ -23,7 +23,6 @@ contract IRV is IBallot {
     function init(uint _totalCandidates) external onlyOwner {
         totalCandidates = _totalCandidates;
     }
-
     // voting as preference candidate
     function vote(uint[] memory voteArr) external onlyOwner {
         require(

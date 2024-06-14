@@ -3,8 +3,7 @@ pragma solidity ^0.8.24;
 
 import "./interface/IBallot.sol";
 
-//  ranked have the same ballot as ...
-contract RankedBallot is IBallot {
+contract QuadraticBallot is IBallot {
     error OwnerPermissioned();
 
     address public electionContract;
@@ -23,7 +22,6 @@ contract RankedBallot is IBallot {
     function init(uint totalCandidate) external onlyOwner {
         candidateVotes = new uint[](totalCandidate);
     }
-
     // voting as preference candidate
     function vote(uint[] memory voteArr) external onlyOwner {
         uint totalCandidates = candidateVotes.length;
@@ -32,11 +30,11 @@ contract RankedBallot is IBallot {
             "Votes don't match the candidates"
         );
 
-        require(checkCreditsRanked(voteArr), "Incorrect credits given");
+        require(checkCreditsQuadratic(voteArr), "Incorrect credits given");
 
         for (uint i = 0; i < totalCandidates; i++) {
-            // voteArr[i] is the candidate ID, i is the rank (0-based)
-            candidateVotes[voteArr[i]] += totalCandidates - i - 1;
+            // voteArr[i] is the credits alloted per candidate
+            candidateVotes[i] += voteArr[i];
         }
     }
 
@@ -44,11 +42,10 @@ contract RankedBallot is IBallot {
         return candidateVotes;
     }
 
-    function checkCreditsRanked(
+    function checkCreditsQuadratic(
         uint[] memory voteArr
-    ) internal view returns (bool) {
-        uint _candidates = candidateVotes.length;
-        uint totalCredits = (_candidates * (_candidates + 1)) / 2 - _candidates;
+    ) internal pure returns (bool) {
+        uint totalCredits = 100;
         for (uint i = 0; i < voteArr.length; i++) {
             totalCredits = totalCredits - voteArr[i];
         }
