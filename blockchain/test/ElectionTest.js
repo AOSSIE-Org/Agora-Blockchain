@@ -812,4 +812,94 @@ describe("ElectionFactory and Election Contracts", function () {
       expect(winner).to.equal(0); // Adjust this based on the actual Kemeny-Young calculation
     });
   });
+
+  describe("Schulze Voting Algorithm Tests", function () {
+    it("Test with three voters and three candidates", async function () {
+      const { electionFactory, voter1, voter2, voter3 } = await loadFixture(
+        deployElectionFactoryFixture
+      );
+
+      const electionInfo = {
+        startTime: Math.floor(Date.now() / 1000) + 60,
+        endTime: Math.floor(Date.now() / 1000) + 3600,
+        name: "Schulze Election",
+        description: "This is a Schulze test election",
+      };
+      const ballotType = 8; // Schulze
+      const resultType = 8; // Schulze
+
+      await electionFactory.createElection(
+        electionInfo,
+        ballotType,
+        resultType
+      );
+
+      const openElections = await electionFactory.getOpenElections();
+      const Election = await ethers.getContractFactory("Election");
+      const electionInstance = Election.attach(openElections[0]);
+
+      await electionInstance.addCandidate("Candidate 1");
+      await electionInstance.addCandidate("Candidate 2");
+      await electionInstance.addCandidate("Candidate 3");
+
+      await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
+
+      // Voters submit their votes in preference ranking: [B, C, A] -> [1, 2, 0]
+      await electionInstance.connect(voter1).userVote([1, 2, 0]); // Voter 1
+      await electionInstance.connect(voter2).userVote([1, 0, 2]); // Voter 2
+      await electionInstance.connect(voter3).userVote([2, 1, 0]); // Voter 3
+
+      await ethers.provider.send("evm_increaseTime", [3600]); // Move time forward to end the election
+
+      await electionInstance.getResult();
+      const winner = await electionInstance.winner();
+
+      expect(winner).to.equal(1);
+    });
+
+    it("Test with five voters and four candidates", async function () {
+      const { electionFactory, voter1, voter2, voter3, voter4, voter5 } =
+        await loadFixture(deployElectionFactoryFixture);
+
+      const electionInfo = {
+        startTime: Math.floor(Date.now() / 1000) + 60,
+        endTime: Math.floor(Date.now() / 1000) + 3600,
+        name: "Schulze Election",
+        description: "This is a Schulze test election",
+      };
+      const ballotType = 8; // Schulze
+      const resultType = 8; // Schulze
+
+      await electionFactory.createElection(
+        electionInfo,
+        ballotType,
+        resultType
+      );
+
+      const openElections = await electionFactory.getOpenElections();
+      const Election = await ethers.getContractFactory("Election");
+      const electionInstance = Election.attach(openElections[0]);
+
+      await electionInstance.addCandidate("Candidate 1");
+      await electionInstance.addCandidate("Candidate 2");
+      await electionInstance.addCandidate("Candidate 3");
+      await electionInstance.addCandidate("Candidate 4");
+
+      await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
+
+      // Adjusting votes to prefer Candidate 3 (index 2) more
+      await electionInstance.connect(voter1).userVote([2, 1, 3, 0]); // Voter 1 prefers Candidate 3
+      await electionInstance.connect(voter2).userVote([0, 2, 3, 1]); // Voter 2 prefers Candidate 3
+      await electionInstance.connect(voter3).userVote([1, 3, 2, 0]); // Voter 3 prefers Candidate 3
+      await electionInstance.connect(voter4).userVote([0, 3, 2, 1]); // Voter 4 prefers Candidate 3
+      await electionInstance.connect(voter5).userVote([2, 0, 3, 1]); // Voter 5 prefers Candidate 3
+
+      await ethers.provider.send("evm_increaseTime", [3600]); // Move time forward to end the election
+
+      await electionInstance.getResult();
+      const winner = await electionInstance.winner();
+
+      expect(winner).to.equal(2); // Candidate 3 (index 2) should be the winner
+    });
+  });
 });

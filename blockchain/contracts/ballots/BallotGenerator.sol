@@ -8,6 +8,7 @@ import {BordaBallot} from "./BordaBallot.sol";
 import {QuadraticBallot} from "./QuadraticBallot.sol";
 import {ScoreBallot} from "./ScoreBallot.sol";
 import {KemenyYoungBallot} from "./KemenyYoungBallot.sol";
+import {SchulzeBallot} from "./SchulzeBallot.sol";
 contract BallotGenerator {
     function generateBallot(
         uint _ballotType,
@@ -40,6 +41,10 @@ contract BallotGenerator {
         if (_ballotType == 7) {
             // KemenyYoung Ballot
             return address(new KemenyYoungBallot(_electionAddress));
+        }
+        if (_ballotType == 8) {
+            // Schulze Ballot
+            return address(new SchulzeBallot(_electionAddress));
         }
         return address(new GeneralBallot(_electionAddress));
     }

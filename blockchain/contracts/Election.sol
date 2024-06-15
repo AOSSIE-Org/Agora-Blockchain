@@ -69,8 +69,8 @@ contract Election is Initializable {
             ballot.init(candidates.length);
             ballotInitialized = true;
         }
-        userVoted[msg.sender] = true;
         ballot.vote(voteArr);
+        userVoted[msg.sender] = true;
     }
 
     function ccipVote(address user, uint[] memory _voteArr) external {
