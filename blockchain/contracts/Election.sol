@@ -95,6 +95,10 @@ contract Election is Initializable {
     }
 
     function getResult() external onlyOwner returns (uint) {
+        require(
+            block.timestamp > electionInfo.endTime,
+            "Election has not completed"
+        );
         bytes memory payload = abi.encodeWithSignature("getVotes()");
 
         (bool success, bytes memory allVotes) = address(ballot).staticcall(
