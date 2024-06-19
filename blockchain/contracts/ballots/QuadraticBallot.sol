@@ -2,10 +2,9 @@
 pragma solidity ^0.8.24;
 
 import "./interface/IBallot.sol";
+import "./interface/Errors.sol";
 
-contract QuadraticBallot is IBallot {
-    error OwnerPermissioned();
-
+contract QuadraticBallot is IBallot, Errors {
     address public electionContract;
 
     uint[] private candidateVotes;
@@ -25,12 +24,8 @@ contract QuadraticBallot is IBallot {
     // voting as preference candidate
     function vote(uint[] memory voteArr) external onlyOwner {
         uint totalCandidates = candidateVotes.length;
-        require(
-            voteArr.length == totalCandidates,
-            "Votes don't match the candidates"
-        );
-
-        require(checkCreditsQuadratic(voteArr), "Incorrect credits given");
+        if (voteArr.length != totalCandidates) revert VoteInputLength();
+        if (!checkCreditsQuadratic(voteArr)) revert IncorrectCredits();
 
         for (uint i = 0; i < totalCandidates; i++) {
             // voteArr[i] is the credits alloted per candidate

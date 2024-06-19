@@ -2,10 +2,8 @@
 pragma solidity ^0.8.24;
 
 import "./interface/IBallot.sol";
-
-contract BordaBallot is IBallot {
-    error OwnerPermissioned();
-
+import "./interface/Errors.sol";
+contract BordaBallot is IBallot, Errors {
     address public electionContract;
 
     uint private totalCandidates;
@@ -25,11 +23,7 @@ contract BordaBallot is IBallot {
     }
     // voting as preference candidate
     function vote(uint[] memory voteArr) external onlyOwner {
-        require(
-            totalCandidates == voteArr.length,
-            "Votes don't match the candidates"
-        );
-
+        if (totalCandidates != voteArr.length) revert VoteInputLength();
         votes.push(voteArr);
     }
 

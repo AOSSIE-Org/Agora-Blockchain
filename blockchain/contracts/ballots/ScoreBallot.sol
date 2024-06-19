@@ -2,9 +2,8 @@
 pragma solidity ^0.8.24;
 
 import "./interface/IBallot.sol";
-
-contract ScoreBallot is IBallot {
-    error OwnerPermissioned();
+import "./interface/Errors.sol";
+contract ScoreBallot is IBallot, Errors {
     error InvalidScore(uint score);
     address public electionContract;
 
@@ -27,10 +26,7 @@ contract ScoreBallot is IBallot {
     // Assign scores on index
     function vote(uint[] memory voteArr) external onlyOwner {
         uint totalCandidates = candidateScores.length;
-        require(
-            voteArr.length == totalCandidates,
-            "Votes don't match the candidates"
-        );
+        if (voteArr.length != totalCandidates) revert VoteInputLength();
 
         for (uint i = 0; i < totalCandidates; i++) {
             uint preference = voteArr[i];

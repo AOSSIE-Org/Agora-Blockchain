@@ -2,11 +2,9 @@
 pragma solidity ^0.8.24;
 
 import "./interface/IBallot.sol";
-
+import "./interface/Errors.sol";
 //  ranked have the same ballot as ...
-contract RankedBallot is IBallot {
-    error OwnerPermissioned();
-
+contract RankedBallot is IBallot, Errors {
     address public electionContract;
 
     uint[] private candidateVotes;
@@ -27,12 +25,7 @@ contract RankedBallot is IBallot {
     // voting as preference candidate
     function vote(uint[] memory voteArr) external onlyOwner {
         uint totalCandidates = candidateVotes.length;
-        require(
-            voteArr.length == totalCandidates,
-            "Votes don't match the candidates"
-        );
-
-        require(checkCreditsRanked(voteArr), "Incorrect credits given");
+        if (voteArr.length != totalCandidates) revert VoteInputLength();
 
         for (uint i = 0; i < totalCandidates; i++) {
             // voteArr[i] is the candidate ID, i is the rank (0-based)
@@ -42,16 +35,5 @@ contract RankedBallot is IBallot {
 
     function getVotes() external view onlyOwner returns (uint256[] memory) {
         return candidateVotes;
-    }
-
-    function checkCreditsRanked(
-        uint[] memory voteArr
-    ) internal view returns (bool) {
-        uint _candidates = candidateVotes.length;
-        uint totalCredits = (_candidates * (_candidates + 1)) / 2 - _candidates;
-        for (uint i = 0; i < voteArr.length; i++) {
-            totalCredits = totalCredits - voteArr[i];
-        }
-        return totalCredits == 0;
     }
 }
