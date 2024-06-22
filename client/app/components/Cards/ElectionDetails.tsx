@@ -4,12 +4,18 @@ import { useReadContract } from "wagmi";
 import { Election } from "../../../abi/artifacts/Election";
 import { VotingInfo } from "../../helpers/votingInfo";
 
-const ElectionDetails = ({ electionAddress, timestamp }) => {
+const ElectionDetails = ({
+  electionAddress,
+  timestamp,
+}: {
+  electionAddress: `0x${string}`;
+  timestamp: any;
+}) => {
   const startTime = UnixTimeConvertor(timestamp![0]);
   const endTime = UnixTimeConvertor(timestamp![1]);
   const { data: resultType, isLoading } = useReadContract({
     abi: Election,
-    address: electionAddress,
+    address: electionAddress as `0x${string}`,
     functionName: "resultType",
   });
   let votingType: string = "";

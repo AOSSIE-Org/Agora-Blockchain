@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-const ClipBoard = ({ inputValue }) => {
+const ClipBoard = ({ inputValue }: { inputValue: string }) => {
   const [isCopied, setisCopied] = useState(false);
   const copyText = () => {
     setisCopied(true);

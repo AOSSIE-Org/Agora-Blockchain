@@ -4,16 +4,17 @@ import { Election } from "../../../abi/artifacts/Election";
 import { useAccount, useReadContracts } from "wagmi";
 import Loader from "../../components/Helper/Loader";
 
-import ElectionDetails from "../../components/Cards/ElectionDetails.tsx";
-import ClipBoard from "../../components/Helper/ClipBoard.tsx";
-import ElectionCandidates from "../../components/Cards/ElectionCandidates.tsx";
-import VotePopup from "../../components/Cards/VotePopup.tsx";
+import ElectionDetails from "../../components/Cards/ElectionDetails";
+import ClipBoard from "../../components/Helper/ClipBoard";
+import ElectionCandidates from "../../components/Cards/ElectionCandidates";
+import VotePopup from "../../components/Cards/VotePopup";
 
 const page = ({ params }: { params: { id: `0x${string}` } }) => {
   const { address } = useAccount();
+  const electionAddress = params.id;
   const electionContract = {
     abi: Election,
-    address: params.id,
+    address: electionAddress,
   };
   const { data: electionInformation, isLoading } = useReadContracts({
     contracts: [
@@ -59,11 +60,11 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
             </div>
           </div>
           <ElectionDetails
-            electionAddress={params.id}
+            electionAddress={electionAddress}
             timestamp={electionInfo}
           />
-          <ElectionCandidates electionAddress={params.id} />
-          <VotePopup electionAddress={params.id} />
+          <ElectionCandidates electionAddress={electionAddress} />
+          <VotePopup electionAddress={electionAddress} />
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { useAccount, useReadContract } from "wagmi";
 import { Election } from "../../../abi/artifacts/Election";
 import LoaderInline from "../Helper/LoaderInline";
 
-const VotePopup = ({ electionAddress }) => {
+const VotePopup = ({ electionAddress }: { electionAddress: `0x${string}` }) => {
   const { address } = useAccount();
   const { data: isVoted, isLoading } = useReadContract({
     abi: Election,

@@ -3,7 +3,11 @@ import { AVATARS } from "../../constants";
 import { useReadContract } from "wagmi";
 import { Election } from "../../../abi/artifacts/Election";
 import LoaderInline from "../Helper/LoaderInline";
-const ElectionCandidates = ({ electionAddress }) => {
+const ElectionCandidates = ({
+  electionAddress,
+}: {
+  electionAddress: `0x${string}`;
+}) => {
   const { data: candidateList, isLoading } = useReadContract({
     abi: Election,
     address: electionAddress,
