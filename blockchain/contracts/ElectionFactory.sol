@@ -57,6 +57,7 @@ contract ElectionFactory is CCIPReceiver {
         uint _ballotType,
         uint _resultType
     ) external {
+        //add checks of time
         address electionAddress = Clones.clone(electionGenerator);
         address _ballot = ballotGenerator.generateBallot(
             _ballotType,

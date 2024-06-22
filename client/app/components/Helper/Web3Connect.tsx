@@ -1,13 +1,9 @@
 import React from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useAccount } from "wagmi";
-
-const HomePage = () => {
-  const { address, isConnected } = useAccount();
+import "@rainbow-me/rainbowkit/styles.css";
+const Web3Connect = () => {
   return (
-    <div className="flex p-8 h-screen w-full items-start justify-between">
-      Hello
-      {isConnected && <p>{address}</p>}
+    <div className="fixed z-50 right-3 top-3 p-4">
       <ConnectButton
         accountStatus={{
           smallScreen: "avatar",
@@ -19,4 +15,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Web3Connect;
