@@ -1,0 +1,26 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "Errors",
+  "sourceName": "contracts/ballots/interface/Errors.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "IncorrectCredits",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OwnerPermissioned",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "VoteInputLength",
+      "type": "error"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

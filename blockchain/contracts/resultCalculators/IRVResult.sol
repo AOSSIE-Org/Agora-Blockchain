@@ -3,10 +3,6 @@ pragma solidity ^0.8.24;
 import {Errors} from "./interface/Errors.sol";
 
 contract IRVResult is Errors {
-    error NoCandidates();
-    error CandidatesTie();
-    error VotesExhausted();
-
     function calculateIRVResult(
         bytes memory returnData
     ) public pure returns (uint256) {

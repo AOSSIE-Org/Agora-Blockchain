@@ -13,4 +13,9 @@ npx hardhat ignition deploy ./ignition/modules/Lock.js
 ```
 
 Code live at
-https://sepolia.etherscan.io/address/0xCEb8005f468E37BBC6ba9F77aa132cdbd3386ba1#code
+https://sepolia.etherscan.io/address/0x57C20d0f5Fe1f69B906988D9d484277d4df64fee#code
+
+Older create election -> 0.15902949 eth
+new election -> 0.02639977 eth
+
+Adding candidate : 0.00013846SepoliaETH
