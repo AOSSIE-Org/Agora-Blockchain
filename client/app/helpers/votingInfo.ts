@@ -1,27 +1,14 @@
-export const VotingInfo = (_ballotType : number) => {
-    if (_ballotType == 1) {
-            return "General Voting"
-        }
-        if (_ballotType == 2) {
-            return "Ranked Voting"
-        }
-        if (_ballotType == 3) {
-            return "IRV Voting"
-        }
-        if (_ballotType == 4) {
-            return "Borda Voting"
-        }
-        if (_ballotType == 5) {
-            return "Quadratic Voting"
-        }
-        if (_ballotType == 6) {
-            return "Score Voting"
-        }
-        if (_ballotType == 7) {
-            return "KemenyYoung Voting"
-        }
-        if (_ballotType == 8) {
-            return "Schulze Voting"
-        }
-    else return "General Voting"
-} 
+export const ballotTypeMap: Record<number, string> = {
+  1: "General Voting",
+  2: "Ranked Voting",
+  3: "IRV Voting",
+  4: "Borda Voting",
+  5: "Quadratic Voting",
+  6: "Score Voting",
+  7: "KemenyYoung Voting",
+  8: "Schulze Voting",
+};
+
+export const VotingInfo = (_ballotType: number): string => {
+  return ballotTypeMap[_ballotType] || "General Voting";
+};

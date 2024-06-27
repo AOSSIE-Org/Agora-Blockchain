@@ -5,7 +5,7 @@ import Dashboard from "./Dashboard";
 const HomePage = () => {
   const { isConnected } = useAccount();
   return (
-    <main className="h-screen pt-20 w-full bg-[#f7f7f7] ">
+    <main className="h-screen pt-20 w-full bg-white ">
       {isConnected ? <Dashboard /> : <LoginPage />}
     </main>
   );

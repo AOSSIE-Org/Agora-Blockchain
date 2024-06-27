@@ -1,23 +1,18 @@
 import React from "react";
 import { UnixTimeConvertor } from "../Functions/UnixTimeConvertor";
-import { useReadContract } from "wagmi";
-import { Election } from "../../../abi/artifacts/Election";
 import { VotingInfo } from "../../helpers/votingInfo";
 
 const ElectionDetails = ({
-  electionAddress,
   timestamp,
+  resultType,
+  winner,
 }: {
-  electionAddress: `0x${string}`;
   timestamp: any;
+  resultType: bigint | undefined;
+  winner: number;
 }) => {
   const startTime = UnixTimeConvertor(timestamp![0]);
   const endTime = UnixTimeConvertor(timestamp![1]);
-  const { data: resultType, isLoading } = useReadContract({
-    abi: Election,
-    address: electionAddress as `0x${string}`,
-    functionName: "resultType",
-  });
   let votingType: string = "";
   if (resultType) {
     votingType = VotingInfo(Number(resultType));
@@ -37,8 +32,10 @@ const ElectionDetails = ({
         <dd className="text-gray-500 ">Ends</dd>
       </div>
       <div className="flex flex-col items-center justify-center w-xl h-xl bg-white p-6  rounded-lg border border-gray-200 ">
-        <dt className="mb-2 text-xl font-bold">1000+</dt>
-        <dd className="text-gray-500 ">Views</dd>
+        <dt className="mb-2 text-xl font-bold">
+          {winner === 0 ? "~" : winner}
+        </dt>
+        <dd className="text-gray-500 ">Winner</dd>
       </div>
       <div className="flex flex-col items-center justify-center w-xl h-xl bg-white p-6  rounded-lg border border-gray-200 ">
         <dt className="mb-2 text-xl font-bold">

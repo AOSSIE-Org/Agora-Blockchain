@@ -17,10 +17,10 @@ const ElectionDash = () => {
       {isLoading || !elections ? (
         <Loader />
       ) : (
-        <div className="grid grid-cols-1 mt-3 gap-x-8 gap-y-8 lg:grid-cols-3">
-          {elections!.map((election, key) => (
-            <ElectionMini electionAddress={election} key={key} />
-          ))}
+        <div className="grid grid-cols-1 mt-3 gap-x-8 gap-y-8 md:grid-cols-2 lg:grid-cols-3 ">
+          {elections!.map((election, key) => {
+            return <ElectionMini electionAddress={election} key={key} />;
+          })}
         </div>
       )}
     </div>

@@ -9,12 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.0",
+    "@nextui-org/theme": "^2.2.6",
     "@rainbow-me/rainbowkit": "^2.1.2",
     "@tanstack/react-query": "^5.45.1",
     "ethers": "^5.7.2",
+    "framer-motion": "^11.2.12",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-hot-toast": "^2.4.1",
+    "rsuite": "^5.64.2",
     "siwe": "^2.3.2",
     "viem": "^2.15.1",
     "wagmi": "^2.10.2",
@@ -22,6 +27,7 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-private-property-in-object": "^7.24.7",
+    "@heroicons/react": "^2.1.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

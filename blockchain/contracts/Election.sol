@@ -63,11 +63,11 @@ contract Election is Initializable {
     }
 
     function userVote(uint[] memory voteArr) external {
-        if (userVoted[msg.sender]) revert AlreadyVoted();
         if (
             block.timestamp < electionInfo.startTime ||
             block.timestamp > electionInfo.endTime
         ) revert ElectionInactive();
+        if (userVoted[msg.sender]) revert AlreadyVoted();
         if (ballotInitialized == false) {
             ballot.init(candidates.length);
             ballotInitialized = true;
@@ -77,17 +77,28 @@ contract Election is Initializable {
     }
 
     function ccipVote(address user, uint[] memory _voteArr) external {
+        if (
+            block.timestamp < electionInfo.startTime ||
+            block.timestamp > electionInfo.endTime
+        ) revert ElectionInactive();
+        if (userVoted[user]) revert AlreadyVoted();
+        if (ballotInitialized == false) {
+            ballot.init(candidates.length);
+            ballotInitialized = true;
+        }
         if (msg.sender != factoryContract) revert OwnerPermissioned();
         userVoted[user] = true;
         ballot.vote(_voteArr);
     }
 
     function addCandidate(string calldata _name) external onlyOwner {
+        //not allowed after election starts
         Candidate memory newCandidate = Candidate(candidates.length, _name);
         candidates.push(newCandidate);
     }
 
     function removeCandidate(uint _id) external onlyOwner {
+        //not allowed after election starts
         candidates[_id] = candidates[candidates.length - 1];
         candidates[_id].candidateID = _id;
         candidates.pop();
@@ -97,7 +108,7 @@ contract Election is Initializable {
         return candidates;
     }
 
-    function getResult() external onlyOwner returns (uint) {
+    function getResult() external returns (uint) {
         if (block.timestamp < electionInfo.endTime) revert ElectionIncomplete();
         bytes memory payload = abi.encodeWithSignature("getVotes()");
 
