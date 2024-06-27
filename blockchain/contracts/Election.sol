@@ -39,6 +39,7 @@ contract Election is Initializable {
 
     uint public winner;
     uint public resultType;
+    uint public totalVotes;
 
     bool private ballotInitialized;
 
@@ -74,6 +75,7 @@ contract Election is Initializable {
         }
         ballot.vote(voteArr);
         userVoted[msg.sender] = true;
+        totalVotes++;
     }
 
     function ccipVote(address user, uint[] memory _voteArr) external {
@@ -89,6 +91,7 @@ contract Election is Initializable {
         if (msg.sender != factoryContract) revert OwnerPermissioned();
         userVoted[user] = true;
         ballot.vote(_voteArr);
+        totalVotes++;
     }
 
     function addCandidate(string calldata _name) external onlyOwner {
