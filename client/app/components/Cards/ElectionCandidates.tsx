@@ -7,9 +7,11 @@ import CandidateCard from "./VotingCards/CandidateCard";
 import Ballot from "../Modal/Ballot";
 import { useElectionModal } from "../../hooks/ElectionModal";
 const ElectionCandidates = ({
+  isOwner,
   electionAddress,
   resultType,
 }: {
+  isOwner: boolean;
   resultType: bigint | undefined;
   electionAddress: `0x${string}`;
 }) => {
@@ -33,7 +35,13 @@ const ElectionCandidates = ({
           {candidateList?.map((candidate, key) => {
             if (key > 3) return null;
             return (
-              <CandidateCard key={key} candidate={candidate} isMini={true} />
+              <CandidateCard
+                isOwner={isOwner}
+                electionAddress={electionAddress}
+                key={key}
+                candidate={candidate}
+                isMini={true}
+              />
             );
           })}
           <li className=" -mb-3 pt-2">
@@ -52,6 +60,7 @@ const ElectionCandidates = ({
       </div>
       {electionModal && (
         <Ballot
+          isOwner={isOwner}
           electionAddress={electionAddress}
           candidateList={candidateList}
           resultType={Number(resultType)}

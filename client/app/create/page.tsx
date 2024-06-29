@@ -7,6 +7,7 @@ import { ballotTypeMap } from "../helpers/votingInfo";
 import { DatePicker } from "rsuite";
 import toast from "react-hot-toast";
 import { ErrorMessage } from "../helpers/ErrorMessage";
+import { BsCalendarPlus, BsCalendarMinus } from "react-icons/bs";
 const page = () => {
   const { writeContractAsync } = useWriteContract();
   const [startTime, setstartTime] = React.useState(new Date());
@@ -20,7 +21,7 @@ const page = () => {
     const ballotType = BigInt(formData.get("ballot") as string);
     const start = BigInt(Math.floor(new Date(startTime).getTime() / 1000));
     const end = BigInt(Math.floor(new Date(endTime).getTime() / 1000));
-    console.log(name, description, ballotType);
+    console.log(name, start, end);
     try {
       await writeContractAsync({
         address: ELECTION_FACTORY_ADDRESS,
@@ -101,15 +102,19 @@ const page = () => {
                 onChange={(value, event) => {
                   handleChange(value, event, 0);
                 }}
+                caretAs={BsCalendarPlus}
+                placement="topStart"
                 className="w-[50%]"
                 format="dd/MM/yyyy HH:mm"
                 placeholder="Select Start Date"
               />
               <DatePicker
                 className="w-[50%]"
+                caretAs={BsCalendarMinus}
                 onChange={(value, event) => {
                   handleChange(value, event, 1);
                 }}
+                placement="topEnd"
                 format="dd/MM/yyyy HH:mm"
                 placeholder="Select End Date"
               />

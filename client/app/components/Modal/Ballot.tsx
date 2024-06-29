@@ -11,6 +11,7 @@ import { Reorder } from "framer-motion";
 import toast from "react-hot-toast";
 import { ErrorMessage } from "@/app/helpers/ErrorMessage";
 const Ballot = ({
+  isOwner,
   candidateList,
   electionAddress,
   resultType,
@@ -18,6 +19,7 @@ const Ballot = ({
   candidateList: any;
   electionAddress: `0x${string}`;
   resultType: number;
+  isOwner: boolean;
 }) => {
   const { electionModal, setelectionModal } = useElectionModal();
   const [inside, setinside] = useState(false);
@@ -88,6 +90,7 @@ const Ballot = ({
                     <div className="hover:bg-blue-50 select-none">
                       <CandidateGrid
                         isVoted={isVoted!}
+                        isOwner={isOwner}
                         electionAddress={electionAddress}
                         key={key}
                         candidate={candidate}
@@ -112,7 +115,12 @@ const Ballot = ({
                       value={candidate}
                       className=" border border-gray-200 rounded-xl hover:bg-blue-50"
                     >
-                      <CandidateCard isMini={false} candidate={candidate} />
+                      <CandidateCard
+                        isOwner={isOwner}
+                        electionAddress={electionAddress}
+                        isMini={false}
+                        candidate={candidate}
+                      />
                     </Reorder.Item>
                   ))}
                 </Reorder.Group>

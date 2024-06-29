@@ -13,4 +13,4 @@ export const UnixTimeConvertor = (timestamp1: bigint) => {
         const time = date.slice(5, date.length - 5);
         return({day: time , time : samay});
       }
-    };
+};

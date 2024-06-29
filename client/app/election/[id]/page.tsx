@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Election } from "../../../abi/artifacts/Election";
-import { useReadContracts } from "wagmi";
+import { useAccount, useReadContracts } from "wagmi";
 import Loader from "../../components/Helper/Loader";
 import ElectionDetails from "../../components/Cards/ElectionDetails";
 import ClipBoard from "../../components/Helper/ClipBoard";
@@ -9,6 +9,7 @@ import ElectionCandidates from "../../components/Cards/ElectionCandidates";
 import { Toaster } from "react-hot-toast";
 import ButtonCard from "../../components/Cards/ButtonCard";
 const page = ({ params }: { params: { id: `0x${string}` } }) => {
+  const { address } = useAccount();
   const electionAddress = params.id;
   const electionContract = {
     abi: Election,
@@ -69,6 +70,7 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
           />
           <div className="md:flex-row gap-x-4 flex flex-col justify-between">
             <ElectionCandidates
+              isOwner={owner === address}
               electionAddress={electionAddress}
               resultType={resultType}
             />
