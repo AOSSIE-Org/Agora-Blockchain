@@ -7,6 +7,10 @@ import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.s
 
 contract Election is Initializable {
     error OwnerPermissioned();
+    error AlreadyVoted();
+    error GetVotes();
+    error ElectionIncomplete();
+    error ElectionInactive();
 
     mapping(address user => bool isVoted) public userVoted;
 
@@ -19,7 +23,7 @@ contract Election is Initializable {
     }
 
     struct Candidate {
-        uint candidateID;
+        uint candidateID; // remove candidateId its not needed
         string name;
     }
 
@@ -35,6 +39,7 @@ contract Election is Initializable {
 
     uint public winner;
     uint public resultType;
+    uint public totalVotes;
 
     bool private ballotInitialized;
 
@@ -59,32 +64,44 @@ contract Election is Initializable {
     }
 
     function userVote(uint[] memory voteArr) external {
-        require(userVoted[msg.sender] == false, "User Voted");
-        require(
-            block.timestamp > electionInfo.startTime &&
-                block.timestamp < electionInfo.endTime,
-            "Election not active"
-        );
+        if (
+            block.timestamp < electionInfo.startTime ||
+            block.timestamp > electionInfo.endTime
+        ) revert ElectionInactive();
+        if (userVoted[msg.sender]) revert AlreadyVoted();
         if (ballotInitialized == false) {
             ballot.init(candidates.length);
             ballotInitialized = true;
         }
-        userVoted[msg.sender] = true;
         ballot.vote(voteArr);
+        userVoted[msg.sender] = true;
+        totalVotes++;
     }
 
     function ccipVote(address user, uint[] memory _voteArr) external {
-        require(msg.sender == factoryContract, "Cannot call");
+        if (
+            block.timestamp < electionInfo.startTime ||
+            block.timestamp > electionInfo.endTime
+        ) revert ElectionInactive();
+        if (userVoted[user]) revert AlreadyVoted();
+        if (ballotInitialized == false) {
+            ballot.init(candidates.length);
+            ballotInitialized = true;
+        }
+        if (msg.sender != factoryContract) revert OwnerPermissioned();
         userVoted[user] = true;
         ballot.vote(_voteArr);
+        totalVotes++;
     }
 
     function addCandidate(string calldata _name) external onlyOwner {
+        //not allowed after election starts
         Candidate memory newCandidate = Candidate(candidates.length, _name);
         candidates.push(newCandidate);
     }
 
     function removeCandidate(uint _id) external onlyOwner {
+        //not allowed after election starts
         candidates[_id] = candidates[candidates.length - 1];
         candidates[_id].candidateID = _id;
         candidates.pop();
@@ -94,14 +111,14 @@ contract Election is Initializable {
         return candidates;
     }
 
-    function getResult() external onlyOwner returns (uint) {
+    function getResult() external returns (uint) {
+        if (block.timestamp < electionInfo.endTime) revert ElectionIncomplete();
         bytes memory payload = abi.encodeWithSignature("getVotes()");
 
         (bool success, bytes memory allVotes) = address(ballot).staticcall(
             payload
         );
-
-        require(success, "Call to getVotes failed");
+        if (!success) revert GetVotes();
 
         uint _winner = resultCalculator.getResults(allVotes, resultType);
         winner = _winner;

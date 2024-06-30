@@ -10,6 +10,7 @@ contract GeneralBallot is IBallot {
 
     address public electionContract;
 
+    uint private totalCandidate;
     uint[] private candidateVotes;
 
     modifier onlyOwner() {
@@ -21,30 +22,23 @@ contract GeneralBallot is IBallot {
         electionContract = _electionAddress;
     }
 
-    function init(uint totalCandidate) external onlyOwner {
-        candidateVotes = new uint[](totalCandidate);
+    function init(uint _totalCandidate) external onlyOwner {
+        totalCandidate = _totalCandidate;
+        candidateVotes = new uint[](_totalCandidate);
     }
 
+    //just a sigle vote in arr [1]
     function vote(uint256[] memory _votes) external onlyOwner {
-        if (_votes.length != candidateVotes.length)
-            revert InvalidVoteArrayLength();
-
-        uint votedIndex = checkValidVotes(_votes);
-        candidateVotes[votedIndex]++;
+        if (_votes.length != 1) revert InvalidVoteArrayLength();
+        checkValidVotes(_votes[0]);
+        candidateVotes[_votes[0]]++;
     }
 
     function getVotes() external view onlyOwner returns (uint256[] memory) {
         return candidateVotes;
     }
 
-    function checkValidVotes(
-        uint256[] memory _votes
-    ) internal pure returns (uint) {
-        for (uint i = 0; i < _votes.length; i++) {
-            // return first non-negative index
-            if (_votes[i] > 0) return i;
-        }
-
-        revert InvalidVoteDistribution();
+    function checkValidVotes(uint256 _vote) internal view {
+        if (_vote >= totalCandidate) revert InvalidVoteDistribution();
     }
 }
