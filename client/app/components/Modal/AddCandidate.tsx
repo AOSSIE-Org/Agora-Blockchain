@@ -8,9 +8,10 @@ import {
 } from "@headlessui/react";
 import toast from "react-hot-toast";
 
-import { useWriteContract } from "wagmi";
+import { useAccount, useSwitchChain, useWriteContract } from "wagmi";
 import { Election } from "../../../abi/artifacts/Election";
 import { ErrorMessage } from "../../helpers/ErrorMessage";
+import { sepolia } from "viem/chains";
 const AddCandidate = ({
   openModal,
   setopenModal,
@@ -20,6 +21,8 @@ const AddCandidate = ({
   setopenModal: any;
   electionAddress: `0x${string}`;
 }) => {
+  const { switchChain } = useSwitchChain();
+  const { chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const addCandidate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,14 +30,16 @@ const AddCandidate = ({
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
     try {
+      if (chain?.id === 43113) switchChain({ chainId: sepolia.id });
       await writeContractAsync({
         address: electionAddress,
         abi: Election,
         functionName: "addCandidate",
-        args: [name],
+        args: [name, description],
       });
       toast.success(`${name} Added to Election`);
     } catch (error) {
+      console.log("Error ", error);
       toast.error(ErrorMessage(error));
     }
     setopenModal(false);

@@ -3,56 +3,80 @@ import React, { useState } from "react";
 import { Dialog, DialogBackdrop } from "@headlessui/react";
 import CandidateGrid from "../Cards/VotingCards/CandidateGrid";
 import CandidateCard from "../Cards/VotingCards/CandidateCard";
-import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import { useAccount, useWriteContract } from "wagmi";
 import { useElectionModal } from "../../hooks/ElectionModal";
 import { Election } from "../../../abi/artifacts/Election";
-import Loader from "../Helper/Loader";
 import { Reorder } from "framer-motion";
 import toast from "react-hot-toast";
 import { ErrorMessage } from "@/app/helpers/ErrorMessage";
+import {
+  CCIP_FUJI_ADDRESS,
+  ELECTION_FACTORY_ADDRESS,
+  SEPOLIA_CHAIN_SELECTOR,
+} from "@/app/constants";
+import { CCIPSender } from "@/abi/artifacts/CCIPSender";
+import { useParams } from "next/navigation";
+import { useElectionData } from "@/app/hooks/ElectionInfo";
+
 const Ballot = ({
   isOwner,
   candidateList,
-  electionAddress,
   resultType,
 }: {
   candidateList: any;
-  electionAddress: `0x${string}`;
   resultType: number;
   isOwner: boolean;
 }) => {
+  const { id: electionAddress } = useParams<{ id: `0x${string}` }>();
+  const { electionData } = useElectionData();
+  const isVoted = electionData[5].result;
   const { electionModal, setelectionModal } = useElectionModal();
   const [inside, setinside] = useState(false);
   const { writeContractAsync } = useWriteContract();
   const checkCloseModal = () => {
     if (!inside) setelectionModal(false);
   };
-  const { address } = useAccount();
-  const { data: isVoted, isLoading } = useReadContract({
-    abi: Election,
-    address: electionAddress,
-    functionName: "userVoted",
-    args: [address!],
-  });
+  const { chain } = useAccount();
+
   const [preference, setpreference] = useState(candidateList);
   const vote = async () => {
     const preferenceIDs = preference.map(
       (candidate: any) => candidate.candidateID
     );
     try {
-      await writeContractAsync({
-        address: electionAddress,
-        abi: Election,
-        functionName: "userVote",
-        args: [preferenceIDs],
-      });
+      if (chain?.id === 43113) {
+        await writeContractAsync({
+          address: CCIP_FUJI_ADDRESS,
+          abi: CCIPSender,
+          functionName: "sendMessage",
+          args: [
+            SEPOLIA_CHAIN_SELECTOR,
+            ELECTION_FACTORY_ADDRESS,
+            electionAddress,
+            preferenceIDs,
+          ],
+        });
+      } else {
+        await writeContractAsync({
+          address: electionAddress,
+          abi: Election,
+          functionName: "userVote",
+          args: [preferenceIDs],
+        });
+      }
       toast.success(`Voted Casted `);
       setelectionModal(false);
     } catch (error) {
+      console.log("Error", error);
       toast.error(ErrorMessage(error));
     }
   };
-  if (isLoading) return <Loader />;
+  let ballotType = 3;
+  if (resultType <= 1) {
+    ballotType = 1;
+  } else if (resultType >= 7 || resultType <= 4) {
+    ballotType = 2;
+  }
   return (
     <Dialog
       className="relative z-30"
@@ -83,16 +107,14 @@ const Ballot = ({
             <div className="text-sm font-medium "># ID</div>
           </div>
           <div className="flow-root h-[90%] overflow-auto">
-            {resultType <= 1 && (
+            {ballotType === 1 && (
               <div className=" divide-gray-200 grid grid-cols-1 mt-3 gap-x-8 gap-y-8 md:grid-cols-2 lg:grid-cols-3 ">
                 {candidateList?.map((candidate: any, key: number) => {
                   return (
-                    <div className="hover:bg-blue-50 select-none">
+                    <div key={key} className="hover:bg-blue-50 select-none">
                       <CandidateGrid
                         isVoted={isVoted!}
                         isOwner={isOwner}
-                        electionAddress={electionAddress}
-                        key={key}
                         candidate={candidate}
                       />
                     </div>
@@ -100,7 +122,7 @@ const Ballot = ({
                 })}
               </div>
             )}
-            {resultType === 2 && (
+            {ballotType === 2 && (
               <>
                 <Reorder.Group
                   layoutScroll
@@ -113,11 +135,10 @@ const Ballot = ({
                     <Reorder.Item
                       key={candidate.candidateID}
                       value={candidate}
-                      className=" border border-gray-200 rounded-xl hover:bg-blue-50"
+                      className=" border-b-[1px] rounded-t-xl py-2 border-gray-300 hover:bg-cyan-50"
                     >
                       <CandidateCard
                         isOwner={isOwner}
-                        electionAddress={electionAddress}
                         isMini={false}
                         candidate={candidate}
                       />
