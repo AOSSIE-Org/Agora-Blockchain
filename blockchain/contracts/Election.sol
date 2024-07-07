@@ -25,10 +25,24 @@ contract Election is Initializable {
     struct Candidate {
         uint candidateID; // remove candidateId its not needed
         string name;
+        string description;
     }
 
     modifier onlyOwner() {
         if (msg.sender != owner) revert OwnerPermissioned();
+        _;
+    }
+
+    modifier electionInactive() {
+        if (
+            block.timestamp < electionInfo.startTime ||
+            block.timestamp > electionInfo.endTime
+        ) revert ElectionInactive();
+        _;
+    }
+
+    modifier electionStarted() {
+        if (block.timestamp > electionInfo.startTime) revert ElectionInactive();
         _;
     }
 
@@ -40,6 +54,7 @@ contract Election is Initializable {
     uint public winner;
     uint public resultType;
     uint public totalVotes;
+    bool public resultsDeclared;
 
     bool private ballotInitialized;
 
@@ -63,11 +78,7 @@ contract Election is Initializable {
         resultCalculator = IResultCalculator(_resultCalculator);
     }
 
-    function userVote(uint[] memory voteArr) external {
-        if (
-            block.timestamp < electionInfo.startTime ||
-            block.timestamp > electionInfo.endTime
-        ) revert ElectionInactive();
+    function userVote(uint[] memory voteArr) external electionInactive {
         if (userVoted[msg.sender]) revert AlreadyVoted();
         if (ballotInitialized == false) {
             ballot.init(candidates.length);
@@ -78,11 +89,10 @@ contract Election is Initializable {
         totalVotes++;
     }
 
-    function ccipVote(address user, uint[] memory _voteArr) external {
-        if (
-            block.timestamp < electionInfo.startTime ||
-            block.timestamp > electionInfo.endTime
-        ) revert ElectionInactive();
+    function ccipVote(
+        address user,
+        uint[] memory _voteArr
+    ) external electionInactive {
         if (userVoted[user]) revert AlreadyVoted();
         if (ballotInitialized == false) {
             ballot.init(candidates.length);
@@ -94,14 +104,19 @@ contract Election is Initializable {
         totalVotes++;
     }
 
-    function addCandidate(string calldata _name) external onlyOwner {
-        //not allowed after election starts
-        Candidate memory newCandidate = Candidate(candidates.length, _name);
+    function addCandidate(
+        string calldata _name,
+        string calldata _description
+    ) external onlyOwner electionStarted {
+        Candidate memory newCandidate = Candidate(
+            candidates.length,
+            _name,
+            _description
+        );
         candidates.push(newCandidate);
     }
 
-    function removeCandidate(uint _id) external onlyOwner {
-        //not allowed after election starts
+    function removeCandidate(uint _id) external onlyOwner electionStarted {
         candidates[_id] = candidates[candidates.length - 1];
         candidates[_id].candidateID = _id;
         candidates.pop();
@@ -122,6 +137,7 @@ contract Election is Initializable {
 
         uint _winner = resultCalculator.getResults(allVotes, resultType);
         winner = _winner;
+        resultsDeclared = true;
         return _winner;
     }
 }

@@ -120,10 +120,11 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
 
       let candidates = await electionInstance.getCandidateList();
+      console.log("Cadnidate list", candidates);
       expect(candidates.length).to.equal(2);
 
       await electionInstance.removeCandidate(0);
@@ -157,8 +158,8 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -196,9 +197,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
-      await electionInstance.addCandidate("Candidate 3");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test");
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -237,9 +238,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
-      await electionInstance.addCandidate("Candidate 3");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test");
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -279,9 +280,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
-      await electionInstance.addCandidate("Candidate 3");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test");
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -323,8 +324,8 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -365,9 +366,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
-      await electionInstance.addCandidate("Candidate 3");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test");
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -410,9 +411,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
-      await electionInstance.addCandidate("Candidate 3");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test");
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -459,11 +460,11 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
-      await electionInstance.addCandidate("Candidate 3");
-      await electionInstance.addCandidate("Candidate 4");
-      await electionInstance.addCandidate("Candidate 5");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 4", "Description Test");
+      await electionInstance.addCandidate("Candidate 5", "Description Test");
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -517,11 +518,11 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
-      await electionInstance.addCandidate("Candidate 3");
-      await electionInstance.addCandidate("Candidate 4");
-      await electionInstance.addCandidate("Candidate 5");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 4", "Description Test");
+      await electionInstance.addCandidate("Candidate 5", "Description Test");
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -575,11 +576,11 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
-      await electionInstance.addCandidate("Candidate 3");
-      await electionInstance.addCandidate("Candidate 4");
-      await electionInstance.addCandidate("Candidate 5");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 4", "Description Test");
+      await electionInstance.addCandidate("Candidate 5", "Description Test");
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -635,11 +636,11 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
-      await electionInstance.addCandidate("Candidate 3");
-      await electionInstance.addCandidate("Candidate 4");
-      await electionInstance.addCandidate("Candidate 5");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 4", "Description Test");
+      await electionInstance.addCandidate("Candidate 5", "Description Test");
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -693,11 +694,11 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
-      await electionInstance.addCandidate("Candidate 3");
-      await electionInstance.addCandidate("Candidate 4");
-      await electionInstance.addCandidate("Candidate 5");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 4", "Description Test");
+      await electionInstance.addCandidate("Candidate 5", "Description Test");
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -747,9 +748,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate A");
-      await electionInstance.addCandidate("Candidate B");
-      await electionInstance.addCandidate("Candidate C");
+      await electionInstance.addCandidate("Candidate A", "Test Description");
+      await electionInstance.addCandidate("Candidate B", "Test Description");
+      await electionInstance.addCandidate("Candidate C", "Test Description");
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -789,10 +790,10 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate A");
-      await electionInstance.addCandidate("Candidate B");
-      await electionInstance.addCandidate("Candidate C");
-      await electionInstance.addCandidate("Candidate D");
+      await electionInstance.addCandidate("Candidate A", "Test Description");
+      await electionInstance.addCandidate("Candidate B", "Test Description");
+      await electionInstance.addCandidate("Candidate C", "Test Description");
+      await electionInstance.addCandidate("Candidate D", "Test Description");
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -838,9 +839,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
-      await electionInstance.addCandidate("Candidate 3");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test");
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -880,10 +881,10 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1");
-      await electionInstance.addCandidate("Candidate 2");
-      await electionInstance.addCandidate("Candidate 3");
-      await electionInstance.addCandidate("Candidate 4");
+      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 4", "Description Test");
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
