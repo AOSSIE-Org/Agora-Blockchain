@@ -19,3 +19,4 @@ Older create election -> 0.15902949 eth
 new election -> 0.02639977 eth
 
 Adding candidate : 0.00013846SepoliaETH
+0.00018668SepoliaETH

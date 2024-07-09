@@ -1,11 +1,18 @@
+"use client";
 import React from "react";
-import { AVATARS } from "../../constants";
 import { useReadContract } from "wagmi";
 import { Election } from "../../../abi/artifacts/Election";
 import LoaderInline from "../Helper/LoaderInline";
+import CandidateCard from "./VotingCards/CandidateCard";
+import Ballot from "../Modal/Ballot";
+import { useElectionModal } from "../../hooks/ElectionModal";
 const ElectionCandidates = ({
+  isOwner,
   electionAddress,
+  resultType,
 }: {
+  isOwner: boolean;
+  resultType: bigint | undefined;
   electionAddress: `0x${string}`;
 }) => {
   const { data: candidateList, isLoading } = useReadContract({
@@ -13,49 +20,52 @@ const ElectionCandidates = ({
     address: electionAddress,
     functionName: "getCandidateList",
   });
-  const candidates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const { electionModal, setelectionModal } = useElectionModal();
   if (isLoading) return <LoaderInline />;
   return (
-    <div className="w-full max-w-md p-4 mt-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 ">
+    <div className=" w-[50%] flex flex-col p-4 mt-4  border border-gray-200 rounded-lg shadow sm:p-8 ">
       <div className="flex items-center justify-between mb-4">
         <h5 className="text-xl font-bold leading-none text-gray-900 ">
           Candidate List
         </h5>
-        <button className="text-sm font-medium text-blue-600 hover:underline ">
-          View all
-        </button>
+        <div className="text-sm font-medium "># ID</div>
       </div>
       <div className="flow-root">
         <ul role="list" className="divide-y divide-gray-200 ">
-          {candidates?.map((candidate, key) => {
-            if (key > 4) return null;
+          {candidateList?.map((candidate, key) => {
+            if (key > 3) return null;
             return (
-              <li className="pt-3 pb-0 sm:pt-4">
-                <div className="flex items-center ">
-                  <div className="flex-shrink-0">
-                    <img
-                      className="w-8 h-8 rounded-full"
-                      src={AVATARS[key % 4]}
-                      alt="pfp"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0 ms-4">
-                    <p className="text-sm font-medium text-gray-900 truncate ">
-                      {/* {candidate.name} */}Name
-                    </p>
-                    <p className="text-sm text-gray-500 truncate ">
-                      {/* Id : {Number(candidate.candidateID)} */} CandidateID
-                    </p>
-                  </div>
-                  <div className="inline-flex items-center text-base font-semibold text-gray-900 ">
-                    $2367
-                  </div>
-                </div>
-              </li>
+              <CandidateCard
+                isOwner={isOwner}
+                electionAddress={electionAddress}
+                key={key}
+                candidate={candidate}
+                isMini={true}
+              />
             );
           })}
+          <li className=" -mb-3 pt-2">
+            <div className="flex items-center justify-center ">
+              <button
+                onClick={() => {
+                  setelectionModal(true);
+                }}
+                className="text-sm font-medium text-blue-600 disabled:text-gray-700 disabled:cursor-not-allowed disabled:hover:no-underline hover:underline "
+              >
+                View All
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
+      {electionModal && (
+        <Ballot
+          isOwner={isOwner}
+          electionAddress={electionAddress}
+          candidateList={candidateList}
+          resultType={Number(resultType)}
+        />
+      )}
     </div>
   );
 };
