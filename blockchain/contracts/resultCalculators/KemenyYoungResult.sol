@@ -6,24 +6,27 @@ import {Errors} from "./interface/Errors.sol";
 contract KemenyYoungResult is Errors {
     function calculateKemenyYoungResult(
         bytes memory returnData
-    ) public pure returns (uint256) {
+    ) public pure returns (uint256[] memory) {
         // Decode the returnData to extract the vote arrays
         uint256[][] memory votes = abi.decode(returnData, (uint256[][]));
 
         // Perform Kemeny-Young calculation to determine the winner
-        uint256 winner = performKemenyYoung(votes);
-
-        return winner;
+        return performKemenyYoung(votes);
     }
 
     function performKemenyYoung(
         uint256[][] memory votes
-    ) internal pure returns (uint256) {
+    ) internal pure returns (uint256[] memory) {
         uint256 numCandidates = votes.length;
 
         // Check for no candidates
         if (numCandidates == 0) {
             revert NoCandidates();
+        }
+        if (numCandidates == 1) {
+            uint[] memory singleWinner = new uint[](1);
+            singleWinner[0] = 0;
+            return singleWinner;
         }
 
         // Compute pairwise scores
@@ -62,17 +65,29 @@ contract KemenyYoungResult is Errors {
             }
         }
 
-        // Find the candidate with the highest ranking score
-        uint256 winner = 0;
         uint256 highestRankingScore = 0;
+        uint256 winnerCount = 0;
 
         for (uint i = 0; i < numCandidates; i++) {
             if (bestRanking[i] > highestRankingScore) {
                 highestRankingScore = bestRanking[i];
-                winner = i;
+                winnerCount = 1;
+            } else if (bestRanking[i] == highestRankingScore) {
+                winnerCount++;
             }
         }
 
-        return winner;
+        // Collect all candidates with the highest ranking score
+        uint256[] memory winners = new uint256[](winnerCount);
+        uint256 numWinners = 0;
+
+        for (uint256 i = 0; i < numCandidates; i++) {
+            if (bestRanking[i] == highestRankingScore) {
+                winners[numWinners] = i;
+                numWinners++;
+            }
+        }
+
+        return winners;
     }
 }

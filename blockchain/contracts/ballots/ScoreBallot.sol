@@ -2,8 +2,8 @@
 pragma solidity ^0.8.24;
 
 import "./interface/IBallot.sol";
-import "./interface/Errors.sol";
-contract ScoreBallot is IBallot, Errors {
+
+contract ScoreBallot is IBallot {
     error InvalidScore(uint score);
     address public electionContract;
 

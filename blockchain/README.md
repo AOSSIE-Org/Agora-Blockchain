@@ -14,6 +14,6 @@ npx hardhat ignition deploy ./ignition/modules/Lock.js
 
 Live Code at
 
-- Election Factory - https://sepolia.etherscan.io/address/0x89e21F5eA28ceb5e147080C3aBb653Cd365d9d9F#code
+- Election Factory - https://sepolia.etherscan.io/address/0x80791556195c9F8C6683ccbDc01f3B64dd6a54a9#code
 - CCIP Sender :-
   - Fuji - https://testnet.snowtrace.io//address/0xf267f0603672E791779E52B153BD9A39C9928767#code

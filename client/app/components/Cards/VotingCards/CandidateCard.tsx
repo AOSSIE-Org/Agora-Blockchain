@@ -45,7 +45,6 @@ const CandidateCard = ({
       toast.error(ErrorMessage(error));
     }
   };
-  console.log("Candidates", candidate);
   return (
     <li className="p-2 select-none">
       <div

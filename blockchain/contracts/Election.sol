@@ -51,7 +51,7 @@ contract Election is Initializable {
     address public factoryContract;
     address public owner;
 
-    uint public winner;
+    uint[] public winners;
     uint public resultType;
     uint public totalVotes;
     bool public resultsDeclared;
@@ -126,7 +126,7 @@ contract Election is Initializable {
         return candidates;
     }
 
-    function getResult() external returns (uint) {
+    function getResult() external {
         if (block.timestamp < electionInfo.endTime) revert ElectionIncomplete();
         bytes memory payload = abi.encodeWithSignature("getVotes()");
 
@@ -135,9 +135,15 @@ contract Election is Initializable {
         );
         if (!success) revert GetVotes();
 
-        uint _winner = resultCalculator.getResults(allVotes, resultType);
-        winner = _winner;
+        uint[] memory _winners = resultCalculator.getResults(
+            allVotes,
+            resultType
+        );
+        winners = _winners;
         resultsDeclared = true;
-        return _winner;
+    }
+
+    function getWinners() external view returns (uint[] memory) {
+        return winners;
     }
 }
