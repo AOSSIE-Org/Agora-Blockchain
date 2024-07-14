@@ -36,7 +36,7 @@ const ElectionCandidates = ({
       <div className="flow-root">
         <ul role="list" className="divide-y divide-gray-200 ">
           {candidateList?.map((candidate, key) => {
-            if (key > 3) return null;
+            if (key > 2) return null;
             return (
               <CandidateCard
                 isOwner={isOwner}
@@ -46,18 +46,20 @@ const ElectionCandidates = ({
               />
             );
           })}
-          <li className=" -mb-3 pt-2">
-            <div className="flex items-center justify-center ">
-              <button
-                onClick={() => {
-                  setelectionModal(true);
-                }}
-                className="text-sm font-medium text-blue-600 disabled:text-gray-700 disabled:cursor-not-allowed disabled:hover:no-underline hover:underline "
-              >
-                View All
-              </button>
-            </div>
-          </li>
+          {candidateList!.length > 2 && (
+            <li className=" -mb-3 pt-2">
+              <div className="flex items-center justify-center ">
+                <button
+                  onClick={() => {
+                    setelectionModal(true);
+                  }}
+                  className="text-sm font-medium text-blue-600 disabled:text-gray-700 disabled:cursor-not-allowed disabled:hover:no-underline hover:underline "
+                >
+                  View All
+                </button>
+              </div>
+            </li>
+          )}
         </ul>
       </div>
       {electionModal && (
