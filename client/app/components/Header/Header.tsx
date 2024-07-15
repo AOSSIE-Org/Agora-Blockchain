@@ -17,12 +17,12 @@ const Header = () => {
         <nav className="flex w-[50%] justify-start items-center  ">
           <div className="flex text-lg w-full items-center justify-around">
             <Link href={"/create"}>
-              <button className="font-semibold gap-x-1 items-center flex text-gray-700">
+              <button className="font-semibold gap-x-1 items-center flex text-gray-700 hover:text-amber-300">
                 <PlusCircleIcon className="w-6" />
                 <p> Create</p>
               </button>
             </Link>
-            <button className="font-semibold gap-x-1 items-center flex text-gray-700">
+            <button className="font-semibold gap-x-1 items-center flex text-gray-700 hover:text-amber-300">
               <UserIcon className="w-6" />
               <p>Profile</p>
             </button>
