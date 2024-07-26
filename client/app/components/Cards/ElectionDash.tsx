@@ -5,8 +5,6 @@ import ElectionMini from "../Cards/ElectionMini";
 import { useReadContract } from "wagmi";
 import { ELECTION_FACTORY_ADDRESS } from "../../constants";
 import { ElectionFactory } from "../../../abi/artifacts/ElectionFactory";
-import SearchBar from "../Helper/SearchBar";
-import { IoReturnDownBack } from "react-icons/io5";
 import ElectionInfoCard from "./ElectionInfoCard";
 import { sepolia } from "viem/chains";
 const ElectionDash = () => {
@@ -58,7 +56,6 @@ const ElectionDash = () => {
         <Loader />
       ) : (
         <div className="flex flex-col items-center justify-center">
-          {/* <SearchBar elections={elections} /> */}
           <div className="flex lg:flex-row flex-col w-[80%] overflow-auto lg:space-x-4">
             <div className=" flex-col w-[90%] lg:w-[24%] mt-3 h-full inline-block items-center justify-center ">
               <ElectionInfoCard

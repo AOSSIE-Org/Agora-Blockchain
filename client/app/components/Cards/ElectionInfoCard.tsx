@@ -18,7 +18,7 @@ const ElectionInfoCard = ({ counts, filterStatus, setFilterStatus }: any) => {
   ];
   return (
     <div className="relative flex border border-gray-300 w-full flex-col rounded-xl bg-white p-4 text-gray-700 bg-clip-border shadow-xl shadow-blue-gray-900/5">
-      <div className="p-4 mb-2">
+      <div className="p-4">
         <h5 className="block font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
           Election List
         </h5>
