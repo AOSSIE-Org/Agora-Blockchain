@@ -41,6 +41,10 @@ contract BallotGenerator {
             // KemenyYoung Ballot
             return address(new KemenyYoungBallot(_electionAddress));
         }
+        if (_ballotType == 8) {
+            // Moore's Ballot
+            return address(new GeneralBallot(_electionAddress));
+        }
         return address(new GeneralBallot(_electionAddress));
     }
 }

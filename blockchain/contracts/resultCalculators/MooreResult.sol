@@ -2,8 +2,8 @@
 pragma solidity ^0.8.20;
 import {Errors} from "./interface/Errors.sol";
 
-contract GeneralResult is Errors {
-    function calculateGeneralResult(
+contract MooreResult is Errors {
+    function calculateMooreResult(
         bytes calldata returnData
     ) public pure returns (uint[] memory) {
         uint[] memory candidateList = abi.decode(returnData, (uint[]));
@@ -20,11 +20,14 @@ contract GeneralResult is Errors {
 
         uint maxVotes = 0;
         uint winnerCount = 0;
-
-        // First pass: find the maximum number of votes and the count of candidates with that maximum
+        uint[] memory winners;
         for (uint i = 0; i < candidatesLength; i++) {
             uint votes = candidateList[i];
-            if (votes > maxVotes) {
+            if (votes > candidatesLength / 2) {
+                winners = new uint[](1);
+                winners[0] = i;
+                return winners;
+            } else if (votes > maxVotes) {
                 maxVotes = votes;
                 winnerCount = 1;
             } else if (votes == maxVotes) {
@@ -32,12 +35,7 @@ contract GeneralResult is Errors {
             }
         }
 
-        if (maxVotes == 0) {
-            revert NoWinner();
-        }
-
-        // Second pass: collect all candidates with the maximum number of votes
-        uint[] memory winners = new uint[](winnerCount);
+        winners = new uint[](winnerCount);
         uint numWinners = 0;
 
         for (uint i = 0; i < candidatesLength; i++) {
