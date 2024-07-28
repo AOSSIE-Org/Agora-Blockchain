@@ -28,6 +28,10 @@ export const ballotTypeMap: Record<number, ReturnType> = {
     name: "KemenyYoung",
     description: `Voters rank candidates, and the system calculates the order of candidates that has the smallest total disagreement with the voters' rankings. The candidate ranking with the highest Kemeny score (the smallest sum of distances) is the winner.`,
   },
+  8: {
+    name: "Moore's",
+    description: `Voters cast their votes for their preferred candidate or option. The candidate with more than 50% votes wins. If no candidate reaches majority than the candidate(s) with highest votes is declared as winner(s)`,
+  },
 };
 
 export const VotingInfo = (_ballotType: number): ReturnType => {

@@ -28,9 +28,9 @@ const Ballot = ({
     if (!inside) setelectionModal(false);
   };
   let ballotType = 3;
-  if (resultType <= 1) {
+  if (resultType <= 1 || resultType == 8) {
     ballotType = 1;
-  } else if (resultType >= 7 || resultType <= 4) {
+  } else if (resultType == 7 || resultType <= 4) {
     ballotType = 2;
   }
   return (

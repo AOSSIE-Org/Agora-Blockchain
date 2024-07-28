@@ -1,6 +1,4 @@
 import React from "react";
-import { useElectionStats } from "@/app/hooks/ElectionsStats";
-import LoaderInline from "../Helper/LoaderInline";
 import {
   TbCalendarMonth,
   TbCalendarDot,
@@ -9,7 +7,6 @@ import {
 } from "react-icons/tb";
 
 const ElectionInfoCard = ({ counts, filterStatus, setFilterStatus }: any) => {
-  if (counts.total == 0) return <LoaderInline />;
   const ElectionInfoImage = [
     { name: "All", image: TbCalendarMonth, count: counts.total },
     { name: "Pending", image: TbCalendarTime, count: counts.pending },
