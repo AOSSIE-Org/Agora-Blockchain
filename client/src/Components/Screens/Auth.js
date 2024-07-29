@@ -31,21 +31,19 @@ function Auth() {
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
-        console.log(signer);
         const contract = new ethers.Contract(
           contractAddress,
           Authentication.abi,
           signer
         );
-        console.log(contract);
-        console.log(fullName.name);
+        
         const add  = await signer.getAddress();
         // const tx = await contract.createUser(fullName.name);
 
         //changed hardcoded address to signer address
         const tx = await contract.createUser([1,fullName.name,add]);
         await tx.wait();
-        console.log("suucce");
+        
         setNewRegistered(true);
       }
     } catch (err) {
@@ -59,21 +57,21 @@ function Auth() {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const add  = await signer.getAddress();
-        console.log(signer);
+        
         const contract = new ethers.Contract(
           contractAddress,
           Authentication.abi,
           signer
         );
 
-        console.log(contract)
+        
 
         //await contract.init(contractAddress)    //This step you have to do  one time
 
         //changed hardcoded address to signer address
 
         const tx = await contract.getAuthStatus(add);
-        console.log(tx);
+        
         setRegistered(tx);
         // setRegistered(true);
       }

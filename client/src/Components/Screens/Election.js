@@ -71,12 +71,11 @@ function Election() {
 						
 				//fetched election details
 				const electionDetail =await electionContract.getElectionInfo();
-				console.log(electionDetail);
+				
 				setElectionDetails(electionDetail);
 
 				//Election Type - Open/Invite
 				const electionType  = await electionContract.getElectionType();
-				console.log("Election Type - ",electionType ? "Open " : "Invite ", "Based Election");
 				setIsOpenBasedElection(electionType);
 
 				//set election status
@@ -85,7 +84,7 @@ function Election() {
 				//set ballot type and algorithm type
 				const ballotType = Number((await electionContract.getBallotType())._hex);
 				setBallotType(ballotType);
-				console.log("Ballot Type - ", ballotType);
+				
 				if(ballotType == 2) setElectionAlgorithm("Okalhoma");
 				else if(ballotType == 4) setElectionAlgorithm("Borda");
 				else if(ballotType == 5) setElectionAlgorithm("Schulze");
@@ -97,7 +96,7 @@ function Election() {
 				//fetched all candidates
 				const cand =await electionContract.getCandidates();
 				setCandidates(cand);
-				console.log("Candidate Details - ", cand);
+				
 				
 				//total voters
 				const no  = await electionContract.getVoterCount();
@@ -124,7 +123,7 @@ function Election() {
 						
 				//fetched election details
 				const electionOrg =await organizerContract.getElectionOwner(electionAddress);
-				console.log("Election Organizer - ",electionOrg);
+				
 				setAdmin(electionOrg);
 			}
 		}catch(err){
@@ -147,12 +146,12 @@ function Election() {
 		  );
 		  let _winnerDetails = [];
 		  let winners = await electionContract.getWinners();
-		  console.log('winner',winners);
+		  
 		  for(let winner of winners){
-			console.log(Number(winner))
+			
 		  }
 		  _winnerDetails.push(Number(winners[0]))
-		  console.log("set winner", Number(winners[0]))
+		  
 
 		  setWinnerDetails(_winnerDetails);
 		}
@@ -299,7 +298,7 @@ function Election() {
 							</div>
 
 							:
-							<span onClick={() => {console.log("Result only calculated after election ends");}} className="voteButton voteButtonDisabled" style={{float: "right", marginTop: "10px", width: "100px"}}>Get Result</span>
+							<span className="voteButton voteButtonDisabled" style={{float: "right", marginTop: "10px", width: "100px"}}>Get Result</span>
 						}
 
 						{

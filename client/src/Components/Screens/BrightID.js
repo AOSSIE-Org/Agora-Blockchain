@@ -58,7 +58,7 @@ function BrightID() {
           r: "0x" + data.data.sig.r,
           s: "0x" + data.data.sig.s,
         });
-        console.log("fetched", data);
+        
       })
       .catch((err) => {
         console.error(err);
@@ -117,7 +117,7 @@ function BrightID() {
           s
         );
         await transaction.wait();
-        console.log("success");
+       
         setData({
           addresses: [],
           timestamp: 0,
@@ -135,7 +135,7 @@ function BrightID() {
     brightid();
     getVerifiers();
   },[]);
-  console.log("verifiers -> ", verifiers);
+  
   return (
     <div>
       <div
