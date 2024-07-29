@@ -33,18 +33,17 @@ const Dashboard = () => {
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
-    console.log(search)
+   
   }
   const handleTypeChange = (e) => {
     setType(e.target.value);
-    console.log(type)
+   
   }
 
   //helper function to filter the elections
   const filtercheck = (elections) => {
-    console.log(elections);
-    console.log('type',type ,'status',elections.status);
-    console.log(type===elections.status);
+   
+    
       if(search === "" && type === "ALL"){
         return true;
       }
@@ -101,9 +100,7 @@ const Dashboard = () => {
         const openBasedElections = await contract.getOpenBasedElections();
         const inviteBasedElections = await contract.getInviteBasedElections(data.publicAddress);
         const elections = await openBasedElections.concat(inviteBasedElections);
-        console.log("Open Based Elections - ",openBasedElections);
-        console.log("Invite Based Elections - ",inviteBasedElections);
-        console.log("Elections - ",elections);
+      
         getElections(elections);
       }
     } catch (err) {

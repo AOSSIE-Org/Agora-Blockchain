@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 //All the components import goes here
 import Auth from "./Components/Screens/Auth";
@@ -18,14 +18,7 @@ const Routing = () => {
 
       </Routes>
 
-    // <BrowserRouter>
-
-    //     <Route exact path="/" element={() => <Navigate to="/auth" />} />
-    //     <Route path="/auth" exact component={() => <Auth />} />
-    //     <Route path="/dashboard" exact component={() => <Dashboard />} />
-    //     <Route path="/election" exact component={() => <Election />} />
-
-    // </BrowserRouter>
+    
   );
 };
 
