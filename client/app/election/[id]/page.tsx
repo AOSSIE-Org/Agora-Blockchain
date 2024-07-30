@@ -80,7 +80,7 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
   return (
     <div className="min-h-screen overflow-auto bg-white pt-20 w-full flex items-start justify-center">
       <div className="my-2 rounded-2xl">
-        <div className="mx-4 px-6 lg:px-8">
+        <div className="">
           <div className=" p-2 rounded-lg md:p-4 ">
             <div className="flex mx-6 my-1 w-full items-start justify-around lg:mx-0">
               <div className="flex flex-col">

@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { BsSend } from "react-icons/bs";
+import { FaArrowUpLong } from "react-icons/fa6";
+import { ArrowUpIcon } from "@heroicons/react/16/solid";
 
 const ChatBot = () => {
   const apiUrl = "http://127.0.0.1:5000/api/chat"; // Update with the actual URL
@@ -62,7 +64,7 @@ const ChatBot = () => {
 
   return (
     <div className="absolute bottom-1 left-3 z-10 p-3">
-      <div className="dropdown dropdown-right dropdown-end ">
+      <div className="dropdown dropdown-top ">
         <div
           tabIndex={0}
           role="button"
@@ -72,40 +74,29 @@ const ChatBot = () => {
         </div>
         <div
           tabIndex={0}
-          className="dropdown-content z-[20] menu bg-base-100 rounded-box h-[380px] w-[330px]  bg-clip-border shadow-xl shadow-blue-gray-900/5"
+          className="dropdown-content z-[20] menu bg-base-100 border border-gray-300 rounded-2xl h-[450px] w-[370px]  bg-clip-border shadow-xl shadow-blue-gray-900/5"
         >
-          <section className="container mx-auto w-full h-full fixed inset-0">
+          <section className="container w-full h-full fixed inset-0">
             <div className=" w-full h-full flex flex-col">
-              <div className="p-1 flex w-full justify-center items-center font-medium text-xl border-b border-gray-400">
+              <div className="p-2 flex w-full justify-center text-gray-600 items-center rounded-2xl font-medium text-xl ">
                 Agora Chatbot
               </div>
-              <div className="p-2  flex-grow flex flex-col  h-fit overflow-auto">
+              <hr className=" h-[2px] border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-25 dark:via-neutral-400" />
+              <div className="p-2 flex-grow flex flex-col  h-fit overflow-auto">
                 {messages.length &&
                   messages.map((msg, i) => {
                     return (
                       <div
-                        className={`chat ${
+                        className={`chat my-1 ${
                           msg.role === "assistant" ? "chat-start" : "chat-end"
                         }`}
                         key={"chatKey" + i}
                       >
-                        <div className="chat-image avatar">
-                          <div className="w-10 rounded-full">
-                            <img
-                              alt="img"
-                              src={
-                                msg.role === "assistant"
-                                  ? "/assistant.png"
-                                  : "/user.png"
-                              }
-                            />
-                          </div>
-                        </div>
                         <div
-                          className={`chat-bubble text-white ${
+                          className={`font-normal mx-1 py-2 px-3 rounded-2xl ${
                             msg.role === "assistant"
-                              ? "bg-[#0285ff]"
-                              : "bg-[#8f17fd]"
+                              ? "bg-[#f0f0f0] text-[#404040]"
+                              : "bg-[#333333] text-white"
                           }`}
                         >
                           {msg.content}
@@ -115,8 +106,12 @@ const ChatBot = () => {
                   })}
                 <div ref={messageEndRef} />
               </div>
-              <form className="h-[10%] items-center" onSubmit={handleSubmit}>
-                <div className="w-full h-full items-center px-2 flex justify-around relative">
+
+              <form
+                className="h-[10%] items-center mb-4 px-2.5"
+                onSubmit={handleSubmit}
+              >
+                <div className="w-full h-full border border-gray-300 rounded-3xl items-center px-1 py-2.5 flex justify-stretch relative">
                   <input
                     className="block rounded-l-xl py-3.5 px-1.5 w-full text-sm text-gray-900 bg-transparent focus:outline-none "
                     value={inputMessage}
@@ -128,10 +123,10 @@ const ChatBot = () => {
                     required
                   />
                   <button
-                    className="mx-1 p-2 rounded-full bg-gray-300 hover:bg-blue-300"
+                    className="p-2 rounded-full text-white bg-gray-800 hover:bg-gray-600 "
                     type="submit"
                   >
-                    <BsSend size={20} />
+                    <ArrowUpIcon className="w-5" />
                   </button>
                 </div>
               </form>
