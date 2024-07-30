@@ -63,14 +63,14 @@ const ChatBot = () => {
   }, [messages]);
 
   return (
-    <div className="absolute bottom-1 left-3 z-10 p-3">
+    <div className="absolute bottom-1 left-3 z-10 p-2">
       <div className="dropdown dropdown-top ">
         <div
           tabIndex={0}
           role="button"
           className="w-14 rounded-full bg-base-100 p-1 bg-clip-border shadow-xl shadow-blue-gray-900/5"
         >
-          <img alt="img" src="/chat.png" />
+          <img alt="img" src="/assistant.png" />
         </div>
         <div
           tabIndex={0}

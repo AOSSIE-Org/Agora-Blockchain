@@ -69,6 +69,10 @@ const ScoreBallot = ({
     }
   };
   const handleChange = (id: number, credits: number) => {
+    if (credits < 0) {
+      toast.error("Credits cannot be Negative!!");
+      return;
+    }
     const newCreditScores = [...creditScores];
 
     const sumWithoutCurrent = creditScores.reduce(
@@ -90,6 +94,10 @@ const ScoreBallot = ({
     setCreditScores(newCreditScores);
   };
   const handleChangeScore = (id: number, credits: number) => {
+    if (credits < 0) {
+      toast.error("Credits cannot be Negative!!");
+      return;
+    }
     if (credits > 10) {
       toast.error("Max Credit is 10");
       return;
