@@ -28,7 +28,7 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
       },
       {
         ...electionContract,
-        functionName: "winner",
+        functionName: "getWinners",
       },
       {
         ...electionContract,
