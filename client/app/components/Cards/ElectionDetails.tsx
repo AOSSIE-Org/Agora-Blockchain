@@ -3,19 +3,26 @@ import { UnixTimeConvertor } from "../Functions/UnixTimeConvertor";
 import { VotingInfo } from "../../helpers/votingInfo";
 import { useElectionData } from "@/app/hooks/ElectionInfo";
 
-const ElectionDetails = () => {
+const ElectionDetails = ({ electionStat }: { electionStat: number }) => {
   const { electionData } = useElectionData();
   const timestamp = electionData[2].result;
   const resultType = electionData[3].result;
   const totalVotes = Number(electionData[4].result);
-  const resultDeclared = electionData[6].result;
-  const startTime = UnixTimeConvertor(timestamp![0]);
-  const endTime = UnixTimeConvertor(timestamp![1]);
+  const startTime = UnixTimeConvertor(timestamp[0]);
+  const endTime = UnixTimeConvertor(timestamp[1]);
   const votingType = VotingInfo(Number(resultType));
+  const ElectionStatus: { [key: number]: string } = {
+    1: "Pending",
+    2: "Active",
+    3: "Ended",
+  };
   const cardData = [
     { head: `${startTime?.day} ${startTime?.time}`, des: "Starts" },
     { head: `${endTime?.day} ${endTime?.time}`, des: "Ends" },
-    { head: !resultDeclared ? "~" : "Result Declared", des: "Status" },
+    {
+      head: ElectionStatus[electionStat],
+      des: "Status",
+    },
     { head: `${votingType.name}`, des: "Voting Type" },
     { head: `${totalVotes}`, des: "Votes Casted" },
   ];

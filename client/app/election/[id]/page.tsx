@@ -51,6 +51,10 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
         ...electionContract,
         functionName: "resultsDeclared",
       },
+      {
+        ...electionContract,
+        functionName: "getCandidateList",
+      },
     ],
   });
 
@@ -63,18 +67,22 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
   if (!electionData) return <Loader />;
 
   const owner = electionData[0].result;
-  const winner = Number(electionData[1].result);
+  const winners = Number(electionData[1].result);
   const electionInfo = electionData[2].result;
   const resultType = electionData[3].result;
   const totalVotes = Number(electionData[4].result);
   const userVoted = electionData[5].result;
   const resultDeclared = electionData[6].result;
+  const candidateList = electionData[7].result;
+  const isStarting = Math.floor(Date.now() / 1000) < Number(electionInfo[0]);
+  const isEnded = Math.floor(Date.now() / 1000) > Number(electionInfo[1]);
+  const electionStat = isStarting ? 1 : isEnded ? 3 : 2;
   return (
     <div className="min-h-screen overflow-auto bg-white pt-20 w-full flex items-start justify-center">
       <div className="my-2 rounded-2xl">
-        <div className="mx-4 px-6 lg:px-8">
+        <div className="">
           <div className=" p-2 rounded-lg md:p-4 ">
-            <div className="flex mx-6 my-1 w-3xl  items-center justify-around lg:mx-0">
+            <div className="flex mx-6 my-1 w-full items-start justify-around lg:mx-0">
               <div className="flex flex-col">
                 <p className="mt-2 text-lg font-bold tracking-tight text-gray-900 sm:text-xl">
                   {electionInfo![2]}
@@ -91,11 +99,12 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
               </div> */}
             </div>
           </div>
-          <ElectionDetails />
+          <ElectionDetails electionStat={electionStat} />
           <div className="md:flex-row gap-x-4 flex flex-col items-center sm:items-stretch justify-between">
             <ElectionCandidates
               isOwner={owner === address}
               resultType={resultType}
+              electionStat={electionStat}
             />
             <ButtonCard isOwner={owner === address} />
           </div>

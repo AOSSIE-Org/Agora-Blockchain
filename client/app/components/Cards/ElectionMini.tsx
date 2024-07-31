@@ -12,7 +12,7 @@ const ElectionMini = ({
   update,
 }: {
   electionAddress: `0x${string}`;
-  update: any;
+  update?: (electionAddress: `0x${string}`, status: number) => void;
 }) => {
   const ElectionStatus = {
     1: "Pending",
@@ -36,7 +36,7 @@ const ElectionMini = ({
   const isStarting = Math.floor(Date.now() / 1000) < Number(electionInfo[0]);
   const isEnded = Math.floor(Date.now() / 1000) > Number(electionInfo[1]);
   const electionStat = isStarting ? 1 : isEnded ? 3 : 2;
-  update(electionAddress, electionStat);
+  update?.(electionAddress, electionStat);
   return (
     <div className="flex h-xl bg-white px-3 py-1 rounded-xl border border-gray-300 bg-clip-border shadow-md shadow-blue-gray-900/5 flex-col items-start justify-between">
       <div className="group w-full relative ">

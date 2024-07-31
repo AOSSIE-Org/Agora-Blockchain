@@ -46,7 +46,7 @@ const CandidateCard = ({
     }
   };
   return (
-    <li className="p-2 select-none">
+    <div className="p-2 select-none">
       <div
         onMouseEnter={() => {
           setinside(true);
@@ -75,7 +75,7 @@ const CandidateCard = ({
             {candidate.description}
           </p>
         </div>
-        <div className="inline-flex items-center text-base font-semibold text-gray-900 ">
+        <div className="inline-flex items-center text-base font-semibold text-blue-900 ">
           {candidateId}
         </div>
         {isOwner && (
@@ -128,7 +128,7 @@ const CandidateCard = ({
           </Menu>
         )}
       </div>
-    </li>
+    </div>
   );
 };
 

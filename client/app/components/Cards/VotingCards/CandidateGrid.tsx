@@ -158,12 +158,7 @@ const CandidateGrid = ({
           {candidate.name} #{Number(candidateId)}
         </h5>
         <p className="text-sm overflow-y-auto p-2 w-full h-20 text-gray-500 ">
-          {/* {candidate.description} */}
-          Candidate Description : Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit. et luctus ante, et lacinia ligula. Etiam enim lectus,
-          efficitur ac semper ac, maximus a nunc. Fusce vitae lacus dictum,
-          dapibus sit amet, dapibus eros. Sed a condimentum nulla. Duis ut urna
-          amet sapien malesuada finibus in tempor erat. Praesent congue risus.
+          {candidate.description}
         </p>
         {!isVoted && (
           <div className="flex mt-4">

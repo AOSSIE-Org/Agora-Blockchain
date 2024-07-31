@@ -12,8 +12,11 @@ import { BsCalendarPlus, BsCalendarMinus } from "react-icons/bs";
 import { sepolia } from "viem/chains";
 import { ArrowsRightLeftIcon } from "@heroicons/react/16/solid";
 import { useRouter } from "next/navigation";
+import ElectionInfoPopup from "../components/Modal/ElectionInfoPopup";
+
 const page = () => {
   const router = useRouter();
+  const [SelectedBallot, setSelectedBallot] = useState(1);
   const { switchChain } = useSwitchChain();
   const { chain } = useAccount();
   const changeChain = () => {
@@ -29,9 +32,13 @@ const page = () => {
     const formData = new FormData(event.currentTarget);
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
-    const ballotType = BigInt(formData.get("ballot") as string);
+    const ballotType = BigInt(SelectedBallot);
     const start = BigInt(Math.floor(new Date(startTime).getTime() / 1000));
     const end = BigInt(Math.floor(new Date(endTime).getTime() / 1000));
+    if (start >= end) {
+      toast.error("Invalid Timing");
+      return;
+    }
     try {
       await writeContractAsync({
         address: ELECTION_FACTORY_ADDRESS,
@@ -55,6 +62,10 @@ const page = () => {
       toast.error(ErrorMessage(error));
     }
   };
+  const handleBallotChange = (event: any) => {
+    const selectedValue = event.target.value;
+    setSelectedBallot(Number(selectedValue));
+  };
   const handleChange = (value: any, event: any, type: number) => {
     type === 0 ? setstartTime(value) : setendTime(value);
   };
@@ -67,7 +78,7 @@ const page = () => {
           </p>
         </div>
         <form onSubmit={createElection} className="text-black w-full">
-          <div className="relative z-0 w-full mb-5 group">
+          <div className="relative gap-y-1 z-0 w-full mb-5 group">
             <input
               type="text"
               name="name"
@@ -80,7 +91,7 @@ const page = () => {
               Name
             </label>
           </div>
-          <div className=" relative  gap-y-1  z-0 w-full mb-5 group">
+          <div className="relative gap-y-1 z-0 w-full mb-5 group">
             <textarea
               rows={4}
               name="description"
@@ -92,23 +103,27 @@ const page = () => {
               Descriptions
             </label>
           </div>
-          <div className=" relative  gap-y-1  z-0 w-full mb-5 group">
+          <div className="relative gap-y-1 z-0 w-full mb-5 group">
             <label className="block mb-2 text-sm font-medium text-gray-900 ">
               Select Voting Type
             </label>
-            <select
-              id="ballot"
-              name="ballot"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            >
-              {Object.entries(ballotTypeMap).map(([key, value]) => (
-                <option key={key} value={key}>
-                  {value.name} Voting
-                </option>
-              ))}
-            </select>
+            <div className="flex">
+              <select
+                value={SelectedBallot}
+                onChange={handleBallotChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[95%] p-2.5"
+              >
+                {Object.entries(ballotTypeMap).map(([key, value]) => (
+                  <option key={key} value={key}>
+                    {value.name} Voting
+                  </option>
+                ))}
+              </select>
+              <ElectionInfoPopup id={SelectedBallot} />
+            </div>
           </div>
-          <div className=" relative  gap-y-1  z-0 w-full mb-5 group">
+          <div className="relative gap-y-1 z-0 w-full mb-5 group"></div>
+          <div className="relative gap-y-1 z-0 w-full mb-5 group">
             <div className="flex justify-around w-full items-center flex-row gap-4">
               <DatePicker
                 onChange={(value, event) => {
