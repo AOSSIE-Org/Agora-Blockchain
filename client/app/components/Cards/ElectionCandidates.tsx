@@ -6,16 +6,19 @@ import LoaderInline from "../Helper/LoaderInline";
 import CandidateCard from "./VotingCards/CandidateCard";
 import Ballot from "../Modal/Ballot";
 import { useElectionModal } from "../../hooks/ElectionModal";
+import { sepolia } from "viem/chains";
+import { useParams } from "next/navigation";
 const ElectionCandidates = ({
   isOwner,
-  electionAddress,
   resultType,
 }: {
   isOwner: boolean;
   resultType: bigint | undefined;
-  electionAddress: `0x${string}`;
 }) => {
+  const { id: electionAddress } = useParams<{ id: `0x${string}` }>();
+
   const { data: candidateList, isLoading } = useReadContract({
+    chainId: sepolia.id,
     abi: Election,
     address: electionAddress,
     functionName: "getCandidateList",
@@ -37,7 +40,6 @@ const ElectionCandidates = ({
             return (
               <CandidateCard
                 isOwner={isOwner}
-                electionAddress={electionAddress}
                 key={key}
                 candidate={candidate}
                 isMini={true}
@@ -61,7 +63,6 @@ const ElectionCandidates = ({
       {electionModal && (
         <Ballot
           isOwner={isOwner}
-          electionAddress={electionAddress}
           candidateList={candidateList}
           resultType={Number(resultType)}
         />

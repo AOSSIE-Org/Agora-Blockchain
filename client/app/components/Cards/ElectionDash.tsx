@@ -5,22 +5,57 @@ import ElectionMini from "../Cards/ElectionMini";
 import { useReadContract } from "wagmi";
 import { ELECTION_FACTORY_ADDRESS } from "../../constants";
 import { ElectionFactory } from "../../../abi/artifacts/ElectionFactory";
-
+import SearchBar from "../Helper/SearchBar";
+import { useElectionStats } from "@/app/hooks/ElectionsStats";
+import ElectionInfoCard from "./ElectionInfoCard";
+import { IoReturnDownBack } from "react-icons/io5";
+import { sepolia } from "viem/chains";
 const ElectionDash = () => {
+  const { electionStats, setelectionStats } = useElectionStats();
   const { data: elections, isLoading } = useReadContract({
+    chainId: sepolia.id,
     abi: ElectionFactory,
     address: ELECTION_FACTORY_ADDRESS,
     functionName: "getOpenElections",
   });
+
+  let electionsByStatus = [0, 0, 0, 0];
+  const update = (value: number) => {
+    electionsByStatus[value]++;
+    electionsByStatus[0]++;
+    if (electionsByStatus[0] === elections?.length) {
+      if (electionStats == null) {
+        setelectionStats(electionsByStatus);
+      }
+    }
+  };
+
   return (
-    <div className="mx-6 mt-4  max-w-2xl  pt-2 sm:mt-4 border-t border-gray-300  sm:pt-4 lg:mx-0 lg:max-w-none ">
+    <div className="w-screen">
       {isLoading || !elections ? (
         <Loader />
       ) : (
-        <div className="grid grid-cols-1 mt-3 gap-x-8 gap-y-8 md:grid-cols-2 lg:grid-cols-3 ">
-          {elections!.map((election, key) => {
-            return <ElectionMini electionAddress={election} key={key} />;
-          })}
+        <div className="flex flex-col items-center justify-center">
+          {/* <SearchBar elections={elections} /> */}
+          <div className="flex lg:flex-row flex-col w-[80%] overflow-auto lg:space-x-4">
+            <div className=" flex-col w-[90%] lg:w-[24%] mt-3 h-full inline-block items-center justify-center ">
+              <ElectionInfoCard />
+            </div>
+            <div
+              className="w-[90%] lg:w-[75%] flex-col space-y-6 my-3 inline-block overflow-auto items-center justify-center"
+              style={{ height: "75vh" }}
+            >
+              {elections!.map((election, key) => {
+                return (
+                  <ElectionMini
+                    electionAddress={election}
+                    key={key}
+                    update={update}
+                  />
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
     </div>

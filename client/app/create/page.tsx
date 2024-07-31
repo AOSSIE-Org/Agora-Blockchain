@@ -1,6 +1,6 @@
 "use client";
 import React, { FormEvent, useState } from "react";
-import { useWriteContract } from "wagmi";
+import { useAccount, useSwitchChain, useWriteContract } from "wagmi";
 import { ELECTION_FACTORY_ADDRESS } from "../constants";
 import { ElectionFactory } from "../../abi/artifacts/ElectionFactory";
 import { ballotTypeMap } from "../helpers/votingInfo";
@@ -8,7 +8,15 @@ import { DatePicker } from "rsuite";
 import toast from "react-hot-toast";
 import { ErrorMessage } from "../helpers/ErrorMessage";
 import { BsCalendarPlus, BsCalendarMinus } from "react-icons/bs";
+import { sepolia } from "viem/chains";
+import { ArrowsRightLeftIcon } from "@heroicons/react/16/solid";
 const page = () => {
+  const { switchChain } = useSwitchChain();
+  const { chain } = useAccount();
+  const changeChain = () => {
+    switchChain({ chainId: sepolia.id });
+  };
+
   const { writeContractAsync } = useWriteContract();
   const [startTime, setstartTime] = React.useState(new Date());
   const [endTime, setendTime] = React.useState(new Date());
@@ -47,8 +55,8 @@ const page = () => {
     type === 0 ? setstartTime(value) : setendTime(value);
   };
   return (
-    <div className="min-h-screen w-full mx-4 px-6 lg:px-8 overflow-auto rounded-2xl bg-white flex items-center  justify-center">
-      <div className="w-[50%] flex my-8 flex-col">
+    <div className="min-h-screen w-full overflow-auto rounded-2xl bg-white flex items-center justify-center">
+      <div className="w-[50%] mx-4 px-6 lg:px-8 flex my-8 flex-col">
         <div className="w-full">
           <p className="my-4 text-lg font-bold tracking-tight text-gray-900 sm:text-xl">
             Create Election
@@ -130,6 +138,23 @@ const page = () => {
           </div>
         </form>
       </div>
+      {chain?.id === 43113 && (
+        <div className="fixed z-20 h-full w-full bg-white bg-opacity-20 backdrop-blur-sm">
+          <div className="inline-flex flex-col gap-y-4 w-full h-full items-center justify-center">
+            <p className="text-lg">
+              Creating Elections is Supported only on Sepolia
+            </p>
+            <button
+              onClick={changeChain}
+              className="align-middle bg-white select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-sm py-2.5 px-5 rounded-lg text-blue-gray-900 shadow-md shadow-blue-gray-500/10 hover:shadow-lg hover:shadow-blue-gray-500/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none flex items-center gap-3"
+              type="button"
+            >
+              <ArrowsRightLeftIcon className="w-5 h-5" />
+              Switch Chain
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

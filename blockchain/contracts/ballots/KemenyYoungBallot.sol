@@ -2,9 +2,8 @@
 pragma solidity ^0.8.24;
 
 import "./interface/IBallot.sol";
-import "./interface/Errors.sol";
 
-contract KemenyYoungBallot is IBallot, Errors {
+contract KemenyYoungBallot is IBallot {
     address public electionContract;
 
     uint[][] private votes;

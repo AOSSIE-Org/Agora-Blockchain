@@ -1,14 +1,13 @@
 export const ballotTypeMap: Record<number, string> = {
-  1: "General Voting",
-  2: "Ranked Voting",
-  3: "IRV Voting",
-  4: "Borda Voting",
-  5: "Quadratic Voting",
-  6: "Score Voting",
-  7: "KemenyYoung Voting",
-  8: "Schulze Voting",
+  1: "General",
+  2: "Ranked",
+  3: "IRV",
+  4: "Schulze",
+  5: "Quadratic",
+  6: "Score",
+  7: "KemenyYoung",
 };
 
 export const VotingInfo = (_ballotType: number): string => {
-  return ballotTypeMap[_ballotType] || "General Voting";
+  return ballotTypeMap[_ballotType] || "General";
 };

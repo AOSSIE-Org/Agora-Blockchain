@@ -1,6 +1,11 @@
 "use client";
 import React, { Fragment } from "react";
-import { AVATARS } from "../../../constants";
+import {
+  AVATARS,
+  CCIP_FUJI_ADDRESS,
+  SEPOLIA_CHAIN_SELECTOR,
+  ELECTION_FACTORY_ADDRESS,
+} from "../../../constants";
 import {
   Menu,
   Transition,
@@ -9,34 +14,52 @@ import {
   MenuItem,
 } from "@headlessui/react";
 import { PencilIcon, TrashIcon } from "@heroicons/react/16/solid";
-import { useWriteContract } from "wagmi";
+import { useAccount, useSwitchChain, useWriteContract } from "wagmi";
 import { ErrorMessage } from "../../../helpers/ErrorMessage";
 import toast from "react-hot-toast";
 import { useElectionModal } from "../../../hooks/ElectionModal";
 import { Election } from "../../../../abi/artifacts/Election";
+import { CCIPSender } from "@/abi/artifacts/CCIPSender";
+import { useParams } from "next/navigation";
+import { sepolia } from "viem/chains";
 
 const CandidateGrid = ({
   isVoted,
   candidate,
-  electionAddress,
   isOwner,
 }: {
   isOwner: boolean;
   isVoted: boolean;
   candidate: any;
-  electionAddress: `0x${string}`;
 }) => {
+  const { id: electionAddress } = useParams<{ id: `0x${string}` }>();
+  const { switchChain } = useSwitchChain();
+  const { chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { setelectionModal } = useElectionModal();
   const candidateId = Number(candidate.candidateID);
   const vote = async () => {
     try {
-      await writeContractAsync({
-        address: electionAddress,
-        abi: Election,
-        functionName: "userVote",
-        args: [[BigInt(candidate.candidateID)]],
-      });
+      if (chain?.id === 43113) {
+        await writeContractAsync({
+          address: CCIP_FUJI_ADDRESS,
+          abi: CCIPSender,
+          functionName: "sendMessage",
+          args: [
+            SEPOLIA_CHAIN_SELECTOR,
+            ELECTION_FACTORY_ADDRESS,
+            electionAddress,
+            [BigInt(candidate.candidateID)],
+          ],
+        });
+      } else {
+        await writeContractAsync({
+          address: electionAddress,
+          abi: Election,
+          functionName: "userVote",
+          args: [[BigInt(candidate.candidateID)]],
+        });
+      }
       toast.success(`Voted Casted to ${candidate.name}`);
       setelectionModal(false);
     } catch (error) {
@@ -45,6 +68,7 @@ const CandidateGrid = ({
   };
   const removeCandidate = async () => {
     try {
+      if (chain?.id === 43113) switchChain({ chainId: sepolia.id });
       await writeContractAsync({
         address: electionAddress,
         abi: Election,
@@ -84,7 +108,7 @@ const CandidateGrid = ({
             leaveTo="transform opacity-0 scale-95"
           >
             <MenuItems className="absolute right-0 z-10 mt-2  w-[70%] border-white border-[1px] border-opacity-20 origin-top-right shadow-lg ring-1 bg-white ring-gray-600 ring-opacity-5 rounded-xl focus:outline-none">
-              <div className="py-1  flex flex-col items-center justify-center">
+              <div className="flex flex-col items-center justify-center">
                 <MenuItem>
                   <button className="flex items-center gap-x-3 justify-center  w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ">
                     <svg

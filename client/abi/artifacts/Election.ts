@@ -43,6 +43,11 @@ export const Election = [
           "internalType": "string",
           "name": "_name",
           "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_description",
+          "type": "string"
         }
       ],
       "name": "addCandidate",
@@ -68,6 +73,11 @@ export const Election = [
         {
           "internalType": "string",
           "name": "name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "description",
           "type": "string"
         }
       ],
@@ -147,6 +157,11 @@ export const Election = [
             {
               "internalType": "string",
               "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "description",
               "type": "string"
             }
           ],
@@ -255,6 +270,32 @@ export const Election = [
     {
       "inputs": [],
       "name": "resultType",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "resultsDeclared",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalVotes",
       "outputs": [
         {
           "internalType": "uint256",

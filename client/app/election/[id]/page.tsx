@@ -8,14 +8,18 @@ import ClipBoard from "../../components/Helper/ClipBoard";
 import ElectionCandidates from "../../components/Cards/ElectionCandidates";
 import { Toaster } from "react-hot-toast";
 import ButtonCard from "../../components/Cards/ButtonCard";
+import { sepolia } from "viem/chains";
+import { useElectionData } from "@/app/hooks/ElectionInfo";
+
 const page = ({ params }: { params: { id: `0x${string}` } }) => {
   const { address } = useAccount();
   const electionAddress = params.id;
+  const { electionData, setelectionData } = useElectionData();
   const electionContract = {
     abi: Election,
     address: electionAddress,
+    chainId: sepolia.id,
   };
-
   const { data: electionInformation, isLoading } = useReadContracts({
     contracts: [
       {
@@ -34,13 +38,37 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
         ...electionContract,
         functionName: "resultType",
       },
+      {
+        ...electionContract,
+        functionName: "totalVotes",
+      },
+      {
+        ...electionContract,
+        functionName: "userVoted",
+        args: [address!],
+      },
+      {
+        ...electionContract,
+        functionName: "resultsDeclared",
+      },
     ],
   });
+
   if (isLoading) return <Loader />;
-  const owner = electionInformation![0].result;
-  const winner = electionInformation![1].result;
-  const electionInfo = electionInformation![2].result;
-  const resultType = electionInformation![3].result;
+
+  if (electionData !== electionInformation) {
+    setelectionData(electionInformation);
+  }
+
+  if (!electionData) return <Loader />;
+
+  const owner = electionData[0].result;
+  const winner = Number(electionData[1].result);
+  const electionInfo = electionData[2].result;
+  const resultType = electionData[3].result;
+  const totalVotes = Number(electionData[4].result);
+  const userVoted = electionData[5].result;
+  const resultDeclared = electionData[6].result;
   return (
     <div className="min-h-screen overflow-auto bg-white pt-20 w-full flex items-start justify-center">
       <div className="my-2 rounded-2xl">
@@ -63,22 +91,13 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
               </div> */}
             </div>
           </div>
-          <ElectionDetails
-            timestamp={electionInfo}
-            resultType={resultType}
-            winner={Number(winner)}
-          />
-          <div className="md:flex-row gap-x-4 flex flex-col justify-between">
+          <ElectionDetails />
+          <div className="md:flex-row gap-x-4 flex flex-col items-center sm:items-stretch justify-between">
             <ElectionCandidates
               isOwner={owner === address}
-              electionAddress={electionAddress}
               resultType={resultType}
             />
-            <ButtonCard
-              owner={owner!}
-              electionAddress={electionAddress}
-              winner={Number(winner)}
-            />
+            <ButtonCard isOwner={owner === address} />
           </div>
         </div>
       </div>

@@ -2,9 +2,8 @@
 pragma solidity ^0.8.24;
 
 import "./interface/IBallot.sol";
-import "./interface/Errors.sol";
-//  ranked have the same ballot as ...
-contract RankedBallot is IBallot, Errors {
+
+contract RankedBallot is IBallot {
     address public electionContract;
 
     uint[] private candidateVotes;
@@ -29,7 +28,7 @@ contract RankedBallot is IBallot, Errors {
 
         for (uint i = 0; i < totalCandidates; i++) {
             // voteArr[i] is the candidate ID, i is the rank (0-based)
-            candidateVotes[voteArr[i]] += totalCandidates - i - 1;
+            candidateVotes[voteArr[i]] += totalCandidates - i;
         }
     }
 

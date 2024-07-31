@@ -4,7 +4,6 @@ pragma solidity ^0.8.24;
 import "./interface/IBallot.sol";
 
 contract GeneralBallot is IBallot {
-    error OwnerPermissioned();
     error InvalidVoteArrayLength();
     error InvalidVoteDistribution();
 

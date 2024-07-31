@@ -12,11 +12,8 @@ npx hardhat node
 npx hardhat ignition deploy ./ignition/modules/Lock.js
 ```
 
-Code live at
-https://sepolia.etherscan.io/address/0x57C20d0f5Fe1f69B906988D9d484277d4df64fee#code
+Live Code at
 
-Older create election -> 0.15902949 eth
-new election -> 0.02639977 eth
-
-Adding candidate : 0.00013846SepoliaETH
-0.00018668SepoliaETH
+- Election Factory - https://sepolia.etherscan.io/address/0x80791556195c9F8C6683ccbDc01f3B64dd6a54a9#code
+- CCIP Sender :-
+  - Fuji - https://testnet.snowtrace.io//address/0xf267f0603672E791779E52B153BD9A39C9928767#code
