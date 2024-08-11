@@ -52,6 +52,7 @@ contract Election is Initializable {
     address public owner;
 
     uint[] public winners;
+    uint public electionId;
     uint public resultType;
     uint public totalVotes;
     bool public resultsDeclared;
@@ -66,12 +67,14 @@ contract Election is Initializable {
     function initialize(
         ElectionInfo memory _electionInfo,
         uint _resultType,
+        uint _electionId,
         address _ballot,
         address _owner,
         address _resultCalculator
     ) external initializer {
         electionInfo = _electionInfo;
         resultType = _resultType;
+        electionId = _electionId;
         owner = _owner;
         factoryContract = msg.sender;
         ballot = IBallot(_ballot);

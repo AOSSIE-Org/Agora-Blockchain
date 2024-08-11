@@ -104,6 +104,19 @@ export const Election = [
   },
   {
     inputs: [],
+    name: "electionId",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "electionInfo",
     outputs: [
       {
@@ -225,6 +238,11 @@ export const Election = [
       {
         internalType: "uint256",
         name: "_resultType",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_electionId",
         type: "uint256",
       },
       {

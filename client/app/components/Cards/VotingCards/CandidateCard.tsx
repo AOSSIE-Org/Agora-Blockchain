@@ -1,5 +1,5 @@
 "use client";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   Menu,
   Transition,
@@ -15,6 +15,9 @@ import toast from "react-hot-toast";
 import { ErrorMessage } from "@/app/helpers/ErrorMessage";
 import { useParams } from "next/navigation";
 import { sepolia } from "viem/chains";
+import { fetchFileFromIPFS } from "@/app/helpers/fetchFileFromIPFS";
+import { unpinJSONFile } from "@/app/helpers/pinToIPFS";
+import CandidateDescription from "../../Fragment/CandidateDescription";
 
 const CandidateCard = ({
   candidate,
@@ -41,10 +44,12 @@ const CandidateCard = ({
         args: [candidate.candidateID],
       });
       toast.success(`Removed Candidate ${candidate.name}`);
+      await unpinJSONFile(candidate.description);
     } catch (error) {
       toast.error(ErrorMessage(error));
     }
   };
+
   return (
     <div className="p-2 select-none">
       <div
@@ -72,7 +77,7 @@ const CandidateCard = ({
               isMini ? "max-w-96" : ""
             }`}
           >
-            {candidate.description}
+            <CandidateDescription IpfsHash={candidate.description} />
           </p>
         </div>
         <div className="inline-flex items-center text-base font-semibold text-blue-900 ">
