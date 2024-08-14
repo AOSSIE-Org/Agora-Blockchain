@@ -4,9 +4,9 @@
 
 ## Prerequisites (only for contributing)
 
-- Basic familarity with [Git](https://git-scm.com/), [NodeJS](https://nodejs.org/en) and [npm](https://www.npmjs.com/).
-- Basic familarity with [ReactJS](https://reactjs.org/), [React context APIs](https://reactjs.org/docs/context.html), if working on frontend part.
-- Basic familarity with Blockchain, [Solidity](https://docs.soliditylang.org/en/v0.8.6/) and [Hardhat](https://hardhat.org/), if working on blockchain part.
+- Basic familiarity with [Git](https://git-scm.com/), [NodeJS](https://nodejs.org/en) and [npm](https://www.npmjs.com/).
+- Basic familiarity with [ReactJS](https://reactjs.org/), [React context APIs](https://reactjs.org/docs/context.html), if working on frontend part.
+- Basic familiarity with Blockchain, [Solidity](https://docs.soliditylang.org/en/v0.8.6/) and [Hardhat](https://hardhat.org/), if working on blockchain part.
 
 ## Requirements
 
@@ -31,7 +31,7 @@ git checkout develop
 
 The frontend code is inside the `client` directory, whereas the smart contracts (solidity) is present inside `server` folder. You may proceed to `client` folder if you are here for enhancing frontend part of the Agora Blockchain. Else you can proceed to `server` folder for enhancing the efficiency or introducing new features in the blockchain part of the Agora.
 
-> Whatever dependencies you need for frontend should be saved in their local `package.json` and not in the global one. This would ensure that a developer who only want to contribute to blockchain code, should not install unneccessary frontend dependencies and vice-versa.
+> Whatever dependencies you need for frontend should be saved in their local `package.json` and not in the global one. This would ensure that a developer who only want to contribute to blockchain code, should not install unnecessary frontend dependencies and vice-versa.
 
 ## Setting up client side
 
@@ -75,7 +75,7 @@ This will create production build folder inside the `client` directory with the 
 npm run build
 ```
 
-Deploying the repository to **Heroku** would automatically serve production build of the client side. This is because, **Heroku** uses `npm run build` for deploying our application. Once the `build` is complete, it uses the `npm start` command. In the `package.json` file of root directory, you can see `node client/server.js` command against `start` script. This will serve the minified files from `build` direcotry.
+Deploying the repository to **Heroku** would automatically serve production build of the client side. This is because, **Heroku** uses `npm run build` for deploying our application. Once the `build` is complete, it uses the `npm start` command. In the `package.json` file of root directory, you can see `node client/server.js` command against `start` script. This will serve the minified files from `build` directory.
 
 ## Setting up Hardhat
 
