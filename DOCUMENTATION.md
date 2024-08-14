@@ -8,8 +8,8 @@
 
 ## Prerequisites
 
-- Basic familarity with [Git](https://git-scm.com/), [NodeJS](https://nodejs.org/en) and [npm](https://www.npmjs.com/).
-- Basic familarity with [ReactJS](https://reactjs.org/), [React context APIs](https://reactjs.org/docs/context.html) and [Drizzle](https://www.trufflesuite.com/drizzle), if working on frontend part.
+- Basic Familiarity with [Git](https://git-scm.com/), [NodeJS](https://nodejs.org/en) and [npm](https://www.npmjs.com/).
+- Basic Familiarity with [ReactJS](https://reactjs.org/), [React context APIs](https://reactjs.org/docs/context.html) and [Drizzle](https://www.trufflesuite.com/drizzle), if working on frontend part.
 - Basic familiarity with Blockchain, [Solidity](https://docs.soliditylang.org/en/v0.8.6/) and [Truffle](https://www.trufflesuite.com/truffle), if working on blockchain part.
 
 ## Requirements
