@@ -1,21 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 import {Errors} from "./interface/Errors.sol";
+import {Candidatecheck} from "./abstract/CandidateCheck.sol";
+import {WinnersArray} from "./abstract/WinnersArray.sol";
 
-contract MooreResult is Errors {
+contract MooreResult is Errors, Candidatecheck, WinnersArray {
     function calculateMooreResult(
         bytes calldata returnData
     ) public pure returns (uint[] memory) {
         uint[] memory candidateList = abi.decode(returnData, (uint[]));
         uint candidatesLength = candidateList.length;
 
-        if (candidatesLength == 0) {
-            revert NoWinner();
-        }
-        if (candidatesLength == 1) {
-            uint[] memory singleWinner = new uint[](1);
-            singleWinner[0] = 0;
-            return singleWinner;
+        if (candidatesLength < 2) {
+            return checkEdgeCases(candidatesLength);
         }
 
         uint maxVotes = 0;
@@ -35,16 +32,6 @@ contract MooreResult is Errors {
             }
         }
 
-        winners = new uint[](winnerCount);
-        uint numWinners = 0;
-
-        for (uint i = 0; i < candidatesLength; i++) {
-            if (candidateList[i] == maxVotes) {
-                winners[numWinners] = i;
-                numWinners++;
-            }
-        }
-
-        return winners;
+        return getWinnersArray(winnerCount, maxVotes, candidateList);
     }
 }
