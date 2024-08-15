@@ -49,7 +49,6 @@ const CandidateGrid = ({
           functionName: "sendMessage",
           args: [
             SEPOLIA_CHAIN_SELECTOR,
-            ELECTION_FACTORY_ADDRESS,
             electionAddress,
             [BigInt(candidate.candidateID)],
           ],
