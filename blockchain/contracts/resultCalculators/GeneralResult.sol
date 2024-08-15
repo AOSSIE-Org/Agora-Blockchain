@@ -12,6 +12,11 @@ contract GeneralResult is Errors {
         if (candidatesLength == 0) {
             revert NoWinner();
         }
+        if (candidatesLength == 1) {
+            uint[] memory singleWinner = new uint[](1);
+            singleWinner[0] = 0;
+            return singleWinner;
+        }
 
         uint maxVotes = 0;
         uint winnerCount = 0;

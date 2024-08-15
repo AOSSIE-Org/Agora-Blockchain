@@ -29,7 +29,7 @@ contract ElectionFactory is CCIPReceiver {
     address private immutable electionGenerator;
 
     mapping(uint election => address owner) private electionOwner;
-
+    mapping(address owner => address[] election) private userElection;
     mapping(uint64 sourceChain => address senderContract)
         private approvedSenderContracts;
 
