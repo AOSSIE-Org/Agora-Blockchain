@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      
+
 env:
   CI: false
   NEXT_PUBLIC_PINATA_JWT: ${{ secrets.NEXT_PUBLIC_PINATA_JWT }}
@@ -24,16 +24,20 @@ jobs:
           node-version: 16
 
       - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+        run: |
+          cd client
+          npm install
 
       - name: Build project
-        run: npm run build
+        run: |
+          cd client
+          npm run build
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v2
         with:
           name: production-files
-          path: ./build
+          path: client/.next
 
   deploy:
     name: Deploy
@@ -52,4 +56,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          publish_dir: ./client/.next
