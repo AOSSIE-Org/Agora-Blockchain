@@ -1,99 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 import {Errors} from "./interface/Errors.sol";
+import {Candidatecheck} from "./abstract/CandidateCheck.sol";
 
-// contract IRVResult is Errors {
-//     function calculateIRVResult(
-//         bytes memory returnData
-//     ) public pure returns (uint256[] memory winners) {
-//         uint256[][] memory votes = abi.decode(returnData, (uint256[][]));
-
-//         // Calculate winners
-//         winners = performIRV(votes);
-//     }
-
-//     function performIRV(
-//         uint256[][] memory votes
-//     ) internal pure returns (uint256[] memory winners) {
-//         uint256 numCandidates = votes[0].length;
-//         uint totalCandidates = numCandidates;
-//         while (true) {
-//             uint[] memory preference = countFirstPreferences(
-//                 votes,
-//                 numCandidates
-//             );
-//             uint leastVotes = checkForLeastID(preference);
-//         }
-//     }
-
-//     function checkForLeastID(
-//         uint[] memory preference
-//     ) internal pure returns (uint) {
-//         uint arrLength = preference.length;
-//         preference = sort(preference);
-//         uint leastId = arrLength;
-//         uint g_leastVotes = arrLength;
-//         uint l_leastVotes = 0;
-//         for(uint i =0 ; i < arrLength -1 ;i++){
-//             if(preference[i] == preference[i+1]){
-//                 i++;
-//             }
-//         }
-
-//     }
-
-//     function countFirstPreferences(
-//         uint256[][] memory votes,
-//         uint256 numCandidates
-//     ) internal pure returns (uint256[] memory) {
-//         // Count the first preferences for each candidate
-//         uint256[] memory firstPreferences = new uint256[](numCandidates);
-//         for (uint256 i = 0; i < votes.length; i++) {
-//             if (votes[i].length > 0) {
-//                 firstPreferences[votes[i][0]]++;
-//             }
-//         }
-//         return firstPreferences;
-//     }
-
-//     function modifyArray(
-//         uint256[][] memory array,
-//         uint256 id
-//     ) public pure returns (uint256[][] memory) {
-//         uint256 rows = array.length;
-//         uint256 cols = array[0].length;
-
-//         for (uint256 i = 0; i < rows; i++) {
-//             for (uint256 j = 0; j < cols; j++) {
-//                 if (array[i][j] == id) {
-//                     // Found the ID, now shift elements to the left
-//                     for (uint256 k = j; k < cols - 1; k++) {
-//                         array[i][k] = array[i][k + 1];
-//                     }
-//                     break; // Since there's only one element with the same ID, we can break the loop
-//                 }
-//             }
-//         }
-
-//         return array;
-//     }
-
-//     function sort(uint256[] memory array) public pure returns (uint256[] memory) {
-//         uint256 length = array.length;
-//         for (uint256 i = 0; i < length; i++) {
-//             for (uint256 j = 0; j < length - 1; j++) {
-//                 if (array[j] > array[j + 1]) {
-//                     uint256 temp = array[j];
-//                     array[j] = array[j + 1];
-//                     array[j + 1] = temp;
-//                 }
-//             }
-//         }
-//         return array;
-//     }
-// }
-
-contract IRVResult is Errors {
+contract IRVResult is Errors, Candidatecheck {
     function calculateIRVResult(
         bytes memory returnData
     ) public pure returns (uint256[] memory winners) {
@@ -110,13 +20,8 @@ contract IRVResult is Errors {
         uint256 numCandidates = votes[0].length;
 
         // Check for no candidates
-        if (numCandidates == 0) {
-            revert NoCandidates();
-        }
-        if (numCandidates == 1) {
-            winners = new uint256[](1);
-            winners[0] = 0;
-            return winners;
+        if (numCandidates < 2) {
+            return checkEdgeCases(numCandidates);
         }
 
         uint256[] memory remainingCandidates = new uint256[](numCandidates);

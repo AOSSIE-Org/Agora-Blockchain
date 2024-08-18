@@ -6,12 +6,15 @@ import {IRVResult} from "./IRVResult.sol";
 import {IResultCalculator} from "./interface/IResultCalculator.sol";
 import {KemenyYoungResult} from "./KemenyYoungResult.sol";
 import {SchulzeResult} from "./SchulzeResult.sol";
+import {MooreResult} from "./MooreResult.sol";
+
 contract ResultCalculator is
     GeneralResult,
     IRVResult,
     IResultCalculator,
     KemenyYoungResult,
-    SchulzeResult
+    SchulzeResult,
+    MooreResult
 {
     function getResults(
         bytes calldata returnData,
@@ -36,6 +39,9 @@ contract ResultCalculator is
         } else if (_resultType == 7) {
             // Result for KemenyYoung Ballot
             return calculateKemenyYoungResult(returnData);
+        } else if (_resultType == 8) {
+            // Result for Moore's Ballot
+            return calculateMooreResult(returnData);
         } else {
             return calculateGeneralResult(returnData);
         }

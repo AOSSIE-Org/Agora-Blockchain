@@ -1,11 +1,6 @@
 "use client";
 import React, { Fragment } from "react";
-import {
-  AVATARS,
-  CCIP_FUJI_ADDRESS,
-  SEPOLIA_CHAIN_SELECTOR,
-  ELECTION_FACTORY_ADDRESS,
-} from "../../../constants";
+import { AVATARS } from "../../../constants";
 import {
   Menu,
   Transition,
@@ -13,15 +8,15 @@ import {
   MenuItems,
   MenuItem,
 } from "@headlessui/react";
-import { PencilIcon, TrashIcon } from "@heroicons/react/16/solid";
 import { useAccount, useSwitchChain, useWriteContract } from "wagmi";
 import { ErrorMessage } from "../../../helpers/ErrorMessage";
 import toast from "react-hot-toast";
-import { useElectionModal } from "../../../hooks/ElectionModal";
 import { Election } from "../../../../abi/artifacts/Election";
-import { CCIPSender } from "@/abi/artifacts/CCIPSender";
 import { useParams } from "next/navigation";
 import { sepolia } from "viem/chains";
+import { unpinJSONFile } from "@/app/helpers/pinToIPFS";
+import CandidateDescription from "../../Fragment/CandidateDescription";
+import Vote from "../../Modal/Vote";
 
 const CandidateGrid = ({
   isVoted,
@@ -36,36 +31,9 @@ const CandidateGrid = ({
   const { switchChain } = useSwitchChain();
   const { chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
-  const { setelectionModal } = useElectionModal();
   const candidateId = Number(candidate.candidateID);
-  const vote = async () => {
-    try {
-      if (chain?.id === 43113) {
-        await writeContractAsync({
-          address: CCIP_FUJI_ADDRESS,
-          abi: CCIPSender,
-          functionName: "sendMessage",
-          args: [
-            SEPOLIA_CHAIN_SELECTOR,
-            ELECTION_FACTORY_ADDRESS,
-            electionAddress,
-            [BigInt(candidate.candidateID)],
-          ],
-        });
-      } else {
-        await writeContractAsync({
-          address: electionAddress,
-          abi: Election,
-          functionName: "userVote",
-          args: [[BigInt(candidate.candidateID)]],
-        });
-      }
-      toast.success(`Voted Casted to ${candidate.name}`);
-      setelectionModal(false);
-    } catch (error) {
-      toast.error(ErrorMessage(error));
-    }
-  };
+  const voteArray = [BigInt(candidate.candidateID)];
+
   const removeCandidate = async () => {
     try {
       if (chain?.id === 43113) switchChain({ chainId: sepolia.id });
@@ -75,6 +43,7 @@ const CandidateGrid = ({
         functionName: "removeCandidate",
         args: [BigInt(candidate.candidateID)],
       });
+      await unpinJSONFile(candidate.description);
       toast.success(`Removed Candidate ${candidate.name}`);
     } catch (error) {
       toast.error(ErrorMessage(error));
@@ -158,21 +127,15 @@ const CandidateGrid = ({
           {candidate.name} #{Number(candidateId)}
         </h5>
         <p className="text-sm overflow-y-auto p-2 w-full h-20 text-gray-500 ">
-          {/* {candidate.description} */}
-          Candidate Description : Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit. et luctus ante, et lacinia ligula. Etiam enim lectus,
-          efficitur ac semper ac, maximus a nunc. Fusce vitae lacus dictum,
-          dapibus sit amet, dapibus eros. Sed a condimentum nulla. Duis ut urna
-          amet sapien malesuada finibus in tempor erat. Praesent congue risus.
+          <CandidateDescription IpfsHash={candidate.description} />
         </p>
         {!isVoted && (
           <div className="flex mt-4">
-            <button
-              onClick={vote}
-              className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-            >
-              Vote
-            </button>
+            <Vote
+              disabled={false}
+              electionAddress={electionAddress}
+              voteArray={voteArray}
+            />
           </div>
         )}
       </div>

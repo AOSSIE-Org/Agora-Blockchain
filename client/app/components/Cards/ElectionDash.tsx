@@ -2,21 +2,10 @@
 import React, { useState } from "react";
 import Loader from "../Helper/Loader";
 import ElectionMini from "../Cards/ElectionMini";
-import { useReadContract } from "wagmi";
-import { ELECTION_FACTORY_ADDRESS } from "../../constants";
-import { ElectionFactory } from "../../../abi/artifacts/ElectionFactory";
-import SearchBar from "../Helper/SearchBar";
-import { IoReturnDownBack } from "react-icons/io5";
 import ElectionInfoCard from "./ElectionInfoCard";
-import { sepolia } from "viem/chains";
+import { useOpenElection } from "../Hooks/GetOpenElections";
 const ElectionDash = () => {
-  const { data: elections, isLoading } = useReadContract({
-    chainId: sepolia.id,
-    abi: ElectionFactory,
-    address: ELECTION_FACTORY_ADDRESS,
-    functionName: "getOpenElections",
-  });
-
+  const { elections, isLoading } = useOpenElection();
   const [electionStatuses, setElectionStatuses] = useState<{
     [key: string]: number;
   }>({});
@@ -58,7 +47,6 @@ const ElectionDash = () => {
         <Loader />
       ) : (
         <div className="flex flex-col items-center justify-center">
-          {/* <SearchBar elections={elections} /> */}
           <div className="flex lg:flex-row flex-col w-[80%] overflow-auto lg:space-x-4">
             <div className=" flex-col w-[90%] lg:w-[24%] mt-3 h-full inline-block items-center justify-center ">
               <ElectionInfoCard

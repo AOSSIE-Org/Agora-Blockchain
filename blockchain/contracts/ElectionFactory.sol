@@ -20,6 +20,7 @@ contract ElectionFactory is CCIPReceiver {
         uint[] voteArr;
     }
 
+    uint public electionCount;
     address public factoryOwner;
     address[] public openBasedElections;
     // address[] public inviteBasedElections;
@@ -29,7 +30,7 @@ contract ElectionFactory is CCIPReceiver {
     address private immutable electionGenerator;
 
     mapping(uint election => address owner) private electionOwner;
-
+    mapping(address owner => address[] election) private userElection;
     mapping(uint64 sourceChain => address senderContract)
         private approvedSenderContracts;
 
@@ -67,11 +68,13 @@ contract ElectionFactory is CCIPReceiver {
         election.initialize(
             _electionInfo,
             _resultType,
+            electionCount,
             _ballot,
             msg.sender,
             resultCalculator
         );
-        electionOwner[openBasedElections.length] = msg.sender; //remove this as its already present
+        electionCount++;
+        electionOwner[openBasedElections.length] = msg.sender;
         openBasedElections.push(address(election));
     }
 

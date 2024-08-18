@@ -1,42 +1,37 @@
 "use client";
-import React, { useEffect } from "react";
-import { useReadContract } from "wagmi";
-import { Election } from "../../../abi/artifacts/Election";
+import React from "react";
 import SkeletonElection from "../Helper/SkeletonElection";
 import { FaRegUser } from "react-icons/fa6";
 import { IoOpenOutline } from "react-icons/io5";
 import Link from "next/link";
-import { sepolia } from "viem/chains";
+import {
+  useMiniElectionInfo,
+  useMiniOwnerInfo,
+} from "../Hooks/GetMiniElectionInfo";
 const ElectionMini = ({
   electionAddress,
   update,
 }: {
   electionAddress: `0x${string}`;
-  update: any;
+  update?: (electionAddress: `0x${string}`, status: number) => void;
 }) => {
   const ElectionStatus = {
     1: "Pending",
     2: "Active",
     3: "Ended",
   };
-  const { data: electionInfo, isLoading } = useReadContract({
-    chainId: sepolia.id,
-    abi: Election,
-    address: electionAddress,
-    functionName: "electionInfo",
+  const { electionInfo, isLoading } = useMiniElectionInfo({
+    electionAddress: electionAddress,
   });
-  const { data: owner, isLoading: loadingOwner } = useReadContract({
-    chainId: sepolia.id,
-    abi: Election,
-    address: electionAddress,
-    functionName: "owner",
+  const { owner, loadingOwner } = useMiniOwnerInfo({
+    electionAddress: electionAddress,
   });
 
   if (isLoading || electionInfo == undefined) return <SkeletonElection />;
   const isStarting = Math.floor(Date.now() / 1000) < Number(electionInfo[0]);
   const isEnded = Math.floor(Date.now() / 1000) > Number(electionInfo[1]);
   const electionStat = isStarting ? 1 : isEnded ? 3 : 2;
-  update(electionAddress, electionStat);
+  update?.(electionAddress, electionStat);
   return (
     <div className="flex h-xl bg-white px-3 py-1 rounded-xl border border-gray-300 bg-clip-border shadow-md shadow-blue-gray-900/5 flex-col items-start justify-between">
       <div className="group w-full relative ">

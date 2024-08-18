@@ -11,6 +11,7 @@ import Header from "./components/Header/Header";
 import Web3Connect from "./components/Helper/Web3Connect";
 import "rsuite/dist/rsuite-no-reset.min.css";
 import { CustomProvider } from "rsuite";
+import ChatBot from "./components/ChatBot/ChatBot";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -33,6 +34,7 @@ export default function RootLayout({
               <CustomProvider>
                 <Header />
                 <Web3Connect />
+                <ChatBot />
                 {children}
               </CustomProvider>
             </RainbowKitProvider>

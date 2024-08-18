@@ -13,6 +13,7 @@ const errorMessages = {
 };
 
 export const ErrorMessage = (error: any) => {
+  console.log("Error : ", error);
   for (const [key, message] of Object.entries(errorMessages)) {
     if (error.message.includes(key)) {
       return message;

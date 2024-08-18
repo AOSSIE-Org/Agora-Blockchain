@@ -2,8 +2,10 @@
 pragma solidity ^0.8.24;
 
 import {Errors} from "./interface/Errors.sol";
+import {Candidatecheck} from "./abstract/CandidateCheck.sol";
+import {WinnersArray} from "./abstract/WinnersArray.sol";
 
-contract SchulzeResult is Errors {
+contract SchulzeResult is Errors, Candidatecheck, WinnersArray {
     function calculateSchulzeResult(
         bytes memory returnData
     ) public pure returns (uint256[] memory) {
@@ -16,13 +18,9 @@ contract SchulzeResult is Errors {
         uint256[][] memory preferences
     ) internal pure returns (uint256[] memory) {
         uint256 numCandidates = preferences.length;
-        if (numCandidates == 0) {
-            revert NoCandidates();
-        }
-        if (numCandidates == 1) {
-            uint256[] memory singleWinner = new uint256[](1);
-            singleWinner[0] = 0;
-            return singleWinner;
+
+        if (numCandidates < 2) {
+            return checkEdgeCases(numCandidates);
         }
 
         uint256[][] memory strength = new uint256[][](numCandidates);
@@ -81,16 +79,7 @@ contract SchulzeResult is Errors {
             }
         }
 
-        uint256[] memory winners = new uint256[](winnerCount);
-        uint256 numWinners = 0;
-
-        for (uint i = 0; i < numCandidates; i++) {
-            if (scores[i] == highestScore) {
-                winners[numWinners] = i;
-                numWinners++;
-            }
-        }
-
-        return winners;
+        // Collect all candidates with the highest ranking score
+        return getWinnersArray(winnerCount, highestScore, scores);
     }
 }
