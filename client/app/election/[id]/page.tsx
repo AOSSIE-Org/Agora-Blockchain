@@ -1,90 +1,24 @@
 "use client";
-import React, { useEffect } from "react";
-import { Election } from "../../../abi/artifacts/Election";
-import { useAccount, useReadContracts } from "wagmi";
+import React from "react";
+import { useAccount } from "wagmi";
 import Loader from "../../components/Helper/Loader";
 import ElectionDetails from "../../components/Cards/ElectionDetails";
 import ClipBoard from "../../components/Helper/ClipBoard";
 import ElectionCandidates from "../../components/Cards/ElectionCandidates";
 import { Toaster } from "react-hot-toast";
 import ButtonCard from "../../components/Cards/ButtonCard";
-import { sepolia, avalancheFuji } from "viem/chains";
 import { useElectionData } from "@/app/hooks/ElectionInfo";
-import { fetchAllGroups } from "@/app/helpers/fetchFileFromIPFS";
-import { useHashIPFS } from "@/app/hooks/HashIPFS";
 import CrossChain from "@/app/components/Helper/CrossChain";
-import { CCIPSender } from "@/abi/artifacts/CCIPSender";
-import { CCIP_FUJI_ADDRESS } from "@/app/constants";
+import { useElectionInformation } from "@/app/components/Hooks/GetElectionInformation";
 
-const page = ({ params }: { params: { id: `0x${string}` } }) => {
-  const { hashIPFS, sethashIPFS } = useHashIPFS();
+const ElectionPage = ({ params }: { params: { id: `0x${string}` } }) => {
   const { address } = useAccount();
   const electionAddress = params.id;
   const { electionData, setelectionData } = useElectionData();
-  const electionContract = {
-    abi: Election,
-    address: electionAddress,
-    chainId: sepolia.id,
-  };
-  const CCIPContract = {
-    abi: CCIPSender,
-    address: CCIP_FUJI_ADDRESS as `0x${string}`,
-    chainId: avalancheFuji.id,
-  };
-  const { data: electionInformation, isLoading } = useReadContracts({
-    contracts: [
-      {
-        ...electionContract,
-        functionName: "owner",
-      },
-      {
-        ...electionContract,
-        functionName: "getWinners",
-      },
-      {
-        ...electionContract,
-        functionName: "electionInfo",
-      },
-      {
-        ...electionContract,
-        functionName: "resultType",
-      },
-      {
-        ...electionContract,
-        functionName: "totalVotes",
-      },
-      {
-        ...electionContract,
-        functionName: "userVoted",
-        args: [address!],
-      },
-      {
-        ...electionContract,
-        functionName: "resultsDeclared",
-      },
-      {
-        ...electionContract,
-        functionName: "getCandidateList",
-      },
-      {
-        ...electionContract,
-        functionName: "electionId",
-      },
-      {
-        ...CCIPContract,
-        functionName: "electionApproved",
-        args: [electionAddress],
-      },
-    ],
+  const { electionInformation, isLoading } = useElectionInformation({
+    address: address,
+    electionAddress: electionAddress,
   });
-
-  const getgroups = async () => {
-    const response = await fetchAllGroups();
-    sethashIPFS(response);
-  };
-  useEffect(() => {
-    !hashIPFS && getgroups();
-  }, []);
 
   if (isLoading) return <Loader />;
 
@@ -92,7 +26,7 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
     setelectionData(electionInformation);
   }
 
-  if (!electionData || hashIPFS == null) return <Loader />;
+  if (!electionData) return <Loader />;
   const owner = electionData[0].result;
   const winners = Number(electionData[1].result);
   const electionInfo = electionData[2].result;
@@ -103,7 +37,6 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
   const candidateList = electionData[7].result;
   const electionID = electionData[8].result;
   const isCrossChainEnabled = electionData[9].result;
-  console.log("isCrossChainEnabled : ", isCrossChainEnabled);
   const isStarting = Math.floor(Date.now() / 1000) < Number(electionInfo[0]);
   const isEnded = Math.floor(Date.now() / 1000) > Number(electionInfo[1]);
   const electionStat = isStarting ? 1 : isEnded ? 3 : 2;
@@ -147,4 +80,4 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
   );
 };
 
-export default page;
+export default ElectionPage;

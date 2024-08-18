@@ -1,12 +1,13 @@
 "use client";
-import React, { useEffect } from "react";
-import { useReadContract } from "wagmi";
-import { Election } from "../../../abi/artifacts/Election";
+import React from "react";
 import SkeletonElection from "../Helper/SkeletonElection";
 import { FaRegUser } from "react-icons/fa6";
 import { IoOpenOutline } from "react-icons/io5";
 import Link from "next/link";
-import { sepolia } from "viem/chains";
+import {
+  useMiniElectionInfo,
+  useMiniOwnerInfo,
+} from "../Hooks/GetMiniElectionInfo";
 const ElectionMini = ({
   electionAddress,
   update,
@@ -19,17 +20,11 @@ const ElectionMini = ({
     2: "Active",
     3: "Ended",
   };
-  const { data: electionInfo, isLoading } = useReadContract({
-    chainId: sepolia.id,
-    abi: Election,
-    address: electionAddress,
-    functionName: "electionInfo",
+  const { electionInfo, isLoading } = useMiniElectionInfo({
+    electionAddress: electionAddress,
   });
-  const { data: owner, isLoading: loadingOwner } = useReadContract({
-    chainId: sepolia.id,
-    abi: Election,
-    address: electionAddress,
-    functionName: "owner",
+  const { owner, loadingOwner } = useMiniOwnerInfo({
+    electionAddress: electionAddress,
   });
 
   if (isLoading || electionInfo == undefined) return <SkeletonElection />;

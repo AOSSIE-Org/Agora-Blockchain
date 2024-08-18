@@ -22,10 +22,12 @@ const Header = () => {
                 <p className="sm:flex hidden"> Create</p>
               </button>
             </Link>
-            <button className="font-semibold gap-x-1 items-center flex text-gray-700">
-              <UserIcon className="w-7" />
-              <p className="sm:flex hidden">Profile</p>
-            </button>
+            <Link href={"/profile"}>
+              <button className="font-semibold gap-x-1 items-center flex text-gray-700">
+                <UserIcon className="w-7" />
+                <p className="sm:flex hidden">Profile</p>
+              </button>
+            </Link>
           </div>
         </nav>
       </div>
