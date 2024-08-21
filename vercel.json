@@ -1,12 +1,7 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "450mb"
-      }
+  "functions": {
+    "api/**": {
+      "excludeFiles": "{.next,*.cache,node_modules,public,app}/**"
     }
-  ],
-  "rewrites": [{ "source": "/(.*)", "destination": "client/app/api/index" }]
+  }
 }
