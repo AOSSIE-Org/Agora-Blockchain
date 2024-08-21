@@ -9,6 +9,10 @@
 # testing
 /coverage
 
+/api/__pycache__/
+api/__pycache__/
+
+
 # next.js
 /.next/
 /out/
