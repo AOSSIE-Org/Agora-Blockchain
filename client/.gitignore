@@ -20,6 +20,8 @@
 .DS_Store
 *.pem
 
+/venv/
+venv
 # debug
 npm-debug.log*
 yarn-debug.log*

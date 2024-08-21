@@ -5,7 +5,7 @@ from flask import Flask, request, jsonify
 import torch
 from model import NeuralNet
 from nltk_utils import bag_of_words, tokenize
-from flask_cors import CORS 
+from flask_cors import CORS  
 
 app = Flask(__name__)
 CORS(app) 
@@ -15,7 +15,7 @@ with open('intents.json', 'r') as json_data:
     intents = json.load(json_data)
 
 FILE = "data.pth"
-data = torch.load(FILE)
+data = torch.load(FILE,weights_only=True)
 
 input_size = data["input_size"]
 hidden_size = data["hidden_size"]

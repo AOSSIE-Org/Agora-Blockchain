@@ -26,7 +26,7 @@ const ChatBot = () => {
 
   const getReply = async (value: string) => {
     try {
-      fetch("/flask-api/chat", {
+      fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
