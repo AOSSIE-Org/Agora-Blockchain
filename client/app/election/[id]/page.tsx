@@ -20,6 +20,14 @@ const ElectionPage = ({ params }: { params: { id: `0x${string}` } }) => {
     electionAddress: electionAddress,
   });
 
+  const getgroups = async () => {
+    const response = await fetchAllGroups();
+    sethashIPFS(response);
+  };
+  useEffect(() => {
+    !hashIPFS && getgroups();
+  }, []);
+
   if (isLoading) return <Loader />;
 
   if (electionData !== electionInformation) {

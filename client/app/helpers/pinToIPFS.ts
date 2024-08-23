@@ -1,6 +1,7 @@
 const JWT = process.env.NEXT_PUBLIC_PINATA_JWT;
 
 export const pinJSONFile = async (body: any) => {
+
   const options = {
     method: "POST",
     headers: {

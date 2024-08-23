@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Loader from "../Helper/Loader";
 import ElectionMini from "../Cards/ElectionMini";
 import ElectionInfoCard from "./ElectionInfoCard";
 import { useOpenElection } from "../Hooks/GetOpenElections";
 const ElectionDash = () => {
   const { elections, isLoading } = useOpenElection();
+
   const [electionStatuses, setElectionStatuses] = useState<{
     [key: string]: number;
   }>({});
@@ -41,6 +42,13 @@ const ElectionDash = () => {
         )
       : elections;
 
+  const getgroups = async () => {
+    const response = await fetchAllGroups();
+    sethashIPFS(response);
+  };
+  useEffect(() => {
+    !hashIPFS && getgroups();
+  }, [elections]);
   return (
     <div className="w-screen">
       {isLoading || !elections ? (
