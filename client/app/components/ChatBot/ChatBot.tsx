@@ -1,12 +1,8 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import { BsSend } from "react-icons/bs";
-import { FaArrowUpLong } from "react-icons/fa6";
 import { ArrowUpIcon } from "@heroicons/react/16/solid";
 
 const ChatBot = () => {
-  const apiUrl = "http://127.0.0.1:5000/api/chat"; // Update with the actual URL
-
   const [messages, setMessages] = useState([
     {
       content:
@@ -30,7 +26,7 @@ const ChatBot = () => {
 
   const getReply = async (value: string) => {
     try {
-      fetch(apiUrl, {
+      fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +59,7 @@ const ChatBot = () => {
   }, [messages]);
 
   return (
-    <div className="absolute bottom-1 left-3 z-10 p-2">
+    <div className="fixed bottom-1 left-3 z-10 p-2">
       <div className="dropdown dropdown-top ">
         <div
           tabIndex={0}

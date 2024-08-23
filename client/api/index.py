@@ -32,27 +32,20 @@ class NeuralNet(nn.Module):
         return x
 
 app = Flask(__name__)
-CORS(app) 
+CORS(app)
+
+# Load the model and intents once at startup
+dir_path = dirname(abspath(__file__))
+with open(join(dir_path, '..', 'data', 'intents.json'), 'r') as f:
+    intents = json.load(f)
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+FILE = join(dir_path, '..', 'data', 'data.pth')
+data = torch.load(FILE, map_location=device)
 
-with open('intents.json', 'r') as json_data:
-    intents = json.load(json_data)
-
-FILE = "data.pth"
-data = torch.load(FILE,weights_only=True)
-
-input_size = data["input_size"]
-hidden_size = data["hidden_size"]
-output_size = data["output_size"]
-all_words = data['all_words']
-tags = data['tags']
-model_state = data["model_state"]
-
-model = NeuralNet(input_size, hidden_size, output_size).to(device)
-model.load_state_dict(model_state)
-model.eval() 
-
-bot_name = "Agora"
+model = NeuralNet(data["input_size"], data["hidden_size"], data["output_size"]).to(device)
+model.load_state_dict(data["model_state"])
+model.eval()
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
