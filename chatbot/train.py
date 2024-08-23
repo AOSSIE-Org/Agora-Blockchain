@@ -7,8 +7,34 @@ import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 import nltk
 nltk.download('punkt')
-from nltk_utils import bag_of_words, tokenize, stem
-from model import NeuralNet
+
+
+# Define a simple tokenizer and stemmer
+def tokenize(sentence):
+    return sentence.split()  # Tokenize by splitting on spaces
+
+def stem(word):
+    return word.lower()  # Simple stemming by converting to lowercase
+
+def bag_of_words(tokenized_sentence, words):
+    bag = [1 if stem(word) in [stem(w) for w in tokenized_sentence] else 0 for word in words]
+    return torch.tensor(bag, dtype=torch.float32)
+
+class NeuralNet(nn.Module):
+    def __init__(self, input_size, hidden_size, num_classes):
+        super(NeuralNet, self).__init__()
+        self.l1 = nn.Linear(input_size, hidden_size)
+        self.l2 = nn.Linear(hidden_size, hidden_size)
+        self.l3 = nn.Linear(hidden_size, num_classes)
+        self.relu = nn.ReLU()
+    
+    def forward(self, x):
+        x = self.relu(self.l1(x))
+        x = self.relu(self.l2(x))
+        x = self.l3(x)
+        return x
+
+
 
 with open('intents.json', 'r') as f:
     intents = json.load(f)
