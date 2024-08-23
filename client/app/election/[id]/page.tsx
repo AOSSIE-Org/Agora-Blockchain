@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Election } from "../../../abi/artifacts/Election";
 import { useAccount, useReadContracts } from "wagmi";
 import Loader from "../../components/Helper/Loader";
@@ -10,8 +10,11 @@ import { Toaster } from "react-hot-toast";
 import ButtonCard from "../../components/Cards/ButtonCard";
 import { sepolia } from "viem/chains";
 import { useElectionData } from "@/app/hooks/ElectionInfo";
+import { fetchAllGroups } from "@/app/helpers/fetchFileFromIPFS";
+import { useHashIPFS } from "@/app/hooks/HashIPFS";
 
 const page = ({ params }: { params: { id: `0x${string}` } }) => {
+  const { hashIPFS, sethashIPFS } = useHashIPFS();
   const { address } = useAccount();
   const electionAddress = params.id;
   const { electionData, setelectionData } = useElectionData();
@@ -55,8 +58,20 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
         ...electionContract,
         functionName: "getCandidateList",
       },
+      {
+        ...electionContract,
+        functionName: "electionId",
+      },
     ],
   });
+
+  const getgroups = async () => {
+    const response = await fetchAllGroups();
+    sethashIPFS(response);
+  };
+  useEffect(() => {
+    !hashIPFS && getgroups();
+  }, []);
 
   if (isLoading) return <Loader />;
 
@@ -64,8 +79,7 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
     setelectionData(electionInformation);
   }
 
-  if (!electionData) return <Loader />;
-
+  if (!electionData || hashIPFS == null) return <Loader />;
   const owner = electionData[0].result;
   const winners = Number(electionData[1].result);
   const electionInfo = electionData[2].result;
@@ -74,6 +88,7 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
   const userVoted = electionData[5].result;
   const resultDeclared = electionData[6].result;
   const candidateList = electionData[7].result;
+  const electionID = electionData[8].result;
   const isStarting = Math.floor(Date.now() / 1000) < Number(electionInfo[0]);
   const isEnded = Math.floor(Date.now() / 1000) > Number(electionInfo[1]);
   const electionStat = isStarting ? 1 : isEnded ? 3 : 2;

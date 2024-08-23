@@ -22,6 +22,8 @@ import { Election } from "../../../../abi/artifacts/Election";
 import { CCIPSender } from "@/abi/artifacts/CCIPSender";
 import { useParams } from "next/navigation";
 import { sepolia } from "viem/chains";
+import { unpinJSONFile } from "@/app/helpers/pinToIPFS";
+import CandidateDescription from "../../Fragment/CandidateDescription";
 
 const CandidateGrid = ({
   isVoted,
@@ -75,6 +77,7 @@ const CandidateGrid = ({
         functionName: "removeCandidate",
         args: [BigInt(candidate.candidateID)],
       });
+      await unpinJSONFile(candidate.description);
       toast.success(`Removed Candidate ${candidate.name}`);
     } catch (error) {
       toast.error(ErrorMessage(error));
@@ -158,7 +161,7 @@ const CandidateGrid = ({
           {candidate.name} #{Number(candidateId)}
         </h5>
         <p className="text-sm overflow-y-auto p-2 w-full h-20 text-gray-500 ">
-          {candidate.description}
+          <CandidateDescription IpfsHash={candidate.description} />
         </p>
         {!isVoted && (
           <div className="flex mt-4">

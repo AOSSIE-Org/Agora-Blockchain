@@ -10,6 +10,8 @@ import toast from "react-hot-toast";
 import { ErrorMessage } from "@/app/helpers/ErrorMessage";
 import { useParams } from "next/navigation";
 import { sepolia } from "viem/chains";
+import { unpinJSONFile } from "@/app/helpers/pinToIPFS";
+import CandidateDescription from "../../Fragment/CandidateDescription";
 
 const CreditsVoting = ({
   candidate,
@@ -38,6 +40,7 @@ const CreditsVoting = ({
         functionName: "removeCandidate",
         args: [candidate.candidateID],
       });
+      await unpinJSONFile(candidate.description);
       toast.success(`Removed Candidate ${candidate.name}`);
     } catch (error) {
       toast.error(ErrorMessage(error));
@@ -63,7 +66,7 @@ const CreditsVoting = ({
                 <p className=" text-gray-900 truncate ">{candidate.name}</p>
               </div>
               <p className="text-sm text-gray-500 truncate w-[80%]">
-                {candidate.description}
+                <CandidateDescription IpfsHash={candidate.description} />
               </p>
             </div>
             <input
