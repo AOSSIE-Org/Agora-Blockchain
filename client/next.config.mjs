@@ -5,8 +5,9 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/:path*",
-        destination: "http://127.0.0.1:5328/api/:path*", // Proxy to Flask Backend
+        source: "/api/chat",
+        destination:
+          "https://agora-blockchain-production.up.railway.app/api/chat", // Proxy to Flask Backend
       },
     ];
   },
