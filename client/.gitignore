@@ -9,6 +9,10 @@
 # testing
 /coverage
 
+/api/__pycache__/
+api/__pycache__/
+
+
 # next.js
 /.next/
 /out/
@@ -20,6 +24,8 @@
 .DS_Store
 *.pem
 
+/venv/
+venv
 # debug
 npm-debug.log*
 yarn-debug.log*

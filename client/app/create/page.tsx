@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 import ElectionInfoPopup from "../components/Modal/ElectionInfoPopup";
 import { createGroupIPFS } from "../helpers/pinToIPFS";
 
-const page = () => {
+const CreatePage = () => {
   const router = useRouter();
   const [SelectedBallot, setSelectedBallot] = useState(1);
   const { switchChain } = useSwitchChain();
@@ -193,4 +193,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default CreatePage;

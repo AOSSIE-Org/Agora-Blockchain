@@ -1,22 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Loader from "../Helper/Loader";
 import ElectionMini from "../Cards/ElectionMini";
-import { useReadContract } from "wagmi";
-import { ELECTION_FACTORY_ADDRESS } from "../../constants";
-import { ElectionFactory } from "../../../abi/artifacts/ElectionFactory";
 import ElectionInfoCard from "./ElectionInfoCard";
-import { sepolia } from "viem/chains";
-import { fetchAllGroups } from "@/app/helpers/fetchFileFromIPFS";
-import { useHashIPFS } from "@/app/hooks/HashIPFS";
+import { useOpenElection } from "../Hooks/GetOpenElections";
 const ElectionDash = () => {
-  const { data: elections, isLoading } = useReadContract({
-    chainId: sepolia.id,
-    abi: ElectionFactory,
-    address: ELECTION_FACTORY_ADDRESS,
-    functionName: "getOpenElections",
-  });
-  const { hashIPFS, sethashIPFS } = useHashIPFS();
+  const { elections, isLoading } = useOpenElection();
   const [electionStatuses, setElectionStatuses] = useState<{
     [key: string]: number;
   }>({});
@@ -52,13 +41,6 @@ const ElectionDash = () => {
         )
       : elections;
 
-  const getgroups = async () => {
-    const response = await fetchAllGroups();
-    sethashIPFS(response);
-  };
-  useEffect(() => {
-    !hashIPFS && getgroups();
-  }, [elections]);
   return (
     <div className="w-screen">
       {isLoading || !elections ? (
