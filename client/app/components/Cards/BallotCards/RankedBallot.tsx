@@ -38,12 +38,7 @@ const RankedBallot = ({
           address: CCIP_FUJI_ADDRESS,
           abi: CCIPSender,
           functionName: "sendMessage",
-          args: [
-            SEPOLIA_CHAIN_SELECTOR,
-            ELECTION_FACTORY_ADDRESS,
-            electionAddress,
-            preferenceIDs,
-          ],
+          args: [SEPOLIA_CHAIN_SELECTOR, electionAddress, preferenceIDs],
         });
       } else {
         await writeContractAsync({

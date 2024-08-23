@@ -11,9 +11,24 @@ export const CCIPSender = [
         name: "_link",
         type: "address",
       },
+      {
+        internalType: "address",
+        name: "_electionFactory",
+        type: "address",
+      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
+  },
+  {
+    inputs: [],
+    name: "CCIPNotSupported",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "InsufficientAllowance",
+    type: "error",
   },
   {
     inputs: [
@@ -120,6 +135,64 @@ export const CCIPSender = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_election",
+        type: "address",
+      },
+    ],
+    name: "addElection",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "election",
+        type: "address",
+      },
+    ],
+    name: "electionApproved",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "status",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getLinkBalance",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "minTokens",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "owner",
     outputs: [
@@ -138,11 +211,6 @@ export const CCIPSender = [
         internalType: "uint64",
         name: "destinationChainSelector",
         type: "uint64",
-      },
-      {
-        internalType: "address",
-        name: "receiver",
-        type: "address",
       },
       {
         internalType: "address",
@@ -175,6 +243,19 @@ export const CCIPSender = [
       },
     ],
     name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_newElectionFactory",
+        type: "address",
+      },
+    ],
+    name: "updateElectionFactory",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

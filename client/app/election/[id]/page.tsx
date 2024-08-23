@@ -8,10 +8,13 @@ import ClipBoard from "../../components/Helper/ClipBoard";
 import ElectionCandidates from "../../components/Cards/ElectionCandidates";
 import { Toaster } from "react-hot-toast";
 import ButtonCard from "../../components/Cards/ButtonCard";
-import { sepolia } from "viem/chains";
+import { sepolia, avalancheFuji } from "viem/chains";
 import { useElectionData } from "@/app/hooks/ElectionInfo";
 import { fetchAllGroups } from "@/app/helpers/fetchFileFromIPFS";
 import { useHashIPFS } from "@/app/hooks/HashIPFS";
+import CrossChain from "@/app/components/Helper/CrossChain";
+import { CCIPSender } from "@/abi/artifacts/CCIPSender";
+import { CCIP_FUJI_ADDRESS } from "@/app/constants";
 
 const page = ({ params }: { params: { id: `0x${string}` } }) => {
   const { hashIPFS, sethashIPFS } = useHashIPFS();
@@ -22,6 +25,11 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
     abi: Election,
     address: electionAddress,
     chainId: sepolia.id,
+  };
+  const CCIPContract = {
+    abi: CCIPSender,
+    address: CCIP_FUJI_ADDRESS as `0x${string}`,
+    chainId: avalancheFuji.id,
   };
   const { data: electionInformation, isLoading } = useReadContracts({
     contracts: [
@@ -62,6 +70,11 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
         ...electionContract,
         functionName: "electionId",
       },
+      {
+        ...CCIPContract,
+        functionName: "electionApproved",
+        args: [electionAddress],
+      },
     ],
   });
 
@@ -89,6 +102,8 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
   const resultDeclared = electionData[6].result;
   const candidateList = electionData[7].result;
   const electionID = electionData[8].result;
+  const isCrossChainEnabled = electionData[9].result;
+  console.log("isCrossChainEnabled : ", isCrossChainEnabled);
   const isStarting = Math.floor(Date.now() / 1000) < Number(electionInfo[0]);
   const isEnded = Math.floor(Date.now() / 1000) > Number(electionInfo[1]);
   const electionStat = isStarting ? 1 : isEnded ? 3 : 2;
@@ -106,12 +121,6 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
                   {electionInfo![3]}
                 </div>
               </div>
-              {/* <div className="inline-block h-[100px] min-h-[1em] w-0.5 self-stretch  bg-gray-300"></div>
-              <div className="flex flex-col items-around justify-center">
-                <div className="my-1 ">
-                  <ClipBoard inputValue={window.location.href} />
-                </div>
-              </div> */}
             </div>
           </div>
           <ElectionDetails electionStat={electionStat} />
@@ -122,6 +131,14 @@ const page = ({ params }: { params: { id: `0x${string}` } }) => {
               electionStat={electionStat}
             />
             <ButtonCard isOwner={owner === address} />
+          </div>
+          <div className="md:flex-row gap-x-4 flex flex-col items-center sm:items-stretch justify-between">
+            <ClipBoard inputValue={window.location.href} />
+            <CrossChain
+              isEnded={isEnded}
+              electionAddress={electionAddress}
+              isCrossChainEnabled={isCrossChainEnabled}
+            />
           </div>
         </div>
       </div>

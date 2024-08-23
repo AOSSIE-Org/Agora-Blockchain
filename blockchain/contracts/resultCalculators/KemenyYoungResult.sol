@@ -2,8 +2,16 @@
 pragma solidity ^0.8.24;
 
 import {Errors} from "./interface/Errors.sol";
+import {Candidatecheck} from "./abstract/CandidateCheck.sol";
+import {VoteWinnerCount} from "./abstract/VoteWinnerCount.sol";
+import {WinnersArray} from "./abstract/WinnersArray.sol";
 
-contract KemenyYoungResult is Errors {
+contract KemenyYoungResult is
+    Errors,
+    Candidatecheck,
+    VoteWinnerCount,
+    WinnersArray
+{
     function calculateKemenyYoungResult(
         bytes memory returnData
     ) public pure returns (uint256[] memory) {
@@ -19,14 +27,8 @@ contract KemenyYoungResult is Errors {
     ) internal pure returns (uint256[] memory) {
         uint256 numCandidates = votes.length;
 
-        // Check for no candidates
-        if (numCandidates == 0) {
-            revert NoCandidates();
-        }
-        if (numCandidates == 1) {
-            uint[] memory singleWinner = new uint[](1);
-            singleWinner[0] = 0;
-            return singleWinner;
+        if (numCandidates < 2) {
+            return checkEdgeCases(numCandidates);
         }
 
         // Compute pairwise scores
@@ -65,29 +67,12 @@ contract KemenyYoungResult is Errors {
             }
         }
 
-        uint256 highestRankingScore = 0;
-        uint256 winnerCount = 0;
+        uint256 highestRankingScore;
+        uint256 winnerCount;
 
-        for (uint i = 0; i < numCandidates; i++) {
-            if (bestRanking[i] > highestRankingScore) {
-                highestRankingScore = bestRanking[i];
-                winnerCount = 1;
-            } else if (bestRanking[i] == highestRankingScore) {
-                winnerCount++;
-            }
-        }
+        (highestRankingScore, winnerCount) = getVoteWinnerCount(bestRanking);
 
         // Collect all candidates with the highest ranking score
-        uint256[] memory winners = new uint256[](winnerCount);
-        uint256 numWinners = 0;
-
-        for (uint256 i = 0; i < numCandidates; i++) {
-            if (bestRanking[i] == highestRankingScore) {
-                winners[numWinners] = i;
-                numWinners++;
-            }
-        }
-
-        return winners;
+        return getWinnersArray(winnerCount, highestRankingScore, bestRanking);
     }
 }

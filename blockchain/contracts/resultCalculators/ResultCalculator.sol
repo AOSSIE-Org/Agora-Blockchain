@@ -7,6 +7,7 @@ import {IResultCalculator} from "./interface/IResultCalculator.sol";
 import {KemenyYoungResult} from "./KemenyYoungResult.sol";
 import {SchulzeResult} from "./SchulzeResult.sol";
 import {MooreResult} from "./MooreResult.sol";
+
 contract ResultCalculator is
     GeneralResult,
     IRVResult,

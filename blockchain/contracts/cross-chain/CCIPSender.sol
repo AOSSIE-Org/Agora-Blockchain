@@ -9,7 +9,8 @@ import {LinkTokenInterface} from "@chainlink/contracts/src/v0.8/shared/interface
 contract CCIPSender is OwnerIsCreator {
     // Used to make sure contract has enough balance
     error NotEnoughBalance(uint256 currentBalance, uint256 calculatedFees);
-
+    error CCIPNotSupported();
+    error InsufficientAllowance();
     struct CCIPVote {
         address election;
         address user;
@@ -27,21 +28,43 @@ contract CCIPSender is OwnerIsCreator {
     );
 
     IRouterClient private s_router;
-
+    address private electionFactory;
     LinkTokenInterface private s_linkToken;
+    uint public constant minTokens = 25000000000000000000;
+    mapping(address election => bool status) public electionApproved;
 
     /// @notice Constructor initializes the contract with the router address.
-    constructor(address _router, address _link) {
+    constructor(address _router, address _link, address _electionFactory) {
         s_router = IRouterClient(_router);
         s_linkToken = LinkTokenInterface(_link);
+        electionFactory = _electionFactory;
+    }
+
+    function getLinkBalance() external view returns (uint) {
+        return s_linkToken.balanceOf(address(this));
+    }
+
+    function updateElectionFactory(
+        address _newElectionFactory
+    ) external onlyOwner {
+        electionFactory = _newElectionFactory;
+    }
+
+    function addElection(address _election) external {
+        uint256 allowance = s_linkToken.allowance(msg.sender, address(this));
+        if (allowance < minTokens) revert InsufficientAllowance();
+        s_linkToken.transferFrom(msg.sender, address(this), minTokens);
+        electionApproved[_election] = true;
     }
 
     function sendMessage(
         uint64 destinationChainSelector,
-        address receiver,
         address _election,
         uint[] calldata _voteArr
     ) external returns (bytes32 messageId) {
+        if (!electionApproved[_election]) {
+            revert CCIPNotSupported();
+        }
         // Create an EVM2AnyMessage struct in memory with necessary information for sending a cross-chain message
         CCIPVote memory _voteDetails = CCIPVote(
             _election,
@@ -49,7 +72,7 @@ contract CCIPSender is OwnerIsCreator {
             _voteArr
         );
         Client.EVM2AnyMessage memory evm2AnyMessage = Client.EVM2AnyMessage({
-            receiver: abi.encode(receiver),
+            receiver: abi.encode(electionFactory),
             data: abi.encode(_voteDetails), // ABI-encoded vote
             tokenAmounts: new Client.EVMTokenAmount[](0), // Empty array indicating no tokens are being sent
             extraArgs: Client._argsToBytes(
@@ -73,7 +96,7 @@ contract CCIPSender is OwnerIsCreator {
         emit MessageSent(
             messageId,
             destinationChainSelector,
-            receiver,
+            electionFactory,
             "Voted",
             address(s_linkToken),
             fees
