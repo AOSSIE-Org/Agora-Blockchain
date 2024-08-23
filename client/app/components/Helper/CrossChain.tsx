@@ -19,7 +19,7 @@ const CrossChain = ({
   const [buttonValue, setbuttonValue] = useState(false);
   const addCrossChain = async () => {
     try {
-      if (chain?.id === 43113) switchChain({ chainId: avalancheFuji.id });
+      if (chain?.id !== 43113) switchChain({ chainId: avalancheFuji.id });
       await writeContractAsync({
         address: LINK_FUJI,
         abi: erc20Abi,
