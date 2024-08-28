@@ -1,11 +1,6 @@
 "use client";
 import React, { FormEvent, useState } from "react";
-import {
-  useAccount,
-  useReadContract,
-  useSwitchChain,
-  useWriteContract,
-} from "wagmi";
+import { useAccount, useSwitchChain, useWriteContract } from "wagmi";
 import { ELECTION_FACTORY_ADDRESS } from "../constants";
 import { ElectionFactory } from "../../abi/artifacts/ElectionFactory";
 import { ballotTypeMap } from "../helpers/votingInfo";
@@ -18,7 +13,6 @@ import { sepolia } from "viem/chains";
 import { ArrowsRightLeftIcon } from "@heroicons/react/16/solid";
 import { useRouter } from "next/navigation";
 import ElectionInfoPopup from "../components/Modal/ElectionInfoPopup";
-import { createGroupIPFS } from "../helpers/pinToIPFS";
 
 const CreatePage = () => {
   const router = useRouter();
@@ -33,13 +27,6 @@ const CreatePage = () => {
   const [startTime, setstartTime] = useState(new Date());
   const [endTime, setendTime] = useState(new Date());
 
-  const { data: electionCount } = useReadContract({
-    chainId: sepolia.id,
-    abi: ElectionFactory,
-    address: ELECTION_FACTORY_ADDRESS,
-    functionName: "electionCount",
-  });
-
   const createElection = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -53,7 +40,6 @@ const CreatePage = () => {
       return;
     }
     try {
-      await createGroupIPFS(Number(electionCount!));
       await writeContractAsync({
         address: ELECTION_FACTORY_ADDRESS,
         abi: ElectionFactory,
