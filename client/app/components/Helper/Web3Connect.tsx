@@ -3,7 +3,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 const Web3Connect = () => {
   return (
-    <div className="fixed z-30 right-3 top-3 p-4">
+    <div className="p-4">
       <ConnectButton
         accountStatus={{
           smallScreen: "avatar",
