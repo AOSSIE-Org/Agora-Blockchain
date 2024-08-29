@@ -1,6 +1,7 @@
 "use client";
+
 import React from "react";
-import SkeletonElection from "../Helper/SkeletonElection";
+import { motion } from "framer-motion";
 import { FaRegUser } from "react-icons/fa6";
 import { IoOpenOutline } from "react-icons/io5";
 import Link from "next/link";
@@ -8,6 +9,8 @@ import {
   useMiniElectionInfo,
   useMiniOwnerInfo,
 } from "../Hooks/GetMiniElectionInfo";
+import SkeletonElection from "../Helper/SkeletonElection";
+
 const ElectionMini = ({
   electionAddress,
   update,
@@ -32,59 +35,58 @@ const ElectionMini = ({
   const isEnded = Math.floor(Date.now() / 1000) > Number(electionInfo[1]);
   const electionStat = isStarting ? 1 : isEnded ? 3 : 2;
   update?.(electionAddress, electionStat);
+
   return (
-    <div className="flex h-xl bg-white px-3 py-1 rounded-xl border border-gray-300 bg-clip-border shadow-md shadow-blue-gray-900/5 flex-col items-start justify-between">
-      <div className="group w-full relative ">
-        <h3 className="mt-3 text-lg  font-semibold leading-6 text-gray-900 ">
-          <div>
-            <span className="absolute" />
-            {electionInfo![2]}
-          </div>
-        </h3>
-        <div className="flex w-full items-start justify-start mt-3 h-20 line-clamp-3 text-sm leading-6 text-gray-600">
-          <div>{electionInfo![3]}</div>
-        </div>
-        <div
-          className={`"inline-flex  items-center absolute right-1.5 top-1.5 text-sm font-normal px-3 py-0.5 rounded-full ${
-            electionStat === 3
-              ? "bg-gray-200"
-              : electionStat === 2
-              ? "bg-green-500"
-              : "bg-yellow-400"
-          } "`}
-        >
-          <div className={`${electionStat === 3 && "text-gray-700"} "`}>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+    >
+      <div className="p-5">
+        <div className="flex justify-between items-start mb-4">
+          <h3 className="text-xl font-bold text-gray-800 line-clamp-1">
+            {electionInfo[2]}
+          </h3>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className={`px-3 py-1 text-xs font-semibold rounded-full ${
+              electionStat === 3
+                ? "bg-gray-100 text-gray-800"
+                : electionStat === 2
+                ? "bg-green-100 text-green-800"
+                : "bg-yellow-100 text-yellow-800"
+            }`}
+          >
             {ElectionStatus[electionStat]}
-          </div>
+          </motion.div>
         </div>
-      </div>
-      <div className=" my-2 flex items-center justify-between w-full">
-        <div className=" flex  items-center">
-          <FaRegUser size={25} />
-          <div className="text-sm mx-1 leading-5">
-            <div className="font-semibold text-gray-900">
-              <div>
-                <span className="absolute " />
-                Owner
-              </div>
-            </div>
-            <div className="text-gray-600 truncate max-w-[100px]">
-              {loadingOwner ? "0x0000000000000" : owner}
+        <p className="text-sm text-gray-600 line-clamp-3 mb-4">
+          {electionInfo[3]}
+        </p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <FaRegUser className="text-gray-400" size={20} />
+            <div>
+              <p className="text-xs font-semibold text-gray-700">Owner</p>
+              <p className="text-xs text-gray-500 truncate w-24">
+                {loadingOwner ? "Loading..." : owner}
+              </p>
             </div>
           </div>
-        </div>
-        <div className="flex items-center text-xs">
           <Link href={`/election/${electionAddress}`}>
-            <button className="px-4 relative py-1 z-10 text-sm font-medium text-blue-600 hover:underline  rounded-2xl  hover:border-gray-300">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="btn btn-sm btn-primary normal-case"
+            >
               Open
-              <div className="absolute right-0 top-1.5">
-                <IoOpenOutline />
-              </div>
-            </button>
+              <IoOpenOutline className="ml-1" />
+            </motion.button>
           </Link>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

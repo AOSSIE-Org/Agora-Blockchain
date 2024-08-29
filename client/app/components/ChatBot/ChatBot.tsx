@@ -1,135 +1,137 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
-import { ArrowUpIcon } from "@heroicons/react/16/solid";
 
-const ChatBot = () => {
-  const [messages, setMessages] = useState([
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ArrowUpIcon,
+  ChatBubbleLeftRightIcon,
+} from "@heroicons/react/24/solid";
+
+interface Message {
+  content: string;
+  role: "assistant" | "user";
+}
+
+const ChatBot: React.FC = () => {
+  const [messages, setMessages] = useState<Message[]>([
     {
       content:
         "Greetings! I'm here to help with any blockchain questions you have",
       role: "assistant",
     },
   ]);
-
-  const [inputMessage, setinputMessage] = useState("");
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    const sentMessage = {
-      content: inputMessage,
-      role: "user",
-    };
-    setMessages([...messages, sentMessage]);
-    setinputMessage("");
-    await getReply(inputMessage);
-  };
-
-  const getReply = async (value: string) => {
-    try {
-      fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message: value }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const reply = {
-            content: data.message,
-            role: "assistant",
-          };
-          const sentMessage = {
-            content: value,
-            role: "user",
-          };
-          setMessages([...messages, sentMessage, reply]);
-        });
-    } catch (error) {
-      //add error message in chatbot here
-      console.error("Error:", error);
-    }
-  };
+  const [inputMessage, setInputMessage] = useState<string>("");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const messageEndRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    messageEndRef?.current?.scrollIntoView({
+    messageEndRef.current?.scrollIntoView({
       behavior: "smooth",
       block: "end",
     });
   }, [messages]);
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!inputMessage.trim()) return;
+
+    const newMessage: Message = { content: inputMessage, role: "user" };
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    setInputMessage("");
+    await getReply(inputMessage);
+  };
+
+  const getReply = async (value: string) => {
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: value }),
+      });
+      const data = await response.json();
+      const reply: Message = { content: data.message, role: "assistant" };
+      setMessages((prevMessages) => [...prevMessages, reply]);
+    } catch (error) {
+      console.error("Error:", error);
+      // Add error message in chatbot here
+    }
+  };
+
   return (
-    <div className="fixed bottom-1 left-3 z-10 p-2">
-      <div className="dropdown dropdown-top ">
-        <div
-          tabIndex={0}
-          role="button"
-          className="w-14 rounded-full bg-base-100 p-1 bg-clip-border shadow-xl shadow-blue-gray-900/5"
+    <div className="fixed bottom-4 right-4 z-50">
+      <motion.div
+        initial={false}
+        animate={isOpen ? "open" : "closed"}
+        className="relative"
+      >
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsOpen(!isOpen)}
+          className="bg-blue-600 text-white p-4 rounded-full shadow-lg"
         >
-          <img alt="img" src="/assistant.png" />
-        </div>
-        <div
-          tabIndex={0}
-          className="dropdown-content z-[20] menu bg-base-100 border border-gray-300 rounded-2xl h-[450px] w-[370px]  bg-clip-border shadow-xl shadow-blue-gray-900/5"
-        >
-          <section className="container w-full h-full fixed inset-0">
-            <div className=" w-full h-full flex flex-col">
-              <div className="p-2 flex w-full justify-center text-gray-600 items-center rounded-2xl font-medium text-xl ">
+          <ChatBubbleLeftRightIcon className="w-6 h-6" />
+        </motion.button>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.2 }}
+              className="absolute bottom-16 right-0 w-96 h-[32rem] bg-white rounded-lg shadow-xl overflow-hidden flex flex-col"
+            >
+              <div className="bg-blue-600 text-white p-4 text-center font-semibold">
                 Agora Chatbot
               </div>
-              <hr className=" h-[2px] border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-25 dark:via-neutral-400" />
-              <div className="p-2 flex-grow flex flex-col  h-fit overflow-auto">
-                {messages.length &&
-                  messages.map((msg, i) => {
-                    return (
-                      <div
-                        className={`chat my-1 ${
-                          msg.role === "assistant" ? "chat-start" : "chat-end"
-                        }`}
-                        key={"chatKey" + i}
-                      >
-                        <div
-                          className={`font-normal mx-1 py-2 px-3 rounded-2xl ${
-                            msg.role === "assistant"
-                              ? "bg-[#f0f0f0] text-[#404040]"
-                              : "bg-[#333333] text-white"
-                          }`}
-                        >
-                          {msg.content}
-                        </div>
-                      </div>
-                    );
-                  })}
+              <div className="flex-grow overflow-auto p-4 space-y-4">
+                {messages.map((msg, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className={`flex ${
+                      msg.role === "assistant" ? "justify-start" : "justify-end"
+                    }`}
+                  >
+                    <div
+                      className={`max-w-[80%] p-3 rounded-lg ${
+                        msg.role === "assistant"
+                          ? "bg-gray-200 text-gray-800"
+                          : "bg-blue-600 text-white"
+                      }`}
+                    >
+                      {msg.content}
+                    </div>
+                  </motion.div>
+                ))}
                 <div ref={messageEndRef} />
               </div>
-
-              <form
-                className="h-[10%] items-center mb-4 px-2.5"
-                onSubmit={handleSubmit}
-              >
-                <div className="w-full h-full border border-gray-300 rounded-3xl items-center px-1 py-2.5 flex justify-stretch relative">
+              <form onSubmit={handleSubmit} className="p-4 bg-gray-100">
+                <div className="flex items-center bg-white rounded-full overflow-hidden shadow">
                   <input
-                    className="block rounded-l-xl py-3.5 px-1.5 w-full text-sm text-gray-900 bg-transparent focus:outline-none "
-                    value={inputMessage}
-                    onChange={(e) => {
-                      setinputMessage(e.target.value);
-                    }}
                     type="text"
-                    placeholder="Type a question and ask anything!"
-                    required
+                    value={inputMessage}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setInputMessage(e.target.value)
+                    }
+                    placeholder="Type your message..."
+                    className="flex-grow px-4 py-2 focus:outline-none"
                   />
                   <button
-                    className="p-2 rounded-full text-white bg-gray-800 hover:bg-gray-600 "
                     type="submit"
+                    className="bg-blue-600 text-white p-2 rounded-full"
                   >
-                    <ArrowUpIcon className="w-5" />
+                    <ArrowUpIcon className="w-5 h-5" />
                   </button>
                 </div>
               </form>
-            </div>
-          </section>
-        </div>
-      </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 };
