@@ -4,21 +4,22 @@ pragma solidity ^0.8.20;
 import {GeneralResult} from "./GeneralResult.sol";
 import {IRVResult} from "./IRVResult.sol";
 import {IResultCalculator} from "./interface/IResultCalculator.sol";
-import {BordaResult} from "./BordaResult.sol";
 import {KemenyYoungResult} from "./KemenyYoungResult.sol";
 import {SchulzeResult} from "./SchulzeResult.sol";
+import {MooreResult} from "./MooreResult.sol";
+
 contract ResultCalculator is
     GeneralResult,
     IRVResult,
     IResultCalculator,
-    BordaResult,
     KemenyYoungResult,
-    SchulzeResult
+    SchulzeResult,
+    MooreResult
 {
     function getResults(
         bytes calldata returnData,
         uint _resultType
-    ) external pure returns (uint) {
+    ) external pure returns (uint[] memory) {
         //add pure here
         if (_resultType < 3) {
             // Result for General & Ranked Ballot
@@ -27,8 +28,8 @@ contract ResultCalculator is
             // Result for IRV Ballot
             return calculateIRVResult(returnData);
         } else if (_resultType == 4) {
-            // Result for Borda Ballot
-            return calculateBordaResult(returnData);
+            // Result for Schulze Ballot
+            return calculateSchulzeResult(returnData);
         } else if (_resultType == 5) {
             // Result for Quadratic Ballot
             return calculateGeneralResult(returnData);
@@ -39,8 +40,8 @@ contract ResultCalculator is
             // Result for KemenyYoung Ballot
             return calculateKemenyYoungResult(returnData);
         } else if (_resultType == 8) {
-            // Result for Schulze Ballot
-            return calculateSchulzeResult(returnData);
+            // Result for Moore's Ballot
+            return calculateMooreResult(returnData);
         } else {
             return calculateGeneralResult(returnData);
         }

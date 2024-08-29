@@ -1,12 +1,10 @@
-import { create } from 'zustand'
+import { create } from "zustand";
 
-type ElectionInfo = {
-  electionInfo: any
-  setelectionInfo: (electionInfo :any) => void
-}
-export const useElectionStore = create<ElectionInfo>(
-    (set) => ({
-          electionInfo: undefined,
-          setelectionInfo: (electionInfo :any) => set(() => ({ electionInfo })),
-        })
-)
+type ElectionData = {
+  electionData: any;
+  setelectionData: (electionData: any) => void;
+};
+export const useElectionData = create<ElectionData>((set) => ({
+  electionData: null,
+  setelectionData: (electionData: any) => set(() => ({ electionData })),
+}));

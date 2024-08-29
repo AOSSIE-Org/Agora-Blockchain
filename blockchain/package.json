@@ -15,7 +15,7 @@
     "@types/mocha": "^10.0.6",
     "dotenv": "^16.4.5",
     "ethers": "^6.13.0",
-    "hardhat": "^2.22.5",
+    "hardhat": "^2.22.8",
     "hardhat-gas-reporter": "^1.0.10",
     "solidity-coverage": "^0.8.12",
     "ts-node": "^10.9.2",

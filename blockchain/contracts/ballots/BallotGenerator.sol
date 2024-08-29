@@ -4,7 +4,6 @@ pragma solidity ^0.8.24;
 import {GeneralBallot} from "./GeneralBallot.sol";
 import {IRV} from "./IRV.sol";
 import {RankedBallot} from "./RankedBallot.sol";
-import {BordaBallot} from "./BordaBallot.sol";
 import {QuadraticBallot} from "./QuadraticBallot.sol";
 import {ScoreBallot} from "./ScoreBallot.sol";
 import {KemenyYoungBallot} from "./KemenyYoungBallot.sol";
@@ -27,8 +26,8 @@ contract BallotGenerator {
             return address(new IRV(_electionAddress));
         }
         if (_ballotType == 4) {
-            // Borda Ballot
-            return address(new BordaBallot(_electionAddress));
+            // Schulze Ballot
+            return address(new SchulzeBallot(_electionAddress));
         }
         if (_ballotType == 5) {
             // Quadratic Ballot
@@ -43,8 +42,8 @@ contract BallotGenerator {
             return address(new KemenyYoungBallot(_electionAddress));
         }
         if (_ballotType == 8) {
-            // Schulze Ballot
-            return address(new SchulzeBallot(_electionAddress));
+            // Moore's Ballot
+            return address(new GeneralBallot(_electionAddress));
         }
         return address(new GeneralBallot(_electionAddress));
     }

@@ -8,49 +8,42 @@ import {
   MenuItems,
   MenuItem,
 } from "@headlessui/react";
-import { PencilIcon, TrashIcon } from "@heroicons/react/16/solid";
-import { useWriteContract } from "wagmi";
+import { useAccount, useSwitchChain, useWriteContract } from "wagmi";
 import { ErrorMessage } from "../../../helpers/ErrorMessage";
 import toast from "react-hot-toast";
-import { useElectionModal } from "../../../hooks/ElectionModal";
 import { Election } from "../../../../abi/artifacts/Election";
+import { useParams } from "next/navigation";
+import { sepolia } from "viem/chains";
+import { unpinJSONFile } from "@/app/helpers/pinToIPFS";
+import CandidateDescription from "../../Fragment/CandidateDescription";
+import Vote from "../../Modal/Vote";
 
 const CandidateGrid = ({
   isVoted,
   candidate,
-  electionAddress,
   isOwner,
 }: {
   isOwner: boolean;
   isVoted: boolean;
   candidate: any;
-  electionAddress: `0x${string}`;
 }) => {
+  const { id: electionAddress } = useParams<{ id: `0x${string}` }>();
+  const { switchChain } = useSwitchChain();
+  const { chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
-  const { setelectionModal } = useElectionModal();
   const candidateId = Number(candidate.candidateID);
-  const vote = async () => {
-    try {
-      await writeContractAsync({
-        address: electionAddress,
-        abi: Election,
-        functionName: "userVote",
-        args: [[BigInt(candidate.candidateID)]],
-      });
-      toast.success(`Voted Casted to ${candidate.name}`);
-      setelectionModal(false);
-    } catch (error) {
-      toast.error(ErrorMessage(error));
-    }
-  };
+  const voteArray = [BigInt(candidate.candidateID)];
+
   const removeCandidate = async () => {
     try {
+      if (chain?.id === 43113) switchChain({ chainId: sepolia.id });
       await writeContractAsync({
         address: electionAddress,
         abi: Election,
         functionName: "removeCandidate",
         args: [BigInt(candidate.candidateID)],
       });
+      await unpinJSONFile(candidate.description);
       toast.success(`Removed Candidate ${candidate.name}`);
     } catch (error) {
       toast.error(ErrorMessage(error));
@@ -84,7 +77,7 @@ const CandidateGrid = ({
             leaveTo="transform opacity-0 scale-95"
           >
             <MenuItems className="absolute right-0 z-10 mt-2  w-[70%] border-white border-[1px] border-opacity-20 origin-top-right shadow-lg ring-1 bg-white ring-gray-600 ring-opacity-5 rounded-xl focus:outline-none">
-              <div className="py-1  flex flex-col items-center justify-center">
+              <div className="flex flex-col items-center justify-center">
                 <MenuItem>
                   <button className="flex items-center gap-x-3 justify-center  w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ">
                     <svg
@@ -134,21 +127,15 @@ const CandidateGrid = ({
           {candidate.name} #{Number(candidateId)}
         </h5>
         <p className="text-sm overflow-y-auto p-2 w-full h-20 text-gray-500 ">
-          {/* {candidate.description} */}
-          Candidate Description : Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit. et luctus ante, et lacinia ligula. Etiam enim lectus,
-          efficitur ac semper ac, maximus a nunc. Fusce vitae lacus dictum,
-          dapibus sit amet, dapibus eros. Sed a condimentum nulla. Duis ut urna
-          amet sapien malesuada finibus in tempor erat. Praesent congue risus.
+          <CandidateDescription IpfsHash={candidate.description} />
         </p>
         {!isVoted && (
           <div className="flex mt-4">
-            <button
-              onClick={vote}
-              className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-            >
-              Vote
-            </button>
+            <Vote
+              disabled={false}
+              electionAddress={electionAddress}
+              voteArray={voteArray}
+            />
           </div>
         )}
       </div>

@@ -4,8 +4,9 @@ module.exports = buildModule("CrossChainSenderModule", (m) => {
   const crosschainSender = m.contract(
     "CCIPSender",
     [
-      "0x9C32fCB86BF0f4a1A8921a9Fe46de3198bb884B2",
-      "0x0Fd9e8d3aF1aaee056EB9e802c3A762a667b1904",
+      "0xF694E193200268f9a4868e4Aa017A0118C9a8177",
+      "0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846",
+      "0x2288516133Fa594905ABc6aB4EE8C8f4f3f1B705",
     ],
     {}
   );

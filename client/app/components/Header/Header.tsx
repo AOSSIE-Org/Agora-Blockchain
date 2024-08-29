@@ -18,14 +18,16 @@ const Header = () => {
           <div className="flex text-lg w-full items-center justify-around">
             <Link href={"/create"}>
               <button className="font-semibold gap-x-1 items-center flex text-gray-700 hover:text-amber-300">
-                <PlusCircleIcon className="w-6" />
-                <p> Create</p>
+                <PlusCircleIcon className="w-7" />
+                <p className="sm:flex hidden"> Create</p>
               </button>
             </Link>
-            <button className="font-semibold gap-x-1 items-center flex text-gray-700 hover:text-amber-300">
-              <UserIcon className="w-6" />
-              <p>Profile</p>
-            </button>
+            <Link href={"/profile"}>
+              <button className="font-semibold gap-x-1 items-center flex text-gray-700 hover:text-amber-300">
+                <UserIcon className="w-7" />
+                <p className="sm:flex hidden">Profile</p>
+              </button>
+            </Link>
           </div>
         </nav>
       </div>

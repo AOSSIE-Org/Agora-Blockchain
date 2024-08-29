@@ -2,28 +2,33 @@
 pragma solidity ^0.8.24;
 
 import {Errors} from "./interface/Errors.sol";
+import {Candidatecheck} from "./abstract/CandidateCheck.sol";
+import {VoteWinnerCount} from "./abstract/VoteWinnerCount.sol";
+import {WinnersArray} from "./abstract/WinnersArray.sol";
 
-contract KemenyYoungResult is Errors {
+contract KemenyYoungResult is
+    Errors,
+    Candidatecheck,
+    VoteWinnerCount,
+    WinnersArray
+{
     function calculateKemenyYoungResult(
         bytes memory returnData
-    ) public pure returns (uint256) {
+    ) public pure returns (uint256[] memory) {
         // Decode the returnData to extract the vote arrays
         uint256[][] memory votes = abi.decode(returnData, (uint256[][]));
 
         // Perform Kemeny-Young calculation to determine the winner
-        uint256 winner = performKemenyYoung(votes);
-
-        return winner;
+        return performKemenyYoung(votes);
     }
 
     function performKemenyYoung(
         uint256[][] memory votes
-    ) internal pure returns (uint256) {
+    ) internal pure returns (uint256[] memory) {
         uint256 numCandidates = votes.length;
 
-        // Check for no candidates
-        if (numCandidates == 0) {
-            revert NoCandidates();
+        if (numCandidates < 2) {
+            return checkEdgeCases(numCandidates);
         }
 
         // Compute pairwise scores
@@ -62,17 +67,12 @@ contract KemenyYoungResult is Errors {
             }
         }
 
-        // Find the candidate with the highest ranking score
-        uint256 winner = 0;
-        uint256 highestRankingScore = 0;
+        uint256 highestRankingScore;
+        uint256 winnerCount;
 
-        for (uint i = 0; i < numCandidates; i++) {
-            if (bestRanking[i] > highestRankingScore) {
-                highestRankingScore = bestRanking[i];
-                winner = i;
-            }
-        }
+        (highestRankingScore, winnerCount) = getVoteWinnerCount(bestRanking);
 
-        return winner;
+        // Collect all candidates with the highest ranking score
+        return getWinnersArray(winnerCount, highestRankingScore, bestRanking);
     }
 }
