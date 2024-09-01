@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import ElectionInfoPopup from "../components/Modal/ElectionInfoPopup";
 
 const CreatePage: React.FC = () => {
+const CreatePage = () => {
   const router = useRouter();
   const [selectedBallot, setSelectedBallot] = useState<number>(1);
   const { switchChain } = useSwitchChain();
@@ -26,6 +27,10 @@ const CreatePage: React.FC = () => {
   const changeChain = () => {
     switchChain({ chainId: sepolia.id });
   };
+
+  const { writeContractAsync } = useWriteContract();
+  const [startTime, setstartTime] = useState(new Date());
+  const [endTime, setendTime] = useState(new Date());
 
   const createElection = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -259,5 +264,4 @@ const ChainSwitchModal: React.FC<ChainSwitchModalProps> = ({ onSwitch }) => (
     </motion.div>
   </motion.div>
 );
-
 export default CreatePage;

@@ -14,6 +14,10 @@ interface Message {
 
 const ChatBot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
+import { ArrowUpIcon } from "@heroicons/react/16/solid";
+
+const ChatBot = () => {
+  const [messages, setMessages] = useState([
     {
       content:
         "Greetings! I'm here to help with any blockchain questions you have",
@@ -44,6 +48,7 @@ const ChatBot: React.FC = () => {
   const getReply = async (value: string) => {
     try {
       const response = await fetch("/api/chat", {
+      fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: value }),
@@ -69,6 +74,18 @@ const ChatBot: React.FC = () => {
           whileTap={{ scale: 0.95 }}
           onClick={() => setIsOpen(!isOpen)}
           className="bg-blue-600 text-white p-4 rounded-full shadow-lg"
+    <div className="fixed bottom-1 left-3 z-10 p-2">
+      <div className="dropdown dropdown-top ">
+        <div
+          tabIndex={0}
+          role="button"
+          className="w-14 rounded-full bg-base-100 p-1 bg-clip-border shadow-xl shadow-blue-gray-900/5"
+        >
+          <img alt="img" src="/assistant.png" />
+        </div>
+        <div
+          tabIndex={0}
+          className="dropdown-content z-[20] menu bg-base-100 border border-gray-300 rounded-2xl h-[450px] w-[370px]  bg-clip-border shadow-xl shadow-blue-gray-900/5"
         >
           <ChatBubbleLeftRightIcon className="w-6 h-6" />
         </motion.button>
