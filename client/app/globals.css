@@ -5,3 +5,26 @@
 body {
   background-color: #ffffff;
 }
+
+
+::-webkit-scrollbar {
+  width: 1px; 
+  height: 1px; 
+}
+
+/* Scrollbar track */
+::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px; 
+}
+
+/* Scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background-color: #cfcaca; 
+  border-radius: 1px; 
+  border: 2px solid #f0f0f0; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #ebe4e4; 
+}
