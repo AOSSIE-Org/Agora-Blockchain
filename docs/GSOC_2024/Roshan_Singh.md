@@ -180,12 +180,12 @@ Our work opens up significant potential applications, particularly in managing i
    - Enhanced the frontend with tooltips, updated Quick Actions for multiple winners, and added a modal for inactive elections.
    - Introduced a chatbot for blockchain-related queries.
 
-7. [Merge request !59](https://github.com/AOSSIE-Org/Agora-Blockchain/pull/59) - **Open**
+7. [Merge request !59](https://github.com/AOSSIE-Org/Agora-Blockchain/pull/59) - **Merged**
 
    - Added IPFS-related ID changes and functions for creating groups, pinning files, and managing JSON files.
    - Updated the frontend to support these IPFS changes and save IPFS hashes instead of descriptions.
 
-8. [Merge request !60](https://github.com/AOSSIE-Org/Agora-Blockchain/pull/60) - **Open**
+8. [Merge request !60](https://github.com/AOSSIE-Org/Agora-Blockchain/pull/60) - **Merged**
 
    - Optimized result calculators and fixed CCIP vulnerabilities.
    - Integrated CCIP for elections funded with Link tokens and added a clipboard feature for sharing election URLs.

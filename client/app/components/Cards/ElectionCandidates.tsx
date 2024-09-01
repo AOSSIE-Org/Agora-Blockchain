@@ -18,9 +18,9 @@ const ElectionCandidates = ({
   resultType: bigint | undefined;
 }) => {
   const { electionData } = useElectionData();
-  if (!electionData) return <LoaderInline />;
   const candidateList = electionData[7].result;
   const { electionModal, setelectionModal } = useElectionModal();
+  if (!electionData) return <LoaderInline />;
   return (
     <div className=" w-[50%] flex flex-col p-4 mt-4  border border-gray-200 rounded-lg shadow sm:p-8 ">
       <div className="flex items-center justify-between mb-4">

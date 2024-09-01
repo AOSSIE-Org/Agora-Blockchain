@@ -19,7 +19,7 @@ const CrossChain = ({
   const [buttonValue, setbuttonValue] = useState(false);
   const addCrossChain = async () => {
     try {
-      if (chain?.id === 43113) switchChain({ chainId: avalancheFuji.id });
+      if (chain?.id !== 43113) switchChain({ chainId: avalancheFuji.id });
       await writeContractAsync({
         address: LINK_FUJI,
         abi: erc20Abi,
@@ -55,7 +55,6 @@ const CrossChain = ({
             disabled={buttonValue || isEnded}
             onChange={addCrossChain}
             className="absolute w-8 h-4 transition-colors duration-300 rounded-full appearance-none cursor-pointer peer bg-blue-gray-100 checked:bg-gray-900 peer-checked:border-gray-900 peer-checked:before:bg-gray-900"
-            defaultChecked={isCrossChainEnabled}
           />
           <label
             htmlFor="switch-component"

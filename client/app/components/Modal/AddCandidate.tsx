@@ -12,9 +12,8 @@ import { useAccount, useSwitchChain, useWriteContract } from "wagmi";
 import { Election } from "../../../abi/artifacts/Election";
 import { ErrorMessage } from "../../helpers/ErrorMessage";
 import { sepolia } from "viem/chains";
-import { useHashIPFS } from "@/app/hooks/HashIPFS";
 import { useElectionData } from "@/app/hooks/ElectionInfo";
-import { addCIDtoGroup, pinJSONFile } from "@/app/helpers/pinToIPFS";
+import { pinJSONFile } from "@/app/helpers/pinToIPFS";
 
 const AddCandidate = ({
   openModal,
@@ -28,7 +27,6 @@ const AddCandidate = ({
   const { switchChain } = useSwitchChain();
   const { chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
-  const { hashIPFS } = useHashIPFS();
   const { electionData } = useElectionData();
   const electionID = electionData[8].result;
   const addCandidate = async (event: FormEvent<HTMLFormElement>) => {
@@ -42,9 +40,8 @@ const AddCandidate = ({
         description: description,
       },
     };
-    const electionHash = hashIPFS[Number(electionID)];
     try {
-      const res = await pinJSONFile(jsonBody, electionHash);
+      const res = await pinJSONFile(jsonBody);
       if (chain?.id === 43113) switchChain({ chainId: sepolia.id });
       await writeContractAsync({
         address: electionAddress,
