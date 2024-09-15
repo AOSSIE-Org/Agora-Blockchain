@@ -6,13 +6,22 @@ import {
   TbCalendarOff,
 } from "react-icons/tb";
 
-const ElectionInfoCard = ({ counts, filterStatus, setFilterStatus }: any) => {
+const ElectionInfoCard = ({ counts, filterStatus, setFilterStatus }) => {
   const ElectionInfoImage = [
     { name: "All", image: TbCalendarMonth, count: counts.total },
     { name: "Pending", image: TbCalendarTime, count: counts.pending },
     { name: "Active", image: TbCalendarDot, count: counts.active },
     { name: "Ended", image: TbCalendarOff, count: counts.ended },
   ];
+
+  const noElectionsMessage = {
+    1: "No pending elections found",
+    2: "No active elections found",
+    3: "No ended elections found",
+  };
+
+  const currentCount = ElectionInfoImage[filterStatus].count;
+
   return (
     <div className="relative flex border border-gray-300 w-full flex-col rounded-xl bg-white p-4 text-gray-700 bg-clip-border shadow-xl shadow-blue-gray-900/5">
       <div className="p-4">
@@ -21,8 +30,12 @@ const ElectionInfoCard = ({ counts, filterStatus, setFilterStatus }: any) => {
         </h5>
       </div>
       <nav className="flex flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700">
-        {ElectionInfoImage.map((electionPart, key) => {
-          return (
+        {currentCount === 0 ? (
+          <div className="text-center text-lg font-bold text-red-500">
+            {noElectionsMessage[filterStatus]}
+          </div>
+        ) : (
+          ElectionInfoImage.map((electionPart, key) => (
             <button
               key={key}
               onClick={() => setFilterStatus(key)}
@@ -38,8 +51,8 @@ const ElectionInfoCard = ({ counts, filterStatus, setFilterStatus }: any) => {
                 <span className="">{electionPart.count}</span>
               </div>
             </button>
-          );
-        })}
+          ))
+        )}
       </nav>
     </div>
   );
