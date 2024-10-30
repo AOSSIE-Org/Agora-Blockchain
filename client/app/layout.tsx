@@ -33,7 +33,6 @@ export default function RootLayout({
             <RainbowKitProvider initialChain={sepolia}>
               <CustomProvider>
                 <Header />
-                <Web3Connect />
                 <ChatBot />
                 {children}
               </CustomProvider>
