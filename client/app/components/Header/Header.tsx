@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,6 +10,7 @@ import {
   HomeIcon,
 } from "@heroicons/react/24/outline";
 import Web3Connect from "../Helper/Web3Connect";
+import Image from "next/image";
 
 const menuItems = [
   { name: "Home", href: "/", icon: HomeIcon },
@@ -29,7 +31,9 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <Link href="/" className="flex-shrink-0 flex items-center">
-            <img
+            <Image
+              width={32}
+              height={32}
               className="h-8 w-auto"
               src="/aossie.png"
               alt="Agora Blockchain"
@@ -38,6 +42,7 @@ const Header = () => {
               Agora Blockchain
             </h1>
           </Link>
+
           <nav className="flex items-center space-x-4">
             {menuItems.map((item) => (
               <Link key={item.name} href={item.href} className="relative">
@@ -67,24 +72,6 @@ const Header = () => {
             <Web3Connect />
           </nav>
         </div>
-          </div>
-        </Link>
-        <nav className="flex w-[50%] justify-start items-center  ">
-          <div className="flex text-lg w-full items-center justify-around">
-            <Link href={"/create"}>
-              <button className="font-semibold gap-x-1 items-center flex text-gray-700 hover:text-amber-300">
-                <PlusCircleIcon className="w-7" />
-                <p className="sm:flex hidden"> Create</p>
-              </button>
-            </Link>
-            <Link href={"/profile"}>
-              <button className="font-semibold gap-x-1 items-center flex text-gray-700 hover:text-amber-300">
-                <UserIcon className="w-7" />
-                <p className="sm:flex hidden">Profile</p>
-              </button>
-            </Link>
-          </div>
-        </nav>
       </div>
     </motion.header>
   );
