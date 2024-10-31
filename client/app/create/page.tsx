@@ -15,7 +15,6 @@ import { useRouter } from "next/navigation";
 import ElectionInfoPopup from "../components/Modal/ElectionInfoPopup";
 
 const CreatePage: React.FC = () => {
-const CreatePage = () => {
   const router = useRouter();
   const [selectedBallot, setSelectedBallot] = useState<number>(1);
   const { switchChain } = useSwitchChain();
@@ -27,10 +26,6 @@ const CreatePage = () => {
   const changeChain = () => {
     switchChain({ chainId: sepolia.id });
   };
-
-  const { writeContractAsync } = useWriteContract();
-  const [startTime, setstartTime] = useState(new Date());
-  const [endTime, setendTime] = useState(new Date());
 
   const createElection = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -143,7 +138,7 @@ const CreatePage = () => {
           </motion.button>
         </form>
       </motion.div>
-      {chain?.id === 43113 && <ChainSwitchModal onSwitch={changeChain} />}
+      {chain?.id !== sepolia.id && <ChainSwitchModal onSwitch={changeChain} />}
       <Toaster />
     </motion.div>
   );
@@ -200,6 +195,7 @@ const TextareaField: React.FC<InputFieldProps> = ({
       rows={4}
       className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
       placeholder={placeholder}
+      required
     ></textarea>
   </motion.div>
 );
@@ -264,4 +260,5 @@ const ChainSwitchModal: React.FC<ChainSwitchModalProps> = ({ onSwitch }) => (
     </motion.div>
   </motion.div>
 );
+
 export default CreatePage;
