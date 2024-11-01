@@ -39,7 +39,7 @@ const ChatBot: React.FC = () => {
 
   const getReply = async (value: string) => {
     try {
-      const response = await fetch("/api/chat", {
+      const response = await fetch("http://192.168.101.12:5000/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: value }),
