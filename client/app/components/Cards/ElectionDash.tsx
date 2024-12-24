@@ -41,6 +41,18 @@ const ElectionDash = () => {
         )
       : elections;
 
+
+      const renderMessage = () => {
+        if ((filterStatus >=1 && filterStatus <=3) && counts.pending === 0) {
+          return (
+            <p className="text-center font-bold text-2xl mt-8">
+              No pending elections found
+            </p>
+          );
+        } else {
+          return null;
+        }
+      };
   return (
     <div className="w-screen">
       {isLoading || !elections ? (
@@ -72,6 +84,7 @@ const ElectionDash = () => {
                   );
                 })}
             </div>
+            renderMessage()
           </div>
         </div>
       )}
