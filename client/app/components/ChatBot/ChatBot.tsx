@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpIcon, ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon } from "@heroicons/react/24/outline"; // Corrected the import for XMarkIcon
 
 interface Message {
   content: string;
@@ -49,7 +50,6 @@ const ChatBot: React.FC = () => {
       setMessages((prevMessages) => [...prevMessages, reply]);
     } catch (error) {
       console.error("Error:", error);
-      // Add error message in chatbot here
     }
   };
 
@@ -72,12 +72,19 @@ const ChatBot: React.FC = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.2 }}
-              className="absolute bottom-16 right-0 w-96 h-[32rem] bg-white rounded-lg shadow-xl overflow-hidden flex flex-col"
+              className="absolute bottom-16 right-0 w-[280px] xs:w-[320px] sm:w-[350px] md:w-[380px] h-[450px] bg-white rounded-lg shadow-xl overflow-hidden flex flex-col"
             >
-              <div className="bg-blue-600 text-white p-4 text-center font-semibold">
-                Agora Chatbot
+              <div className="bg-blue-600 text-white p-3 flex items-center justify-between">
+                <h3 className="font-semibold">Agora Chatbot</h3>
+                <button
+                  onClick={() => setIsOpen(false)} // Close chatbot on click
+                  className="text-white focus:outline-none"
+                >
+                  <XMarkIcon className="w-6 h-6" />
+                </button>
               </div>
-              <div className="flex-grow overflow-auto p-4 space-y-4">
+
+              <div className="flex-grow overflow-auto p-3 space-y-3">
                 {messages.map((msg, index) => (
                   <motion.div
                     key={index}
@@ -87,11 +94,7 @@ const ChatBot: React.FC = () => {
                     className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
                   >
                     <div
-                      className={`max-w-[80%] p-3 rounded-lg ${
-                        msg.role === "assistant"
-                          ? "bg-gray-200 text-gray-800"
-                          : "bg-blue-600 text-white"
-                      }`}
+                      className={`max-w-[85%] p-2.5 rounded-lg text-sm ${msg.role === "assistant" ? "bg-gray-200 text-gray-800" : "bg-blue-600 text-white"}`}
                     >
                       {msg.content}
                     </div>
@@ -99,16 +102,15 @@ const ChatBot: React.FC = () => {
                 ))}
                 <div ref={messageEndRef} />
               </div>
-              <form onSubmit={handleSubmit} className="p-4 bg-gray-100">
-                <div className="flex items-center bg-white rounded-full overflow-hidden shadow">
+
+              <form onSubmit={handleSubmit} className="p-3 bg-gray-100">
+                <div className="flex items-center gap-2">
                   <input
                     type="text"
                     value={inputMessage}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setInputMessage(e.target.value)
-                    }
+                    onChange={(e) => setInputMessage(e.target.value)}
                     placeholder="Type your message..."
-                    className="flex-grow px-4 py-2 focus:outline-none"
+                    className="flex-grow px-3 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                   />
                   <button type="submit" className="bg-blue-600 text-white p-2 rounded-full">
                     <ArrowUpIcon className="w-5 h-5" />
