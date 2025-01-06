@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -9,7 +9,7 @@ import {
   UserIcon,
   HomeIcon,
 } from "@heroicons/react/24/outline";
-import Web3Connect from "../Helper/Web3Connect";
+import Web3Connect from "../Helper/Web3Connect"; // Assuming this is your wallet connection logic
 import Image from "next/image";
 
 const menuItems = [
@@ -20,6 +20,30 @@ const menuItems = [
 
 const Header = () => {
   const pathname = usePathname();
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+
+  // Function to simulate wallet connection
+  const connectWallet = async () => {
+    try {
+      // Call your wallet connection logic here
+      // For example, using Web3Connect or any other method
+      await Web3Connect(); // Assuming this function connects the wallet
+      setIsWalletConnected(true);
+    } catch (error) {
+      console.error("Failed to connect wallet:", error);
+    }
+  };
+
+  // Optional: Function to check wallet connection status
+  const checkWalletConnection = async () => {
+    // Logic to check if the wallet is connected
+    const connected = /* your logic here to check if wallet is connected */;
+    setIsWalletConnected(connected);
+  };
+
+  useEffect(() => {
+    checkWalletConnection();
+  }, []);
 
   return (
     <motion.header
@@ -44,7 +68,7 @@ const Header = () => {
           </Link>
 
           <nav className="flex items-center space-x-4">
-            {menuItems.map((item) => (
+            {isWalletConnected && menuItems.map((item) => (
               <Link key={item.name} href={item.href} className="relative">
                 <motion.button
                   className={`inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md ${
@@ -69,7 +93,11 @@ const Header = () => {
                 )}
               </Link>
             ))}
-            <Web3Connect />
+            {!isWalletConnected && (
+              <button onClick={connectWallet} className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
+                Connect Wallet
+              </button>
+            )}
           </nav>
         </div>
       </div>
