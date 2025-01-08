@@ -1,5 +1,5 @@
 "use client";
-import React, { FormEvent } from "react";
+import React, { FormEvent,useState } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -14,6 +14,21 @@ import { ErrorMessage } from "../../helpers/ErrorMessage";
 import { sepolia } from "viem/chains";
 import { useElectionData } from "@/app/hooks/ElectionInfo";
 import { pinJSONFile } from "@/app/helpers/pinToIPFS";
+import {create} from "kubo-rpc-client";
+import {env} from "node:process"
+import { url } from "inspector";
+
+const projectId = process.env.PROJECT_ID; // Replace with your Project ID
+const projectSecret = process.env.PROJECT_SECRET;; // Replace with your Project Secret
+const auth = 'Basic ' + Buffer.from(`${projectId}:${projectSecret}`).toString('base64');
+
+// Connect to Infura IPFS
+const client = create({
+  url: 'https://ipfs.infura.io:5001',
+  headers: {
+      authorization: auth,
+  },
+});
 
 const AddCandidate = ({
   openModal,
@@ -28,20 +43,34 @@ const AddCandidate = ({
   const { chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { electionData } = useElectionData();
+  const [cid,setCid] = useState<string>("");
   const electionID = electionData[8].result;
   const addCandidate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
+    const file = formData.get("file") as File;
+    try{
+      const result = await client.add(file);
+      const url = `https://ipfs.io/ipfs/${result.cid}`;
+      toast.success('Image uploaded to IPFS: ' + url);
+      setCid(url.replace("https://ipfs.io/ipfs/", ""));
+    }
+    catch(error){
+      console.log(error);
+      toast.error(ErrorMessage(error));
+    }
     const jsonBody = {
       pinataContent: {
         name: name,
         description: description,
+        filehash: cid,
       },
     };
     try {
       const res = await pinJSONFile(jsonBody);
+      console.log(`The res is ${res}`);
       if (chain?.id === 43113) switchChain({ chainId: sepolia.id });
       await writeContractAsync({
         address: electionAddress,
@@ -56,6 +85,31 @@ const AddCandidate = ({
     }
     setopenModal(false);
   };
+  const [preview, setPreview] = useState<string | null>(null);
+  const [fileType, setFileType] = useState<string | null>(null);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const isImage = file.type.startsWith("image/");
+      const isVideo = file.type.startsWith("video/");
+
+      if (isImage || isVideo) {
+        setFileType(isImage ? "image" : "video");
+
+        const previewURL = URL.createObjectURL(file);
+        setPreview(previewURL);
+      } else {
+        alert("Please upload an image or a video file.");
+        setPreview(null);
+        setFileType(null);
+      }
+    }
+  };
+  const clearPreview = () => {
+    setPreview(null);
+    setFileType(null);
+  };
+
   return (
     <>
       <Dialog
@@ -101,6 +155,34 @@ const AddCandidate = ({
                 <label className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Description
                 </label>
+              </div>
+              <div className=" relative  gap-y-1  z-0 w-full mb-5 group">
+                <input
+                  name="file"
+                  type="file"
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  accept="image/*,video/*"
+                  onChange={handleFileChange}
+                  required
+                />
+                {preview && (
+                <div 
+                  className="flex-col flex items-center justify-center w-full py-3"
+                >
+                  {fileType === "image" && (
+                    <img src={preview} alt="Preview" className="w-3/5 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+                  )}
+                  {fileType === "video" && (
+                    <video controls>
+                      <source src={preview} type="video/mp4" className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
+                  <button onClick={clearPreview} className=" border border-gray-300 px-2 py-1 rounded-md mt-2">
+                    Clear Preview
+                  </button>
+                </div>
+              )}
               </div>
               {/* <div className="relative z-0 w-full mb-5 group">
                 <label className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
