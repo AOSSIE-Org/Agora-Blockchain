@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
+import { ThemeToggle } from "../Helper/ThemeToggle";
 import {
   PlusCircleIcon,
   UserIcon,
@@ -23,12 +24,12 @@ const Header = () => {
 
   return (
     <motion.header
-      className="bg-white border-b border-gray-200 fixed w-full z-30 shadow-sm"
+      className="bg-white border-b border-gray-200 fixed w-full z-30 shadow-sm dark:bg-dark"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 dark:bg-dark">
         <div className="flex justify-between h-16">
           <Link href="/" className="flex-shrink-0 flex items-center">
             <Image
@@ -38,12 +39,12 @@ const Header = () => {
               src="/aossie.png"
               alt="Agora Blockchain"
             />
-            <h1 className="ml-3 text-xl font-bold text-gray-800 hidden sm:block">
+            <h1 className="ml-3 text-xl font-bold text-gray-800 hidden sm:block dark:text-white">
               Agora Blockchain
             </h1>
           </Link>
 
-          <nav className="flex items-center space-x-4">
+          <nav className="flex items-center space-x-4  dark:bg-dark">
             {menuItems.map((item) => (
               <Link key={item.name} href={item.href} className="relative">
                 <motion.button
@@ -70,6 +71,7 @@ const Header = () => {
               </Link>
             ))}
             <Web3Connect />
+            <ThemeToggle />
           </nav>
         </div>
       </div>

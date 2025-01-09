@@ -2,7 +2,10 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpIcon, ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowUpIcon,
+  ChatBubbleLeftRightIcon,
+} from "@heroicons/react/24/solid";
 
 interface Message {
   content: string;
@@ -12,7 +15,8 @@ interface Message {
 const ChatBot: React.FC = () => {
   const [messages, setMessages] = useState([
     {
-      content: "Greetings! I'm here to help with any blockchain questions you have",
+      content:
+        "Greetings! I'm here to help with any blockchain questions you have",
       role: "assistant",
     },
   ]);
@@ -54,8 +58,12 @@ const ChatBot: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
-      <motion.div initial={false} animate={isOpen ? "open" : "closed"} className="relative">
+    <div className="fixed bottom-4 right-4 z-50 ">
+      <motion.div
+        initial={false}
+        animate={isOpen ? "open" : "closed"}
+        className="relative"
+      >
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
@@ -84,7 +92,9 @@ const ChatBot: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
-                    className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
+                    className={`flex ${
+                      msg.role === "assistant" ? "justify-start" : "justify-end"
+                    }`}
                   >
                     <div
                       className={`max-w-[80%] p-3 rounded-lg ${
@@ -110,7 +120,10 @@ const ChatBot: React.FC = () => {
                     placeholder="Type your message..."
                     className="flex-grow px-4 py-2 focus:outline-none"
                   />
-                  <button type="submit" className="bg-blue-600 text-white p-2 rounded-full">
+                  <button
+                    type="submit"
+                    className="bg-blue-600 text-white p-2 rounded-full"
+                  >
                     <ArrowUpIcon className="w-5 h-5" />
                   </button>
                 </div>

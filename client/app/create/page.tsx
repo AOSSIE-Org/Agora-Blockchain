@@ -75,33 +75,38 @@ const CreatePage: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen w-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center p-4"
+      className="min-h-screen w-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center p-4 dark:bg-dark"
     >
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 space-y-8 mt-12"
+        className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 space-y-8 mt-12 dark:bg-dark"
       >
-        <h2 className="text-3xl font-extrabold text-gray-800 mb-6 text-center">
+        <h2 className="text-3xl font-extrabold text-gray-800 mb-6 text-center dark:text-white">
           Create New Election
         </h2>
-        <form onSubmit={createElection} className="space-y-6">
+        <form
+          onSubmit={createElection}
+          className="space-y-6 dark:bg-dark dark:text-white"
+        >
           <InputField
             name="name"
             label="Election Name"
             placeholder="Enter election name"
+            className="dark:text-white"
           />
           <TextareaField
             name="description"
             label="Description"
             placeholder="Describe the election"
+            className="dark:text-white"
           />
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+          <div className="space-y-2 dark:bg-dark">
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">
               Voting Type
             </label>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 dark:text-white">
               <select
                 value={selectedBallot}
                 onChange={handleBallotChange}
@@ -116,7 +121,7 @@ const CreatePage: React.FC = () => {
               <ElectionInfoPopup id={selectedBallot} />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 dark:bg-dark">
             <DatePickerField
               value={startTime}
               onChange={(value) => setStartTime(value)}
@@ -130,7 +135,7 @@ const CreatePage: React.FC = () => {
           </div>
           <motion.button
             type="submit"
-            className="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-dark"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -148,27 +153,32 @@ interface InputFieldProps {
   name: string;
   label: string;
   placeholder: string;
+  className?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
   name,
   label,
   placeholder,
+  className,
 }) => (
   <motion.div
-    className="space-y-1"
+    className={`space-y-1 ${className}`}
     initial={{ x: -20, opacity: 0 }}
     animate={{ x: 0, opacity: 1 }}
     transition={{ delay: 0.3, duration: 0.5 }}
   >
-    <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+    <label
+      htmlFor={name}
+      className="block text-sm font-medium text-gray-700 dark:text-white"
+    >
       {label}
     </label>
     <input
       type="text"
       name={name}
       id={name}
-      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      className={`block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${className}`}
       placeholder={placeholder}
       required
     />
@@ -179,21 +189,25 @@ const TextareaField: React.FC<InputFieldProps> = ({
   name,
   label,
   placeholder,
+  className,
 }) => (
   <motion.div
-    className="space-y-1"
+    className={`space-y-1 ${className}`}
     initial={{ x: -20, opacity: 0 }}
     animate={{ x: 0, opacity: 1 }}
     transition={{ delay: 0.4, duration: 0.5 }}
   >
-    <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+    <label
+      htmlFor={name}
+      className="block text-sm font-medium text-gray-700 dark:text-white"
+    >
       {label}
     </label>
     <textarea
       name={name}
       id={name}
       rows={4}
-      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      className={`block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${className}`}
       placeholder={placeholder}
       required
     ></textarea>
@@ -212,7 +226,9 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
   label,
 }) => (
   <div className="space-y-1">
-    <label className="block text-sm font-medium text-gray-700">{label}</label>
+    <label className="block text-sm font-medium text-gray-700 dark:text-white">
+      {label}
+    </label>
     <DatePicker
       value={value}
       placement="topStart"
@@ -243,14 +259,14 @@ const ChainSwitchModal: React.FC<ChainSwitchModalProps> = ({ onSwitch }) => (
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="bg-white rounded-lg p-8 shadow-xl text-center"
+      className="bg-white rounded-lg p-8 shadow-xl text-center dark:bg-dark"
     >
-      <p className="text-xl mb-4 text-gray-800">
+      <p className="text-xl mb-4 text-gray-800 dark:text-white">
         Creating Elections is supported only on Sepolia
       </p>
       <motion.button
         onClick={onSwitch}
-        className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75"
+        className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75 dark:bg-dark"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >

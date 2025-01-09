@@ -1,3 +1,4 @@
+import { ThemeProvider } from "./components/Helper/ThemeProvider"; // Import ThemeProvider
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -8,10 +9,8 @@ import { sepolia } from "wagmi/chains";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { config, queryClient } from "./helpers/client";
 import Header from "./components/Header/Header";
-import Web3Connect from "./components/Helper/Web3Connect";
-import "rsuite/dist/rsuite-no-reset.min.css";
-import { CustomProvider } from "rsuite";
 import ChatBot from "./components/ChatBot/ChatBot";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -27,18 +26,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <link rel="icon" href="/aossie.png" sizes="any" />
-      <body className={inter.className}>
-        <WagmiProvider config={config}>
-          <QueryClientProvider client={queryClient}>
-            <RainbowKitProvider initialChain={sepolia}>
-              <CustomProvider>
+      <body className={`${inter.className}`}>
+        <ThemeProvider>
+          <WagmiProvider config={config}>
+            <QueryClientProvider client={queryClient}>
+              <RainbowKitProvider initialChain={sepolia}>
                 <Header />
                 <ChatBot />
                 {children}
-              </CustomProvider>
-            </RainbowKitProvider>
-          </QueryClientProvider>
-        </WagmiProvider>
+              </RainbowKitProvider>
+            </QueryClientProvider>
+          </WagmiProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
