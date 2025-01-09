@@ -23,7 +23,6 @@ contract Election is Initializable {
     }
 
     struct Candidate {
-        uint candidateID; // remove candidateId its not needed
         string name;
         string description;
     }
@@ -42,7 +41,7 @@ contract Election is Initializable {
     }
 
     modifier electionStarted() {
-        if (block.timestamp > electionInfo.startTime) revert ElectionInactive();
+        if (block.timestamp < electionInfo.startTime) revert ElectionInactive();
         _;
     }
 
