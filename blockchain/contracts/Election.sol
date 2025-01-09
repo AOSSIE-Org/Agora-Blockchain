@@ -41,7 +41,7 @@ contract Election is Initializable {
     }
 
     modifier electionStarted() {
-        if (block.timestamp < electionInfo.startTime) revert ElectionInactive();
+        if (block.timestamp > electionInfo.startTime) revert ElectionInactive();
         _;
     }
 
