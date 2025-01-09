@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpIcon, ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
+import ActionToolTip from "../ActionToolTip/ActionToolTip";
 
 interface Message {
   content: string;
@@ -54,6 +55,7 @@ const ChatBot: React.FC = () => {
   };
 
   return (
+    <ActionToolTip label="ChatBot" align="center" side="left" responsive={false}>
     <div className="fixed bottom-4 right-4 z-50">
       <motion.div initial={false} animate={isOpen ? "open" : "closed"} className="relative">
         <motion.button
@@ -120,6 +122,7 @@ const ChatBot: React.FC = () => {
         </AnimatePresence>
       </motion.div>
     </div>
+    </ActionToolTip>
   );
 };
 
