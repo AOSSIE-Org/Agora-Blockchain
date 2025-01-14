@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import ElectionMini from "../components/Cards/ElectionMini";
 import { useOpenElection } from "../components/Hooks/GetOpenElections";
 import Loader from "../components/Helper/Loader";
+import ErrorPage from "../components/Error-pages/ErrorPage";
 
 const ElectionMiniSkeleton: React.FC = () => {
   return (
@@ -18,7 +19,18 @@ const ElectionMiniSkeleton: React.FC = () => {
 };
 
 const ProfilePage: React.FC = () => {
-  const { elections = [], isLoading } = useOpenElection();
+  const { elections = [], isLoading=false } = useOpenElection();
+  const [showError, setShowError] = useState(false);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (isLoading) {
+        setShowError(true);
+      }
+    }, 5000); // 5 seconds timeout
+
+    return () => clearTimeout(timer);
+  }, [isLoading]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -37,6 +49,17 @@ const ProfilePage: React.FC = () => {
       opacity: 1,
     },
   };
+
+  if (showError) {
+    return <ErrorPage 
+    errorCode={403} // Forbidden error, often due to access restrictions
+  errorMessage="Oops! Something went wrong."
+  details="We couldn't load the page you're trying to access. This may be due to a temporary issue with our servers. Please try again later."
+  redirectPath="/"
+  redirectLabel="Go to Homepage"
+  onRetry={() => window.location.reload()}
+  />;
+  }
 
   if (isLoading) {
     return (
