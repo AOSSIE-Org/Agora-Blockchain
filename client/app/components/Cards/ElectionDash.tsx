@@ -1,16 +1,27 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Loader from "../Helper/Loader";
 import ElectionMini from "../Cards/ElectionMini";
 import ElectionInfoCard from "./ElectionInfoCard";
 import { useOpenElection } from "../Hooks/GetOpenElections";
+import ErrorPage from "../Error-pages/ErrorPage";
 
 const ElectionDash = () => {
   const { elections, isLoading } = useOpenElection();
   const [electionStatuses, setElectionStatuses] = useState<{
     [key: string]: number;
   }>({});
-  const [filterStatus, setFilterStatus] = useState<number>(0); //0: All, 1: Pending, 2: Active, 3: Ended
+  const [filterStatus, setFilterStatus] = useState<number>(0); // 0: All, 1: Pending, 2: Active, 3: Ended
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // Set the timer for 4 seconds to switch from loader to error or elections
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 4000); // 4 seconds
+
+    return () => clearTimeout(timer); // Clean up the timer on component unmount
+  }, []);
 
   const update = (electionAddress: `0x${string}`, status: number) => {
     if (electionStatuses[electionAddress] !== status) {
@@ -44,12 +55,12 @@ const ElectionDash = () => {
 
   return (
     <div className="w-screen">
-      {isLoading || !elections ? (
+      {loading ? (
         <Loader />
-      ) : (
+      ) : elections ? (
         <div className="flex flex-col items-center justify-center">
           <div className="flex lg:flex-row flex-col w-[80%] overflow-auto lg:space-x-4">
-            <div className=" flex-col w-[90%] lg:w-[24%] mt-3 h-full inline-block items-center justify-center ">
+            <div className="flex-col w-[90%] lg:w-[24%] mt-3 h-full inline-block items-center justify-center">
               <ElectionInfoCard
                 counts={counts}
                 filterStatus={filterStatus}
@@ -102,13 +113,21 @@ const ElectionDash = () => {
                   >
                     Refresh
                   </button>
-</div>
-
-
+                </div>
               )}
             </div>
           </div>
         </div>
+      ) : (
+        <ErrorPage
+          errorCode={403} // Forbidden error, often due to access restrictions
+          errorMessage="Oops! Something went wrong."
+          details="We couldn't load the page you're trying to access. This may be due to a temporary issue with our servers. Please try again later."
+          redirectPath="#"
+          redirectLabel="Go to Homepage"
+          onRetry={() => window.location.reload()}
+          current_route="/"
+        />
       )}
     </div>
   );
