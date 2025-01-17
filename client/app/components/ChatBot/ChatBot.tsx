@@ -62,7 +62,7 @@ const ChatBot: React.FC = () => {
           onClick={() => setIsOpen(!isOpen)}
           className="bg-blue-600 text-white p-4 rounded-full shadow-lg"
         >
-          <ChatBubbleLeftRightIcon className="w-6 h-6" />
+          <ChatBubbleLeftRightIcon className="w-6 h-6 " />
         </motion.button>
 
         <AnimatePresence>
@@ -72,7 +72,7 @@ const ChatBot: React.FC = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.2 }}
-              className="absolute bottom-16 right-0 w-96 h-[32rem] bg-white rounded-lg shadow-xl overflow-hidden flex flex-col"
+              className="absolute bottom-16 right-0 w-50 md:pt-40 md:w-96 h-[32rem] bg-white rounded-lg shadow-xl overflow-hidden flex flex-col"
             >
               <div className="bg-blue-600 text-white p-4 text-center font-semibold">
                 Agora Chatbot
@@ -99,8 +99,8 @@ const ChatBot: React.FC = () => {
                 ))}
                 <div ref={messageEndRef} />
               </div>
-              <form onSubmit={handleSubmit} className="p-4 bg-gray-100">
-                <div className="flex items-center bg-white rounded-full overflow-hidden shadow">
+              <form onSubmit={handleSubmit} className="p-4 bg-gray-200">
+                <div className="flex items-center bg-white rounded-full overflow-hidden shadow-lg">
                   <input
                     type="text"
                     value={inputMessage}
