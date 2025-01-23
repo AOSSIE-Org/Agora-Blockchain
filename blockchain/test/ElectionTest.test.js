@@ -176,7 +176,7 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await expect(
         electionInstance.connect(voter1).userVote([0])
-      ).to.be.revertedWith("User Voted");
+      ).to.be.revertedWithCustomError(electionInstance, "AlreadyVoted");
     });
   });
 
