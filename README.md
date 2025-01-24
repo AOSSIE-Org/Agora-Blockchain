@@ -10,6 +10,7 @@ Agora is a library of voting algorithms like `Moore's`, `Oklahoma` , `Borda` , `
 
   - [Solidity](https://docs.soliditylang.org/en/v0.8.24/): A programming language used for developing smart contracts on the Ethereum ecosystem.
   - [Hardhat](https://hardhat.org/): A development environment for testing, deploying, and managing smart contracts.
+    [Foundry](): A fast, Solidity-native development framework for testing and deploying smart contracts.
   - [ChainLink](https://docs.chain.link/ccip): Facilitates cross-chain interoperability within the ecosystem.
   - [EIPs](https://eips.ethereum.org/): Utilized for implementing the latest Ethereum Improvement Proposals.
   - [OpenZeppelin](https://www.openzeppelin.com/): Provides a collection of well-audited, secure smart contracts that are easy to integrate and use.
@@ -37,6 +38,8 @@ git clone https://github.com/AOSSIE-Org/Agora-Blockchain
 ```
 
 ## Backend
+
+### Using Hardhat
 
 1. **Navigate to the Blockchain Directory**:
 
@@ -70,13 +73,48 @@ git clone https://github.com/AOSSIE-Org/Agora-Blockchain
    npx hardhat ignition deploy ./ignition/modules/<ContractModule> --network <Network> --verify
    ```
 
+### Using Foundry
+
+1. #### Install Foundry:
+
+   If Foundry is not installed, run:
+
+```
+curl -L https://foundry.paradigm.xyz | bash
+foundryup
+```
+
+2. #### Compile Contracts with Foundry:
+
+   ```
+   forge build
+   ```
+
+3. #### Test Contracts with Foundry:
+
+   Foundry supports Solidity-native testing:
+
+   ```
+   forge test --gas-report
+   ```
+
+4. #### Ensure your foundry.toml file is configured
+
+```
+[default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.24"
+```
+
 ## Frontend
 
 1. **Navigate to the Client Directory**:
 
-   ```bash
-   cd client
-   ```
+```bash
+cd client
+```
 
 2. **Install Dependencies**:
 

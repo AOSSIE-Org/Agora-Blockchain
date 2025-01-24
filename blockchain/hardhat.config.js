@@ -1,7 +1,11 @@
+require("@nomicfoundation/hardhat-foundry");
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
-/** @type import('hardhat/config').HardhatUserConfig */
+if (!process.env.PRIVATE_KEY || !process.env.RPC_URL_SEPOLIA) {
+  throw new Error("Missing environment variables. Please check your .env.local file.");
+}
+
 module.exports = {
   solidity: "0.8.24",
   defaultNetwork: "hardhat",
