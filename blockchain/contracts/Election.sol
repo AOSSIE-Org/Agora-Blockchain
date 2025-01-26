@@ -129,7 +129,7 @@ contract Election is Initializable {
         return candidates;
     }
 
-    function getResult() external {
+    function getResult() external onlyOwner{
         if (block.timestamp < electionInfo.endTime) revert ElectionIncomplete();
         bytes memory payload = abi.encodeWithSignature("getVotes()");
 
