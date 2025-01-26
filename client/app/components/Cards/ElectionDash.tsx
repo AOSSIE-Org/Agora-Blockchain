@@ -45,7 +45,11 @@ const ElectionDash = () => {
   return (
     <div className="w-screen">
       {isLoading || !elections ? (
+        <div className="w-screen flex mt-6 h-screen object-center justify-center text-center">
         <Loader />
+      
+
+        </div>
       ) : (
         <div className="flex flex-col items-center justify-center">
           <div className="flex lg:flex-row flex-col w-[80%] overflow-auto lg:space-x-4">
