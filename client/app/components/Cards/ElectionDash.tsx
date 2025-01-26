@@ -18,7 +18,7 @@ const ElectionDash = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 4000); // 4 seconds
+    }, 7000); // 7 seconds
 
     return () => clearTimeout(timer); // Clean up the timer on component unmount
   }, []);
