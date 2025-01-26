@@ -26,6 +26,7 @@
     "react-hot-toast": "^2.4.1",
     "react-window": "^1.8.10",
     "rsuite": "^5.64.2",
+    "sharp": "^0.33.5",
     "siwe": "^2.3.2",
     "ua-parser-js": "^2.0.0",
     "viem": "^2.15.1",
