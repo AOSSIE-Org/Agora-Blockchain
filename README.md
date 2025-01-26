@@ -4,7 +4,7 @@
 
 Agora is a library of voting algorithms like `Moore's`, `Oklahoma` , `Borda` , `IRV` etc. Some of these voting algorithms are already implemented by AOSSIE in a centralized manner using Scala as their backend. Our vision is to take these algorithms on a decentralized platform, so that, crucial votes of the voters could not be tampered with by admins, hackers, or anyone with access to the database. Blockchain technology would make the ballots immutable and hence more secure.
 
-## Tech Stack
+## Tech Stack 
 
 - ### Backend
 
