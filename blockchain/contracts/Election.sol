@@ -4,6 +4,7 @@ pragma solidity ^0.8.24;
 import {IBallot} from "./ballots/interface/IBallot.sol";
 import {IResultCalculator} from "./resultCalculators/interface/IResultCalculator.sol";
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Election is Initializable {
     error OwnerPermissioned();
@@ -42,9 +43,9 @@ contract Election is Initializable {
     }
 
     modifier electionStarted() {
-        if (block.timestamp > electionInfo.startTime) revert ElectionInactive();
-        _;
-    }
+    if (block.timestamp > electionInfo.startTime) revert ElectionInactive();
+    _;
+}
 
     ElectionInfo public electionInfo;
 
@@ -129,7 +130,7 @@ contract Election is Initializable {
         return candidates;
     }
 
-    function getResult() external {
+    function getResult() external onlyOwner{
         if (block.timestamp < electionInfo.endTime) revert ElectionIncomplete();
         bytes memory payload = abi.encodeWithSignature("getVotes()");
 
