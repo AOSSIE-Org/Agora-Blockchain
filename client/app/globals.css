@@ -4,8 +4,13 @@
 
 body {
   background-color: #ffffff;
+  margin: 0;
+  overflow: hidden;
 }
 
+html {
+  scroll-behavior: smooth;
+}
 
 ::-webkit-scrollbar {
   width: 1px; 
