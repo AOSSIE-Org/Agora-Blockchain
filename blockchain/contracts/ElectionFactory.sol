@@ -7,7 +7,7 @@ import {ResultCalculator} from "./resultCalculators/ResultCalculator.sol";
 
 import {Client} from "@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol";
 import {CCIPReceiver} from "@chainlink/contracts-ccip/src/v0.8/ccip/applications/CCIPReceiver.sol";
-import "@openzeppelin/contracts/proxy/Clones.sol";
+import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 
 contract ElectionFactory is CCIPReceiver {
     error OnlyOwner();
@@ -21,11 +21,11 @@ contract ElectionFactory is CCIPReceiver {
     }
 
     uint public electionCount;
-    address public factoryOwner;
+    address public immutable factoryOwner; // Immutable value set in constructor
     address[] public openBasedElections;
     // address[] public inviteBasedElections;
 
-    BallotGenerator private ballotGenerator;
+    BallotGenerator private immutable ballotGenerator;
     address private immutable resultCalculator;
     address private immutable electionGenerator;
 
