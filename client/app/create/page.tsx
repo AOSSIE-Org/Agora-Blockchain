@@ -23,6 +23,7 @@ const CreatePage: React.FC = () => {
   const [startTime, setStartTime] = useState<Date | null>(new Date());
   const [endTime, setEndTime] = useState<Date | null>(new Date());
   const [candidates,setCandidates] = useState<Candidate[]>([])
+  const ALLOWED_CHAIN_IDS = [sepolia.id, 31337]
   const changeChain = () => {
     switchChain({ chainId: sepolia.id });
   }
@@ -67,7 +68,7 @@ const CreatePage: React.FC = () => {
       toast.error("Invalid timing. End time must be after start time.");
       return;
     }
-    if(candidates.length>0  && candidates.some(candidate=>!candidate.name || candidate.description)){
+    if(candidates.length>0  && candidates.some(candidate=>!candidate.name || !candidate.description)){
       toast.error("please enter all candidate information or remove empty candidates.")
       return 
     }
@@ -78,7 +79,12 @@ const CreatePage: React.FC = () => {
         abi: ElectionFactory,
         functionName: "createElection",
         args: [
-          { startTime: start, endTime: end, name, description,candidates:candidates.map(c => ({ name: c.name, description: c.description })) },
+          { startTime: start, endTime: end, name, description }, // ElectionInfo struct
+          candidates.map((c, index) => ({
+            candidateID: BigInt(index), 
+            name: c.name,
+            description: c.description,
+          })), 
           ballotType,
           ballotType,
         ],
@@ -226,8 +232,9 @@ const CreatePage: React.FC = () => {
           </motion.button>
         </form>
       </motion.div>
-      {chain?.id !== sepolia.id && <ChainSwitchModal onSwitch={changeChain} />}
-      <Toaster />
+      {chain?.id && !ALLOWED_CHAIN_IDS.includes(chain.id) && (
+      <ChainSwitchModal onSwitch={changeChain} />
+    )}      <Toaster />
     </motion.div>
   );
 };
