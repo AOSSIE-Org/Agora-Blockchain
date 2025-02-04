@@ -6,12 +6,12 @@ export const Election = [
   },
   {
     inputs: [],
-    name: "ElectionIncomplete",
+    name: "ElectionInactive",
     type: "error",
   },
   {
     inputs: [],
-    name: "ElectionInactive",
+    name: "ElectionIncomplete",
     type: "error",
   },
   {
@@ -30,6 +30,19 @@ export const Election = [
     type: "error",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint8",
+        name: "version",
+        type: "uint8",
+      },
+    ],
+    name: "Initialized",
+    type: "event",
+  },
+  {
     inputs: [
       {
         internalType: "string",
@@ -43,106 +56,6 @@ export const Election = [
       },
     ],
     name: "addCandidate",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "startTime",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "endTime",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "name",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "description",
-            type: "string",
-          },
-        ],
-        internalType: "struct Election.ElectionInfo",
-        name: "_electionInfo",
-        type: "tuple",
-      },
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "candidateID",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "name",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "description",
-            type: "string",
-          },
-        ],
-        internalType: "struct Election.Candidate[]",
-        name: "_candidates",
-        type: "tuple[]",
-      },
-      {
-        internalType: "uint256",
-        name: "_resultType",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_electionId",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_ballot",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_owner",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_resultCalculator",
-        type: "address",
-      },
-    ],
-    name: "initialize",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-      {
-        internalType: "uint256[]",
-        name: "_voteArr",
-        type: "uint256[]",
-      },
-    ],
-    name: "ccipVote",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -174,6 +87,24 @@ export const Election = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        internalType: "uint256[]",
+        name: "_voteArr",
+        type: "uint256[]",
+      },
+    ],
+    name: "ccipVote",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -281,6 +212,88 @@ export const Election = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "startTime",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "endTime",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "name",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "description",
+            type: "string",
+          },
+        ],
+        internalType: "struct Election.ElectionInfo",
+        name: "_electionInfo",
+        type: "tuple",
+      },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "candidateID",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "name",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "description",
+            type: "string",
+          },
+        ],
+        internalType: "struct Election.Candidate[]",
+        name: "_candidates",
+        type: "tuple[]",
+      },
+      {
+        internalType: "uint256",
+        name: "_resultType",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_electionId",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_ballot",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_owner",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_resultCalculator",
+        type: "address",
+      },
+    ],
+    name: "initialize",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "owner",
     outputs: [
@@ -327,6 +340,19 @@ export const Election = [
         internalType: "bool",
         name: "",
         type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalVotes",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -383,4 +409,4 @@ export const Election = [
     stateMutability: "view",
     type: "function",
   },
-] as const;
+];

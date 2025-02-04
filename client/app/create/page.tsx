@@ -23,7 +23,6 @@ const CreatePage: React.FC = () => {
   const [startTime, setStartTime] = useState<Date | null>(new Date());
   const [endTime, setEndTime] = useState<Date | null>(new Date());
   const [candidates,setCandidates] = useState<Candidate[]>([])
-  const ALLOWED_CHAIN_IDS = [sepolia.id, 31337]
   const changeChain = () => {
     switchChain({ chainId: sepolia.id });
   }
@@ -79,12 +78,8 @@ const CreatePage: React.FC = () => {
         abi: ElectionFactory,
         functionName: "createElection",
         args: [
-          { startTime: start, endTime: end, name, description }, // ElectionInfo struct
-          candidates.map((c, index) => ({
-            candidateID: BigInt(index), 
-            name: c.name,
-            description: c.description,
-          })), 
+          { startTime: start, endTime: end, name, description }, // ElectionInfo object
+          candidates.map((c, index) => ({ candidateID: BigInt(index), name: c.name, description: c.description })), // Correct candidates format
           ballotType,
           ballotType,
         ],
@@ -232,9 +227,8 @@ const CreatePage: React.FC = () => {
           </motion.button>
         </form>
       </motion.div>
-      {chain?.id && !ALLOWED_CHAIN_IDS.includes(chain.id) && (
-      <ChainSwitchModal onSwitch={changeChain} />
-    )}      <Toaster />
+      {chain?.id !== sepolia.id && <ChainSwitchModal onSwitch={changeChain} />}
+      <Toaster />
     </motion.div>
   );
 };
