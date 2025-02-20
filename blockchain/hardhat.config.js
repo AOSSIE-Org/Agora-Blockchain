@@ -4,6 +4,7 @@ require("dotenv").config();
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.24",
+  settings: { optimizer: { enabled: true, runs: 10_000 } },
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {

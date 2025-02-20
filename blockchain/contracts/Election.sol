@@ -24,7 +24,6 @@ contract Election is Initializable {
     }
 
     struct Candidate {
-        uint candidateID; // remove candidateId its not needed
         string name;
         string description;
     }
@@ -34,13 +33,12 @@ contract Election is Initializable {
         _;
     }
 
-    modifier electionInactive() {
-        if (
-            block.timestamp < electionInfo.startTime ||
-            block.timestamp > electionInfo.endTime
-        ) revert ElectionInactive();
-        _;
-    }
+    modifier electionInactive() {   
+    uint256 start = electionInfo.startTime;
+    uint256 end = electionInfo.endTime;
+    if (block.timestamp < start || block.timestamp > end) revert ElectionInactive();
+    _;
+}
 
     modifier electionStarted() {
         if (block.timestamp > electionInfo.startTime) revert ElectionInactive();
@@ -113,7 +111,6 @@ contract Election is Initializable {
         string calldata _description
     ) external onlyOwner electionStarted {
         Candidate memory newCandidate = Candidate(
-            candidates.length,
             _name,
             _description
         );

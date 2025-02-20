@@ -16,6 +16,7 @@ contract CCIPSender is OwnerIsCreator {
         address user;
         uint[] voteArr;
     }
+    string private constant VOTE_TEXT = "Voted"; //Static event text "Voted" is reinitialized on every call.
 
     // Event emitted when a message is sent to another chain.
     event MessageSent(
@@ -27,10 +28,10 @@ contract CCIPSender is OwnerIsCreator {
         uint256 fees // The fees paid for sending the CCIP message.
     );
 
-    IRouterClient private s_router;
+    IRouterClient private immutable s_router;
     address private electionFactory;
-    LinkTokenInterface private s_linkToken;
-    uint public constant minTokens = 25000000000000000000;
+    LinkTokenInterface private immutable s_linkToken;
+    uint public constant minTokens = 25e18; // 25 LINK h
     mapping(address election => bool status) public electionApproved;
 
     /// @notice Constructor initializes the contract with the router address.
@@ -97,7 +98,7 @@ contract CCIPSender is OwnerIsCreator {
             messageId,
             destinationChainSelector,
             electionFactory,
-            "Voted",
+            VOTE_TEXT,
             address(s_linkToken),
             fees
         );
