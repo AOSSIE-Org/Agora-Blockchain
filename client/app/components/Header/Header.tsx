@@ -10,6 +10,7 @@ import {
   HomeIcon,
   XMarkIcon,
   Bars3Icon,
+  ChartBarIcon
 } from "@heroicons/react/24/outline";
 import Web3Connect from "../Helper/Web3Connect";
 import Image from "next/image";

@@ -99,6 +99,33 @@ git clone https://github.com/AOSSIE-Org/Agora-Blockchain
 5. **Visit the Live App at**:
    **[localhost](http://localhost:3000/)**
 
+## 🧪 Running Tests Locally
+
+## Frontend Tests
+
+Before pushing your changes, run the frontend tests to ensure everything is working correctly. Follow these steps:
+
+### 1️⃣ change working directory  
+change working directory to `/client`:
+```
+cd client
+```
+
+### 2️⃣ Install Dependencies  
+Make sure all required packages are installed:
+```bash
+npm install  
+```
+
+### 3️⃣ Run Tests  
+Execute the test suite:
+```bash
+npm test
+```
+
+Ensure all tests pass before creating a PR to maintain code quality! 🚀
+
+
 ## About smart contracts
 
 The architecture of your Election Factory contract is designed to facilitate the creation and management of elections on the blockchain, incorporating cross-chain voting capabilities through Chainlink's Cross-Chain Interoperability Protocol (CCIP). Below is a detailed explanation:
