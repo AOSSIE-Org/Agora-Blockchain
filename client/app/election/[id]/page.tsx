@@ -41,7 +41,7 @@ const ElectionPage = ({ params }: { params: { id: `0x${string}` } }) => {
   const isEnded = Math.floor(Date.now() / 1000) > Number(electionInfo[1]);
   const electionStat = isStarting ? 1 : isEnded ? 3 : 2;
   return (
-    <div className="min-h-screen overflow-auto bg-white pt-20 w-full rounded-2xl flex items-start justify-center">
+    <div className="h-screen overflow-auto bg-white pt-20 w-full rounded-2xl flex items-start justify-center">
       <div className="w-[90%] p-4">
         <div className="p-2 rounded-lg md:p-4 ">
           <div className="flex mx-6 my-1 w-full items-start justify-around lg:mx-0">

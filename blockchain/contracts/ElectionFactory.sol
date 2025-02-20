@@ -55,6 +55,7 @@ contract ElectionFactory is CCIPReceiver {
 
     function createElection(
         Election.ElectionInfo memory _electionInfo,
+        Election.Candidate[] memory _candidates, // add candidates separately due to separation of concerns 
         uint _ballotType,
         uint _resultType
     ) external {
@@ -67,6 +68,7 @@ contract ElectionFactory is CCIPReceiver {
         Election election = Election(electionAddress);
         election.initialize(
             _electionInfo,
+            _candidates,
             _resultType,
             electionCount,
             _ballot,

@@ -21,6 +21,11 @@ export const Election = [
   },
   {
     inputs: [],
+    name: "InvalidCandidateID",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "OwnerPermissioned",
     type: "error",
   },
@@ -236,6 +241,28 @@ export const Election = [
         type: "tuple",
       },
       {
+        components: [
+          {
+            internalType: "uint256",
+            name: "candidateID",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "name",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "description",
+            type: "string",
+          },
+        ],
+        internalType: "struct Election.Candidate[]",
+        name: "_candidates",
+        type: "tuple[]",
+      },
+      {
         internalType: "uint256",
         name: "_resultType",
         type: "uint256",
@@ -382,4 +409,4 @@ export const Election = [
     stateMutability: "view",
     type: "function",
   },
-] as const;
+];
