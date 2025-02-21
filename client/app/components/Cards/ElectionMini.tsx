@@ -49,17 +49,17 @@ const ElectionMini = ({
             {electionInfo[2]}
           </h3>
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            className={`px-3 py-1 text-xs font-semibold rounded-full ${
-              electionStat === 3
-                ? "bg-gray-100 text-gray-800"
+            whileHover={{ scale: 1.1 }}
+            className={`px-4 py-1.5 text-sm font-semibold rounded-full shadow-md transition-all duration-200 ${electionStat === 3
+                ? "bg-gray-200 text-gray-900"
                 : electionStat === 2
-                ? "bg-green-100 text-green-800"
-                : "bg-yellow-100 text-yellow-800"
-            }`}
+                  ? "bg-green-200 text-green-900"
+                  : "bg-red-200 text-red-900"
+              }`}
           >
             {ElectionStatus[electionStat]}
           </motion.div>
+
         </div>
         <p className="text-sm text-gray-600 line-clamp-3 mb-4">
           {electionInfo[3]}
