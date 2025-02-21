@@ -10,7 +10,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { ErrorMessage } from "../helpers/ErrorMessage";
 import { CalendarIcon } from "@heroicons/react/24/outline";
 import { sepolia } from "viem/chains";
-import { ArrowPathIcon } from "@heroicons/react/24/solid";
+import { ArrowPathIcon , PlusIcon, TrashIcon} from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import ElectionInfoPopup from "../components/Modal/ElectionInfoPopup";
 
@@ -22,11 +22,32 @@ const CreatePage: React.FC = () => {
   const { writeContractAsync } = useWriteContract();
   const [startTime, setStartTime] = useState<Date | null>(new Date());
   const [endTime, setEndTime] = useState<Date | null>(new Date());
-
+  const [candidates,setCandidates] = useState<Candidate[]>([])
   const changeChain = () => {
     switchChain({ chainId: sepolia.id });
+  }
+  interface Candidate {
+    name: string;
+    description: string;
+  }
+  const addCandidate = () => {
+    setCandidates([...candidates, { name: "", description: "" }]);
   };
-
+  
+  const removeCandidate = (index: number) => {
+    const newCandidates = candidates.filter((_, i) => i !== index);
+    setCandidates(newCandidates);
+  };
+  
+  const updateCandidate = (index: number, field: keyof Candidate, value: string) => {
+    const newCandidates = candidates.map((candidate, i) => {
+      if (i === index) {
+        return { ...candidate, [field]: value };
+      }
+      return candidate;
+    });
+    setCandidates(newCandidates);
+  };
   const createElection = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -46,14 +67,19 @@ const CreatePage: React.FC = () => {
       toast.error("Invalid timing. End time must be after start time.");
       return;
     }
-
+    if(candidates.length>0  && candidates.some(candidate=>!candidate.name || !candidate.description)){
+      toast.error("please enter all candidate information or remove empty candidates.")
+      return 
+    }
+  // passed candidates to the create election function 
     try {
       await writeContractAsync({
         address: ELECTION_FACTORY_ADDRESS,
         abi: ElectionFactory,
         functionName: "createElection",
         args: [
-          { startTime: start, endTime: end, name, description },
+          { startTime: start, endTime: end, name, description }, // ElectionInfo object
+          candidates.map((c, index) => ({ candidateID: BigInt(index), name: c.name, description: c.description })), // Correct candidates format
           ballotType,
           ballotType,
         ],
@@ -72,17 +98,17 @@ const CreatePage: React.FC = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen w-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center p-4"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.5 }}
+    className="h-screen w-full bg-gradient-to-br pt-[50px] from-gray-100 to-gray-200 flex flex-col items-center justify-start p-4 overflow-y-auto"
+  >
+    <motion.div
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.2, duration: 0.5 }}
+      className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 space-y-8 my-12"
     >
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-        className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 space-y-8 mt-12"
-      >
         <h2 className="text-3xl font-extrabold text-gray-800 mb-6 text-center">
           Create New Election
         </h2>
@@ -97,6 +123,69 @@ const CreatePage: React.FC = () => {
             label="Description"
             placeholder="Describe the election"
           />
+          {/* candidate section  shows placeholder if empty candidate and allows to add cnadidates*/ }
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">Candidates</h3>
+              <motion.button
+                type="button"
+                onClick={addCandidate}
+                className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <PlusIcon className="h-4 w-4 mr-1" />
+                Add Candidate
+              </motion.button>
+            </div>
+            
+            {candidates.length === 0 ? (
+              <p className="text-gray-500 text-sm italic text-center py-4">
+                No candidates added yet. Click "Add Candidate" to begin adding candidates.
+              </p>
+            ) : (
+              candidates.map((candidate, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="p-4 border border-gray-200 rounded-lg space-y-3"
+                >
+                  <div className="flex justify-between items-center">
+                    <h4 className="text-md font-medium text-gray-700">
+                      Candidate {index + 1}
+                    </h4>
+                    <motion.button
+                      type="button"
+                      onClick={() => removeCandidate(index)}
+                      className="text-red-600 hover:text-red-700"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                    </motion.button>
+                  </div>
+                  <input
+                    type="text"
+                    value={candidate.name}
+                    onChange={(e) => updateCandidate(index, "name", e.target.value)}
+                    placeholder="Candidate Name"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    required
+                  />
+                  <textarea
+                    value={candidate.description}
+                    onChange={(e) => updateCandidate(index, "description", e.target.value)}
+                    placeholder="Candidate Description"
+                    rows={2}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    required
+                  />
+                </motion.div>
+              ))
+            )}
+          </div>
+
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
               Voting Type
