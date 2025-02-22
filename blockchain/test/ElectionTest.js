@@ -80,11 +80,13 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
       const ballotType = 1; // General
       const resultType = 1; // General
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -110,20 +112,22 @@ describe("ElectionFactory and Election Contracts", function () {
       );
 
       const electionInfo = {
-        startTime: Math.floor(Date.now() / 1000) + 60,
-        endTime: Math.floor(Date.now() / 1000) + 3600,
+        startTime: Math.floor(Date.now() / 1000) + 60, // start in 1 minute
+        endTime: Math.floor(Date.now() / 1000) + 3600, // end in 1 hour
         name: "Test Election",
         description: "This is a test election",
       };
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+
       const ballotType = 1; // General
       const resultType = 1; // General
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
-
       const openElections = await electionFactory.getOpenElections();
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
@@ -132,11 +136,11 @@ describe("ElectionFactory and Election Contracts", function () {
       await electionInstance.addCandidate("Candidate 2", "Description Test");
 
       let candidates = await electionInstance.getCandidateList();
-      expect(candidates.length).to.equal(2);
+      expect(candidates.length).to.equal(4);
 
       await electionInstance.removeCandidate(0);
       candidates = await electionInstance.getCandidateList();
-      expect(candidates.length).to.equal(1);
+      expect(candidates.length).to.equal(3);
     });
   });
 
@@ -147,20 +151,22 @@ describe("ElectionFactory and Election Contracts", function () {
       );
 
       const electionInfo = {
-        startTime: Math.floor(Date.now() / 1000) + 60,
-        endTime: Math.floor(Date.now() / 1000) + 3600,
+        startTime: Math.floor(Date.now() / 1000) + 60, // start in 1 minute
+        endTime: Math.floor(Date.now() / 1000) + 3600, // end in 1 hour
         name: "Test Election",
         description: "This is a test election",
       };
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+;
       const ballotType = 1; // General
       const resultType = 1; // General
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
-
       const openElections = await electionFactory.getOpenElections();
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
@@ -186,20 +192,22 @@ describe("ElectionFactory and Election Contracts", function () {
         await loadFixture(deployElectionFactoryFixture);
 
       const electionInfo = {
-        startTime: Math.floor(Date.now() / 1000) + 60,
-        endTime: Math.floor(Date.now() / 1000) + 3600,
+        startTime: Math.floor(Date.now() / 1000) + 60, // start in 1 minute
+        endTime: Math.floor(Date.now() / 1000) + 3600, // end in 1 hour
         name: "Test Election",
         description: "This is a test election",
       };
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+;
       const ballotType = 1; // General
       const resultType = 1; // General
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
-
       const openElections = await electionFactory.getOpenElections();
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
@@ -232,11 +240,13 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -251,16 +261,16 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([1, 2, 0]); // Rank: B > C > A
-      await electionInstance.connect(voter2).userVote([2, 1, 0]); // Rank: C > B > A
-      await electionInstance.connect(voter3).userVote([1, 2, 0]); // Rank: B > A > C
+      await electionInstance.connect(voter1).userVote([3, 4, 2,1,0]); 
+      await electionInstance.connect(voter2).userVote([4,1,2,3,0]); 
+      await electionInstance.connect(voter3).userVote([4,3,2,1,0]); 
 
       await time.increase(3600); // Move time forward to end the election
 
       await electionInstance.getResult();
       const winner = await electionInstance.getWinners();
 
-      expect(winner[0]).to.equal(1); // Candidate B is the winner
+      expect(winner[0]).to.equal(4); // Candidate B is the winner
     });
 
     it("Should calculate results for IRV voting algorithm", async function () {
@@ -274,11 +284,14 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+
       const ballotType = 3; // IRV
       const resultType = 3; // IRV
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -293,9 +306,9 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([1, 2, 0]); // Rank: B > C > A
-      await electionInstance.connect(voter2).userVote([1, 2, 0]); // Rank: B > C > A
-      await electionInstance.connect(voter3).userVote([2, 1, 0]); // Rank: C > B > A
+      await electionInstance.connect(voter1).userVote([1, 2, 0, 3, 4]); 
+      await electionInstance.connect(voter2).userVote([1, 2, 4, 0, 3]); 
+      await electionInstance.connect(voter3).userVote([2, 3, 1, 4, 0]); 
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -318,11 +331,14 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Tie Election",
         description: "This is a tie test election",
       };
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+
       const ballotType = 1; // General
       const resultType = 1; // General
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -359,20 +375,22 @@ describe("ElectionFactory and Election Contracts", function () {
       } = await loadFixture(deployElectionFactoryFixture);
 
       const electionInfo = {
-        startTime: Math.floor(Date.now() / 1000) + 60,
-        endTime: Math.floor(Date.now() / 1000) + 3600,
+        startTime: Math.floor(Date.now() / 1000) + 60, // start in 1 minute
+        endTime: Math.floor(Date.now() / 1000) + 3600, // end in 1 hour
         name: "Test Election",
         description: "This is a test election",
       };
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+
       const ballotType = 1; // General
       const resultType = 1; // General
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
-
       const openElections = await electionFactory.getOpenElections();
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
@@ -399,20 +417,22 @@ describe("ElectionFactory and Election Contracts", function () {
         await loadFixture(deployElectionFactoryFixture);
 
       const electionInfo = {
-        startTime: Math.floor(Date.now() / 1000) + 60,
-        endTime: Math.floor(Date.now() / 1000) + 3600,
+        startTime: Math.floor(Date.now() / 1000) + 60, // start in 1 minute
+        endTime: Math.floor(Date.now() / 1000) + 3600, // end in 1 hour
         name: "Test Election",
         description: "This is a test election",
       };
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+
       const ballotType = 1; // General
       const resultType = 1; // General
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
-
       const openElections = await electionFactory.getOpenElections();
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
@@ -448,9 +468,11 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -463,7 +485,7 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([0]); // Rank: A
+      await electionInstance.connect(voter1).userVote([0 , 1 , 2]); // Rank: A
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -482,11 +504,13 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Ranked Election",
         description: "This is a ranked test election",
       };
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -501,11 +525,11 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([0, 1, 2]); // Rank: A > B > C
-      await electionInstance.connect(voter2).userVote([1, 2, 0]); // Rank: B > C > A
-      await electionInstance.connect(voter3).userVote([2, 0, 1]); // Rank: C > A > B
-      await electionInstance.connect(voter4).userVote([0, 2, 1]); // Rank: A > C > B
-      await electionInstance.connect(voter5).userVote([2, 1, 0]); // Rank: C > B > A
+      await electionInstance.connect(voter1).userVote([0, 1, 2, 3, 4]); // Rank: A > B > C
+      await electionInstance.connect(voter2).userVote([1, 2, 0, 4, 3]); // Rank: B > C > A
+      await electionInstance.connect(voter3).userVote([2, 0, 1, 3, 4]); // Rank: C > A > B
+      await electionInstance.connect(voter4).userVote([0, 2, 1, 3, 4]); // Rank: A > C > B
+      await electionInstance.connect(voter5).userVote([2, 1, 0, 3, 4]); // Rank: C > B > A
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -531,11 +555,14 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Ranked Election",
         description: "This is a ranked test election",
       };
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -550,12 +577,12 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([0, 1, 2]);
-      await electionInstance.connect(voter2).userVote([1, 2, 0]);
-      await electionInstance.connect(voter3).userVote([2, 0, 1]);
-      await electionInstance.connect(voter4).userVote([0, 1, 2]);
-      await electionInstance.connect(voter5).userVote([1, 2, 0]);
-      await electionInstance.connect(voter6).userVote([2, 0, 1]);
+      await electionInstance.connect(voter1).userVote([0, 1, 2, 3, 4]);
+      await electionInstance.connect(voter2).userVote([1, 2, 0, 3, 4]);
+      await electionInstance.connect(voter3).userVote([2, 0, 1, 3, 4]);
+      await electionInstance.connect(voter4).userVote([0, 1, 2, 3, 4]);
+      await electionInstance.connect(voter5).userVote([1, 2, 0, 3, 4]);
+      await electionInstance.connect(voter6).userVote([2, 0, 1, 3, 4]);
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -580,11 +607,14 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Ranked Election",
         description: "This is a ranked test election",
       };
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -599,12 +629,12 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([0, 1, 2]); // Rank: A > B > C
-      await electionInstance.connect(voter2).userVote([1, 0, 2]); // Rank: B > A > C
-      await electionInstance.connect(voter3).userVote([0, 1, 2]); // Rank: A > B > C
-      await electionInstance.connect(voter4).userVote([1, 0, 2]); // Rank: B > A > C
-      await electionInstance.connect(voter5).userVote([2, 0, 1]); // Rank: C > A > B
-      await electionInstance.connect(voter6).userVote([2, 1, 0]); // Rank: C > B > A
+      await electionInstance.connect(voter1).userVote([0, 1, 2 , 3, 4]); // Rank: A > B > C
+      await electionInstance.connect(voter2).userVote([1, 0, 2, 3, 4]); // Rank: B > A > C
+      await electionInstance.connect(voter3).userVote([0, 1, 2 , 3, 4]); // Rank: A > B > C
+      await electionInstance.connect(voter4).userVote([1, 0, 2, 3, 4]); // Rank: B > A > C
+      await electionInstance.connect(voter5).userVote([2, 0, 1, 4, 3]); // Rank: C > A > B
+      await electionInstance.connect(voter6).userVote([2, 1, 0, 4, 3]); // Rank: C > B > A
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -624,12 +654,16 @@ describe("ElectionFactory and Election Contracts", function () {
         endTime: Math.floor(Date.now() / 1000) + 3600,
         name: "IRV Election",
         description: "This is an IRV test election",
-      };
+      };   
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+
+
       const ballotType = 3; // IRV
       const resultType = 3; // IRV
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -644,11 +678,11 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([0, 1, 2]); // Rank: A > B > C
-      await electionInstance.connect(voter2).userVote([1, 2, 0]); // Rank: B > C > A
-      await electionInstance.connect(voter3).userVote([2, 0, 1]); // Rank: C > A > B
-      await electionInstance.connect(voter4).userVote([0, 2, 1]); // Rank: A > C > B
-      await electionInstance.connect(voter5).userVote([2, 1, 0]); // Rank: C > B > A
+      await electionInstance.connect(voter1).userVote([0, 1, 2, 3, 4]); // Rank: A > B > C
+      await electionInstance.connect(voter2).userVote([1, 2, 0, 3, 4]); // Rank: B > C > A
+      await electionInstance.connect(voter3).userVote([2, 0, 1, 3, 4]); // Rank: C > A > B
+      await electionInstance.connect(voter4).userVote([0, 2, 1, 3, 4]); // Rank: A > C > B
+      await electionInstance.connect(voter5).userVote([2, 1, 0, 3, 4]); // Rank: C > B > A
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -669,9 +703,13 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 3; // IRV
       const resultType = 3; // IRV
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+
+
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -684,7 +722,7 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([0]); // Rank: A
+      await electionInstance.connect(voter1).userVote([0,1,2]); // Rank: A
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -712,9 +750,11 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 3; // IRV
       const resultType = 3; // IRV
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -723,11 +763,10 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
       await electionInstance.addCandidate("Candidate 3", "Description Test");
       await electionInstance.addCandidate("Candidate 4", "Description Test");
       await electionInstance.addCandidate("Candidate 5", "Description Test");
+
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -751,7 +790,7 @@ describe("ElectionFactory and Election Contracts", function () {
   });
 
   describe("Schulze Voting Algorithm Tests", function () {
-    it("Should handle single vote & candidate", async function () {
+    it("Should handle double vote & candidate", async function () {
       const { electionFactory, voter1 } = await loadFixture(
         deployElectionFactoryFixture
       );
@@ -764,9 +803,12 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 4; // IRV
       const resultType = 4; // IRV
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -775,11 +817,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([0]); // Rank: A
+      await electionInstance.connect(voter1).userVote([0,1]); // Rank: A
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -801,9 +841,12 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 4; // Schulze
       const resultType = 4; // Schulze
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -812,8 +855,6 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
       await electionInstance.addCandidate("Candidate 3", "Description Test");
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
@@ -843,9 +884,11 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 4; // Schulze
       const resultType = 4; // Schulze
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -854,8 +897,6 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
       await electionInstance.addCandidate("Candidate 3", "Description Test");
       await electionInstance.addCandidate("Candidate 4", "Description Test");
 
@@ -888,9 +929,11 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 4; // Schulze
       const resultType = 4; // Schulze
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -899,8 +942,6 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
       await electionInstance.addCandidate("Candidate 3", "Description Test");
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
@@ -920,7 +961,7 @@ describe("ElectionFactory and Election Contracts", function () {
   });
 
   describe("Quadratic Voting Algorithm Tests", function () {
-    it("Should handle single vote & candidate", async function () {
+    it("Should handle double vote & candidate", async function () {
       const { electionFactory, voter1 } = await loadFixture(
         deployElectionFactoryFixture
       );
@@ -931,11 +972,13 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Ranked Election",
         description: "This is a ranked test election",
       };
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
       const ballotType = 5; // Quadratic
       const resultType = 5; // Quadratic
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -944,11 +987,10 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([100]); // Rank: A
+      await electionInstance.connect(voter1).userVote([75,25]); // Rank: A
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -976,9 +1018,12 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 5; // Quadratic
       const resultType = 5; // Quadratic
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -987,8 +1032,6 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
       await electionInstance.addCandidate("Candidate 3", "Description Test");
       await electionInstance.addCandidate("Candidate 4", "Description Test");
       await electionInstance.addCandidate("Candidate 5", "Description Test");
@@ -1033,9 +1076,11 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 5; // Quadratic
       const resultType = 5; // Quadratic
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -1044,8 +1089,7 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
+
       await electionInstance.addCandidate("Candidate 3", "Description Test");
       await electionInstance.addCandidate("Candidate 4", "Description Test");
       await electionInstance.addCandidate("Candidate 5", "Description Test");
@@ -1093,9 +1137,12 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 6; // Score
       const resultType = 6; // Score
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -1104,8 +1151,6 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
       await electionInstance.addCandidate("Candidate 3", "Description Test");
       await electionInstance.addCandidate("Candidate 4", "Description Test");
       await electionInstance.addCandidate("Candidate 5", "Description Test");
@@ -1151,9 +1196,11 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 6; // Score
       const resultType = 6; // Score
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -1162,8 +1209,6 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
       await electionInstance.addCandidate("Candidate 3", "Description Test");
       await electionInstance.addCandidate("Candidate 4", "Description Test");
       await electionInstance.addCandidate("Candidate 5", "Description Test");
@@ -1209,9 +1254,11 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 6; // Score
       const resultType = 6; // Score
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -1220,8 +1267,6 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
       await electionInstance.addCandidate("Candidate 3", "Description Test");
       await electionInstance.addCandidate("Candidate 4", "Description Test");
       await electionInstance.addCandidate("Candidate 5", "Description Test");
@@ -1250,7 +1295,7 @@ describe("ElectionFactory and Election Contracts", function () {
   });
 
   describe("Kemeny-Young Voting Algorithm Tests", function () {
-    it("Should handle single vote & candidate", async function () {
+    it("Should handle double vote & candidate", async function () {
       const { electionFactory, voter1 } = await loadFixture(
         deployElectionFactoryFixture
       );
@@ -1263,9 +1308,11 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny Young
       const resultType = 7; // Kemeny Young
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -1274,11 +1321,10 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([0]); // Rank: A
+      await electionInstance.connect(voter1).userVote([0,1]); // Rank: A
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -1300,9 +1346,11 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny-Young
       const resultType = 7; // Kemeny-Young
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -1312,8 +1360,6 @@ describe("ElectionFactory and Election Contracts", function () {
       const electionInstance = Election.attach(openElections[0]);
 
       await electionInstance.addCandidate("Candidate A", "Test Description");
-      await electionInstance.addCandidate("Candidate B", "Test Description");
-      await electionInstance.addCandidate("Candidate C", "Test Description");
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -1342,9 +1388,11 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny-Young
       const resultType = 7; // Kemeny-Young
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -1353,8 +1401,7 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate A", "Test Description");
-      await electionInstance.addCandidate("Candidate B", "Test Description");
+
       await electionInstance.addCandidate("Candidate C", "Test Description");
       await electionInstance.addCandidate("Candidate D", "Test Description");
 
@@ -1388,9 +1435,11 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny-Young
       const resultType = 7; // Kemeny-Young
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -1399,8 +1448,7 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate A", "Test Description");
-      await electionInstance.addCandidate("Candidate B", "Test Description");
+
       await electionInstance.addCandidate("Candidate C", "Test Description");
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
@@ -1437,9 +1485,11 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny-Young
       const resultType = 7; // Kemeny-Young
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -1448,8 +1498,6 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate A", "Test Description");
-      await electionInstance.addCandidate("Candidate B", "Test Description");
       await electionInstance.addCandidate("Candidate C", "Test Description");
       await electionInstance.addCandidate("Candidate D", "Test Description");
       await electionInstance.addCandidate("Candidate E", "Test Description");
@@ -1487,9 +1535,11 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 8; // Moore
       const resultType = 8; // Moore
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
 
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
@@ -1522,26 +1572,27 @@ describe("ElectionFactory and Election Contracts", function () {
         await loadFixture(deployElectionFactoryFixture);
 
       const electionInfo = {
-        startTime: Math.floor(Date.now() / 1000) + 60,
-        endTime: Math.floor(Date.now() / 1000) + 3600,
+        startTime: Math.floor(Date.now() / 1000) + 60, // start in 1 minute
+        endTime: Math.floor(Date.now() / 1000) + 3600, // end in 1 hour
         name: "Test Election",
         description: "This is a test election",
       };
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+
       const ballotType = 1; // General
       const resultType = 1; // General
-
+      
       await electionFactory.createElection(
         electionInfo,
+        initialCandidates,
         ballotType,
         resultType
       );
-
       const openElections = await electionFactory.getOpenElections();
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
+
       await electionInstance.addCandidate("Candidate 3", "Description Test");
 
       await time.increase(120); // Move time forward to make the election active

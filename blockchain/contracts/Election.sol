@@ -67,6 +67,7 @@ contract Election is Initializable {
 
     function initialize(
         ElectionInfo memory _electionInfo,
+        Candidate[] memory _candidates,
         uint _resultType,
         uint _electionId,
         address _ballot,
@@ -74,6 +75,15 @@ contract Election is Initializable {
         address _resultCalculator
     ) external initializer {
         electionInfo = _electionInfo;
+        for(uint i = 0 ;i< _candidates.length;i++){ // add _candidates to candidates array 
+            candidates.push(
+                Candidate(
+                    i,
+                    _candidates[i].name,
+                    _candidates[i].description
+                )
+            );
+        }
         resultType = _resultType;
         electionId = _electionId;
         owner = _owner;
