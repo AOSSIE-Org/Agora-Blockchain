@@ -55,6 +55,12 @@ const CreatePage: React.FC = () => {
     const description = formData.get("description") as string;
     const ballotType = BigInt(selectedBallot);
 
+    if (candidates.length<2){
+      toast.error("At least 2 candidates are required!");
+      return;
+    
+    }
+
     if (!startTime || !endTime) {
       toast.error("Please select both start and end times.");
       return;
@@ -79,7 +85,7 @@ const CreatePage: React.FC = () => {
         functionName: "createElection",
         args: [
           { startTime: start, endTime: end, name, description }, // ElectionInfo object
-          candidates.map((c, index) => ({ candidateID: BigInt(index), name: c.name, description: c.description })), // Correct candidates format
+          candidates.map((c, index) => ({ candidateID: BigInt(index), name: c.name, description: c.description })), 
           ballotType,
           ballotType,
         ],
