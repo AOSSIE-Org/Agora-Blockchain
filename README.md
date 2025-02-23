@@ -35,7 +35,7 @@ Here's a refined version of the development guide:
 ```bash
 git clone https://github.com/AOSSIE-Org/Agora-Blockchain
 ```
-### Option 1: Docker Setup (Recommended)
+### Option 1: Docker Setup 
 
 1. **Clone the Repository**:
    ```bash
