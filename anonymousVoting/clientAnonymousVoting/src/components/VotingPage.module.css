@@ -1,0 +1,34 @@
+.container {
+    margin: 0 auto;
+    text-align: center;
+    justify-content: center;
+    font-size: calc(10px + 0.6vw);
+}
+
+.collapse {
+    width: 50%;
+    margin: auto;
+    text-align: center;
+    justify-content: center;
+    margin-top: 2em;
+    padding: 1em;
+    border: 1px solid #f1356d;
+}
+.collapse p{
+    word-break: break-all;
+    white-space: normal;
+}
+.proposalsContainer{
+    display: flex;
+    margin: 0 auto;
+    justify-content: center;
+    text-align: center;
+    margin-top: 2em;
+}
+.proposalsContainer div {
+    margin: 1em;
+}
+.proposalsContainer input {
+    margin-right: 0.6em;
+}
+
