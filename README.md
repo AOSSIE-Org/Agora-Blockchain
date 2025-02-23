@@ -35,9 +35,42 @@ Here's a refined version of the development guide:
 ```bash
 git clone https://github.com/AOSSIE-Org/Agora-Blockchain
 ```
+### Option 1: Docker Setup (Recommended)
 
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/AOSSIE-Org/Agora-Blockchain
+   cd Agora-Blockchain
+   ```
+
+2. **Set up Environment Variables**:
+
+   Create `.env.local` in the `blockchain` directory:
+   ```
+   PRIVATE_KEY=<your_private_key>
+   RPC_URL_SEPOLIA=<your_sepolia_rpc_url>
+   RPC_URL_FUJI=<your_fuji_rpc_url>
+   ETHERSCAN_KEY=<your_etherscan_api_key>
+   ```
+
+   Create `.env.local` in the `client` directory:
+   ```
+   NEXT_PUBLIC_PINATA_JWT=<your_pinata_jwt>
+   ```
+
+3. **Run with Docker Compose**:
+   ```bash
+   docker-compose up --build
+   ```
+
+4. **Access the Application**:
+   - Frontend: http://localhost:3000
+   - Blockchain Node: http://localhost:8545
+
+The application will automatically reload when you make changes to the source code.
+
+### Option 2: Manual Setup
 ## Backend
-
 1. **Navigate to the Blockchain Directory**:
 
    ```bash
