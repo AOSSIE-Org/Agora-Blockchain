@@ -3,7 +3,7 @@ const {
   loadFixture,
 } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
 const { expect } = require("chai");
-
+const sampleIPFSHASH = "sample";
 describe("ElectionFactory and Election Contracts", function () {
   async function deployElectionFactoryFixture() {
     const [
@@ -80,7 +80,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1", ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s", ipfsHash:sampleIPFSHASH}];
       const ballotType = 1; // General
       const resultType = 1; // General
 
@@ -117,7 +117,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1", ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s", ipfsHash:sampleIPFSHASH}];
 
       const ballotType = 1; // General
       const resultType = 1; // General
@@ -132,8 +132,8 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test",sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 2", "Description Test",sampleIPFSHASH);
 
       let candidates = await electionInstance.getCandidateList();
       expect(candidates.length).to.equal(4);
@@ -156,7 +156,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 ;
       const ballotType = 1; // General
       const resultType = 1; // General
@@ -171,8 +171,8 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test",sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 2", "Description Test",sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -197,7 +197,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1", ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s", ipfsHash:sampleIPFSHASH}];
 ;
       const ballotType = 1; // General
       const resultType = 1; // General
@@ -212,9 +212,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test",sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 2", "Description Test",sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 3", "Description Test",sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -240,7 +240,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
 
@@ -255,9 +255,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 2", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -284,7 +284,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       const ballotType = 3; // IRV
       const resultType = 3; // IRV
@@ -300,9 +300,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 2", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -331,7 +331,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Tie Election",
         description: "This is a tie test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       const ballotType = 1; // General
       const resultType = 1; // General
@@ -347,8 +347,8 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 2", "Description Test",  sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -380,7 +380,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       const ballotType = 1; // General
       const resultType = 1; // General
@@ -395,9 +395,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 2", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -422,7 +422,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       const ballotType = 1; // General
       const resultType = 1; // General
@@ -437,9 +437,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 2", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -468,7 +468,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       await electionFactory.createElection(
         electionInfo,
@@ -481,7 +481,7 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test", sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -504,7 +504,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Ranked Election",
         description: "This is a ranked test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
 
@@ -519,9 +519,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 2", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -555,7 +555,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Ranked Election",
         description: "This is a ranked test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
@@ -571,9 +571,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 2", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -607,7 +607,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Ranked Election",
         description: "This is a ranked test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
@@ -623,9 +623,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 2", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -655,7 +655,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "IRV Election",
         description: "This is an IRV test election",
       };   
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
 
       const ballotType = 3; // IRV
@@ -672,9 +672,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 2", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -703,7 +703,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 3; // IRV
       const resultType = 3; // IRV
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
 
 
@@ -718,7 +718,7 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test", sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -750,7 +750,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 3; // IRV
       const resultType = 3; // IRV
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       await electionFactory.createElection(
         electionInfo,
@@ -763,9 +763,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
-      await electionInstance.addCandidate("Candidate 4", "Description Test");
-      await electionInstance.addCandidate("Candidate 5", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 4", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 5", "Description Test", sampleIPFSHASH);
 
 
       await time.increase(120); // Move time forward to make the election active
@@ -803,7 +803,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 4; // IRV
       const resultType = 4; // IRV
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
 
       await electionFactory.createElection(
@@ -841,7 +841,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 4; // Schulze
       const resultType = 4; // Schulze
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
 
       await electionFactory.createElection(
@@ -855,7 +855,7 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -884,7 +884,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 4; // Schulze
       const resultType = 4; // Schulze
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       await electionFactory.createElection(
         electionInfo,
@@ -897,8 +897,8 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
-      await electionInstance.addCandidate("Candidate 4", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 4", "Description Test", sampleIPFSHASH);
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -929,7 +929,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 4; // Schulze
       const resultType = 4; // Schulze
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       await electionFactory.createElection(
         electionInfo,
@@ -942,7 +942,7 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -972,7 +972,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Ranked Election",
         description: "This is a ranked test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
       const ballotType = 5; // Quadratic
       const resultType = 5; // Quadratic
 
@@ -1018,7 +1018,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 5; // Quadratic
       const resultType = 5; // Quadratic
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
 
       await electionFactory.createElection(
@@ -1032,9 +1032,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
-      await electionInstance.addCandidate("Candidate 4", "Description Test");
-      await electionInstance.addCandidate("Candidate 5", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 4", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 5", "Description Test", sampleIPFSHASH);
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -1076,7 +1076,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 5; // Quadratic
       const resultType = 5; // Quadratic
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1090,9 +1090,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const electionInstance = Election.attach(openElections[0]);
 
 
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
-      await electionInstance.addCandidate("Candidate 4", "Description Test");
-      await electionInstance.addCandidate("Candidate 5", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test",sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 4", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 5", "Description Test", sampleIPFSHASH);
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -1137,7 +1137,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 6; // Score
       const resultType = 6; // Score
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
 
       await electionFactory.createElection(
@@ -1151,9 +1151,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
-      await electionInstance.addCandidate("Candidate 4", "Description Test");
-      await electionInstance.addCandidate("Candidate 5", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 4", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 5", "Description Test", sampleIPFSHASH);
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -1196,7 +1196,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 6; // Score
       const resultType = 6; // Score
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1209,9 +1209,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
-      await electionInstance.addCandidate("Candidate 4", "Description Test");
-      await electionInstance.addCandidate("Candidate 5", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 4", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 5", "Description Test", sampleIPFSHASH);
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -1254,7 +1254,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 6; // Score
       const resultType = 6; // Score
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1", ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1267,9 +1267,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
-      await electionInstance.addCandidate("Candidate 4", "Description Test");
-      await electionInstance.addCandidate("Candidate 5", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 4", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 5", "Description Test", sampleIPFSHASH);
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -1308,7 +1308,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny Young
       const resultType = 7; // Kemeny Young
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1346,7 +1346,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny-Young
       const resultType = 7; // Kemeny-Young
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1359,7 +1359,7 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate A", "Test Description");
+      await electionInstance.addCandidate("Candidate A", "Test Description", sampleIPFSHASH);
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -1388,7 +1388,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny-Young
       const resultType = 7; // Kemeny-Young
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1402,8 +1402,8 @@ describe("ElectionFactory and Election Contracts", function () {
       const electionInstance = Election.attach(openElections[0]);
 
 
-      await electionInstance.addCandidate("Candidate C", "Test Description");
-      await electionInstance.addCandidate("Candidate D", "Test Description");
+      await electionInstance.addCandidate("Candidate C", "Test Description", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate D", "Test Description", sampleIPFSHASH);
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -1435,7 +1435,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny-Young
       const resultType = 7; // Kemeny-Young
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1449,7 +1449,7 @@ describe("ElectionFactory and Election Contracts", function () {
       const electionInstance = Election.attach(openElections[0]);
 
 
-      await electionInstance.addCandidate("Candidate C", "Test Description");
+      await electionInstance.addCandidate("Candidate C", "Test Description", sampleIPFSHASH);
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -1485,7 +1485,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny-Young
       const resultType = 7; // Kemeny-Young
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1498,9 +1498,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate C", "Test Description");
-      await electionInstance.addCandidate("Candidate D", "Test Description");
-      await electionInstance.addCandidate("Candidate E", "Test Description");
+      await electionInstance.addCandidate("Candidate C", "Test Description", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate D", "Test Description", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate E", "Test Description", sampleIPFSHASH);
 
       await ethers.provider.send("evm_increaseTime", [120]); // Move time forward to make the election active
 
@@ -1535,7 +1535,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 8; // Moore
       const resultType = 8; // Moore
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1548,9 +1548,9 @@ describe("ElectionFactory and Election Contracts", function () {
       const Election = await ethers.getContractFactory("Election");
       const electionInstance = Election.attach(openElections[0]);
 
-      await electionInstance.addCandidate("Candidate 1", "Description Test");
-      await electionInstance.addCandidate("Candidate 2", "Description Test");
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 1", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 2", "Description Test", sampleIPFSHASH);
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
@@ -1577,7 +1577,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1",ipfsHash:sampleIPFSHASH},{candidateID:2,name:'candidate2', description:"candidate2s",ipfsHash:sampleIPFSHASH}];
 
       const ballotType = 1; // General
       const resultType = 1; // General
@@ -1593,7 +1593,7 @@ describe("ElectionFactory and Election Contracts", function () {
       const electionInstance = Election.attach(openElections[0]);
 
 
-      await electionInstance.addCandidate("Candidate 3", "Description Test");
+      await electionInstance.addCandidate("Candidate 3", "Description Test", sampleIPFSHASH);
 
       await time.increase(120); // Move time forward to make the election active
 
