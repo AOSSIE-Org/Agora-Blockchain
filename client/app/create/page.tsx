@@ -13,6 +13,8 @@ import { sepolia } from "viem/chains";
 import { ArrowPathIcon , PlusIcon, TrashIcon} from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import ElectionInfoPopup from "../components/Modal/ElectionInfoPopup";
+import { pinata } from "@/utils/config";
+import { pinJSONFile } from "@/app/helpers/pinToIPFS";
 
 const CreatePage: React.FC = () => {
   const router = useRouter();
@@ -29,9 +31,10 @@ const CreatePage: React.FC = () => {
   interface Candidate {
     name: string;
     description: string;
+    ipfsHash?: string;
   }
   const addCandidate = () => {
-    setCandidates([...candidates, { name: "", description: "" }]);
+    setCandidates([...candidates, { name: "", description: "", ipfsHash: ""}]);
   };
   
   const removeCandidate = (index: number) => {
@@ -39,7 +42,7 @@ const CreatePage: React.FC = () => {
     setCandidates(newCandidates);
   };
   
-  const updateCandidate = (index: number, field: keyof Candidate, value: string) => {
+  const updateCandidate = (index: number, field: keyof Candidate, value: string | boolean) => {
     const newCandidates = candidates.map((candidate, i) => {
       if (i === index) {
         return { ...candidate, [field]: value };
@@ -48,6 +51,23 @@ const CreatePage: React.FC = () => {
     });
     setCandidates(newCandidates);
   };
+  const handleFileChange = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    try {
+          const keyRequest = await fetch("/api/key");
+          const keyData = await keyRequest.json();
+          const upload = await pinata.upload.file(file).key(keyData.JWT);
+          const url = `https://ipfs.io/ipfs/${upload.IpfsHash}`;
+          updateCandidate(index, "ipfsHash", url);
+    } 
+    catch (e) {
+          console.log(e);
+          alert("Trouble uploading file");
+    }
+  }
   const createElection = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -85,7 +105,7 @@ const CreatePage: React.FC = () => {
         functionName: "createElection",
         args: [
           { startTime: start, endTime: end, name, description }, // ElectionInfo object
-          candidates.map((c, index) => ({ candidateID: BigInt(index), name: c.name, description: c.description })), 
+          candidates.map((c, index) => ({ candidateID: BigInt(index), name: c.name, description: c.description, ipfsHash: c.ipfsHash})), 
           ballotType,
           ballotType,
         ],
@@ -187,6 +207,34 @@ const CreatePage: React.FC = () => {
                     className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     required
                   />
+                  <div className="flex flex-col items-center p-4 border-2 border-dashed border-blue-300 rounded-lg hover:border-blue-500 transition-colors bg-blue-50">
+                  <label className="cursor-pointer flex flex-col items-center">
+                    <span className="text-xs text-gray-500 mt-1">
+                      Click to change photo / upload photo
+                    </span>
+                    <input 
+                      type="file" 
+                      onChange={(e) => handleFileChange(index, e)} 
+                      className="hidden"
+                    />
+                  </label>
+                  {/* Show image when hasUploaded is true AND ipfsHash exists */}
+                  {candidate.ipfsHash && (
+                    <div className="mt-4 relative">
+                      <img 
+                        src={candidate.ipfsHash} 
+                        alt="Candidate" 
+                        className="w-24 h-24 object-cover rounded-lg shadow-md border border-gray-200" 
+                      />
+                      <div className="absolute -top-2 -right-2 bg-green-500 text-white rounded-full p-1 shadow-sm">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                  
                 </motion.div>
               ))
             )}
