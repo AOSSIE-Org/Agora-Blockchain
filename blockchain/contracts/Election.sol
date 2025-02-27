@@ -12,6 +12,7 @@ contract Election is Initializable {
     error ElectionIncomplete();
     error ElectionInactive();
     error InvalidCandidateID();
+    string private constant DEFAULT_IPFS_HASH = "QmDefaultIpfsHash";
 
     mapping(address user => bool isVoted) public userVoted;
 
@@ -27,6 +28,7 @@ contract Election is Initializable {
         uint candidateID; // remove candidateId its not needed
         string name;
         string description;
+        string ipfsHash;
     }
 
     modifier onlyOwner() {
@@ -75,15 +77,22 @@ contract Election is Initializable {
         address _resultCalculator
     ) external initializer {
         electionInfo = _electionInfo;
-        for(uint i = 0 ;i< _candidates.length;i++){ // add _candidates to candidates array 
+        for(uint i = 0; i < _candidates.length; i++) {
+            // Check for empty IPFS hash and use default
+            string memory ipfsHash = bytes(_candidates[i].ipfsHash).length > 0 
+                ? _candidates[i].ipfsHash 
+                : DEFAULT_IPFS_HASH;
+            
             candidates.push(
                 Candidate(
                     i,
                     _candidates[i].name,
-                    _candidates[i].description
+                    _candidates[i].description,
+                    ipfsHash  // Use processed hash
                 )
             );
         }
+
         resultType = _resultType;
         electionId = _electionId;
         owner = _owner;
@@ -120,21 +129,28 @@ contract Election is Initializable {
 
     function addCandidate(
         string calldata _name,
-        string calldata _description
+        string calldata _description,
+        string calldata _ipfsHash
     ) external onlyOwner electionStarted {
+        // Use default if empty (already implemented)
+        string memory ipfsHash = bytes(_ipfsHash).length > 0 
+            ? _ipfsHash 
+            : DEFAULT_IPFS_HASH;
+        
         Candidate memory newCandidate = Candidate(
             candidates.length,
             _name,
-            _description
+            _description,
+            ipfsHash
         );
         candidates.push(newCandidate);
     }
 
     function removeCandidate(uint _id) external onlyOwner electionStarted {
-    if (_id >= candidates.length) revert InvalidCandidateID();
-    candidates[_id] = candidates[candidates.length - 1]; // Replace with last element
-    candidates.pop(); 
-}
+        if (_id >= candidates.length) revert InvalidCandidateID();
+        candidates[_id] = candidates[candidates.length - 1]; // Replace with last element
+        candidates.pop(); 
+    }
 
     function getCandidateList() external view returns (Candidate[] memory) {
         return candidates;
