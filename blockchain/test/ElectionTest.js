@@ -80,7 +80,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
       const ballotType = 1; // General
       const resultType = 1; // General
 
@@ -117,7 +117,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       const ballotType = 1; // General
       const resultType = 1; // General
@@ -156,8 +156,8 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
-;
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
+      ;
       const ballotType = 1; // General
       const resultType = 1; // General
 
@@ -182,7 +182,7 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await expect(
         electionInstance.connect(voter1).userVote([0])
-    ).to.be.revertedWithCustomError(electionInstance, "AlreadyVoted");
+      ).to.be.revertedWithCustomError(electionInstance, "AlreadyVoted");
     });
   });
 
@@ -197,8 +197,8 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
-;
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
+      ;
       const ballotType = 1; // General
       const resultType = 1; // General
 
@@ -240,7 +240,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
 
@@ -261,9 +261,9 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([3, 4, 2,1,0]); 
-      await electionInstance.connect(voter2).userVote([4,1,2,3,0]); 
-      await electionInstance.connect(voter3).userVote([4,3,2,1,0]); 
+      await electionInstance.connect(voter1).userVote([3, 4, 2, 1, 0]);
+      await electionInstance.connect(voter2).userVote([4, 1, 2, 3, 0]);
+      await electionInstance.connect(voter3).userVote([4, 3, 2, 1, 0]);
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -284,7 +284,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       const ballotType = 3; // IRV
       const resultType = 3; // IRV
@@ -306,9 +306,9 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([1, 2, 0, 3, 4]); 
-      await electionInstance.connect(voter2).userVote([1, 2, 4, 0, 3]); 
-      await electionInstance.connect(voter3).userVote([2, 3, 1, 4, 0]); 
+      await electionInstance.connect(voter1).userVote([1, 2, 0, 3, 4]);
+      await electionInstance.connect(voter2).userVote([1, 2, 4, 0, 3]);
+      await electionInstance.connect(voter3).userVote([2, 3, 1, 4, 0]);
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -331,7 +331,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Tie Election",
         description: "This is a tie test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       const ballotType = 1; // General
       const resultType = 1; // General
@@ -380,7 +380,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       const ballotType = 1; // General
       const resultType = 1; // General
@@ -422,7 +422,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       const ballotType = 1; // General
       const resultType = 1; // General
@@ -468,7 +468,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       await electionFactory.createElection(
         electionInfo,
@@ -485,7 +485,7 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([0 , 1 , 2]); // Rank: A
+      await electionInstance.connect(voter1).userVote([0, 1, 2]); // Rank: A
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -504,7 +504,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Ranked Election",
         description: "This is a ranked test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
 
@@ -555,7 +555,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Ranked Election",
         description: "This is a ranked test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
@@ -607,7 +607,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Ranked Election",
         description: "This is a ranked test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       const ballotType = 2; // Ranked
       const resultType = 2; // Ranked
@@ -629,9 +629,9 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([0, 1, 2 , 3, 4]); // Rank: A > B > C
+      await electionInstance.connect(voter1).userVote([0, 1, 2, 3, 4]); // Rank: A > B > C
       await electionInstance.connect(voter2).userVote([1, 0, 2, 3, 4]); // Rank: B > A > C
-      await electionInstance.connect(voter3).userVote([0, 1, 2 , 3, 4]); // Rank: A > B > C
+      await electionInstance.connect(voter3).userVote([0, 1, 2, 3, 4]); // Rank: A > B > C
       await electionInstance.connect(voter4).userVote([1, 0, 2, 3, 4]); // Rank: B > A > C
       await electionInstance.connect(voter5).userVote([2, 0, 1, 4, 3]); // Rank: C > A > B
       await electionInstance.connect(voter6).userVote([2, 1, 0, 4, 3]); // Rank: C > B > A
@@ -654,8 +654,8 @@ describe("ElectionFactory and Election Contracts", function () {
         endTime: Math.floor(Date.now() / 1000) + 3600,
         name: "IRV Election",
         description: "This is an IRV test election",
-      };   
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      };
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
 
       const ballotType = 3; // IRV
@@ -703,7 +703,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 3; // IRV
       const resultType = 3; // IRV
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
 
 
@@ -722,7 +722,7 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([0,1,2]); // Rank: A
+      await electionInstance.connect(voter1).userVote([0, 1, 2]); // Rank: A
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -750,7 +750,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 3; // IRV
       const resultType = 3; // IRV
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       await electionFactory.createElection(
         electionInfo,
@@ -803,7 +803,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 4; // IRV
       const resultType = 4; // IRV
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
 
       await electionFactory.createElection(
@@ -819,7 +819,7 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([0,1]); // Rank: A
+      await electionInstance.connect(voter1).userVote([0, 1]); // Rank: A
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -841,7 +841,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 4; // Schulze
       const resultType = 4; // Schulze
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
 
       await electionFactory.createElection(
@@ -884,7 +884,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 4; // Schulze
       const resultType = 4; // Schulze
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       await electionFactory.createElection(
         electionInfo,
@@ -929,7 +929,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 4; // Schulze
       const resultType = 4; // Schulze
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       await electionFactory.createElection(
         electionInfo,
@@ -972,7 +972,7 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Ranked Election",
         description: "This is a ranked test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
       const ballotType = 5; // Quadratic
       const resultType = 5; // Quadratic
 
@@ -990,7 +990,7 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([75,25]); // Rank: A
+      await electionInstance.connect(voter1).userVote([75, 25]); // Rank: A
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -1018,7 +1018,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 5; // Quadratic
       const resultType = 5; // Quadratic
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
 
       await electionFactory.createElection(
@@ -1076,7 +1076,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 5; // Quadratic
       const resultType = 5; // Quadratic
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1137,7 +1137,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 6; // Score
       const resultType = 6; // Score
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
 
       await electionFactory.createElection(
@@ -1196,7 +1196,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 6; // Score
       const resultType = 6; // Score
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1254,7 +1254,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 6; // Score
       const resultType = 6; // Score
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1308,7 +1308,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny Young
       const resultType = 7; // Kemeny Young
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1324,7 +1324,7 @@ describe("ElectionFactory and Election Contracts", function () {
 
       await time.increase(120); // Move time forward to make the election active
 
-      await electionInstance.connect(voter1).userVote([0,1]); // Rank: A
+      await electionInstance.connect(voter1).userVote([0, 1]); // Rank: A
 
       await time.increase(3600); // Move time forward to end the election
 
@@ -1346,7 +1346,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny-Young
       const resultType = 7; // Kemeny-Young
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1388,7 +1388,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny-Young
       const resultType = 7; // Kemeny-Young
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1435,7 +1435,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny-Young
       const resultType = 7; // Kemeny-Young
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1485,7 +1485,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 7; // Kemeny-Young
       const resultType = 7; // Kemeny-Young
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1535,7 +1535,7 @@ describe("ElectionFactory and Election Contracts", function () {
       };
       const ballotType = 8; // Moore
       const resultType = 8; // Moore
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       await electionFactory.createElection(
         electionInfo,
@@ -1577,11 +1577,11 @@ describe("ElectionFactory and Election Contracts", function () {
         name: "Test Election",
         description: "This is a test election",
       };
-      const initialCandidates = [{candidateID:1,name:'candidate1', description:"candidate1"},{candidateID:2,name:'candidate2', description:"candidate2s"}];
+      const initialCandidates = [{ candidateID: 1, name: 'candidate1', description: "candidate1" }, { candidateID: 2, name: 'candidate2', description: "candidate2s" }];
 
       const ballotType = 1; // General
       const resultType = 1; // General
-      
+
       await electionFactory.createElection(
         electionInfo,
         initialCandidates,
@@ -1610,210 +1610,291 @@ describe("ElectionFactory and Election Contracts", function () {
   });
 
   describe("ElectionFactory Owner Management", function () {
-  it("Should allow only owner to add whitelisted contracts", async function () {
-    const { electionFactory, owner, otherAccount } = await loadFixture(
-      deployElectionFactoryFixture
-    );
-    
-    const sourceChainSelector = 16015286601757825753n; // Example chain selector
-    const contractAddress = "0x1234567890123456789012345678901234567890";
-    
-    // Should work when owner calls it
-    await electionFactory.addWhitelistedContract(sourceChainSelector, contractAddress);
-    
-    // Should revert when non-owner calls it
-    await expect(
-      electionFactory.connect(otherAccount).addWhitelistedContract(sourceChainSelector, contractAddress)
-    ).to.be.revertedWithCustomError(electionFactory, "OwnerRestricted");
+    it("Should allow only owner to add whitelisted contracts", async function () {
+      const { electionFactory, owner, otherAccount } = await loadFixture(
+        deployElectionFactoryFixture
+      );
+
+      const sourceChainSelector = 16015286601757825753n; // Example chain selector
+      const contractAddress = "0x1234567890123456789012345678901234567890";
+
+      // Should work when owner calls it
+      await electionFactory.addWhitelistedContract(sourceChainSelector, contractAddress);
+
+      // Should revert when non-owner calls it
+      await expect(
+        electionFactory.connect(otherAccount).addWhitelistedContract(sourceChainSelector, contractAddress)
+      ).to.be.revertedWithCustomError(electionFactory, "OwnerRestricted");
+    });
+
+    it("Should allow only owner to remove whitelisted contracts", async function () {
+      const { electionFactory, owner, otherAccount } = await loadFixture(
+        deployElectionFactoryFixture
+      );
+
+      const sourceChainSelector = 16015286601757825753n; // Example chain selector
+      const contractAddress = "0x1234567890123456789012345678901234567890";
+
+      // Add a whitelisted contract first
+      await electionFactory.addWhitelistedContract(sourceChainSelector, contractAddress);
+
+      // Should work when owner calls it
+      await electionFactory.removeWhitelistedContract(sourceChainSelector);
+
+      // Should revert when non-owner calls it
+      await expect(
+        electionFactory.connect(otherAccount).removeWhitelistedContract(sourceChainSelector)
+      ).to.be.revertedWithCustomError(electionFactory, "OwnerRestricted");
+    });
   });
 
-  it("Should allow only owner to remove whitelisted contracts", async function () {
-    const { electionFactory, owner, otherAccount } = await loadFixture(
-      deployElectionFactoryFixture
-    );
-    
-    const sourceChainSelector = 16015286601757825753n; // Example chain selector
-    const contractAddress = "0x1234567890123456789012345678901234567890";
-    
-    // Add a whitelisted contract first
-    await electionFactory.addWhitelistedContract(sourceChainSelector, contractAddress);
-    
-    // Should work when owner calls it
-    await electionFactory.removeWhitelistedContract(sourceChainSelector);
-    
-    // Should revert when non-owner calls it
-    await expect(
-      electionFactory.connect(otherAccount).removeWhitelistedContract(sourceChainSelector)
-    ).to.be.revertedWithCustomError(electionFactory, "OwnerRestricted");
-  });
-});
+  describe("Election Deletion", function () {
+    it("Should allow election owner to delete their election", async function () {
+      const { electionFactory, owner, otherAccount } = await loadFixture(
+        deployElectionFactoryFixture
+      );
 
-describe("Election Deletion", function () {
-  it("Should allow election owner to delete their election", async function () {
-    const { electionFactory, owner, otherAccount } = await loadFixture(
-      deployElectionFactoryFixture
-    );
-    
-    // Create an election
-    const electionInfo = {
-      startTime: Math.floor(Date.now() / 1000) + 60,
-      endTime: Math.floor(Date.now() / 1000) + 3600,
-      name: "Test Election",
-      description: "This is a test election",
-    };
-    
-    const initialCandidates = [
-      {candidateID:1, name:'candidate1', description:"candidate1"},
-      {candidateID:2, name:'candidate2', description:"candidate2"}
-    ];
-    
-    const ballotType = 1; // General
-    const resultType = 1; // General
-    
-    await electionFactory.createElection(
-      electionInfo,
-      initialCandidates,
-      ballotType,
-      resultType
-    );
-    
-    // Verify election was created
-    let openElections = await electionFactory.getOpenElections();
-    expect(openElections.length).to.equal(1);
-    
-    // Delete the election
-    await electionFactory.deleteElection(0);
-    
-    // Verify election was deleted
-    openElections = await electionFactory.getOpenElections();
-    expect(openElections.length).to.equal(0);
-  });
-  
-  it("Should not allow non-owner to delete an election", async function () {
-    const { electionFactory, owner, otherAccount } = await loadFixture(
-      deployElectionFactoryFixture
-    );
-    
-    // Create an election
-    const electionInfo = {
-      startTime: Math.floor(Date.now() / 1000) + 60,
-      endTime: Math.floor(Date.now() / 1000) + 3600,
-      name: "Test Election",
-      description: "This is a test election",
-    };
-    
-    const initialCandidates = [
-      {candidateID:1, name:'candidate1', description:"candidate1"},
-      {candidateID:2, name:'candidate2', description:"candidate2"}
-    ];
-    
-    const ballotType = 1; // General
-    const resultType = 1; // General
-    
-    await electionFactory.createElection(
-      electionInfo,
-      initialCandidates,
-      ballotType,
-      resultType
-    );
-    
-    // Attempt to delete the election as non-owner, should fail
-    await expect(
-      electionFactory.connect(otherAccount).deleteElection(0)
-    ).to.be.revertedWithCustomError(electionFactory, "OnlyOwner");
-  });
-  
-  it("Should properly handle deletion of non-last election", async function () {
-    const { electionFactory, owner } = await loadFixture(
-      deployElectionFactoryFixture
-    );
-    
-    // Create multiple elections
-    const electionInfo = {
-      startTime: Math.floor(Date.now() / 1000) + 60,
-      endTime: Math.floor(Date.now() / 1000) + 3600,
-      name: "Test Election",
-      description: "This is a test election",
-    };
-    
-    const initialCandidates = [
-      {candidateID:1, name:'candidate1', description:"candidate1"},
-      {candidateID:2, name:'candidate2', description:"candidate2"}
-    ];
-    
-    const ballotType = 1; // General
-    const resultType = 1; // General
-    
-    // Create first election
-    await electionFactory.createElection(
-      electionInfo,
-      initialCandidates,
-      ballotType,
-      resultType
-    );
-    
-    // Create second election
-    await electionFactory.createElection(
-      electionInfo,
-      initialCandidates,
-      ballotType,
-      resultType
-    );
-    
-    // Create third election
-    await electionFactory.createElection(
-      electionInfo,
-      initialCandidates,
-      ballotType,
-      resultType
-    );
-    
-    let openElections = await electionFactory.getOpenElections();
-    expect(openElections.length).to.equal(3);
-    
-    const firstElectionAddress = openElections[0];
-    const lastElectionAddress = openElections[2];
-    
-    // Delete the first election
-    await electionFactory.deleteElection(0);
-    
-    // Check that the last election was moved to index 0
-    openElections = await electionFactory.getOpenElections();
-    expect(openElections.length).to.equal(2);
-    expect(openElections[0]).to.equal(lastElectionAddress);
-  });
-});
+      // Create an election
+      const electionInfo = {
+        startTime: Math.floor(Date.now() / 1000) + 60,
+        endTime: Math.floor(Date.now() / 1000) + 3600,
+        name: "Test Election",
+        description: "This is a test election",
+      };
 
-describe("Election Creation Validation", function () {
-  it("Should revert when creating an election with less than 2 candidates", async function () {
-    const { electionFactory, owner } = await loadFixture(
-      deployElectionFactoryFixture
-    );
-    
-    const electionInfo = {
-      startTime: Math.floor(Date.now() / 1000) + 60,
-      endTime: Math.floor(Date.now() / 1000) + 3600,
-      name: "Test Election",
-      description: "This is a test election",
-    };
-    
-    // Only one candidate
-    const initialCandidates = [
-      {candidateID:1, name:'candidate1', description:"candidate1"}
-    ];
-    
-    const ballotType = 1; // General
-    const resultType = 1; // General
-    
-    // Should revert with InvalidCandidatesLength
-    await expect(
-      electionFactory.createElection(
+      const initialCandidates = [
+        { candidateID: 1, name: 'candidate1', description: "candidate1" },
+        { candidateID: 2, name: 'candidate2', description: "candidate2" }
+      ];
+
+      const ballotType = 1; // General
+      const resultType = 1; // General
+
+      await electionFactory.createElection(
         electionInfo,
         initialCandidates,
         ballotType,
         resultType
-      )
-    ).to.be.revertedWithCustomError(electionFactory, "InvalidCandidatesLength");
+      );
+
+      // Verify election was created
+      let openElections = await electionFactory.getOpenElections();
+      expect(openElections.length).to.equal(1);
+
+      // Delete the election
+      await electionFactory.deleteElection(0);
+
+      // Verify election was deleted
+      openElections = await electionFactory.getOpenElections();
+      expect(openElections.length).to.equal(0);
+    });
+
+    it("Should not allow non-owner to delete an election", async function () {
+      const { electionFactory, owner, otherAccount } = await loadFixture(
+        deployElectionFactoryFixture
+      );
+
+      // Create an election
+      const electionInfo = {
+        startTime: Math.floor(Date.now() / 1000) + 60,
+        endTime: Math.floor(Date.now() / 1000) + 3600,
+        name: "Test Election",
+        description: "This is a test election",
+      };
+
+      const initialCandidates = [
+        { candidateID: 1, name: 'candidate1', description: "candidate1" },
+        { candidateID: 2, name: 'candidate2', description: "candidate2" }
+      ];
+
+      const ballotType = 1; // General
+      const resultType = 1; // General
+
+      await electionFactory.createElection(
+        electionInfo,
+        initialCandidates,
+        ballotType,
+        resultType
+      );
+
+      // Attempt to delete the election as non-owner, should fail
+      await expect(
+        electionFactory.connect(otherAccount).deleteElection(0)
+      ).to.be.revertedWithCustomError(electionFactory, "OnlyOwner");
+    });
+
+    it("Should properly handle deletion of non-last election", async function () {
+      const { electionFactory, owner } = await loadFixture(
+        deployElectionFactoryFixture
+      );
+
+      // Create multiple elections
+      const electionInfo = {
+        startTime: Math.floor(Date.now() / 1000) + 60,
+        endTime: Math.floor(Date.now() / 1000) + 3600,
+        name: "Test Election",
+        description: "This is a test election",
+      };
+
+      const initialCandidates = [
+        { candidateID: 1, name: 'candidate1', description: "candidate1" },
+        { candidateID: 2, name: 'candidate2', description: "candidate2" }
+      ];
+
+      const ballotType = 1; // General
+      const resultType = 1; // General
+
+      // Create first election
+      await electionFactory.createElection(
+        electionInfo,
+        initialCandidates,
+        ballotType,
+        resultType
+      );
+
+      // Create second election
+      await electionFactory.createElection(
+        electionInfo,
+        initialCandidates,
+        ballotType,
+        resultType
+      );
+
+      // Create third election
+      await electionFactory.createElection(
+        electionInfo,
+        initialCandidates,
+        ballotType,
+        resultType
+      );
+
+      let openElections = await electionFactory.getOpenElections();
+      expect(openElections.length).to.equal(3);
+
+      const firstElectionAddress = openElections[0];
+      const lastElectionAddress = openElections[2];
+
+      // Delete the first election
+      await electionFactory.deleteElection(0);
+
+      // Check that the last election was moved to index 0
+      openElections = await electionFactory.getOpenElections();
+      expect(openElections.length).to.equal(2);
+      expect(openElections[0]).to.equal(lastElectionAddress);
+    });
   });
-});
+
+  describe("Election Creation Validation", function () {
+    it("Should revert when creating an election with less than 2 candidates", async function () {
+      const { electionFactory, owner } = await loadFixture(
+        deployElectionFactoryFixture
+      );
+
+      const electionInfo = {
+        startTime: Math.floor(Date.now() / 1000) + 60,
+        endTime: Math.floor(Date.now() / 1000) + 3600,
+        name: "Test Election",
+        description: "This is a test election",
+      };
+
+      // Only one candidate
+      const initialCandidates = [
+        { candidateID: 1, name: 'candidate1', description: "candidate1" }
+      ];
+
+      const ballotType = 1; // General
+      const resultType = 1; // General
+
+      // Should revert with InvalidCandidatesLength
+      await expect(
+        electionFactory.createElection(
+          electionInfo,
+          initialCandidates,
+          ballotType,
+          resultType
+        )
+      ).to.be.revertedWithCustomError(electionFactory, "InvalidCandidatesLength");
+    });
+  });
+
+  describe("CCIP Cross-Chain Functionality", function () {
+    async function setupCCIPTest() {
+      // Use the existing fixture
+      const fixtureData = await loadFixture(deployElectionFactoryFixture);
+      console.log("fixtureData", fixtureData);
+      // Deploy MockCCIPReceiver
+      console.log("ElectionFactory address:", fixtureData.electionFactory.target);
+      const MockCCIPReceiver = await ethers.getContractFactory("MockCCIPReceiver");
+      const mockCcipReceiver = await MockCCIPReceiver.deploy(fixtureData.electionFactory.target);
+      // await mockCcipReceiver.deployed();
+      console.log("MockCCIPReceiver deployed at:", mockCcipReceiver.target);
+
+      // Create an election for testing
+      const electionInfo = {
+        startTime: Math.floor(Date.now() / 1000) + 60,
+        endTime: Math.floor(Date.now() / 1000) + 3600,
+        name: "CCIP Test",
+        description: "CCIP Test",
+      };
+
+      const initialCandidates = [
+        { candidateID: 1, name: 'candidate1', description: "candidate1" },
+        { candidateID: 2, name: 'candidate2', description: "candidate2" }
+      ];
+
+      await fixtureData.electionFactory.createElection(
+        electionInfo,
+        initialCandidates,
+        1, // General ballot
+        1  // General result
+      );
+
+      const openElections = await fixtureData.electionFactory.getOpenElections();
+      const electionAddress = openElections[0];
+
+      return {
+        ...fixtureData,
+        mockCcipReceiver,
+        electionAddress
+      };
+    }
+
+    it("Should allow whitelisted contracts to send CCIP messages", async function () {
+      const { electionFactory, mockCcipReceiver, electionAddress, owner, voter1 } = await setupCCIPTest();
+      const mockReceiverAddress = await mockCcipReceiver.getAddress();
+      console.log("Mock Receiver Address:", mockReceiverAddress);
+
+      // Add the mock contract as a whitelisted source
+      const sourceChainSelector = BigInt("16015286601757825753");
+      console.log("Whitelisting for chain:", sourceChainSelector.toString(), "contract:", mockReceiverAddress);
+
+      await electionFactory.addWhitelistedContract(sourceChainSelector, mockCcipReceiver.target);
+
+      const messageId = ethers.encodeBytes32String("testMessage");
+      const voteArr = [0]; // Vote for candidate with ID 0
+
+      // This should not revert since we're using a whitelisted sender
+      await mockCcipReceiver.mockCcipReceive(
+        messageId,
+        sourceChainSelector,
+        mockReceiverAddress,
+        electionAddress,
+        voter1.address,
+        voteArr
+      );
+      console.log("Testing4");
+
+      // Attach to the election contract to verify the vote was processed
+      const Election = await ethers.getContractFactory("Election");
+      console.log("Testing5");
+      const electionContract = Election.attach(electionAddress);
+      console.log("Testing6");
+
+      // Check if the voter is marked as having voted
+      const hasVoted = await electionContract.userVoted(voter1.address);
+      console.log("Testing7");
+      expect(hasVoted).to.be.true;
+    });
+
+  });
 });
