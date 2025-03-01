@@ -1608,4 +1608,212 @@ describe("ElectionFactory and Election Contracts", function () {
       expect(winnerIds).to.deep.equal([0, 1]); // Candidate 1 and Candidate 2 are winners due to tie
     });
   });
+
+  describe("ElectionFactory Owner Management", function () {
+  it("Should allow only owner to add whitelisted contracts", async function () {
+    const { electionFactory, owner, otherAccount } = await loadFixture(
+      deployElectionFactoryFixture
+    );
+    
+    const sourceChainSelector = 16015286601757825753n; // Example chain selector
+    const contractAddress = "0x1234567890123456789012345678901234567890";
+    
+    // Should work when owner calls it
+    await electionFactory.addWhitelistedContract(sourceChainSelector, contractAddress);
+    
+    // Should revert when non-owner calls it
+    await expect(
+      electionFactory.connect(otherAccount).addWhitelistedContract(sourceChainSelector, contractAddress)
+    ).to.be.revertedWithCustomError(electionFactory, "OwnerRestricted");
+  });
+
+  it("Should allow only owner to remove whitelisted contracts", async function () {
+    const { electionFactory, owner, otherAccount } = await loadFixture(
+      deployElectionFactoryFixture
+    );
+    
+    const sourceChainSelector = 16015286601757825753n; // Example chain selector
+    const contractAddress = "0x1234567890123456789012345678901234567890";
+    
+    // Add a whitelisted contract first
+    await electionFactory.addWhitelistedContract(sourceChainSelector, contractAddress);
+    
+    // Should work when owner calls it
+    await electionFactory.removeWhitelistedContract(sourceChainSelector);
+    
+    // Should revert when non-owner calls it
+    await expect(
+      electionFactory.connect(otherAccount).removeWhitelistedContract(sourceChainSelector)
+    ).to.be.revertedWithCustomError(electionFactory, "OwnerRestricted");
+  });
+});
+
+describe("Election Deletion", function () {
+  it("Should allow election owner to delete their election", async function () {
+    const { electionFactory, owner, otherAccount } = await loadFixture(
+      deployElectionFactoryFixture
+    );
+    
+    // Create an election
+    const electionInfo = {
+      startTime: Math.floor(Date.now() / 1000) + 60,
+      endTime: Math.floor(Date.now() / 1000) + 3600,
+      name: "Test Election",
+      description: "This is a test election",
+    };
+    
+    const initialCandidates = [
+      {candidateID:1, name:'candidate1', description:"candidate1"},
+      {candidateID:2, name:'candidate2', description:"candidate2"}
+    ];
+    
+    const ballotType = 1; // General
+    const resultType = 1; // General
+    
+    await electionFactory.createElection(
+      electionInfo,
+      initialCandidates,
+      ballotType,
+      resultType
+    );
+    
+    // Verify election was created
+    let openElections = await electionFactory.getOpenElections();
+    expect(openElections.length).to.equal(1);
+    
+    // Delete the election
+    await electionFactory.deleteElection(0);
+    
+    // Verify election was deleted
+    openElections = await electionFactory.getOpenElections();
+    expect(openElections.length).to.equal(0);
+  });
+  
+  it("Should not allow non-owner to delete an election", async function () {
+    const { electionFactory, owner, otherAccount } = await loadFixture(
+      deployElectionFactoryFixture
+    );
+    
+    // Create an election
+    const electionInfo = {
+      startTime: Math.floor(Date.now() / 1000) + 60,
+      endTime: Math.floor(Date.now() / 1000) + 3600,
+      name: "Test Election",
+      description: "This is a test election",
+    };
+    
+    const initialCandidates = [
+      {candidateID:1, name:'candidate1', description:"candidate1"},
+      {candidateID:2, name:'candidate2', description:"candidate2"}
+    ];
+    
+    const ballotType = 1; // General
+    const resultType = 1; // General
+    
+    await electionFactory.createElection(
+      electionInfo,
+      initialCandidates,
+      ballotType,
+      resultType
+    );
+    
+    // Attempt to delete the election as non-owner, should fail
+    await expect(
+      electionFactory.connect(otherAccount).deleteElection(0)
+    ).to.be.revertedWithCustomError(electionFactory, "OnlyOwner");
+  });
+  
+  it("Should properly handle deletion of non-last election", async function () {
+    const { electionFactory, owner } = await loadFixture(
+      deployElectionFactoryFixture
+    );
+    
+    // Create multiple elections
+    const electionInfo = {
+      startTime: Math.floor(Date.now() / 1000) + 60,
+      endTime: Math.floor(Date.now() / 1000) + 3600,
+      name: "Test Election",
+      description: "This is a test election",
+    };
+    
+    const initialCandidates = [
+      {candidateID:1, name:'candidate1', description:"candidate1"},
+      {candidateID:2, name:'candidate2', description:"candidate2"}
+    ];
+    
+    const ballotType = 1; // General
+    const resultType = 1; // General
+    
+    // Create first election
+    await electionFactory.createElection(
+      electionInfo,
+      initialCandidates,
+      ballotType,
+      resultType
+    );
+    
+    // Create second election
+    await electionFactory.createElection(
+      electionInfo,
+      initialCandidates,
+      ballotType,
+      resultType
+    );
+    
+    // Create third election
+    await electionFactory.createElection(
+      electionInfo,
+      initialCandidates,
+      ballotType,
+      resultType
+    );
+    
+    let openElections = await electionFactory.getOpenElections();
+    expect(openElections.length).to.equal(3);
+    
+    const firstElectionAddress = openElections[0];
+    const lastElectionAddress = openElections[2];
+    
+    // Delete the first election
+    await electionFactory.deleteElection(0);
+    
+    // Check that the last election was moved to index 0
+    openElections = await electionFactory.getOpenElections();
+    expect(openElections.length).to.equal(2);
+    expect(openElections[0]).to.equal(lastElectionAddress);
+  });
+});
+
+describe("Election Creation Validation", function () {
+  it("Should revert when creating an election with less than 2 candidates", async function () {
+    const { electionFactory, owner } = await loadFixture(
+      deployElectionFactoryFixture
+    );
+    
+    const electionInfo = {
+      startTime: Math.floor(Date.now() / 1000) + 60,
+      endTime: Math.floor(Date.now() / 1000) + 3600,
+      name: "Test Election",
+      description: "This is a test election",
+    };
+    
+    // Only one candidate
+    const initialCandidates = [
+      {candidateID:1, name:'candidate1', description:"candidate1"}
+    ];
+    
+    const ballotType = 1; // General
+    const resultType = 1; // General
+    
+    // Should revert with InvalidCandidatesLength
+    await expect(
+      electionFactory.createElection(
+        electionInfo,
+        initialCandidates,
+        ballotType,
+        resultType
+      )
+    ).to.be.revertedWithCustomError(electionFactory, "InvalidCandidatesLength");
+  });
+});
 });
