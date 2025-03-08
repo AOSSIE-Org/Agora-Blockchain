@@ -1,5 +1,8 @@
 {
   "name": "hardhat-project",
+  "scripts": {
+    "format": "npx prettier --write . --ignore-path .prettierignore"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",
     "@nomicfoundation/hardhat-ethers": "^3.0.6",
@@ -17,6 +20,7 @@
     "ethers": "^6.13.0",
     "hardhat": "^2.22.8",
     "hardhat-gas-reporter": "^1.0.10",
+    "prettier": "^3.5.3",
     "solidity-coverage": "^0.8.12",
     "ts-node": "^10.9.2",
     "typechain": "^8.3.2",
