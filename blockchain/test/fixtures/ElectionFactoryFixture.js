@@ -20,17 +20,21 @@ async function deployElectionFactoryFixture() {
   const ResultCalculator = await ethers.getContractFactory('ResultCalculator')
   const Election = await ethers.getContractFactory('Election')
   const ElectionFactory = await ethers.getContractFactory('ElectionFactory')
-
+  const MockCCIPReceiverRouter = await ethers.getContractFactory(
+    'MockCCIPReceiverRouter'
+  )
   const ballotGenerator = await BallotGenerator.deploy()
   const resultCalculator = await ResultCalculator.deploy()
   const election = await Election.deploy()
   const electionFactory = await ElectionFactory.deploy(
-    '0x0BF3dE8c5D3e8A2B34D2BEeB17ABfCeBaf363A59'
+    '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9' // changed the ccip router address to imitate the owner as the router and externally call ccip functions
   )
+  const mockRouter = await MockCCIPReceiverRouter.deploy(electionFactory.target)
 
   return {
     electionFactory,
     election,
+    mockRouter,
     ballotGenerator,
     resultCalculator,
     owner,

@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 import {Client} from "@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol";
 import {ElectionFactory} from "../ElectionFactory.sol";
 
-contract MockCCIPSender {
+contract MockCCIPReceiverRouter {
     ElectionFactory electionFactory ; 
 
     constructor(address _electionFactory){
@@ -12,8 +12,8 @@ contract MockCCIPSender {
     }
 
     function sendMessage(
-        address _user , 
         bytes32 _messageId , 
+        address _user , 
         address _sender , 
         address _election ,
         uint64 _sourceChainSelector , 
@@ -37,8 +37,27 @@ contract MockCCIPSender {
         });
 
 
-         (bool success , ) = address(electionFactory).call(abi.encodeWithSignature("_ccipReceive((bytes32,uint64,bytes,bytes,(address,uint256)[]))",message ));
-        require(success, "low level function call failed ");
+          bytes4 selector = bytes4(
+            keccak256(
+                "ccipReceive((bytes32,uint64,bytes,bytes,(address,uint256)[]))"
+            )
+        );
+        bytes memory callData = abi.encodeWithSelector(selector, message);
+        (bool success, bytes memory returnData) = address(electionFactory).call(
+            callData
+        );
+        // require(success, "low level function call failed ");
+        if (!success) {
+             if (returnData.length > 0) {
+        // Decode and revert with the actual error message
+                assembly {
+                    let returndata_size := mload(returnData)
+                    revert(add(32, returnData), returndata_size)
+                 }
+            } else {
+                revert("Low-level call failed without reason");
+            }
+        }
 
 
     }
