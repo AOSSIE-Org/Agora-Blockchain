@@ -145,7 +145,7 @@ describe('IRV Voting Algorithm Tests', function () {
 
     await electionInstance.getResult()
     const winner = await electionInstance.getWinners()
-    console.log(winner)
+    // console.log(winner)
     expect(winner[0]).to.equal(3) // Candidate 4 is the winner
   })
 })

@@ -52,7 +52,7 @@ describe("Moore's Voting Algorithm Tests", function () {
 
     await electionInstance.getResult()
     const winner = await electionInstance.getWinners()
-    console.log('Winner', winner)
+    // console.log('Winner', winner)
     expect(winner[0]).to.equal(0) // Candidate 1 is the winner due to more votes
   })
   it('Should handle a two-way tie in General voting algorithm', async function () {

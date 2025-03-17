@@ -60,6 +60,63 @@ describe('ElectionFactory', function () {
       expect(fetchedElectionInfo.name).to.equal(electionInfo.name)
       expect(fetchedElectionInfo.description).to.equal(electionInfo.description)
     })
+    it('should add candidates to candidates array upon election creation' , async function (){
+      const { electionFactory, election, owner } = await loadFixture(
+        deployElectionFactoryFixture
+      )
+      const electionInfo = {
+        startTime: Math.floor(Date.now() / 1000) + 60,
+        endTime: Math.floor(Date.now() / 1000) + 3600,
+        name: 'election1',
+        description: `This is election1`,
+      }
+      const ballotType = 1
+        const resultType = 1
+        const initialCandidates = [
+          { candidateID: 1, name: 'candidate1', description: 'candidate1' },
+          { candidateID: 2, name: 'candidate2', description: 'candidate2s' },
+        ]
+        await electionFactory.createElection(
+          electionInfo,
+          initialCandidates,
+          ballotType,
+          resultType
+        )
+        const openElections = await electionFactory.getOpenElections()
+        const election1Address = openElections[0];
+        const election1 = await election.attach(election1Address)
+        const candidates = await election1.getCandidateList();
+
+        expect(candidates.length).to.equal(2)
+
+
+      
+    })
+    it ('should revert if the candiates length is less than 2 ' , async function (){
+      const { electionFactory, election, owner } = await loadFixture(
+        deployElectionFactoryFixture
+      )
+      const electionInfo = {
+        startTime: Math.floor(Date.now() / 1000) + 60,
+        endTime: Math.floor(Date.now() / 1000) + 3600,
+        name: 'election1',
+        description: `This is election1`,
+      }
+      const ballotType = 1
+        const resultType = 1
+        const initialCandidates = [
+          { candidateID: 1, name: 'candidate1', description: 'candidate1' }, // only 1 candidate passed while creating election 
+        ]
+        await expect(electionFactory.createElection(
+          electionInfo,
+          initialCandidates,
+          ballotType,
+          resultType
+        )).to.be.revertedWithCustomError(electionFactory, 'InvalidCandidatesLength')
+        
+        
+
+    })
     it('should delete the election ', async function () {
       const { electionFactory, election, owner } = await loadFixture(
         deployElectionFactoryFixture
