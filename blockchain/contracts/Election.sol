@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
-
+// added a useless commits
 import {IBallot} from "./ballots/interface/IBallot.sol";
 import {IResultCalculator} from "./resultCalculators/interface/IResultCalculator.sol";
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
