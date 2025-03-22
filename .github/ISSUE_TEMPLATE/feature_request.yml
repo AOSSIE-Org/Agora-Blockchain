@@ -1,0 +1,45 @@
+name: "✨ Feature Request"
+description: "Suggest a new feature"
+title: "[Feature]: "
+
+body:
+  - type: checkboxes
+    id: existing-issue
+    attributes:
+      label: "Is there an existing issue for this?"
+      description: "Please search to see if an issue already exists for the feature you want to suggest."
+      options:
+        - label: "I have searched the existing issues"
+          required: true
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: "Issue Description ✍️"
+      description: "Enter a brief description about the new feature"
+      placeholder: "Please include a summary, relevant motivation, and context."
+      value: |
+        ## 📌 Feature Description  
+        <!-- Provide a brief summary of the feature -->
+
+        ## 📷 Screenshot  
+        <!-- Attach screenshots if applicable -->
+
+        ## 💡 Suggestions  
+        <!-- Any ideas for a fix or improvement? -->
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: record
+    attributes:
+      label: "Record"
+      options:
+        - label: "I have synced all my node versions as mentioned in the project"
+          required: true
+        - label: "I am using the same version of npm as is the project"
+          required: true
+        - label: "My current branch is in sync with the development branch"
+          required: true
+        - label: "I want to work on this issue"
+          required: false
