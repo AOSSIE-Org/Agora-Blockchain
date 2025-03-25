@@ -57,6 +57,8 @@ contract Election is Initializable {
     uint public resultType;
     uint public totalVotes;
     bool public resultsDeclared;
+    address[] public voters;
+    uint public electionFund;
 
     bool private ballotInitialized;
 
@@ -99,7 +101,8 @@ contract Election is Initializable {
             ballotInitialized = true;
         }
         ballot.vote(voteArr);
-        userVoted[msg.sender] = true;
+        totalVotes++;
+        voters.push(msg.sender);
         totalVotes++;
     }
 
@@ -159,5 +162,17 @@ contract Election is Initializable {
 
     function getWinners() external view returns (uint[] memory) {
         return winners;
+    }
+
+    function fundElection() external payable {
+        electionFund += msg.value;
+    }
+
+    function distributeRewards() external onlyOwner {
+        require(block.timestamp > electionInfo.endTime, "Election not ended");
+        uint rewardPerVoter = electionFund / totalVotes;
+        for (uint i = 0; i < voters.length; i++) {
+            payable(voters[i]).transfer(rewardPerVoter);
+        }
     }
 }
