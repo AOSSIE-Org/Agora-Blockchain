@@ -1,0 +1,50 @@
+name: "🐞 Bug Report"
+description: "Create a report to help us improve"
+title: "BUG:"
+labels: ["Bug"]
+body:
+  - type: checkboxes
+    attributes:
+      label: "Is there an existing issue for this?"
+      description: "Please search to see if an issue already exists for the bug you encountered."
+      options:
+        - label: "I have searched the existing issues"
+          required: true
+  - type: markdown
+    attributes:
+      value: |
+        > [!IMPORTANT]
+        > Before posting, remove sensitive data, such as passwords, secret keys, session cookies, etc.
+  - type: textarea
+    attributes:
+      label: "Issue Description ✍️"
+      description: "Please provide the issue description, including following information:"
+      value: |
+        ## 📌 Describe the Bug
+        <!-- Provide a brief summary of the issue --> 
+
+        ## 🚨 Actual Behavior  
+        <!-- What actually happened? -->
+
+        ## 🎯 Expected Behavior  
+        <!-- What should happen? -->
+
+        ## 📷 Screenshot  
+        <!-- Attach screenshots if applicable -->
+
+        ## 💡 Suggestions  
+        <!-- Any ideas for a fix? -->
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: "Record"
+      options:
+        - label: "I have synced all my node versions as mentioned in the project"
+          required: true
+        - label: "I am using the same version of npm as is the project"
+          required: true
+        - label: "My current branch is in sync with the development branch"
+          required: true
+        - label: "I want to work on this issue"
+          required: false
