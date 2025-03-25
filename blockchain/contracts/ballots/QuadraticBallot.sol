@@ -1,33 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import "./interface/IBallot.sol";
+import "./BaseBallot.sol";
 
-contract QuadraticBallot is IBallot {
-    address public electionContract;
-
+contract QuadraticBallot is BaseBallot {
     uint[] private candidateVotes;
 
-    modifier onlyOwner() {
-        if (msg.sender != electionContract) revert OwnerPermissioned();
-        _;
+    function _afterInit() internal override {
+        candidateVotes = new uint[](totalCandidates);
     }
 
-    constructor(address _electionAddress) {
-        electionContract = _electionAddress;
-    }
-
-    function init(uint totalCandidate) external onlyOwner {
-        candidateVotes = new uint[](totalCandidate);
-    }
-    // voting as preference candidate
     function vote(uint[] memory voteArr) external onlyOwner {
-        uint totalCandidates = candidateVotes.length;
         if (voteArr.length != totalCandidates) revert VoteInputLength();
-        if (!checkCreditsQuadratic(voteArr)) revert IncorrectCredits();
+        if (!_validateQuadraticCredits(voteArr)) revert IncorrectCredits();
 
         for (uint i = 0; i < totalCandidates; i++) {
-            // voteArr[i] is the credits alloted per candidate
             candidateVotes[i] += voteArr[i];
         }
     }
@@ -36,13 +23,13 @@ contract QuadraticBallot is IBallot {
         return candidateVotes;
     }
 
-    function checkCreditsQuadratic(
+    function _validateQuadraticCredits(
         uint[] memory voteArr
     ) internal pure returns (bool) {
-        uint totalCredits = 100;
+        uint remainingCredits = 100;
         for (uint i = 0; i < voteArr.length; i++) {
-            totalCredits = totalCredits - voteArr[i];
+            remainingCredits -= voteArr[i];
         }
-        return totalCredits == 0;
+        return remainingCredits == 0;
     }
 }
