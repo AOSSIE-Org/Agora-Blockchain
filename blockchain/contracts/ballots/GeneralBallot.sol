@@ -1,35 +1,23 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import "./interface/IBallot.sol";
+import "./BaseBallot.sol";  // Changed from IBallot to BaseBallot
 
-contract GeneralBallot is IBallot {
+contract GeneralBallot is BaseBallot {
     error InvalidVoteArrayLength();
     error InvalidVoteDistribution();
 
-    address public electionContract;
-
-    uint private totalCandidate;
     uint[] private candidateVotes;
 
-    modifier onlyOwner() {
-        if (msg.sender != electionContract) revert OwnerPermissioned();
-        _;
+    // Constructor removed - now inherited from BaseBallot
+
+    function _afterInit() internal override {
+        candidateVotes = new uint[](totalCandidates);  // Uses totalCandidates from BaseBallot
     }
 
-    constructor(address _electionAddress) {
-        electionContract = _electionAddress;
-    }
-
-    function init(uint _totalCandidate) external onlyOwner {
-        totalCandidate = _totalCandidate;
-        candidateVotes = new uint[](_totalCandidate);
-    }
-
-    //just a sigle vote in arr [1]
     function vote(uint256[] memory _votes) external onlyOwner {
         if (_votes.length != 1) revert InvalidVoteArrayLength();
-        checkValidVotes(_votes[0]);
+        _validateVote(_votes[0]);
         candidateVotes[_votes[0]]++;
     }
 
@@ -37,7 +25,7 @@ contract GeneralBallot is IBallot {
         return candidateVotes;
     }
 
-    function checkValidVotes(uint256 _vote) internal view {
-        if (_vote >= totalCandidate) revert InvalidVoteDistribution();
+    function _validateVote(uint256 _vote) internal view {
+        if (_vote >= totalCandidates) revert InvalidVoteDistribution();
     }
 }

@@ -1,34 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import "./interface/IBallot.sol";
+import "./BaseBallot.sol";  // Changed from IBallot to BaseBallot
 
-contract IRV is IBallot {
-    address public electionContract;
-
-    uint private totalCandidates;
+contract IRV is BaseBallot {
     uint[][] private votes;
 
-    modifier onlyOwner() {
-        if (msg.sender != electionContract) revert OwnerPermissioned();
-        _;
-    }
+    // Constructor removed - inherited from BaseBallot
+    // init() removed - handled by BaseBallot
 
-    constructor(address _electionAddress) {
-        electionContract = _electionAddress;
-    }
-
-    function init(uint _totalCandidates) external onlyOwner {
-        totalCandidates = _totalCandidates;
-    }
-
-    // voting as preference candidate
     function vote(uint[] memory voteArr) external onlyOwner {
         if (totalCandidates != voteArr.length) revert VoteInputLength();
         votes.push(voteArr);
     }
 
-    function getVotes() external view returns (uint256[][] memory) {
+    function getVotes() external view onlyOwner returns (uint256[][] memory) {
         return votes;
     }
 }
