@@ -1,6 +1,7 @@
 import React from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
+
 const Web3Connect = () => {
   return (
     <div className="p-4">
@@ -11,7 +12,7 @@ const Web3Connect = () => {
         }}
         showBalance={false}
       />
-    </div>
+      </div>
   );
 };
 
