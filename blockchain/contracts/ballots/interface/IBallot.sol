@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity 0.8.24;
 import {Errors} from "./Errors.sol";
 interface IBallot is Errors {
     function init(uint) external;

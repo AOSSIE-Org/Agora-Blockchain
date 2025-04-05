@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity 0.8.24;
 
 import {IBallot} from "./ballots/interface/IBallot.sol";
 import {IResultCalculator} from "./resultCalculators/interface/IResultCalculator.sol";
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 contract Election is Initializable {
-    error OwnerPermissioned();
-    error AlreadyVoted();
-    error GetVotes();
-    error ElectionIncomplete();
-    error ElectionInactive();
-    error InvalidCandidateID();
+    error Election_OwnerPermissioned();
+    error Election_AlreadyVoted();
+    error Election_GetVotes();
+    error Election_ElectionIncomplete();
+    error Election_ElectionInactive();
+    error Election_InvalidCandidateID();
 
     mapping(address user => bool isVoted) public userVoted;
 
@@ -30,7 +30,7 @@ contract Election is Initializable {
     }
 
     modifier onlyOwner() {
-        if (msg.sender != owner) revert OwnerPermissioned();
+        if (msg.sender != owner) revert Election_OwnerPermissioned();
         _;
     }
 
@@ -38,12 +38,12 @@ contract Election is Initializable {
         if (
             block.timestamp < electionInfo.startTime ||
             block.timestamp > electionInfo.endTime
-        ) revert ElectionInactive();
+        ) revert Election_ElectionInactive();
         _;
     }
 
     modifier electionStarted() {
-        if (block.timestamp > electionInfo.startTime) revert ElectionInactive();
+        if (block.timestamp > electionInfo.startTime) revert Election_ElectionInactive();
         _;
     }
 
@@ -64,6 +64,8 @@ contract Election is Initializable {
     IResultCalculator private resultCalculator;
 
     Candidate[] public candidates;
+
+    
 
     function initialize(
         ElectionInfo memory _electionInfo,
@@ -93,7 +95,7 @@ contract Election is Initializable {
     }
 
     function userVote(uint[] memory voteArr) external electionInactive {
-        if (userVoted[msg.sender]) revert AlreadyVoted();
+        if (userVoted[msg.sender]) revert Election_AlreadyVoted();
         if (ballotInitialized == false) {
             ballot.init(candidates.length);
             ballotInitialized = true;
@@ -107,12 +109,12 @@ contract Election is Initializable {
         address user,
         uint[] memory _voteArr
     ) external electionInactive {
-        if (userVoted[user]) revert AlreadyVoted();
+        if (userVoted[user]) revert Election_AlreadyVoted();
         if (ballotInitialized == false) {
             ballot.init(candidates.length);
             ballotInitialized = true;
         }
-        if (msg.sender != factoryContract) revert OwnerPermissioned();
+        if (msg.sender != factoryContract) revert Election_OwnerPermissioned();
         userVoted[user] = true;
         ballot.vote(_voteArr);
         totalVotes++;
@@ -131,8 +133,9 @@ contract Election is Initializable {
     }
 
     function removeCandidate(uint _id) external onlyOwner electionStarted {
-    if (_id >= candidates.length) revert InvalidCandidateID();
-    candidates[_id] = candidates[candidates.length - 1]; // Replace with last element
+    uint256 candidatesLength = candidates.length ;
+    if (_id >= candidatesLength) revert Election_InvalidCandidateID();
+    candidates[_id] = candidates[candidatesLength - 1]; // Replace with last element
     candidates.pop(); 
 }
 
@@ -141,13 +144,13 @@ contract Election is Initializable {
     }
 
     function getResult() external {
-        if (block.timestamp < electionInfo.endTime) revert ElectionIncomplete();
+        if (block.timestamp < electionInfo.endTime) revert Election_ElectionIncomplete();
         bytes memory payload = abi.encodeWithSignature("getVotes()");
 
         (bool success, bytes memory allVotes) = address(ballot).staticcall(
             payload
         );
-        if (!success) revert GetVotes();
+        if (!success) revert Election_GetVotes();
 
         uint[] memory _winners = resultCalculator.getResults(
             allVotes,
