@@ -17,8 +17,9 @@ import ElectionInfoPopup from "../components/Modal/ElectionInfoPopup";
 const CreatePage: React.FC = () => {
   const router = useRouter();
   const [selectedBallot, setSelectedBallot] = useState<number>(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { switchChain } = useSwitchChain();
-  const { chain } = useAccount();
+  const { chain, isConnected, address } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const [startTime, setStartTime] = useState<Date | null>(new Date());
   const [endTime, setEndTime] = useState<Date | null>(new Date());
@@ -50,15 +51,31 @@ const CreatePage: React.FC = () => {
   };
   const createElection = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    
+    // Check if wallet is connected
+    if (!isConnected || !address) {
+      toast.error("Please connect your wallet first!");
+      console.log("Wallet not connected. isConnected:", isConnected, "address:", address);
+      return;
+    }
+
+    // Check if on correct network
+    if (chain?.id !== sepolia.id) {
+      toast.error("Please switch to Sepolia network!");
+      console.log("Wrong network. Current chain:", chain?.id, "Required:", sepolia.id);
+      return;
+    }
+
     const formData = new FormData(event.currentTarget);
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
     const ballotType = BigInt(selectedBallot);
 
+    console.log("Form data:", { name, description, ballotType, candidateCount: candidates.length });
+
     if (candidates.length<2){
       toast.error("At least 2 candidates are required!");
       return;
-    
     }
 
     if (!startTime || !endTime) {
@@ -73,28 +90,65 @@ const CreatePage: React.FC = () => {
       toast.error("Invalid timing. End time must be after start time.");
       return;
     }
+    
     if(candidates.length>0  && candidates.some(candidate=>!candidate.name || !candidate.description)){
       toast.error("please enter all candidate information or remove empty candidates.")
       return 
     }
-  // passed candidates to the create election function 
+    
+    setIsSubmitting(true);
+    console.log("Submitting transaction...");
+    toast.loading("Waiting for MetaMask approval...", { id: "creating" });
+    
     try {
-      await writeContractAsync({
+      console.log("Calling writeContractAsync with:", {
+        address: ELECTION_FACTORY_ADDRESS,
+        functionName: "createElection",
+        args: [
+          { startTime: start, endTime: end, name, description },
+          candidates.map((c, index) => ({ candidateID: BigInt(index), name: c.name, description: c.description })),
+          ballotType,
+          ballotType,
+        ]
+      });
+      
+      const txHash = await writeContractAsync({
         address: ELECTION_FACTORY_ADDRESS,
         abi: ElectionFactory,
         functionName: "createElection",
         args: [
-          { startTime: start, endTime: end, name, description }, // ElectionInfo object
+          { startTime: start, endTime: end, name, description },
           candidates.map((c, index) => ({ candidateID: BigInt(index), name: c.name, description: c.description })), 
           ballotType,
           ballotType,
         ],
       });
-      toast.success("Election created successfully!");
-      router.push("/");
-    } catch (error) {
+      
+      console.log("Transaction submitted:", txHash);
+      toast.success("Election created successfully!", { id: "creating" });
+      
+      setTimeout(() => {
+        router.push("/");
+      }, 1500);
+    } catch (error: any) {
       console.error("Error creating election:", error);
-      toast.error(ErrorMessage(error));
+      console.error("Error details:", {
+        message: error?.message,
+        cause: error?.cause,
+        shortMessage: error?.shortMessage,
+      });
+      
+      toast.dismiss("creating");
+      
+      if (error?.message?.includes("User rejected") || error?.message?.includes("User denied")) {
+        toast.error("Transaction rejected by user");
+      } else if (error?.message?.includes("Request expired")) {
+        toast.error("MetaMask request timed out. Please try again and approve quickly!");
+      } else {
+        toast.error(ErrorMessage(error));
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -225,11 +279,16 @@ const CreatePage: React.FC = () => {
           </div>
           <motion.button
             type="submit"
-            className="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            disabled={isSubmitting}
+            className={`w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+              isSubmitting 
+                ? "bg-gray-400 cursor-not-allowed" 
+                : "bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
+            } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+            whileHover={isSubmitting ? {} : { scale: 1.02 }}
+            whileTap={isSubmitting ? {} : { scale: 0.98 }}
           >
-            Create Election
+            {isSubmitting ? "Creating... Check MetaMask" : "Create Election"}
           </motion.button>
         </form>
       </motion.div>
