@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import SkeletonElection from "../Helper/SkeletonElection";
 import { FaRegUser } from "react-icons/fa6";
@@ -30,11 +30,21 @@ const ElectionMini = ({
     electionAddress: electionAddress,
   });
 
-  if (isLoading || electionInfo == undefined) return <SkeletonElection />;
-  const isStarting = Math.floor(Date.now() / 1000) < Number(electionInfo[0]);
-  const isEnded = Math.floor(Date.now() / 1000) > Number(electionInfo[1]);
+  // Calculate election status (safe to do even if electionInfo is undefined)
+  const isStarting = electionInfo ? Math.floor(Date.now() / 1000) < Number(electionInfo[0]) : false;
+  const isEnded = electionInfo ? Math.floor(Date.now() / 1000) > Number(electionInfo[1]) : false;
   const electionStat = isStarting ? 1 : isEnded ? 3 : 2;
-  update?.(electionAddress, electionStat);
+  
+  // Move state update to useEffect to avoid updating parent during render
+  // This must be called before any conditional returns (Rules of Hooks)
+  useEffect(() => {
+    if (update && electionInfo) {
+      update(electionAddress, electionStat);
+    }
+  }, [electionAddress, electionStat, update, electionInfo]);
+
+  // Early return AFTER all hooks have been called
+  if (isLoading || electionInfo == undefined) return <SkeletonElection />;
 
   return (
     <motion.div

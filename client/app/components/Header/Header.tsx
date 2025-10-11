@@ -10,6 +10,8 @@ import {
   HomeIcon,
   XMarkIcon,
   Bars3Icon,
+  WalletIcon,
+  QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 import Web3Connect from "../Helper/Web3Connect";
 import Image from "next/image";
@@ -17,7 +19,9 @@ import Image from "next/image";
 const menuItems = [
   { name: "Home", href: "/", icon: HomeIcon },
   { name: "Create", href: "/create", icon: PlusCircleIcon },
+  { name: "Wallet", href: "/wallet", icon: WalletIcon },
   { name: "Profile", href: "/profile", icon: UserIcon },
+  { name: "Help", href: "/help", icon: QuestionMarkCircleIcon },
 ];
 
 const Header = () => {
@@ -40,7 +44,7 @@ const Header = () => {
               <Image
                 width={32}
                 height={32}
-                className="h-8 w-auto"
+                style={{ width: 'auto', height: '32px' }}
                 src="/aossie.png"
                 alt="Agora Blockchain"
               />
