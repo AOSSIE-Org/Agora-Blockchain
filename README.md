@@ -82,6 +82,7 @@ The application will automatically reload when you make changes to the source co
    ```bash
    npm install
    ```
+⚠️ Note: This is a monorepo. You must navigate into client/ or blockchain/ before running installation commands. Do not run npm install in the root directory.
 
 3. **Test the Contracts**:
 
