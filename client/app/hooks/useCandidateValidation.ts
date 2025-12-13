@@ -4,7 +4,7 @@ import {
   CandidateValidationErrors,
   VALIDATION_MESSAGES,
   MIN_CANDIDATES,
-  findDuplicateIndices,
+  findDuplicateIds,
   findEmptyFields,
 } from "../helpers/candidateValidation";
 
@@ -21,7 +21,7 @@ export interface ValidationResult {
  */
 export function useCandidateValidation(candidates: Candidate[]): ValidationResult {
   return useMemo(() => {
-    const duplicateIndices = findDuplicateIndices(candidates);
+    const duplicateIds = findDuplicateIds(candidates);
     const emptyFields = findEmptyFields(candidates);
     const errorMessages: string[] = [];
 
@@ -36,7 +36,7 @@ export function useCandidateValidation(candidates: Candidate[]): ValidationResul
     }
 
     // Check for duplicate names
-    if (duplicateIndices.size > 0) {
+    if (duplicateIds.size > 0) {
       errorMessages.push(VALIDATION_MESSAGES.DUPLICATE_NAMES);
     }
 
@@ -45,7 +45,7 @@ export function useCandidateValidation(candidates: Candidate[]): ValidationResul
     return {
       isValid,
       errors: {
-        duplicateIndices,
+        duplicateIds,
         emptyFields,
       },
       errorMessages,

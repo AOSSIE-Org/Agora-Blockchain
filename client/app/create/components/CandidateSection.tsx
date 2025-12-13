@@ -10,9 +10,9 @@ interface CandidateSectionProps {
   candidates: Candidate[];
   validationErrors: CandidateValidationErrors;
   onAddCandidate: () => void;
-  onRemoveCandidate: (index: number) => void;
-  onUpdateCandidate: (index: number, field: keyof Candidate, value: string) => void;
-  onFieldBlur: (index: number, field: keyof Candidate) => void;
+  onRemoveCandidate: (id: string) => void;
+  onUpdateCandidate: (id: string, field: "name" | "description", value: string) => void;
+  onFieldBlur: (id: string, field: "name" | "description") => void;
 }
 
 /**
@@ -71,14 +71,14 @@ const CandidateSection: React.FC<CandidateSectionProps> = ({
           <AnimatePresence mode="popLayout" initial={false}>
             {candidates.map((candidate, index) => (
               <CandidateCard
-                key={`candidate-${index}`}
+                key={candidate.id}
                 candidate={candidate}
                 index={index}
-                isDuplicate={validationErrors.duplicateIndices.has(index)}
-                emptyFields={validationErrors.emptyFields.get(index)}
-                onRemove={() => onRemoveCandidate(index)}
-                onUpdate={(field, value) => onUpdateCandidate(index, field, value)}
-                onBlur={(field) => onFieldBlur(index, field)}
+                isDuplicate={validationErrors.duplicateIds.has(candidate.id)}
+                emptyFields={validationErrors.emptyFields.get(candidate.id)}
+                onRemove={() => onRemoveCandidate(candidate.id)}
+                onUpdate={(field, value) => onUpdateCandidate(candidate.id, field, value)}
+                onBlur={(field) => onFieldBlur(candidate.id, field)}
               />
             ))}
           </AnimatePresence>

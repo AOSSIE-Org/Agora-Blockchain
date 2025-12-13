@@ -4,13 +4,21 @@
  */
 
 export interface Candidate {
+  id: string;
   name: string;
   description: string;
 }
 
+/**
+ * Generates a unique ID for a new candidate.
+ */
+export function generateCandidateId(): string {
+  return `candidate-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+}
+
 export interface CandidateValidationErrors {
-  duplicateIndices: Set<number>;
-  emptyFields: Map<number, Set<keyof Candidate>>;
+  duplicateIds: Set<string>;
+  emptyFields: Map<string, Set<"name" | "description">>;
 }
 
 export const VALIDATION_MESSAGES = {
@@ -22,42 +30,42 @@ export const VALIDATION_MESSAGES = {
 export const MIN_CANDIDATES = 2;
 
 /**
- * Finds indices of candidates with duplicate names (case-insensitive).
- * Returns a Set containing all indices that have duplicates.
+ * Finds IDs of candidates with duplicate names (case-insensitive).
+ * Returns a Set containing all IDs that have duplicates.
  */
-export function findDuplicateIndices(candidates: Candidate[]): Set<number> {
-  const duplicateIndices = new Set<number>();
-  const nameToIndices = new Map<string, number[]>();
+export function findDuplicateIds(candidates: Candidate[]): Set<string> {
+  const duplicateIds = new Set<string>();
+  const nameToIds = new Map<string, string[]>();
 
-  candidates.forEach((candidate, index) => {
+  candidates.forEach((candidate) => {
     const normalizedName = candidate.name.trim().toLowerCase();
     if (normalizedName) {
-      const indices = nameToIndices.get(normalizedName) || [];
-      indices.push(index);
-      nameToIndices.set(normalizedName, indices);
+      const ids = nameToIds.get(normalizedName) || [];
+      ids.push(candidate.id);
+      nameToIds.set(normalizedName, ids);
     }
   });
 
-  nameToIndices.forEach((indices) => {
-    if (indices.length > 1) {
-      indices.forEach((index) => duplicateIndices.add(index));
+  nameToIds.forEach((ids) => {
+    if (ids.length > 1) {
+      ids.forEach((id) => duplicateIds.add(id));
     }
   });
 
-  return duplicateIndices;
+  return duplicateIds;
 }
 
 /**
  * Finds empty fields for each candidate.
- * Returns a Map where keys are candidate indices and values are Sets of empty field names.
+ * Returns a Map where keys are candidate IDs and values are Sets of empty field names.
  */
 export function findEmptyFields(
   candidates: Candidate[]
-): Map<number, Set<keyof Candidate>> {
-  const emptyFields = new Map<number, Set<keyof Candidate>>();
+): Map<string, Set<"name" | "description">> {
+  const emptyFields = new Map<string, Set<"name" | "description">>();
 
-  candidates.forEach((candidate, index) => {
-    const empty = new Set<keyof Candidate>();
+  candidates.forEach((candidate) => {
+    const empty = new Set<"name" | "description">();
 
     if (!candidate.name.trim()) {
       empty.add("name");
@@ -67,7 +75,7 @@ export function findEmptyFields(
     }
 
     if (empty.size > 0) {
-      emptyFields.set(index, empty);
+      emptyFields.set(candidate.id, empty);
     }
   });
 

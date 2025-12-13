@@ -8,10 +8,10 @@ interface CandidateCardProps {
   candidate: Candidate;
   index: number;
   isDuplicate: boolean;
-  emptyFields: Set<keyof Candidate> | undefined;
+  emptyFields: Set<"name" | "description"> | undefined;
   onRemove: () => void;
-  onUpdate: (field: keyof Candidate, value: string) => void;
-  onBlur: (field: keyof Candidate) => void;
+  onUpdate: (field: "name" | "description", value: string) => void;
+  onBlur: (field: "name" | "description") => void;
 }
 
 const inputBaseClasses =

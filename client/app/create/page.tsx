@@ -13,7 +13,7 @@ import { sepolia } from "viem/chains";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import ElectionInfoPopup from "../components/Modal/ElectionInfoPopup";
-import { Candidate } from "../helpers/candidateValidation";
+import { Candidate, generateCandidateId } from "../helpers/candidateValidation";
 import { useCandidateValidation } from "../hooks/useCandidateValidation";
 import CandidateSection from "./components/CandidateSection";
 
@@ -26,7 +26,7 @@ const CreatePage: React.FC = () => {
   const [startTime, setStartTime] = useState<Date | null>(new Date());
   const [endTime, setEndTime] = useState<Date | null>(new Date());
   const [candidates, setCandidates] = useState<Candidate[]>([]);
-  const [touchedFields, setTouchedFields] = useState<Map<number, Set<keyof Candidate>>>(new Map());
+  const [touchedFields, setTouchedFields] = useState<Map<string, Set<"name" | "description">>>(new Map());
 
   // Use the validation hook
   const validation = useCandidateValidation(candidates);
@@ -36,61 +36,61 @@ const CreatePage: React.FC = () => {
   };
 
   const addCandidate = useCallback(() => {
-    setCandidates((prev) => [...prev, { name: "", description: "" }]);
+    setCandidates((prev) => [...prev, { id: generateCandidateId(), name: "", description: "" }]);
   }, []);
 
-  const removeCandidate = useCallback((index: number) => {
-    setCandidates((prev) => prev.filter((_, i) => i !== index));
+  const removeCandidate = useCallback((id: string) => {
+    setCandidates((prev) => prev.filter((c) => c.id !== id));
     // Clean up touched fields for removed candidate
     setTouchedFields((prev) => {
       const newMap = new Map(prev);
-      newMap.delete(index);
+      newMap.delete(id);
       return newMap;
     });
   }, []);
 
   const updateCandidate = useCallback(
-    (index: number, field: keyof Candidate, value: string) => {
+    (id: string, field: "name" | "description", value: string) => {
       setCandidates((prev) =>
-        prev.map((candidate, i) =>
-          i === index ? { ...candidate, [field]: value } : candidate
+        prev.map((candidate) =>
+          candidate.id === id ? { ...candidate, [field]: value } : candidate
         )
       );
     },
     []
   );
 
-  const handleFieldBlur = useCallback((index: number, field: keyof Candidate) => {
+  const handleFieldBlur = useCallback((id: string, field: "name" | "description") => {
     setTouchedFields((prev) => {
       const newMap = new Map(prev);
-      const fields = newMap.get(index) || new Set();
+      const fields = newMap.get(id) || new Set();
       fields.add(field);
-      newMap.set(index, fields);
+      newMap.set(id, fields);
       return newMap;
     });
   }, []);
 
   // Filter validation errors to only show for touched fields
   const getVisibleValidationErrors = useCallback(() => {
-    const visibleEmptyFields = new Map<number, Set<keyof Candidate>>();
+    const visibleEmptyFields = new Map<string, Set<"name" | "description">>();
     
-    validation.errors.emptyFields.forEach((fields, index) => {
-      const touched = touchedFields.get(index);
+    validation.errors.emptyFields.forEach((fields, id) => {
+      const touched = touchedFields.get(id);
       if (touched) {
-        const visibleFields = new Set<keyof Candidate>();
+        const visibleFields = new Set<"name" | "description">();
         fields.forEach((field) => {
           if (touched.has(field)) {
             visibleFields.add(field);
           }
         });
         if (visibleFields.size > 0) {
-          visibleEmptyFields.set(index, visibleFields);
+          visibleEmptyFields.set(id, visibleFields);
         }
       }
     });
 
     return {
-      duplicateIndices: validation.errors.duplicateIndices,
+      duplicateIds: validation.errors.duplicateIds,
       emptyFields: visibleEmptyFields,
     };
   }, [validation.errors, touchedFields]);
