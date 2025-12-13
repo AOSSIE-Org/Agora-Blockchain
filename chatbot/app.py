@@ -5,16 +5,22 @@ import torch.nn as nn
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from os.path import dirname, abspath, join
+import nltk
+from nltk.stem.porter import PorterStemmer
 
-# Define a simple tokenizer and stemmer
+# Initialize the stemmer globally
+stemmer = PorterStemmer()
+
+# Define a tokenizer and stemmer
 def tokenize(sentence):
-    return sentence.split()  # Tokenize by splitting on spaces
+    return nltk.word_tokenize(sentence)
 
 def stem(word):
-    return word.lower()  # Simple stemming by converting to lowercase
+    return stemmer.stem(word.lower())
 
 def bag_of_words(tokenized_sentence, words):
-    bag = [1 if stem(word) in [stem(w) for w in tokenized_sentence] else 0 for word in words]
+    sentence_words = [stem(word) for word in tokenized_sentence]
+    bag = [1.0 if word in sentence_words else 0.0 for word in words]
     return torch.tensor(bag, dtype=torch.float32)
 
 class NeuralNet(nn.Module):
@@ -39,7 +45,7 @@ with open('intents.json', 'r') as json_data:
     intents = json.load(json_data)
 
 FILE = "data.pth"
-data = torch.load(FILE,weights_only=True)
+data = torch.load(FILE)
 
 input_size = data["input_size"]
 hidden_size = data["hidden_size"]
@@ -87,4 +93,4 @@ def chat():
         return jsonify({"error": str(e)})
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000,debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

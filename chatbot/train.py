@@ -1,23 +1,34 @@
+from operator import index
 import numpy as np
 import random
 import json
-
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 import nltk
+from nltk.stem.porter import PorterStemmer
+
 nltk.download('punkt')
 
+# Configuration
+INTENTS_FILE = 'intents.json'
+MODEL_SAVE_FILE = "data.pth"
 
-# Define a simple tokenizer and stemmer
+# Initialize the stemmer globally
+stemmer = PorterStemmer()
+
+# Define a tokenizer and stemmer
 def tokenize(sentence):
-    return sentence.split()  # Tokenize by splitting on spaces
+    return nltk.word_tokenize(sentence)
 
 def stem(word):
-    return word.lower()  # Simple stemming by converting to lowercase
+    return stemmer.stem(word.lower())
 
 def bag_of_words(tokenized_sentence, words):
-    bag = [1 if stem(word) in [stem(w) for w in tokenized_sentence] else 0 for word in words]
+    sentence_words = [stem(word) for word in tokenized_sentence]
+    
+    bag = [1.0 if word in sentence_words else 0.0 for word in words]
+    
     return torch.tensor(bag, dtype=torch.float32)
 
 class NeuralNet(nn.Module):
@@ -36,12 +47,13 @@ class NeuralNet(nn.Module):
 
 
 
-with open('intents.json', 'r') as f:
+with open(INTENTS_FILE, 'r') as f:
     intents = json.load(f)
 
 all_words = []
 tags = []
 xy = []
+
 # loop through each sentence in our intents patterns
 for intent in intents['intents']:
     tag = intent['tag']
@@ -55,15 +67,13 @@ for intent in intents['intents']:
         # add to xy pair
         xy.append((w, tag))
 
-# stem and lower each word
-ignore_words = ['?', '.', '!']
-all_words = [stem(w) for w in all_words if w not in ignore_words]
+all_words = [stem(w) for w in all_words]
 # remove duplicates and sort
-all_words = sorted(set(all_words))
-tags = sorted(set(tags))
+all_words = sorted(list(set(all_words)))
+tags = sorted(list(set(tags)))
 
 print(len(xy), "patterns")
-print(len(tags), "tags:", tags)
+print(len(tags), "unique tags:", tags)
 print(len(all_words), "unique stemmed words:", all_words)
 
 # create training data
@@ -98,7 +108,7 @@ class ChatDataset(Dataset):
 
     # support indexing such that dataset[i] can be used to get i-th sample
     def __getitem__(self, index):
-        return self.x_data[index], self.y_data[index]
+        return torch.from_numpy(self.x_data[index]), torch.tensor(self.y_data[index])
 
     # we can call len(dataset) to return the size
     def __len__(self):
@@ -120,6 +130,9 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
 # Train the model
 for epoch in range(num_epochs):
+
+    total_loss = 0 # for tracking loss
+
     for (words, labels) in train_loader:
         words = words.to(device)
         labels = labels.to(dtype=torch.long).to(device)
@@ -134,12 +147,16 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        
+
+        total_loss += loss.item() * words.size(0) # Accumulate weighted loss
+    
+    epoch_loss = total_loss / len(dataset)
+
     if (epoch+1) % 100 == 0:
-        print (f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
+        print (f'Epoch [{epoch+1}/{num_epochs}], Average Loss: {epoch_loss:.4f}')
 
 
-print(f'final loss: {loss.item():.4f}')
+print(f'final average loss: {epoch_loss:.4f}')
 
 data = {
 "model_state": model.state_dict(),
@@ -150,7 +167,6 @@ data = {
 "tags": tags
 }
 
-FILE = "data.pth"
-torch.save(data, FILE)
+torch.save(data, MODEL_SAVE_FILE)
 
-print(f'training complete. file saved to {FILE}')
+print(f'training complete. file saved to {MODEL_SAVE_FILE}')
