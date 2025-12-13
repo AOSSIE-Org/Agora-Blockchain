@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDownIcon,
   MagnifyingGlassIcon,
@@ -102,7 +102,7 @@ const categories = [
 export default function HelpPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
+  const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null);
 
   const filteredFAQs = faqs.filter((faq) => {
     const matchesSearch =
@@ -113,8 +113,8 @@ export default function HelpPage() {
     return matchesSearch && matchesCategory;
   });
 
-  const toggleFAQ = (index: number) => {
-    setExpandedFAQ(expandedFAQ === index ? null : index);
+  const toggleFAQ = (id: string) => {
+    setExpandedFAQ(expandedFAQ === id ? null : id);
   };
 
   return (
@@ -146,6 +146,7 @@ export default function HelpPage() {
             <input
               type="text"
               placeholder="Search for help..."
+              aria-label="Search FAQs"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 transition-colors duration-200"
@@ -184,15 +185,17 @@ export default function HelpPage() {
             {filteredFAQs.length > 0 ? (
               filteredFAQs.map((faq, index) => (
                 <motion.div
-                  key={index}
+                  key={faq.question}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
                   className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors duration-200"
                 >
                   <button
-                    onClick={() => toggleFAQ(index)}
-                    className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors duration-200"
+                    onClick={() => toggleFAQ(faq.question)}
+                    aria-expanded={expandedFAQ === faq.question}
+                    aria-controls={`faq-panel-${index}`}
+                    className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
                   >
                     <div className="flex-1">
                       <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide">
@@ -204,23 +207,28 @@ export default function HelpPage() {
                     </div>
                     <ChevronDownIcon
                       className={`h-5 w-5 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${
-                        expandedFAQ === index ? "transform rotate-180" : ""
+                        expandedFAQ === faq.question ? "transform rotate-180" : ""
                       }`}
                     />
                   </button>
-                  {expandedFAQ === index && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="px-6 pb-4"
-                    >
-                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        {faq.answer}
-                      </p>
-                    </motion.div>
-                  )}
+                  <AnimatePresence initial={false}>
+                    {expandedFAQ === faq.question && (
+                      <motion.div
+                        id={`faq-panel-${index}`}
+                        role="region"
+                        aria-label={faq.question}
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="px-6 pb-4"
+                      >
+                        <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                          {faq.answer}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
               ))
             ) : (
