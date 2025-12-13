@@ -28,6 +28,54 @@ Here's a refined version of the development guide:
 
 ## Development Guide
 
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+- **Node.js** (v18 or later): [Download here](https://nodejs.org/)
+- **npm** (comes with Node.js) or **yarn**
+- **Git**: [Download here](https://git-scm.com/)
+- **MetaMask** browser extension: [Install here](https://metamask.io/)
+
+### Environment Setup
+
+The project requires environment variables for both blockchain and client components. We provide `.env.example` files with detailed comments to help you get started.
+
+#### Quick Setup for Local Development
+
+For quick local testing without external services:
+
+1. **Blockchain** (`blockchain/.env`):
+   ```bash
+   cp blockchain/.env.example blockchain/.env
+   ```
+   You can use the default Hardhat test account values provided in the comments.
+
+2. **Client** (`client/.env`):
+   ```bash
+   cp client/.env.example client/.env
+   ```
+   For local development, you can use dummy values (some features like IPFS upload won't work).
+
+#### Setup for Testnet/Production
+
+For deploying to testnets or production:
+
+1. Review the `.env.example` files in both `blockchain/` and `client/` directories
+2. Each variable has detailed comments explaining:
+   - What the variable is used for
+   - Where to obtain the credentials
+   - Differences between local/testnet/mainnet usage
+3. Copy the example files and fill in your actual credentials:
+   ```bash
+   cp blockchain/.env.example blockchain/.env
+   cp client/.env.example client/.env
+   ```
+
+⚠️ **Security Notes**:
+- NEVER commit `.env` or `.env.local` files to Git
+- NEVER use wallets with real funds for testing
+- Keep your private keys and API keys secure
+
 ### Running Locally
 
 **Clone the Repository**:
@@ -44,19 +92,14 @@ git clone https://github.com/AOSSIE-Org/Agora-Blockchain
    ```
 
 2. **Set up Environment Variables**:
-
-   Create `.env.local` in the `blockchain` directory:
+   
+   Copy the example environment files and configure them:
+   ```bash
+   cp blockchain/.env.example blockchain/.env
+   cp client/.env.example client/.env
    ```
-   PRIVATE_KEY=<your_private_key>
-   RPC_URL_SEPOLIA=<your_sepolia_rpc_url>
-   RPC_URL_FUJI=<your_fuji_rpc_url>
-   ETHERSCAN_KEY=<your_etherscan_api_key>
-   ```
-
-   Create `.env.local` in the `client` directory:
-   ```
-   NEXT_PUBLIC_PINATA_JWT=<your_pinata_jwt>
-   ```
+   
+   Edit the `.env` files with your credentials. See the `.env.example` files for detailed instructions on each variable.
 
 3. **Run with Docker Compose**:
    ```bash
@@ -70,67 +113,66 @@ git clone https://github.com/AOSSIE-Org/Agora-Blockchain
 The application will automatically reload when you make changes to the source code.
 
 ### Option 2: Manual Setup
-## Backend
-1. **Navigate to the Blockchain Directory**:
 
+#### Backend (Blockchain)
+
+1. **Navigate to the Blockchain Directory**:
    ```bash
    cd blockchain
    ```
 
 2. **Install Dependencies**:
-
    ```bash
    npm install
    ```
 
-3. **Test the Contracts**:
+3. **Set up Environment Variables**:
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` with your configuration (see `.env.example` for detailed instructions).
+   
+   For local development only, you can use:
+   ```bash
+   npx hardhat node
+   ```
+   This starts a local blockchain at `http://localhost:8545` with test accounts.
 
+4. **Test the Contracts**:
    ```bash
    npx hardhat test
    ```
 
-4. **Create an `.env.local` file** with the following environment variables:
-
-   ```bash
-   PRIVATE_KEY=<your_private_key>
-   RPC_URL_SEPOLIA=<your_sepolia_rpc_url>
-   RPC_URL_FUJI=<your_fuji_rpc_url>
-   ETHERSCAN_KEY=<your_etherscan_api_key>
-   ```
-
-5. **Compile & Deploy Contracts**:
+5. **Compile & Deploy Contracts** (Optional - for testnet deployment):
    ```bash
    npx hardhat ignition deploy ./ignition/modules/<ContractModule> --network <Network> --verify
    ```
 
-## Frontend
+#### Frontend (Client)
 
 1. **Navigate to the Client Directory**:
-
    ```bash
    cd client
    ```
 
 2. **Install Dependencies**:
-
    ```bash
    npm install
    ```
 
-3. **Run the Application**:
+3. **Set up Environment Variables**:
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` with your configuration (see `.env.example` for detailed instructions).
 
+4. **Run the Application**:
    ```bash
    npm run dev
    ```
 
-4. **Create an `.env.local` file** with the following environment variables:
-
-   ```bash
-   NEXT_PUBLIC_PINATA_JWT=<your_pinata_jwt>
-   ```
-
-5. **Visit the Live App at**:
-   **[localhost](http://localhost:3000/)**
+5. **Visit the Application**:
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## About smart contracts
 

@@ -9,7 +9,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { config, queryClient } from "./helpers/client";
 import Header from "./components/Header/Header";
 import Web3Connect from "./components/Helper/Web3Connect";
-import "rsuite/dist/rsuite-no-reset.min.css";
+import "rsuite/dist/rsuite.min.css";
 import { CustomProvider } from "rsuite";
 import ChatBot from "./components/ChatBot/ChatBot";
 const inter = Inter({ subsets: ["latin"] });

@@ -7,7 +7,7 @@ import { sepolia, polygonAmoy, avalancheFuji } from "wagmi/chains";
 export const config = getDefaultConfig({
   appName: "Agora-Blockchain",
   projectId: "8501447cf73c4e68061f7ed912d6a8ee",
-  chains: [sepolia, avalancheFuji],
+  chains: [sepolia, polygonAmoy, avalancheFuji],
   ssr: true,
   transports: {
     [sepolia.id]: http(process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL),
