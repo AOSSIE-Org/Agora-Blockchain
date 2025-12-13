@@ -133,12 +133,27 @@ export default function CommunityPage() {
   const [votedPosts, setVotedPosts] = useState<{
     [key: number]: "up" | "down" | null;
   }>({});
+  const [isNewDiscussionOpen, setIsNewDiscussionOpen] = useState(false);
+  const [newDiscussion, setNewDiscussion] = useState({
+    title: "",
+    content: "",
+    category: "General",
+    tags: "",
+  });
 
   const handleVote = (postId: number, voteType: "up" | "down") => {
     setVotedPosts((prev) => ({
       ...prev,
       [postId]: prev[postId] === voteType ? null : voteType,
     }));
+  };
+
+  const handleCreateDiscussion = (e: React.FormEvent) => {
+    e.preventDefault();
+    // In a real app, this would POST to an API
+    alert(`New discussion created:\nTitle: ${newDiscussion.title}\nCategory: ${newDiscussion.category}`);
+    setNewDiscussion({ title: "", content: "", category: "General", tags: "" });
+    setIsNewDiscussionOpen(false);
   };
 
   const filteredDiscussions = mockDiscussions.filter((discussion) => {
@@ -176,6 +191,7 @@ export default function CommunityPage() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => setIsNewDiscussionOpen(true)}
               className="mt-4 md:mt-0 inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-lg transition-colors duration-200"
             >
               <PlusCircleIcon className="h-5 w-5 mr-2" />
@@ -396,6 +412,127 @@ export default function CommunityPage() {
             </div>
           </main>
         </div>
+
+        {/* New Discussion Modal */}
+        <AnimatePresence>
+          {isNewDiscussionOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsNewDiscussionOpen(false)}
+                className="fixed inset-0 bg-black bg-opacity-50 z-40"
+              />
+              
+              {/* Modal */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              >
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                  <div className="p-6">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                      Start a New Discussion
+                    </h2>
+                    
+                    <form onSubmit={handleCreateDiscussion} className="space-y-4">
+                      {/* Title */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Title
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={newDiscussion.title}
+                          onChange={(e) =>
+                            setNewDiscussion({ ...newDiscussion, title: e.target.value })
+                          }
+                          placeholder="What's your discussion about?"
+                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        />
+                      </div>
+
+                      {/* Category */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Category
+                        </label>
+                        <select
+                          value={newDiscussion.category}
+                          onChange={(e) =>
+                            setNewDiscussion({ ...newDiscussion, category: e.target.value })
+                          }
+                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        >
+                          <option>General</option>
+                          <option>Governance</option>
+                          <option>Technical</option>
+                          <option>Proposals</option>
+                          <option>Voting Algorithms</option>
+                        </select>
+                      </div>
+
+                      {/* Content */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Content
+                        </label>
+                        <textarea
+                          required
+                          rows={6}
+                          value={newDiscussion.content}
+                          onChange={(e) =>
+                            setNewDiscussion({ ...newDiscussion, content: e.target.value })
+                          }
+                          placeholder="Share your thoughts, questions, or ideas..."
+                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none"
+                        />
+                      </div>
+
+                      {/* Tags */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Tags (comma separated)
+                        </label>
+                        <input
+                          type="text"
+                          value={newDiscussion.tags}
+                          onChange={(e) =>
+                            setNewDiscussion({ ...newDiscussion, tags: e.target.value })
+                          }
+                          placeholder="e.g., borda, security, help"
+                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        />
+                      </div>
+
+                      {/* Buttons */}
+                      <div className="flex justify-end space-x-3 pt-4">
+                        <button
+                          type="button"
+                          onClick={() => setIsNewDiscussionOpen(false)}
+                          className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors"
+                        >
+                          Post Discussion
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
