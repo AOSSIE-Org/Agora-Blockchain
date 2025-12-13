@@ -1,5 +1,5 @@
 "use client";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useState, useCallback } from "react";
 import { useAccount, useSwitchChain, useWriteContract } from "wagmi";
 import { motion } from "framer-motion";
 import { ELECTION_FACTORY_ADDRESS } from "../constants";
@@ -10,9 +10,12 @@ import toast, { Toaster } from "react-hot-toast";
 import { ErrorMessage } from "../helpers/ErrorMessage";
 import { CalendarIcon } from "@heroicons/react/24/outline";
 import { sepolia } from "viem/chains";
-import { ArrowPathIcon , PlusIcon, TrashIcon} from "@heroicons/react/24/solid";
+import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import ElectionInfoPopup from "../components/Modal/ElectionInfoPopup";
+import { Candidate } from "../helpers/candidateValidation";
+import { useCandidateValidation } from "../hooks/useCandidateValidation";
+import CandidateSection from "./components/CandidateSection";
 
 const CreatePage: React.FC = () => {
   const router = useRouter();
@@ -22,32 +25,75 @@ const CreatePage: React.FC = () => {
   const { writeContractAsync } = useWriteContract();
   const [startTime, setStartTime] = useState<Date | null>(new Date());
   const [endTime, setEndTime] = useState<Date | null>(new Date());
-  const [candidates,setCandidates] = useState<Candidate[]>([])
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [touchedFields, setTouchedFields] = useState<Map<number, Set<keyof Candidate>>>(new Map());
+
+  // Use the validation hook
+  const validation = useCandidateValidation(candidates);
+
   const changeChain = () => {
     switchChain({ chainId: sepolia.id });
-  }
-  interface Candidate {
-    name: string;
-    description: string;
-  }
-  const addCandidate = () => {
-    setCandidates([...candidates, { name: "", description: "" }]);
   };
-  
-  const removeCandidate = (index: number) => {
-    const newCandidates = candidates.filter((_, i) => i !== index);
-    setCandidates(newCandidates);
-  };
-  
-  const updateCandidate = (index: number, field: keyof Candidate, value: string) => {
-    const newCandidates = candidates.map((candidate, i) => {
-      if (i === index) {
-        return { ...candidate, [field]: value };
-      }
-      return candidate;
+
+  const addCandidate = useCallback(() => {
+    setCandidates((prev) => [...prev, { name: "", description: "" }]);
+  }, []);
+
+  const removeCandidate = useCallback((index: number) => {
+    setCandidates((prev) => prev.filter((_, i) => i !== index));
+    // Clean up touched fields for removed candidate
+    setTouchedFields((prev) => {
+      const newMap = new Map(prev);
+      newMap.delete(index);
+      return newMap;
     });
-    setCandidates(newCandidates);
-  };
+  }, []);
+
+  const updateCandidate = useCallback(
+    (index: number, field: keyof Candidate, value: string) => {
+      setCandidates((prev) =>
+        prev.map((candidate, i) =>
+          i === index ? { ...candidate, [field]: value } : candidate
+        )
+      );
+    },
+    []
+  );
+
+  const handleFieldBlur = useCallback((index: number, field: keyof Candidate) => {
+    setTouchedFields((prev) => {
+      const newMap = new Map(prev);
+      const fields = newMap.get(index) || new Set();
+      fields.add(field);
+      newMap.set(index, fields);
+      return newMap;
+    });
+  }, []);
+
+  // Filter validation errors to only show for touched fields
+  const getVisibleValidationErrors = useCallback(() => {
+    const visibleEmptyFields = new Map<number, Set<keyof Candidate>>();
+    
+    validation.errors.emptyFields.forEach((fields, index) => {
+      const touched = touchedFields.get(index);
+      if (touched) {
+        const visibleFields = new Set<keyof Candidate>();
+        fields.forEach((field) => {
+          if (touched.has(field)) {
+            visibleFields.add(field);
+          }
+        });
+        if (visibleFields.size > 0) {
+          visibleEmptyFields.set(index, visibleFields);
+        }
+      }
+    });
+
+    return {
+      duplicateIndices: validation.errors.duplicateIndices,
+      emptyFields: visibleEmptyFields,
+    };
+  }, [validation.errors, touchedFields]);
   const createElection = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -55,10 +101,10 @@ const CreatePage: React.FC = () => {
     const description = formData.get("description") as string;
     const ballotType = BigInt(selectedBallot);
 
-    if (candidates.length<2){
-      toast.error("At least 2 candidates are required!");
+    // Use validation hook results
+    if (!validation.isValid) {
+      toast.error(validation.errorMessages[0]);
       return;
-    
     }
 
     if (!startTime || !endTime) {
@@ -73,19 +119,19 @@ const CreatePage: React.FC = () => {
       toast.error("Invalid timing. End time must be after start time.");
       return;
     }
-    if(candidates.length>0  && candidates.some(candidate=>!candidate.name || !candidate.description)){
-      toast.error("please enter all candidate information or remove empty candidates.")
-      return 
-    }
-  // passed candidates to the create election function 
+
     try {
       await writeContractAsync({
         address: ELECTION_FACTORY_ADDRESS,
         abi: ElectionFactory,
         functionName: "createElection",
         args: [
-          { startTime: start, endTime: end, name, description }, // ElectionInfo object
-          candidates.map((c, index) => ({ candidateID: BigInt(index), name: c.name, description: c.description })), 
+          { startTime: start, endTime: end, name, description },
+          candidates.map((c, index) => ({
+            candidateID: BigInt(index),
+            name: c.name,
+            description: c.description,
+          })),
           ballotType,
           ballotType,
         ],
@@ -129,68 +175,15 @@ const CreatePage: React.FC = () => {
             label="Description"
             placeholder="Describe the election"
           />
-          {/* candidate section  shows placeholder if empty candidate and allows to add cnadidates*/ }
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="text-lg font-medium text-gray-900">Candidates</h3>
-              <motion.button
-                type="button"
-                onClick={addCandidate}
-                className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <PlusIcon className="h-4 w-4 mr-1" />
-                Add Candidate
-              </motion.button>
-            </div>
-            
-            {candidates.length === 0 ? (
-              <p className="text-gray-500 text-sm italic text-center py-4">
-                No candidates added yet. Click "Add Candidate" to begin adding candidates.
-              </p>
-            ) : (
-              candidates.map((candidate, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="p-4 border border-gray-200 rounded-lg space-y-3"
-                >
-                  <div className="flex justify-between items-center">
-                    <h4 className="text-md font-medium text-gray-700">
-                      Candidate {index + 1}
-                    </h4>
-                    <motion.button
-                      type="button"
-                      onClick={() => removeCandidate(index)}
-                      className="text-red-600 hover:text-red-700"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <TrashIcon className="h-5 w-5" />
-                    </motion.button>
-                  </div>
-                  <input
-                    type="text"
-                    value={candidate.name}
-                    onChange={(e) => updateCandidate(index, "name", e.target.value)}
-                    placeholder="Candidate Name"
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    required
-                  />
-                  <textarea
-                    value={candidate.description}
-                    onChange={(e) => updateCandidate(index, "description", e.target.value)}
-                    placeholder="Candidate Description"
-                    rows={2}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    required
-                  />
-                </motion.div>
-              ))
-            )}
-          </div>
+          {/* Candidate section with validation */}
+          <CandidateSection
+            candidates={candidates}
+            validationErrors={getVisibleValidationErrors()}
+            onAddCandidate={addCandidate}
+            onRemoveCandidate={removeCandidate}
+            onUpdateCandidate={updateCandidate}
+            onFieldBlur={handleFieldBlur}
+          />
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
