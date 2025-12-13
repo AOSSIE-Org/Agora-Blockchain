@@ -15,7 +15,7 @@ import {
 interface DocSection {
   id: string;
   title: string;
-  icon: any;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   content: string;
 }
 
@@ -477,6 +477,7 @@ export default function DevelopersPage() {
               <nav className="space-y-2">
                 {docSections.map((section) => (
                   <button
+                    type="button"
                     key={section.id}
                     onClick={() => setActiveSection(section.id)}
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
@@ -518,50 +519,64 @@ export default function DevelopersPage() {
                   className="text-gray-700 dark:text-gray-300 space-y-4"
                   style={{ whiteSpace: "pre-wrap" }}
                 >
-                  {currentSection?.content.split("\n").map((line, idx) => {
-                    // Headers
-                    if (line.startsWith("## ")) {
-                      return (
-                        <h2
-                          key={idx}
-                          className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4"
-                        >
-                          {line.replace("## ", "")}
-                        </h2>
+                  {(() => {
+                    const out: React.ReactNode[] = [];
+                    const lines = currentSection?.content.split("\n") ?? [];
+                    let inCode = false;
+                    let list: string[] = [];
+
+                    const flushList = (key: string) => {
+                      if (!list.length) return;
+                      out.push(
+                        <ul key={key} className="list-disc ml-6 space-y-1">
+                          {list.map((t, i) => <li key={`${key}-${i}`}>{t}</li>)}
+                        </ul>
                       );
-                    }
-                    if (line.startsWith("### ")) {
-                      return (
-                        <h3
-                          key={idx}
-                          className="text-xl font-semibold text-gray-900 dark:text-white mt-6 mb-3"
-                        >
-                          {line.replace("### ", "")}
-                        </h3>
-                      );
-                    }
-                    // Code blocks
-                    if (line.startsWith("```")) {
-                      return null;
-                    }
-                    // List items
-                    if (line.startsWith("- ")) {
-                      return (
-                        <li key={idx} className="ml-6">
-                          {line.replace("- ", "")}
-                        </li>
-                      );
-                    }
-                    // Regular paragraphs
-                    if (line.trim()) {
-                      return (
-                        <p key={idx} className="leading-relaxed">
-                          {line}
-                        </p>
-                      );
-                    }
-                    return <br key={idx} />;
-                  })}
+                      list = [];
+                    };
+
+                    lines.forEach((line, idx) => {
+                      if (line.startsWith("```")) {
+                        inCode = !inCode;
+                        flushList(`list-${idx}`);
+                        return;
+                      }
+                      if (inCode) return;
+
+                      if (line.startsWith("## ")) {
+                        flushList(`list-${idx}`);
+                        out.push(
+                          <h2 key={idx} className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">
+                            {line.replace("## ", "")}
+                          </h2>
+                        );
+                        return;
+                      }
+                      if (line.startsWith("### ")) {
+                        flushList(`list-${idx}`);
+                        out.push(
+                          <h3 key={idx} className="text-xl font-semibold text-gray-900 dark:text-white mt-6 mb-3">
+                            {line.replace("### ", "")}
+                          </h3>
+                        );
+                        return;
+                      }
+                      if (line.startsWith("- ")) {
+                        list.push(line.replace("- ", ""));
+                        return;
+                      }
+                      if (line.trim()) {
+                        flushList(`list-${idx}`);
+                        out.push(<p key={idx} className="leading-relaxed">{line}</p>);
+                        return;
+                      }
+                      flushList(`list-${idx}`);
+                      out.push(<br key={idx} />);
+                    });
+
+                    flushList("list-end");
+                    return out;
+                  })()}
                 </div>
               </div>
             </div>
