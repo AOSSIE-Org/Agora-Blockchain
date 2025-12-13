@@ -10,6 +10,7 @@ import {
   HomeIcon,
   XMarkIcon,
   Bars3Icon,
+  QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 import Web3Connect from "../Helper/Web3Connect";
 import Image from "next/image";
@@ -18,6 +19,7 @@ const menuItems = [
   { name: "Home", href: "/", icon: HomeIcon },
   { name: "Create", href: "/create", icon: PlusCircleIcon },
   { name: "Profile", href: "/profile", icon: UserIcon },
+  { name: "Help", href: "/help", icon: QuestionMarkCircleIcon },
 ];
 
 const Header = () => {
