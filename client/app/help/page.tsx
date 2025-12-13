@@ -104,6 +104,11 @@ export default function HelpPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null);
 
+  // Generate stable ID from question text
+  const generatePanelId = (question: string): string => {
+    return `faq-panel-${question.replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '')}`;
+  };
+
   const filteredFAQs = faqs.filter((faq) => {
     const matchesSearch =
       faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -183,54 +188,57 @@ export default function HelpPage() {
           </h2>
           <div className="space-y-4">
             {filteredFAQs.length > 0 ? (
-              filteredFAQs.map((faq, index) => (
-                <motion.div
-                  key={faq.question}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors duration-200"
-                >
-                  <button
-                    onClick={() => toggleFAQ(faq.question)}
-                    aria-expanded={expandedFAQ === faq.question}
-                    aria-controls={`faq-panel-${index}`}
-                    className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+              filteredFAQs.map((faq, index) => {
+                const panelId = generatePanelId(faq.question);
+                return (
+                  <motion.div
+                    key={faq.question}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors duration-200"
                   >
-                    <div className="flex-1">
-                      <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide">
-                        {faq.category}
-                      </span>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-1">
-                        {faq.question}
-                      </h3>
-                    </div>
-                    <ChevronDownIcon
-                      className={`h-5 w-5 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${
-                        expandedFAQ === faq.question ? "transform rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {expandedFAQ === faq.question && (
-                      <motion.div
-                        id={`faq-panel-${index}`}
-                        role="region"
-                        aria-label={faq.question}
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="px-6 pb-4"
-                      >
-                        <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                          {faq.answer}
-                        </p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              ))
+                    <button
+                      onClick={() => toggleFAQ(faq.question)}
+                      aria-expanded={expandedFAQ === faq.question}
+                      aria-controls={panelId}
+                      className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                    >
+                      <div className="flex-1">
+                        <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide">
+                          {faq.category}
+                        </span>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-1">
+                          {faq.question}
+                        </h3>
+                      </div>
+                      <ChevronDownIcon
+                        className={`h-5 w-5 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${
+                          expandedFAQ === faq.question ? "transform rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {expandedFAQ === faq.question && (
+                        <motion.div
+                          id={panelId}
+                          role="region"
+                          aria-label={faq.question}
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="px-6 pb-4"
+                        >
+                          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                            {faq.answer}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                );
+              })
             ) : (
               <div className="text-center py-12">
                 <p className="text-gray-500 dark:text-gray-400">
