@@ -4,6 +4,9 @@ import React, { useEffect, useState } from "react";
 import { erc20Abi } from "viem";
 import { avalancheFuji } from "viem/chains";
 import { useAccount, useSwitchChain, useWriteContract } from "wagmi";
+import logger from "@/app/helpers/logger";
+import toast from "react-hot-toast";
+
 const CrossChain = ({
   electionAddress,
   isEnded,
@@ -34,8 +37,9 @@ const CrossChain = ({
       });
       setbuttonValue(true);
     } catch (error) {
-      console.log("Error : ", error);
-    }
+      logger.error("CrossChain: failed to add election", error);
+      toast.error("Failed to enable cross-chain support. Please try again.");
+        }
   };
   useEffect(() => {
     setbuttonValue(isCrossChainEnabled);

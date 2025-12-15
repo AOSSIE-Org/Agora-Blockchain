@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpIcon, ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline"; // Corrected the import for XMarkIcon
+import toast from "react-hot-toast";
 
 interface Message {
   content: string;
@@ -49,7 +50,7 @@ const ChatBot: React.FC = () => {
       const reply: Message = { content: data.message, role: "assistant" };
       setMessages((prevMessages) => [...prevMessages, reply]);
     } catch (error) {
-      console.error("Error:", error);
+      toast.error("Failed to get response. Please try again.");
     }
   };
 

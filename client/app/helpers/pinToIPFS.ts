@@ -1,3 +1,4 @@
+import logger from "@/app/helpers/logger";
 const JWT = process.env.NEXT_PUBLIC_PINATA_JWT;
 
 export const pinJSONFile = async (body: any) => {
@@ -16,10 +17,9 @@ export const pinJSONFile = async (body: any) => {
       options
     );
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (err) {
-    console.error(err);
+    logger.error("pinJSONFile: failed to pin JSON to IPFS", err);
     throw err; // rethrow the error to be handled by the caller
   }
 };
@@ -33,7 +33,7 @@ export const unpinJSONFile = async (CID: String) => {
   try {
     await fetch(`https://api.pinata.cloud/pinning/unpin/${CID}`, options);
   } catch (err) {
-    console.error(err);
+    logger.error("unpinJSONFile: failed to unpin JSON from IPFS", err);
     throw err; // rethrow the error to be handled by the caller
   }
 };

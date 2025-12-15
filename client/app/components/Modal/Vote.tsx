@@ -6,6 +6,7 @@ import { useElectionModal } from "@/app/hooks/ElectionModal";
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useAccount, useWriteContract } from "wagmi";
+import logger from "@/app/helpers/logger";
 
 const Vote = ({
   disabled,
@@ -20,7 +21,6 @@ const Vote = ({
   const { writeContractAsync } = useWriteContract();
   const { chain } = useAccount();
   const vote = async () => {
-    console.log("Vote array", voteArray);
     try {
       if (chain?.id === 43113) {
         await writeContractAsync({
@@ -40,7 +40,7 @@ const Vote = ({
       toast.success(`Voted Casted `);
       setelectionModal(false);
     } catch (error) {
-      console.log("Error", error);
+      logger.error("Vote: failed to cast vote", error);
       toast.error(ErrorMessage(error));
     }
   };
