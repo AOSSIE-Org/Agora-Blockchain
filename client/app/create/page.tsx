@@ -13,9 +13,11 @@ import { sepolia } from "viem/chains";
 import { ArrowPathIcon , PlusIcon, TrashIcon} from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import ElectionInfoPopup from "../components/Modal/ElectionInfoPopup";
+import {Loader} from "rsuite";
 
 const CreatePage: React.FC = () => {
   const router = useRouter();
+  const [isLoading,setIsLoading] = useState<boolean>(false);
   const [selectedBallot, setSelectedBallot] = useState<number>(1);
   const { switchChain } = useSwitchChain();
   const { chain } = useAccount();
@@ -79,6 +81,7 @@ const CreatePage: React.FC = () => {
     }
   // passed candidates to the create election function 
     try {
+    setIsLoading(true);
       await writeContractAsync({
         address: ELECTION_FACTORY_ADDRESS,
         abi: ElectionFactory,
@@ -95,6 +98,9 @@ const CreatePage: React.FC = () => {
     } catch (error) {
       console.error("Error creating election:", error);
       toast.error(ErrorMessage(error));
+    }
+    finally{
+      setIsLoading(false);
     }
   };
 
@@ -229,7 +235,7 @@ const CreatePage: React.FC = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            Create Election
+            {isLoading ? <Loader/>: "Create Election"}
           </motion.button>
         </form>
       </motion.div>
