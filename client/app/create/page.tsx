@@ -231,8 +231,12 @@ const CreatePage: React.FC = () => {
           </div>
           <motion.button
             type="submit"
-            className="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            whileHover={{ scale: 1.02 }}
+            disabled={isLoading}
+className={`w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white 
+    ${isLoading 
+      ? "bg-indigo-400 cursor-not-allowed opacity-70" 
+      : "bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700" 
+    } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             {isLoading ? <Loader/>: "Create Election"}
