@@ -60,10 +60,17 @@ const CreateProcess = () => {
     }
 };
 
+const isFormValid = () => {
+    // Split proposals by comma, trim each item, and filter out empty strings
+    const validProposals = proposals
+        .split(',')
+        .map(p => p.trim())
+        .filter(p => p.length > 0);
 
-    const isFormValid = () => {
-    return proposals.split(',').length >= 2;
+    // Must have at least 2 valid proposals
+    return validProposals.length >= 2;
 };
+
 
 
     const formatProposals = (input) => {
