@@ -25,30 +25,31 @@ export function AddCandidateModal({ electionId }) {
     };
 
     const handleSubmitCandidate = async (e) => {
-        let id;
-        e.preventDefault();
+    e.preventDefault();
 
-        // ✅ Enforce terms acceptance
-        if (!acceptedTerms) {
-            toast.error("You must accept the Terms & Conditions");
-            return;
-        }
+    if (!acceptedTerms) {
+        toast.error("You must accept the Terms & Conditions");
+        return;
+    }
 
-        try {
-            let tx = await addProposal(
-                electionId,
-                ethers.utils.toUtf8Bytes(candidateDetail.name.trim())
-            );
+    try {
+        let tx = await addProposal(
+            electionId,
+            ethers.utils.toUtf8Bytes(candidateDetail.name.trim())
+        );
 
-            await tx.wait();
+        await tx.wait();
 
-            setIsOpen(false);
-            setAcceptedTerms(false);
-        } catch (err) {
-            dangertoast(id, "Candidate Addition Failed");
-            console.log(err);
-        }
-    };
+        setIsOpen(false);
+        setAcceptedTerms(false);
+
+        successtoast("Candidate Added Successfully"); // optional success toast
+    } catch (err) {
+        dangertoast("Candidate Addition Failed"); // removed 'id'
+        console.log(err);
+    }
+};
+
 
     const closeModal = (e) => {
         e.preventDefault();
