@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Flex, Modal, Button, Card } from "rimble-ui";
 import { ethers } from "ethers";
-import ElectionOrganiser from "../../build/ElectionOrganizer.json";
 import { successtoast, dangertoast } from '../utilities/Toasts';
 import { toast } from "react-toastify";
 import { addProposal } from '../../web3/contracts';
@@ -9,12 +8,12 @@ import { addProposal } from '../../web3/contracts';
 export function AddCandidateModal({ electionId }) {
     const [isOpen, setIsOpen] = useState(false);
 
+    // ✅ ONLY name is kept (description removed)
     const [candidateDetail, setCandidateDetail] = useState({
-        name: '',
-        description: ''
+        name: ''
     });
 
-    //  ADDED: terms acceptance state
+    // ✅ Terms acceptance state
     const [acceptedTerms, setAcceptedTerms] = useState(false);
 
     const handleCandidateDetailChange = (e) => {
@@ -29,7 +28,7 @@ export function AddCandidateModal({ electionId }) {
         let id;
         e.preventDefault();
 
-        // ✅ ADDED: enforce terms acceptance
+        // ✅ Enforce terms acceptance
         if (!acceptedTerms) {
             toast.error("You must accept the Terms & Conditions");
             return;
@@ -42,9 +41,7 @@ export function AddCandidateModal({ electionId }) {
             );
 
             await tx.wait();
-            console.log(tx);
 
-            // successtoast(id, "Candidate Added Successfully")
             setIsOpen(false);
             setAcceptedTerms(false);
         } catch (err) {
@@ -53,13 +50,13 @@ export function AddCandidateModal({ electionId }) {
         }
     };
 
-    const closeModal = e => {
+    const closeModal = (e) => {
         e.preventDefault();
         setIsOpen(false);
-        setAcceptedTerms(false); // ✅ reset
+        setAcceptedTerms(false);
     };
 
-    const openModal = e => {
+    const openModal = (e) => {
         e.preventDefault();
         setIsOpen(true);
     };
@@ -67,17 +64,17 @@ export function AddCandidateModal({ electionId }) {
     return (
         <div>
             <div onClick={openModal} style={{ cursor: "pointer" }}>
-                <font size='2'>Add Candidate</font>
+                <font size="2">Add Candidate</font>
             </div>
 
             <Modal isOpen={isOpen}>
-                <Card width={"90%"} height={"max-content"} p={0} style={{ maxWidth: "500px" }}>
+                <Card width="90%" height="max-content" p={0} style={{ maxWidth: "500px" }}>
                     <Button.Text
                         style={{ margin: "0px" }}
                         icononly
-                        icon={"Close"}
-                        color={"moon-gray"}
-                        position={"absolute"}
+                        icon="Close"
+                        color="moon-gray"
+                        position="absolute"
                         top={0}
                         right={0}
                         mt={3}
@@ -90,7 +87,7 @@ export function AddCandidateModal({ electionId }) {
                         <br />
 
                         <div>
-                            <b>Canidate Name</b>
+                            <b>Candidate Name</b>
                             <br />
 
                             <input
@@ -101,24 +98,10 @@ export function AddCandidateModal({ electionId }) {
                                 onChange={handleCandidateDetailChange}
                                 style={{ marginTop: "15px" }}
                             />
-                            <br /><br />
-
-                            <b>Canidate Description</b>
-                            <br />
-
-                            <textarea
-                                className="form-control"
-                                placeholder="Name of the candidate"
-                                name="description"
-                                rows={6}
-                                value={candidateDetail.description}
-                                onChange={handleCandidateDetailChange}
-                                style={{ marginTop: "15px" }}
-                            />
 
                             <br /><br />
 
-                            {/*  ADDED: Terms & Conditions checkbox */}
+                            {/* ✅ Terms & Conditions checkbox */}
                             <div>
                                 <label style={{ cursor: "pointer" }}>
                                     <input
@@ -133,13 +116,13 @@ export function AddCandidateModal({ electionId }) {
                         </div>
                     </div>
 
-                    <Flex px={4} py={3} justifyContent={"flex-end"}>
+                    <Flex px={4} py={3} justifyContent="flex-end">
                         <Button.Outline onClick={closeModal}>Cancel</Button.Outline>
                         <Button
                             ml={3}
                             type="submit"
                             onClick={handleSubmitCandidate}
-                            disabled={!acceptedTerms} // ✅ ADDED
+                            disabled={!acceptedTerms}
                         >
                             Confirm
                         </Button>
