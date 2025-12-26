@@ -62,7 +62,14 @@ const CreateProcess = () => {
 
 
     const isFormValid = () => {
-    return proposals.split(',').length >= 2;
+  const validProposals = proposals
+    .split(',')
+    .map(p => p.trim())
+    .filter(p => p.length > 0);
+
+  return validProposals.length >= 2;
+};
+
 };
 
 
