@@ -28,11 +28,13 @@ function Navbar({header, infoText, pictureUrl}) {
     </Link>
 
     <Link to="/">
-        <img
-            src="/assets/logout.png"
-            className="navbarMenuIcon"
-            alt="logout"
-        />
+<img
+    src="/assets/logout.png"
+    className="navbarMenuIcon"
+    alt="logout"
+    onClick={handleLogout}
+    style={{ cursor: "pointer" }}
+/>
     </Link>
 </div>
         </nav>
