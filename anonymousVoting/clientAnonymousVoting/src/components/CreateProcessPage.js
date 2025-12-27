@@ -61,7 +61,7 @@ const CreateProcess = () => {
 };
 
 
-    const isFormValid = () => {
+  const isFormValid = () => {
   const validProposals = proposals
     .split(',')
     .map(p => p.trim())
@@ -69,6 +69,7 @@ const CreateProcess = () => {
 
   return validProposals.length >= 2;
 };
+
 
 };
 
