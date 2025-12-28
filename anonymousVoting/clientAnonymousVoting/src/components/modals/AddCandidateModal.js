@@ -14,7 +14,7 @@ export function AddCandidateModal({ electionId }) {
         description: ''
     });
 
-    //  ADDED: terms acceptance state
+    // ADDED: terms acceptance state
     const [acceptedTerms, setAcceptedTerms] = useState(false);
 
     const handleCandidateDetailChange = (e) => {
@@ -26,10 +26,9 @@ export function AddCandidateModal({ electionId }) {
     };
 
     const handleSubmitCandidate = async (e) => {
-        let id;
         e.preventDefault();
 
-        // ✅ ADDED: enforce terms acceptance
+        // Enforce terms acceptance
         if (!acceptedTerms) {
             toast.error("You must accept the Terms & Conditions");
             return;
@@ -44,11 +43,11 @@ export function AddCandidateModal({ electionId }) {
             await tx.wait();
             console.log(tx);
 
-            // successtoast(id, "Candidate Added Successfully")
+            // successtoast("Candidate Added Successfully")
             setIsOpen(false);
             setAcceptedTerms(false);
         } catch (err) {
-            dangertoast(id, "Candidate Addition Failed");
+            dangertoast("Candidate Addition Failed");
             console.log(err);
         }
     };
@@ -56,7 +55,7 @@ export function AddCandidateModal({ electionId }) {
     const closeModal = e => {
         e.preventDefault();
         setIsOpen(false);
-        setAcceptedTerms(false); // ✅ reset
+        setAcceptedTerms(false);
     };
 
     const openModal = e => {
@@ -90,7 +89,7 @@ export function AddCandidateModal({ electionId }) {
                         <br />
 
                         <div>
-                            <b>Canidate Name</b>
+                            <b>Candidate Name</b>
                             <br />
 
                             <input
@@ -103,12 +102,12 @@ export function AddCandidateModal({ electionId }) {
                             />
                             <br /><br />
 
-                            <b>Canidate Description</b>
+                            <b>Candidate Description</b>
                             <br />
 
                             <textarea
                                 className="form-control"
-                                placeholder="Name of the candidate"
+                                placeholder="Description of the candidate"
                                 name="description"
                                 rows={6}
                                 value={candidateDetail.description}
@@ -118,7 +117,6 @@ export function AddCandidateModal({ electionId }) {
 
                             <br /><br />
 
-                            {/*  ADDED: Terms & Conditions checkbox */}
                             <div>
                                 <label style={{ cursor: "pointer" }}>
                                     <input
@@ -139,7 +137,7 @@ export function AddCandidateModal({ electionId }) {
                             ml={3}
                             type="submit"
                             onClick={handleSubmitCandidate}
-                            disabled={!acceptedTerms} // ✅ ADDED
+                            disabled={!acceptedTerms}
                         >
                             Confirm
                         </Button>
