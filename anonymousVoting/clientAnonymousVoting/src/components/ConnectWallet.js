@@ -5,7 +5,6 @@ import { ethers } from 'ethers';
 
 import { useDispatch, useSelector } from 'react-redux'
 import { selectNetwork, selectCorrectNetwork, setNetwork, setCorrectNetwork } from '../store/home.slice';
-
 import Modal from 'react-bootstrap/Modal';
 
 

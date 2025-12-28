@@ -13,9 +13,28 @@ function Navbar({header, infoText, pictureUrl}) {
             </div>
 
             <div className="navbarMenuOption">
-                <img src="/assets/settings.png" className="navbarMenuIcon navbarMenuLeft" alt="settings"/>
-                <Link to="/"><img src="/assets/logout.png" className="navbarMenuIcon" alt="logout"/></Link>
-            </div>
+    <img
+        src="/assets/settings.png"
+        className="navbarMenuIcon navbarMenuLeft"
+        alt="settings"
+    />
+
+    <Link to="/explorer">
+        <img
+            src="/assets/explorer.png"
+            className="navbarMenuIcon"
+            alt="explorer"
+        />
+    </Link>
+
+    <Link to="/">
+        <img
+            src="/assets/logout.png"
+            className="navbarMenuIcon"
+            alt="logout"
+        />
+    </Link>
+</div>
         </nav>
 	)
 }

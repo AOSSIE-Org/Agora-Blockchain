@@ -1,4 +1,5 @@
 import Navbar from './components/Navbar';
+import Explorer from "./components/Explorer";
 import { BrowserRouter as Router, Route, Routes,Navigate } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -31,6 +32,7 @@ function App() {
     // }else{
       ret = 
       <Routes>
+        <Route path="/explorer" element={<Explorer />} />
         <Route path="/" element={<Navigate to="/auth" />} />
         <Route path="/auth" element={<Register/>} />
         <Route path="/voting/:id" element={<VotingPage/>} />
