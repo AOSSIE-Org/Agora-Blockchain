@@ -54,12 +54,11 @@ const CreateProcess = () => {
         try {
             setPending(true);
 
-            // Proposals are validated & formatted but NOT passed here
-            // (deployVotingProcess only accepts 4 params)
-            formatProposals(proposals);
+            
+const _formattedProposals = formatProposals(proposals);
 
-            const startDate = 1000000;
-            const endDate = 1000000;
+const startDate = 1000000;
+const endDate = 1000000;
 
             const result = await deployVotingProcess(
                 name,
