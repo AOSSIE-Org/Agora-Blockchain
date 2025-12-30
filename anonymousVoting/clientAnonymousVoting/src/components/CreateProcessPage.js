@@ -3,8 +3,6 @@ import Collapse from 'react-bootstrap/Collapse';
 import Spinner from 'react-bootstrap/Spinner';
 import styles from './CreateProcessPage.module.css';
 import { ethers } from 'ethers';
-
-// web3 imports
 import { deployVotingProcess } from '../web3/contracts';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +14,6 @@ const CreateProcess = () => {
     const [description, setDescription] = useState('');
     const [proposals, setProposals] = useState('');
     const [pending, setPending] = useState(false);
-
     const [show, setShow] = useState(false);
     const [open, setOpen] = useState(false);
     const [transactionResult, setTransactionResult] = useState(null);
@@ -31,7 +28,6 @@ const CreateProcess = () => {
             .split(',')
             .map(p => p.trim())
             .filter(p => p.length > 0);
-
         return validProposals.length >= 2;
     };
 
@@ -47,24 +43,25 @@ const CreateProcess = () => {
         e.preventDefault();
 
         if (!isFormValid()) {
-            window.alert("Form is not valid");
+            window.alert("Form is not valid. Enter at least 2 proposals.");
             return;
         }
 
         try {
             setPending(true);
 
-            
-const _formattedProposals = formatProposals(proposals);
+            const _formattedProposals = formatProposals(proposals);
 
-const startDate = 1000000;
-const endDate = 1000000;
+            const startDate = Math.floor(Date.now() / 1000); // current time
+            const endDate = startDate + 24 * 60 * 60; // 1 day later
 
+            // Deploy with proposals
             const result = await deployVotingProcess(
                 name,
                 description,
                 startDate,
-                endDate
+                endDate,
+                _formattedProposals // <-- send proposals to contract
             );
 
             setTransactionResult(result);
@@ -72,7 +69,7 @@ const endDate = 1000000;
 
         } catch (err) {
             console.error(err);
-            window.alert("Transaction failed");
+            window.alert("Transaction failed: " + (err.message || err));
         } finally {
             setPending(false);
         }
@@ -161,11 +158,11 @@ const endDate = 1000000;
                                 className={styles.collapse}
                             >
                                 <div>
-                                    <h4>transaction hash:</h4>
+                                    <h4>Transaction hash:</h4>
                                     <p>{transactionResult.hash}</p>
                                 </div>
                                 <div>
-                                    <h4>nonce:</h4>
+                                    <h4>Nonce:</h4>
                                     <p>{transactionResult.nonce}</p>
                                 </div>
                             </div>
