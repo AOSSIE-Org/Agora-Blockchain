@@ -14,17 +14,18 @@ describe("ElectionFactory", function () {
     maxVotes: 3,
     options: ["Option 1", "Option 2", "Option 3"]
   };
-
+  // candidateID is required for tests, although the contract overwrites it during initialization
+  // This ensures consistent test behavior
   const mockCandidates = [
   {
     name: "Candidate 1",
     description: "First candidate",
-    candidateID: 1
+    candidateID: 0
   },
   {
     name: "Candidate 2",
     description: "Second candidate",
-    candidateID: 2
+    candidateID: 1
   }
 ];
 
