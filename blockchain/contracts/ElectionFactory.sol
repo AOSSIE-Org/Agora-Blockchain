@@ -22,7 +22,7 @@ contract ElectionFactory is CCIPReceiver {
     }
 
     uint public electionCount;
-    address public factoryOwner;
+    address public immutable factoryOwner;// factory owner does not need to be changed at any point of time. Using immutable reduces SLOAD cost.
     address[] public openBasedElections;
     // address[] public inviteBasedElections;
 
@@ -62,6 +62,7 @@ contract ElectionFactory is CCIPReceiver {
     ) external {
         if (_candidates.length<2) revert InvalidCandidatesLength();
         //add checks of time
+        
         address electionAddress = Clones.clone(electionGenerator);
         address _ballot = ballotGenerator.generateBallot(
             _ballotType,
@@ -77,17 +78,22 @@ contract ElectionFactory is CCIPReceiver {
             msg.sender,
             resultCalculator
         );
-        electionCount++;
-        electionOwner[openBasedElections.length] = msg.sender;
+        unchecked{ //Skips overflow check as electionCount will never be that high.
+           electionCount++;
+        }
+        uint electionId = openBasedElections.length;
+        electionOwner[electionId] = msg.sender;
         openBasedElections.push(address(election));
     }
 
     function deleteElection(uint _electionId) external {
         if (electionOwner[_electionId] != msg.sender) revert OnlyOwner();
         uint lastElement = openBasedElections.length - 1;
+        address lastElection = openBasedElections[lastElement];
+        address lastOwner = electionOwner[lastElement];
         if (_electionId != lastElement) {
-            openBasedElections[_electionId] = openBasedElections[lastElement];
-            electionOwner[_electionId] = electionOwner[lastElement];
+            openBasedElections[_electionId] = lastElection;
+            electionOwner[_electionId] = lastOwner;
         }
         openBasedElections.pop();
         delete electionOwner[lastElement];
