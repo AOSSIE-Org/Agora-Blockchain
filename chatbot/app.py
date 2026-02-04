@@ -97,6 +97,11 @@ def chat():
     X = torch.from_numpy(X).unsqueeze(0).to(device)
 
     with torch.no_grad():
+        # Check if input is gibberish (no known words recognized)
+        if X.sum().item() == 0:
+            return jsonify({"message": "I do not understand..."})
+
+        # Make prediction
         output = model(X)
         _, predicted = torch.max(output, dim=1)
         tag = tags[predicted.item()]
