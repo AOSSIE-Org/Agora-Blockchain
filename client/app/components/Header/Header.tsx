@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -26,6 +26,40 @@ const Header = () => {
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
+  // Lock body scroll when sidebar is open
+  useEffect(() => {
+    if (isSidebarOpen) {
+      // Save current scroll position
+      const scrollY = window.scrollY;
+
+      // Lock scroll
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+    } else {
+      // Restore scroll
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+
+      // Restore scroll position
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+    };
+  }, [isSidebarOpen]);
+
   return (
     <>
       <motion.header
@@ -38,11 +72,13 @@ const Header = () => {
           <div className="flex justify-between h-16">
             <Link href="/" className="flex-shrink-0 flex items-center">
               <Image
-                width={32}
-                height={32}
+                width={0}
+                height={0}
+                sizes="200px"
                 className="h-8 w-auto"
                 src="/aossie.png"
                 alt="Agora Blockchain"
+                style={{ width: 'auto' }}
               />
               <h1 className="ml-3 text-xl font-bold text-gray-800 hidden sm:block">
                 Agora Blockchain
@@ -54,11 +90,10 @@ const Header = () => {
               {menuItems.map((item) => (
                 <Link key={item.name} href={item.href} className="relative">
                   <motion.button
-                    className={`inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md ${
-                      pathname === item.href
-                        ? "text-indigo-600"
-                        : "text-gray-700 hover:text-indigo-600"
-                    } bg-white hover:bg-gray-50`}
+                    className={`inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md ${pathname === item.href
+                      ? "text-indigo-600"
+                      : "text-gray-700 hover:text-indigo-600"
+                      } bg-white hover:bg-gray-50`}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -101,38 +136,47 @@ const Header = () => {
       <AnimatePresence>
         {isSidebarOpen && (
           <>
+            {/* Overlay/Scrim - blocks all interactions with background */}
             <motion.div
-              className="fixed inset-0 bg-black bg-opacity-50 z-40"
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 touch-none"
+              style={{ pointerEvents: 'auto' }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={toggleSidebar}
+              aria-hidden="true"
             />
+            {/* Sidebar Panel */}
             <motion.div
-              className="fixed right-0 top-0 h-full w-72 bg-white z-50 shadow-lg"
+              className="fixed right-0 top-0 h-full w-72 bg-white z-50 shadow-lg flex flex-col"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 20 }}
             >
-              <div className="p-6">
+              {/* Sidebar Header with Close Button */}
+              <div className="p-6 flex-shrink-0">
                 <button
                   onClick={toggleSidebar}
                   className="absolute top-4 right-4 p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  aria-label="Close sidebar"
                 >
                   <XMarkIcon className="h-6 w-6" />
                 </button>
-                <div className="mt-8 space-y-6">
+              </div>
+
+              {/* Scrollable Content Area */}
+              <div className="flex-1 overflow-y-auto px-6 pb-6">
+                <div className="mt-2 space-y-6">
                   {menuItems.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
                       onClick={toggleSidebar}
-                      className={`flex items-center p-4 rounded-lg transition-colors ${
-                        pathname === item.href
+                      className={`flex items-center p-4 rounded-lg transition-colors ${pathname === item.href
                           ? "bg-indigo-50 text-indigo-600"
                           : "text-gray-700 hover:bg-gray-50"
-                      }`}
+                        }`}
                     >
                       <item.icon className="h-6 w-6 mr-4" />
                       <span className="text-base font-medium">{item.name}</span>
