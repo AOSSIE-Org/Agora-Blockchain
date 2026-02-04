@@ -1,16 +1,35 @@
-import random
+import os
 import json
 import torch
-import torch.nn as nn
-
+import nltk
+import numpy as np
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 
 ################################
-# NLP STANDARDIZATION (MUST MATCH train.py)
+# PATH SETUP
+################################
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+INTENTS_PATH = os.path.join(BASE_DIR, "intents.json")
+MODEL_PATH = os.path.join(BASE_DIR, "data.pth")
+
+################################
+# NLTK SAFE SETUP (3.8.2+)
+################################
+def ensure_nltk_tokenizers():
+    try:
+        nltk.data.find("tokenizers/punkt_tab/english")
+    except LookupError:
+        try:
+            nltk.download("punkt_tab")
+        except Exception:
+            nltk.download("punkt")
+
+ensure_nltk_tokenizers()
+
+################################
+# NLP UTILITIES
 ################################
 stemmer = PorterStemmer()
 
@@ -22,40 +41,33 @@ def stem(word):
 
 def bag_of_words(tokenized_sentence, words):
     sentence_words = [stem(w) for w in tokenized_sentence]
-    bag = [1 if w in sentence_words else 0 for w in words]
-    return torch.tensor(bag, dtype=torch.float32)
+    bag = np.zeros(len(words), dtype=np.float32)
+    for idx, w in enumerate(words):
+        if w in sentence_words:
+            bag[idx] = 1
+    return bag
 
 ################################
-# MODEL
+# LOAD DATA
 ################################
-class NeuralNet(nn.Module):
+with open(INTENTS_PATH, "r", encoding="utf-8") as f:
+    intents = json.load(f)
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+data = torch.load(MODEL_PATH, map_location=device)
+
+class NeuralNet(torch.nn.Module):
     def __init__(self, input_size, hidden_size, num_classes):
         super().__init__()
-        self.l1 = nn.Linear(input_size, hidden_size)
-        self.l2 = nn.Linear(hidden_size, hidden_size)
-        self.l3 = nn.Linear(hidden_size, num_classes)
-        self.relu = nn.ReLU()
+        self.l1 = torch.nn.Linear(input_size, hidden_size)
+        self.l2 = torch.nn.Linear(hidden_size, hidden_size)
+        self.l3 = torch.nn.Linear(hidden_size, num_classes)
+        self.relu = torch.nn.ReLU()
 
     def forward(self, x):
         x = self.relu(self.l1(x))
         x = self.relu(self.l2(x))
         return self.l3(x)
-
-################################
-# APP SETUP
-################################
-app = Flask(__name__)
-CORS(app)
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-################################
-# LOAD DATA
-################################
-with open("intents.json", "r") as f:
-    intents = json.load(f)
-
-data = torch.load("data.pth", weights_only=True)
 
 model = NeuralNet(
     data["input_size"],
@@ -70,45 +82,43 @@ all_words = data["all_words"]
 tags = data["tags"]
 
 ################################
-# CHAT ENDPOINT
+# FLASK APP
+################################
+app = Flask(__name__)
 
-@app.route("/api/chat", methods=["POST"])
+@app.route("/chat", methods=["POST"])
 def chat():
-    try:
-        req = request.get_json()
-        message = req.get("message", "")
+    message = request.json.get("message")
+    if not message:
+        return jsonify({"error": "Message is required"}), 400
 
-        if not message.strip():
-            return jsonify({"message": "Please say something."})
+    tokens = tokenize(message)
+    X = bag_of_words(tokens, all_words)
+    X = torch.from_numpy(X).unsqueeze(0).to(device)
 
-        tokens = tokenize(message)
-        X = bag_of_words(tokens, all_words).unsqueeze(0).to(device)
-
-        if X.sum().item() == 0:
-            return jsonify({"message": "I do not understand..."})
-
+    with torch.no_grad():
         output = model(X)
         _, predicted = torch.max(output, dim=1)
-
         tag = tags[predicted.item()]
-        probs = torch.softmax(output, dim=1)
-        confidence = probs[0][predicted.item()].item()
 
-        if confidence > 0.75:
+        probs = torch.softmax(output, dim=1)
+        confidence = probs[0][predicted.item()]
+
+        if confidence.item() > 0.75:
             for intent in intents["intents"]:
                 if intent["tag"] == tag:
                     return jsonify({
-                        "message": random.choice(intent["responses"]),
-                        "confidence": round(confidence, 3)
+                        "response": np.random.choice(intent["responses"])
                     })
 
-        return jsonify({"message": "I do not understand..."})
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    return jsonify({"response": "Sorry, I didn’t understand that."})
 
 ################################
-# RUN
+# SAFE ENTRYPOINT
 ################################
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    debug = os.getenv("FLASK_DEBUG", "false").lower() == "true"
+    host = os.getenv("FLASK_HOST", "127.0.0.1")
+    port = int(os.getenv("FLASK_PORT", "5000"))
+
+    app.run(host=host, port=port, debug=debug)

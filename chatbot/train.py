@@ -1,18 +1,36 @@
-import sys, os
+import os
 import json
+import nltk
 import numpy as np
-import multiprocessing as mp
-
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
-
-import nltk
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 
 ################################
-# NLP UTILITIES (NO DOWNLOAD HERE)
+# PATH SETUP (IMPORTANT)
+################################
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+INTENTS_PATH = os.path.join(BASE_DIR, "intents.json")
+MODEL_PATH = os.path.join(BASE_DIR, "data.pth")
+
+################################
+# NLTK SAFE SETUP (3.8.2+)
+################################
+def ensure_nltk_tokenizers():
+    try:
+        nltk.data.find("tokenizers/punkt_tab/english")
+    except LookupError:
+        try:
+            nltk.download("punkt_tab")
+        except Exception:
+            nltk.download("punkt")
+
+ensure_nltk_tokenizers()
+
+################################
+# NLP UTILITIES
 ################################
 stemmer = PorterStemmer()
 
@@ -24,8 +42,60 @@ def stem(word):
 
 def bag_of_words(tokenized_sentence, words):
     sentence_words = [stem(w) for w in tokenized_sentence]
-    bag = [1 if w in sentence_words else 0 for w in words]
-    return torch.tensor(bag, dtype=torch.float32)
+    bag = np.zeros(len(words), dtype=np.float32)
+    for idx, w in enumerate(words):
+        if w in sentence_words:
+            bag[idx] = 1
+    return bag
+
+################################
+# LOAD INTENTS
+################################
+with open(INTENTS_PATH, "r", encoding="utf-8") as f:
+    intents = json.load(f)
+
+all_words = []
+tags = []
+xy = []
+
+for intent in intents["intents"]:
+    tag = intent["tag"]
+    tags.append(tag)
+
+    for pattern in intent["patterns"]:
+        w = tokenize(pattern)
+        all_words.extend(w)
+        xy.append((w, tag))
+
+ignore_words = ["?", "!", ".", ","]
+all_words = [stem(w) for w in all_words if w not in ignore_words]
+all_words = sorted(set(all_words))
+tags = sorted(set(tags))
+
+X_train = []
+y_train = []
+
+for (pattern_sentence, tag) in xy:
+    X_train.append(bag_of_words(pattern_sentence, all_words))
+    y_train.append(tags.index(tag))
+
+X_train = np.array(X_train)
+y_train = np.array(y_train)
+
+################################
+# DATASET
+################################
+class ChatDataset(Dataset):
+    def __init__(self):
+        self.x_data = X_train
+        self.y_data = y_train
+        self.n_samples = len(self.x_data)
+
+    def __getitem__(self, index):
+        return self.x_data[index], self.y_data[index]
+
+    def __len__(self):
+        return self.n_samples
 
 ################################
 # MODEL
@@ -44,137 +114,51 @@ class NeuralNet(nn.Module):
         return self.l3(x)
 
 ################################
-# DATASET
+# TRAINING
 ################################
-class ChatDataset(Dataset):
-    def __init__(self, X, y):
-        self.X = X
-        self.y = y
+batch_size = 8
+hidden_size = 8
+learning_rate = 0.001
+num_epochs = 1000
 
-    def __getitem__(self, index):
-        return self.X[index], self.y[index]
+input_size = len(all_words)
+output_size = len(tags)
 
-    def __len__(self):
-        return len(self.X)
+dataset = ChatDataset()
+train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-################################
-# MAIN FUNCTION
-################################
-def main():
-    # ✅ Download punkt ONCE (safe)
-    try:
-        nltk.data.find("tokenizers/punkt")
-    except LookupError:
-        nltk.download("punkt")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = NeuralNet(input_size, hidden_size, output_size).to(device)
 
-    ################################
-    # LOAD INTENTS
-    ################################
-    with open("intents.json", "r") as f:
-        intents = json.load(f)
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-    all_words = []
-    tags = []
-    xy = []
+for epoch in range(num_epochs):
+    for words, labels in train_loader:
+        words = words.to(device)
+        labels = labels.to(device)
 
-    for intent in intents["intents"]:
-        tag = intent["tag"]
-        tags.append(tag)
+        outputs = model(words)
+        loss = criterion(outputs, labels)
 
-        for pattern in intent["patterns"]:
-            tokens = tokenize(pattern)
-            all_words.extend(tokens)
-            xy.append((tokens, tag))
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
-    ignore_words = ["?", "!", ".", ","]
-    all_words = [stem(w) for w in all_words if w not in ignore_words]
-    all_words = sorted(set(all_words))
-    tags = sorted(set(tags))
-
-    print(f"{len(xy)} patterns")
-    print(f"{len(tags)} tags")
-    print(f"{len(all_words)} unique stemmed words")
-
-    ################################
-    # TRAINING DATA
-    ################################
-    X_train = []
-    y_train = []
-
-    for (tokens, tag) in xy:
-        X_train.append(bag_of_words(tokens, all_words))
-        y_train.append(tags.index(tag))
-
-    X_train = np.array(X_train)
-    y_train = np.array(y_train)
-
-    ################################
-    # HYPERPARAMETERS
-    ################################
-    num_epochs = 300
-    batch_size = 16
-    learning_rate = 0.001
-    hidden_size = 8
-    input_size = len(X_train[0])
-    output_size = len(tags)
-
-    ################################
-    # DATALOADER (MULTIPROCESSING SAFE)
-    ################################
-    dataset = ChatDataset(X_train, y_train)
-    train_loader = DataLoader(
-        dataset=dataset,
-        batch_size=batch_size,
-        shuffle=True,
-        num_workers = 0 if sys.platform.startswith("win") else min(4, os.cpu_count())
-    )
-
-    ################################
-    # TRAINING
-    ################################
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = NeuralNet(input_size, hidden_size, output_size).to(device)
-
-    criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-
-    for epoch in range(num_epochs):
-        epoch_loss = 0.0
-
-        for words, labels in train_loader:
-            words = words.to(device)
-            labels = labels.to(device, dtype=torch.long)
-
-            outputs = model(words)
-            loss = criterion(outputs, labels)
-
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-
-            epoch_loss += loss.item()
-
-        if (epoch + 1) % 100 == 0:
-            avg_loss = epoch_loss / len(train_loader)
-            print(f"Epoch [{epoch+1}/{num_epochs}], Avg Loss: {avg_loss:.4f}")
-
-    ################################
-    # SAVE MODEL
-    ################################
-    torch.save({
-        "model_state": model.state_dict(),
-        "input_size": input_size,
-        "hidden_size": hidden_size,
-        "output_size": output_size,
-        "all_words": all_words,
-        "tags": tags
-    }, "data.pth")
-
-    print("Training complete. data.pth saved.")
+    if (epoch + 1) % 100 == 0:
+        print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
 
 ################################
-# WINDOWS ENTRY POINT
+# SAVE MODEL
 ################################
-if __name__ == "__main__":
-    mp.freeze_support()
-    main()
+torch.save({
+    "model_state": model.state_dict(),
+    "input_size": input_size,
+    "hidden_size": hidden_size,
+    "output_size": output_size,
+    "all_words": all_words,
+    "tags": tags
+}, MODEL_PATH)
+
+print("✅ Training complete.")
+print("📦 Model saved at:", MODEL_PATH)
