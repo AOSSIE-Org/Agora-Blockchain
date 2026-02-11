@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@floating-ui/core": "^1.7.3",
+    "@floating-ui/dom": "^1.7.4",
+    "@floating-ui/react": "^0.27.16",
     "@headlessui/react": "^2.1.0",
     "@material-tailwind/react": "^2.1.9",
     "@nextui-org/theme": "^2.2.6",
