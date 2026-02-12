@@ -13,6 +13,7 @@ import { sepolia } from "viem/chains";
 import { ArrowPathIcon , PlusIcon, TrashIcon} from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import ElectionInfoPopup from "../components/Modal/ElectionInfoPopup";
+import logger from "@/app/helpers/logger";
 
 const CreatePage: React.FC = () => {
   const router = useRouter();
@@ -93,7 +94,7 @@ const CreatePage: React.FC = () => {
       toast.success("Election created successfully!");
       router.push("/");
     } catch (error) {
-      console.error("Error creating election:", error);
+      logger.error("CreateElection: failed to create election", error);
       toast.error(ErrorMessage(error));
     }
   };

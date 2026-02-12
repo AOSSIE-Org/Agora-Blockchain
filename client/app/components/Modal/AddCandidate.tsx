@@ -14,6 +14,7 @@ import { ErrorMessage } from "../../helpers/ErrorMessage";
 import { sepolia } from "viem/chains";
 import { useElectionData } from "@/app/hooks/ElectionInfo";
 import { pinJSONFile } from "@/app/helpers/pinToIPFS";
+import logger from "@/app/helpers/logger";
 
 const AddCandidate = ({
   openModal,
@@ -51,8 +52,8 @@ const AddCandidate = ({
       });
       toast.success(`${name} Added to Election`);
     } catch (error) {
-      console.log("Error ", error);
-      toast.error(ErrorMessage(error));
+        logger.error("AddCandidate: failed to add candidate", error);
+        toast.error(ErrorMessage(error));
     }
     setopenModal(false);
   };

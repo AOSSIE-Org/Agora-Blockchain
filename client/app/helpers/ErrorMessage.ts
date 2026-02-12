@@ -1,3 +1,5 @@
+import logger from "@/app/helpers/logger";
+
 const errorMessages = {
   ElectionInactive: "Election is Not Active",
   OwnerPermissioned: "Must be Owner of Election",
@@ -13,7 +15,7 @@ const errorMessages = {
 };
 
 export const ErrorMessage = (error: any) => {
-  console.log("Error : ", error);
+  logger.error("ErrorMessage helper received error", error);
   for (const [key, message] of Object.entries(errorMessages)) {
     if (error.message.includes(key)) {
       return message;

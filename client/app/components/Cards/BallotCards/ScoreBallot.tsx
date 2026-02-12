@@ -41,9 +41,7 @@ const ScoreBallot = ({
     const newSum = sumWithoutCurrent + credits;
 
     if (newSum > 100) {
-      toast.error("Credit Limit Exceeded !!");
-      console.log("Error credits");
-      return;
+      toast.error("Credit Limit Exceeded !!");      return;
     }
     newCreditScores[id] = credits;
     const sum = SumOfArray(newCreditScores);
