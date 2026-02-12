@@ -1,136 +1,153 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.24;
 
-import {Election} from "./Election.sol";
-import {BallotGenerator} from "./ballots/BallotGenerator.sol";
-import {ResultCalculator} from "./resultCalculators/ResultCalculator.sol";
+import {Election} from './Election.sol';
+import {BallotGenerator} from './ballots/BallotGenerator.sol';
+import {ResultCalculator} from './resultCalculators/ResultCalculator.sol';
 
-import {Client} from "@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol";
-import {CCIPReceiver} from "@chainlink/contracts-ccip/src/v0.8/ccip/applications/CCIPReceiver.sol";
-import "@openzeppelin/contracts/proxy/Clones.sol";
+import {Client} from '@chainlink/contracts-ccip/contracts/libraries/Client.sol';
+import {
+  CCIPReceiver
+} from '@chainlink/contracts-ccip/contracts/applications/CCIPReceiver.sol';
+import '@openzeppelin/contracts/proxy/Clones.sol';
 
 contract ElectionFactory is CCIPReceiver {
-    error OnlyOwner();
-    error OwnerRestricted();
-    error NotWhitelistedSender();
-    error InvalidCandidatesLength();
+  error OnlyOwner();
+  error OwnerRestricted();
+  error NotWhitelistedSender();
+  error InvalidCandidatesLength();
 
-    struct CCIPVote {
-        address election;
-        address user;
-        uint[] voteArr;
-    }
+  struct CCIPVote {
+    address election;
+    address user;
+    uint[] voteArr;
+  }
 
-    uint public electionCount;
-    address public factoryOwner;
-    address[] public openBasedElections;
-    // address[] public inviteBasedElections;
+  uint public electionCount;
+  address public factoryOwner;
+  address[] public openBasedElections;
+  // address[] public inviteBasedElections;
 
-    BallotGenerator private ballotGenerator;
-    address private immutable resultCalculator;
-    address private immutable electionGenerator;
+  BallotGenerator private ballotGenerator;
+  address private immutable resultCalculator;
+  address private immutable electionGenerator;
 
-    mapping(uint election => address owner) private electionOwner;
-    mapping(address owner => address[] election) private userElection;
-    mapping(uint64 sourceChain => address senderContract)
-        private approvedSenderContracts;
+  mapping(uint election => address owner) private electionOwner;
+  mapping(uint electionId => uint index) private electionIdToIndex;
+  mapping(address owner => address[] election) private userElection;
+  mapping(uint64 sourceChain => address senderContract)
+    private approvedSenderContracts;
 
-    event MessageReceived(
-        bytes32 indexed messageId,
-        uint64 indexed sourceChainSelector,
-        address sender
+  event MessageReceived(
+    bytes32 indexed messageId,
+    uint64 indexed sourceChainSelector,
+    address sender
+  );
+
+  /// initializes the contract with the router address.
+  constructor(address router) CCIPReceiver(router) {
+    factoryOwner = msg.sender;
+    electionGenerator = address(new Election());
+    ballotGenerator = new BallotGenerator();
+    resultCalculator = address(new ResultCalculator());
+  }
+
+  modifier onlyOwner() {
+    if (msg.sender != factoryOwner) revert OwnerRestricted();
+    _;
+  }
+
+  function createElection(
+    Election.ElectionInfo memory _electionInfo,
+    Election.Candidate[] memory _candidates, // add candidates separately due to separation of concerns
+    uint _ballotType,
+    uint _resultType
+  ) external {
+    if (_candidates.length < 2) revert InvalidCandidatesLength();
+    //add checks of time
+    address electionAddress = Clones.clone(electionGenerator);
+    address _ballot = ballotGenerator.generateBallot(
+      _ballotType,
+      electionAddress
+    );
+    Election election = Election(electionAddress);
+    election.initialize(
+      _electionInfo,
+      _candidates,
+      _resultType,
+      electionCount,
+      _ballot,
+      msg.sender,
+      resultCalculator
     );
 
-    /// initializes the contract with the router address.
-    constructor(address router) CCIPReceiver(router) {
-        factoryOwner = msg.sender;
-        electionGenerator = address(new Election());
-        ballotGenerator = new BallotGenerator();
-        resultCalculator = address(new ResultCalculator());
+    // Use electionId (electionCount) for ownership and indexing
+    electionOwner[electionCount] = msg.sender;
+    electionIdToIndex[electionCount] = openBasedElections.length;
+    openBasedElections.push(address(election));
+
+    electionCount++;
+  }
+
+  function deleteElection(uint _electionId) external {
+    if (electionOwner[_electionId] != msg.sender) revert OnlyOwner();
+
+    uint indexToDelete = electionIdToIndex[_electionId];
+    uint lastIndex = openBasedElections.length - 1;
+
+    if (indexToDelete != lastIndex) {
+      address lastElectionAddr = openBasedElections[lastIndex];
+      openBasedElections[indexToDelete] = lastElectionAddr;
+
+      // Update the index of the moved election
+      // We need to fetch the ID of the election at the last index to update its index mapping
+      uint lastElectionId = Election(lastElectionAddr).electionId();
+      electionIdToIndex[lastElectionId] = indexToDelete;
     }
 
-    modifier onlyOwner() {
-        if (msg.sender != factoryOwner) revert OwnerRestricted();
-        _;
-    }
+    openBasedElections.pop();
+    delete electionOwner[_electionId];
+    delete electionIdToIndex[_electionId];
+  }
 
-    function createElection(
-        Election.ElectionInfo memory _electionInfo,
-        Election.Candidate[] memory _candidates, // add candidates separately due to separation of concerns 
-        uint _ballotType,
-        uint _resultType
-    ) external {
-        if (_candidates.length<2) revert InvalidCandidatesLength();
-        //add checks of time
-        address electionAddress = Clones.clone(electionGenerator);
-        address _ballot = ballotGenerator.generateBallot(
-            _ballotType,
-            electionAddress
-        );
-        Election election = Election(electionAddress);
-        election.initialize(
-            _electionInfo,
-            _candidates,
-            _resultType,
-            electionCount,
-            _ballot,
-            msg.sender,
-            resultCalculator
-        );
-        electionCount++;
-        electionOwner[openBasedElections.length] = msg.sender;
-        openBasedElections.push(address(election));
-    }
+  function addWhitelistedContract(
+    uint64 _sourceChainSelector,
+    address _contractAddress
+  ) external onlyOwner {
+    approvedSenderContracts[_sourceChainSelector] = _contractAddress;
+  }
 
-    function deleteElection(uint _electionId) external {
-        if (electionOwner[_electionId] != msg.sender) revert OnlyOwner();
-        uint lastElement = openBasedElections.length - 1;
-        if (_electionId != lastElement) {
-            openBasedElections[_electionId] = openBasedElections[lastElement];
-            electionOwner[_electionId] = electionOwner[lastElement];
-        }
-        openBasedElections.pop();
-        delete electionOwner[lastElement];
-    }
+  function removeWhitelistedContract(
+    uint64 _sourceChainSelector
+  ) external onlyOwner {
+    approvedSenderContracts[_sourceChainSelector] = address(0);
+  }
 
-    function addWhitelistedContract(
-        uint64 _sourceChainSelector,
-        address _contractAddress
-    ) external onlyOwner {
-        approvedSenderContracts[_sourceChainSelector] = _contractAddress;
-    }
+  function ccipVote(CCIPVote memory _vote) internal {
+    Election _election = Election(_vote.election);
+    _election.ccipVote(_vote.user, _vote.voteArr);
+  }
 
-    function removeWhitelistedContract(
-        uint64 _sourceChainSelector
-    ) external onlyOwner {
-        approvedSenderContracts[_sourceChainSelector] = address(0);
-    }
+  // any2EvmMessage.messageId shows the address of senderContract
+  function _ccipReceive(
+    Client.Any2EVMMessage memory any2EvmMessage
+  ) internal override {
+    if (
+      approvedSenderContracts[any2EvmMessage.sourceChainSelector] !=
+      abi.decode(any2EvmMessage.sender, (address))
+    ) revert NotWhitelistedSender();
 
-    function ccipVote(CCIPVote memory _vote) internal {
-        Election _election = Election(_vote.election);
-        _election.ccipVote(_vote.user, _vote.voteArr);
-    }
+    CCIPVote memory _vote = abi.decode(any2EvmMessage.data, (CCIPVote));
+    ccipVote(_vote);
 
-    // any2EvmMessage.messageId shows the address of senderContract
-    function _ccipReceive(
-        Client.Any2EVMMessage memory any2EvmMessage
-    ) internal override {
-        if (
-            approvedSenderContracts[any2EvmMessage.sourceChainSelector] !=
-            abi.decode(any2EvmMessage.sender, (address))
-        ) revert NotWhitelistedSender();
+    emit MessageReceived(
+      any2EvmMessage.messageId,
+      any2EvmMessage.sourceChainSelector, // fetch the source chain identifier
+      abi.decode(any2EvmMessage.sender, (address)) // abi-decoding of the sender address,
+    );
+  }
 
-        CCIPVote memory _vote = abi.decode(any2EvmMessage.data, (CCIPVote));
-        ccipVote(_vote);
-
-        emit MessageReceived(
-            any2EvmMessage.messageId,
-            any2EvmMessage.sourceChainSelector, // fetch the source chain identifier
-            abi.decode(any2EvmMessage.sender, (address)) // abi-decoding of the sender address,
-        );
-    }
-
-    function getOpenElections() external view returns (address[] memory) {
-        return openBasedElections;
-    }
+  function getOpenElections() external view returns (address[] memory) {
+    return openBasedElections;
+  }
 }

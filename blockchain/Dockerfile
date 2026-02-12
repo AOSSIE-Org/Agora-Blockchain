@@ -1,20 +1,21 @@
-FROM node:20-slim
+FROM ghcr.io/foundry-rs/foundry:latest
 
-WORKDIR /app/blockchain
+WORKDIR /app
 
-# Install Python and build dependencies
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+# Install Node.js and npm
+RUN apk add --no-cache nodejs npm
 
-# Set Python path for node-gyp
-ENV PYTHON=/usr/bin/python3
+# Copy package files
+COPY package.json package-lock.json ./
 
-COPY package*.json ./
+# Install dependencies
 RUN npm install
 
+# Copy source code
 COPY . .
 
-CMD ["npx", "hardhat", "node"]
+# Build the project
+RUN forge build
+
+# Set the entrypoint to anvil (local testnet) or forge
+CMD ["anvil", "--host", "0.0.0.0"]
