@@ -147,7 +147,7 @@ const CreatePage: React.FC = () => {
             
             {candidates.length === 0 ? (
               <p className="text-gray-500 text-sm italic text-center py-4">
-                No candidates added yet. Click "Add Candidate" to begin adding candidates.
+                 No candidates added yet. Click &quot;Add Candidate&quot; to begin adding candidates.
               </p>
             ) : (
               candidates.map((candidate, index) => (
