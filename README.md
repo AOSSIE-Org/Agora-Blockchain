@@ -103,6 +103,40 @@ The application will automatically reload when you make changes to the source co
    npx hardhat ignition deploy ./ignition/modules/<ContractModule> --network <Network> --verify
    ```
 
+## Chatbot Backend
+
+1. **Navigate to the Chatbot Directory**:
+
+   ```bash
+   cd chatbot
+   ```
+
+2. **Create and Activate Virtual Environment**:
+
+   **For Windows**
+   ```bash
+    python -m venv venv
+   source venv/Scripts/activate
+   ```
+
+   **For Mac/Linux**:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **Install Dependencies**:
+
+   ```bash
+   pip install -r requirements.txt 
+   ```
+
+4. **Run the Application**:
+
+   ```bash
+   python app.py
+   ```
+
 ## Frontend
 
 1. **Navigate to the Client Directory**:
