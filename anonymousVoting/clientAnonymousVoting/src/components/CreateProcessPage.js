@@ -2,14 +2,10 @@ import Modal from 'react-bootstrap/Modal';
 import Collapse from 'react-bootstrap/Collapse';
 import Spinner from 'react-bootstrap/Spinner';
 import styles from './CreateProcessPage.module.css';
-import {ethers} from 'ethers';
-
-//web3 imports
-import { deployVotingProcess, deployTestContract, getTestContract } from '../web3/contracts'
-import { useState, useEffect, useRef } from 'react';
+import { ethers } from 'ethers';
+import { deployVotingProcess } from '../web3/contracts';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-
 
 const CreateProcess = () => {
     const navigate = useNavigate();
@@ -18,107 +14,134 @@ const CreateProcess = () => {
     const [description, setDescription] = useState('');
     const [proposals, setProposals] = useState('');
     const [pending, setPending] = useState(false);
-
     const [show, setShow] = useState(false);
-    const handleClose = () => {
-        setShow(false);
-        navigate('/');
-    }
     const [open, setOpen] = useState(false);
     const [transactionResult, setTransactionResult] = useState(null);
 
-    const refValue = useRef(false);
-    
-    const createProcess = async (e) => {
-        e.preventDefault();
-        console.log("name: ", name);
-        //format proposals
-        let proposalArray = formatProposals(proposals);
-        //check form inputs
-        if(!isFormValid()){
-            window.alert("Form is not valid");
-            return;
-        }
-        setPending(true);
-        refValue.current = true;
-        //deploy new process contract
-        const result = await deployVotingProcess(name, description, proposalArray,1000000,1000000);
-        setTransactionResult(result);
-
-        refValue.current = false;
-        setPending(false);
-        
-        setShow(true);
-    }
+    const handleClose = () => {
+        setShow(false);
+        navigate('/');
+    };
 
     const isFormValid = () => {
-        if(proposals < 2)
-            return false;
-        return true;
-    }
+        const validProposals = proposals
+            .split(',')
+            .map(p => p.trim())
+            .filter(p => p.length > 0);
+        return validProposals.length >= 2;
+    };
 
     const formatProposals = (input) => {
-        let proposals = input.split(',');
-        let array = []
-        for(let i=0; i < proposals.length; i ++){
-            array.push(ethers.utils.toUtf8Bytes(proposals[i].trim()));
+        return input
+            .split(',')
+            .map(p => p.trim())
+            .filter(p => p.length > 0)
+            .map(p => ethers.utils.toUtf8Bytes(p));
+    };
+
+    const createProcess = async (e) => {
+        e.preventDefault();
+
+        if (!isFormValid()) {
+            window.alert("Form is not valid. Enter at least 2 proposals.");
+            return;
         }
-        return array;
-    }
 
+        try {
+            setPending(true);
 
-    useEffect(() => {
-        // setPending(!pending);
-    }, [pending])
+            const _formattedProposals = formatProposals(proposals);
 
-    return (  
-        <div >
+            const startDate = Math.floor(Date.now() / 1000); // current time
+            const endDate = startDate + 24 * 60 * 60; // 1 day later
+
+            // Deploy with proposals
+            const result = await deployVotingProcess(
+                name,
+                description,
+                startDate,
+                endDate,
+                _formattedProposals // <-- send proposals to contract
+            );
+
+            setTransactionResult(result);
+            setShow(true);
+
+        } catch (err) {
+            console.error(err);
+            window.alert("Transaction failed: " + (err.message || err));
+        } finally {
+            setPending(false);
+        }
+    };
+
+    return (
+        <div>
             <div className={styles.createProcess}>
                 <h1>Create new voting process</h1>
             </div>
+
             <form onSubmit={createProcess} className={styles.create}>
                 <div>
                     <label>Process name:</label>
-                    <input 
+                    <input
                         type="text"
                         required
-                        value = {name}
+                        value={name}
                         onChange={(e) => setName(e.target.value)}
                     />
                 </div>
+
                 <div>
                     <label>Process description:</label>
-                    <input 
+                    <input
                         type="text"
                         required
-                        value = {description}
+                        value={description}
                         onChange={(e) => setDescription(e.target.value)}
                     />
                 </div>
+
                 <div>
                     <label>Proposals (separated with ","):</label>
-                    <input 
+                    <input
                         type="text"
                         required
-                        value = {proposals}
+                        value={proposals}
                         onChange={(e) => setProposals(e.target.value)}
                     />
                 </div>
+
                 <div>
-                    <button className="baseButton">Create new process</button>
+                    <button
+                        className="baseButton"
+                        type="submit"
+                        disabled={pending}
+                    >
+                        {pending ? (
+                            <>
+                                <Spinner
+                                    animation="border"
+                                    size="sm"
+                                    style={{ marginRight: "8px" }}
+                                />
+                                Creating...
+                            </>
+                        ) : (
+                            "Create new process"
+                        )}
+                    </button>
                 </div>
-                {refValue.current == true && <div style={{marginTop: "2em"}}>
-                    <Spinner animation="border" />
-                </div>}
             </form>
+
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Transaction result</Modal.Title>
                 </Modal.Header>
+
                 <Modal.Body>
-                    <p>
-                        Transaction was executed.
-                    </p>
+                    <p>Transaction was executed.</p>
+
                     <button
                         className="baseButton"
                         onClick={() => setOpen(!open)}
@@ -127,25 +150,34 @@ const CreateProcess = () => {
                     >
                         Transaction details
                     </button>
-                    { transactionResult && <Collapse in={open}>
-                        <div id="example-collapse-text" className={styles.collapse}>
-                            <div>
-                                <h4>transaction hash: </h4>
-                                <p>{transactionResult.hash}</p>
+
+                    {transactionResult && (
+                        <Collapse in={open}>
+                            <div
+                                id="example-collapse-text"
+                                className={styles.collapse}
+                            >
+                                <div>
+                                    <h4>Transaction hash:</h4>
+                                    <p>{transactionResult.hash}</p>
+                                </div>
+                                <div>
+                                    <h4>Nonce:</h4>
+                                    <p>{transactionResult.nonce}</p>
+                                </div>
                             </div>
-                            <div>
-                                <h4>nonce: </h4>
-                                <p>{transactionResult.nonce}</p>
-                            </div>
-                        </div>
-                    </Collapse>}
+                        </Collapse>
+                    )}
                 </Modal.Body>
+
                 <Modal.Footer>
-                    <button className="baseButton" onClick={handleClose}>Close</button>
+                    <button className="baseButton" onClick={handleClose}>
+                        Close
+                    </button>
                 </Modal.Footer>
             </Modal>
         </div>
     );
-}
- 
+};
+
 export default CreateProcess;
