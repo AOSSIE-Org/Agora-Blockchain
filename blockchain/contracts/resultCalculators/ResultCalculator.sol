@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.20;
+pragma solidity 0.8.24;
 
 import {GeneralResult} from "./GeneralResult.sol";
 import {IRVResult} from "./IRVResult.sol";

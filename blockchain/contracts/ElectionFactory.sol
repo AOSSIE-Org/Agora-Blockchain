@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.24;
+pragma solidity 0.8.24;
 
 import {Election} from "./Election.sol";
 import {BallotGenerator} from "./ballots/BallotGenerator.sol";
@@ -10,10 +10,14 @@ import {CCIPReceiver} from "@chainlink/contracts-ccip/src/v0.8/ccip/applications
 import "@openzeppelin/contracts/proxy/Clones.sol";
 
 contract ElectionFactory is CCIPReceiver {
-    error OnlyOwner();
-    error OwnerRestricted();
-    error NotWhitelistedSender();
-    error InvalidCandidatesLength();
+    error ElectionFactory_OnlyOwner();
+    error ElectionFactory_OwnerRestricted();
+    error ElectionFactory_NotWhitelistedSender();
+    error ElectionFactory_InvalidCandidatesLength();
+
+    // events 
+    event ElectionFactory_electionCreated(address indexed owner);
+    event ElectionFactory_electionDeleted(uint256 indexed electionId);
 
     struct CCIPVote {
         address election;
@@ -50,7 +54,7 @@ contract ElectionFactory is CCIPReceiver {
     }
 
     modifier onlyOwner() {
-        if (msg.sender != factoryOwner) revert OwnerRestricted();
+        if (msg.sender != factoryOwner) revert ElectionFactory_OwnerRestricted();
         _;
     }
 
@@ -60,7 +64,7 @@ contract ElectionFactory is CCIPReceiver {
         uint _ballotType,
         uint _resultType
     ) external {
-        if (_candidates.length<2) revert InvalidCandidatesLength();
+        if (_candidates.length<2) revert ElectionFactory_InvalidCandidatesLength();
         //add checks of time
         address electionAddress = Clones.clone(electionGenerator);
         address _ballot = ballotGenerator.generateBallot(
@@ -80,10 +84,11 @@ contract ElectionFactory is CCIPReceiver {
         electionCount++;
         electionOwner[openBasedElections.length] = msg.sender;
         openBasedElections.push(address(election));
+        emit ElectionFactory_electionCreated(msg.sender);
     }
 
     function deleteElection(uint _electionId) external {
-        if (electionOwner[_electionId] != msg.sender) revert OnlyOwner();
+        if (electionOwner[_electionId] != msg.sender) revert ElectionFactory_OnlyOwner();
         uint lastElement = openBasedElections.length - 1;
         if (_electionId != lastElement) {
             openBasedElections[_electionId] = openBasedElections[lastElement];
@@ -91,6 +96,7 @@ contract ElectionFactory is CCIPReceiver {
         }
         openBasedElections.pop();
         delete electionOwner[lastElement];
+        emit ElectionFactory_electionDeleted(_electionId);
     }
 
     function addWhitelistedContract(
@@ -118,7 +124,7 @@ contract ElectionFactory is CCIPReceiver {
         if (
             approvedSenderContracts[any2EvmMessage.sourceChainSelector] !=
             abi.decode(any2EvmMessage.sender, (address))
-        ) revert NotWhitelistedSender();
+        ) revert ElectionFactory_NotWhitelistedSender();
 
         CCIPVote memory _vote = abi.decode(any2EvmMessage.data, (CCIPVote));
         ccipVote(_vote);
