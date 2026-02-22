@@ -1,0 +1,105 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+language: en
+early_access: true
+
+chat:
+  auto_reply: true
+
+issue_enrichment:
+  labeling:
+    auto_apply_labels: true
+    labeling_instructions:
+      - label: bug
+        instructions: Issues reporting bugs, errors, or unexpected behavior.
+      - label: enhancement
+        instructions: Feature requests, performance optimizations, or refactoring.
+      - label: documentation
+        instructions: Documentation updates or clarifications.
+  planning:
+    enabled: true
+    auto_planning:
+      enabled: true
+      labels: ["plan-me", "feature", "!no-plan"]
+
+reviews:
+  profile: assertive
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - main
+      - develop
+  
+  high_level_summary: true
+  sequence_diagrams: true
+  poem: true
+  review_status: true
+  collapse_walkthrough: false
+  changed_files_summary: true
+  
+  # Set to false to prevent the bot from blocking merges with a "Changes Requested" state
+  request_changes_workflow: false 
+
+  pre_merge_checks:
+    description:
+      mode: warning
+    docstrings:
+      mode: off
+
+  path_filters:
+    - "!**/node_modules/**"
+    - "!**/dist/**"
+    - "!**/build/**"
+    # Removed mobile-specific filters (Expo/Android/iOS) as they don't apply to this repo
+
+  tools:
+    shellcheck: { enabled: true }
+    ruff: { enabled: true }
+    markdownlint: { enabled: true }
+    github-checks: { enabled: true, timeout_ms: 90000 }
+    languagetool: { enabled: true }
+    biome: { enabled: true }
+    hadolint: { enabled: true }
+    yamllint: { enabled: true }
+    gitleaks: { enabled: true }
+    checkov: { enabled: true }
+    eslint: { enabled: true }
+    # Removed irrelevant linters: swiftlint, phpstan, golangci-lint, detekt
+
+  path_instructions:
+    # General instructions moved here from the top level (Fixes Critical Schema Error)
+    - path: "**/*"
+      instructions: |
+        - Verify that documentation and comments are free of spelling mistakes
+        - Ensure that test code is automated and follows best practices
+        - Confirm that copyright years are up-to-date
+        - Point out redundant obvious comments
+        - Suggest code completions for TODO or FIXME comments
+
+    # Web Client specific (Next.js/TS)
+    - path: "client/**/*.{ts,tsx,js,jsx}"
+      instructions: |
+        - NextJS: Prefer Server Components by default. Use "use client" only for interactivity.
+        - TypeScript: Avoid 'any', use explicit types.
+        - Security: Check for XSS, CSRF, and sensitive data exposure.
+
+    # Blockchain specific (Solidity)
+    - path: "blockchain/**/*.sol"
+      instructions: |
+        - Review for reentrancy, access control, and gas optimizations.
+        - Ensure explicit visibility modifiers and immutability where applicable.
+        - Verify events are emitted for state changes.
+
+    # Blockchain Tests (Fixes the incorrect .sol test path)
+    - path: "blockchain/test/**/*.test.js"
+      instructions: |
+        - This project uses Hardhat/Chai for contract testing.
+        - Ensure async/await is used correctly for contract calls.
+        - Verify coverage of failure/revert scenarios.
+
+    # Web Assets
+    - path: "assets/**/*"
+      instructions: |
+        - Validate modern web formats (WebP/AVIF) and SVG optimization.
+        - Removed mobile density (@2x/@3x) requirements.
