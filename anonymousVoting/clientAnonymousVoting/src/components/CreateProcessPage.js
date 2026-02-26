@@ -5,8 +5,8 @@ import styles from './CreateProcessPage.module.css';
 import {ethers} from 'ethers';
 
 //web3 imports
-import { deployVotingProcess, deployTestContract, getTestContract } from '../web3/contracts'
-import { useState, useEffect, useRef } from 'react';
+import { deployVotingProcess} from '../web3/contracts'
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -27,35 +27,51 @@ const CreateProcess = () => {
     const [open, setOpen] = useState(false);
     const [transactionResult, setTransactionResult] = useState(null);
 
-    const refValue = useRef(false);
+    // const refValue = useRef(false);
     
-    const createProcess = async (e) => {
-        e.preventDefault();
-        console.log("name: ", name);
-        //format proposals
-        let proposalArray = formatProposals(proposals);
-        //check form inputs
-        if(!isFormValid()){
-            window.alert("Form is not valid");
-            return;
-        }
+   const createProcess = async (e) => {
+    e.preventDefault();
+
+    if (!isFormValid()) {
+        window.alert("Form is not valid");
+        return;
+    }
+
+    try {
         setPending(true);
-        refValue.current = true;
-        //deploy new process contract
-        const result = await deployVotingProcess(name, description, proposalArray,1000000,1000000);
+
+        const proposalArray = formatProposals(proposals);
+        const result = await deployVotingProcess(
+            name,
+            description,
+            proposalArray,
+            1000000,
+            1000000
+        );
+
         setTransactionResult(result);
-
-        refValue.current = false;
-        setPending(false);
-        
         setShow(true);
-    }
 
-    const isFormValid = () => {
-        if(proposals < 2)
-            return false;
-        return true;
+    } catch (err) {
+        console.error(err);
+        window.alert("Transaction failed");
+    } finally {
+        setPending(false);
     }
+};
+
+const isFormValid = () => {
+    // Split proposals by comma, trim each item, and filter out empty strings
+    const validProposals = proposals
+        .split(',')
+        .map(p => p.trim())
+        .filter(p => p.length > 0);
+
+    // Must have at least 2 valid proposals
+    return validProposals.length >= 2;
+};
+
+
 
     const formatProposals = (input) => {
         let proposals = input.split(',');
@@ -67,9 +83,6 @@ const CreateProcess = () => {
     }
 
 
-    useEffect(() => {
-        // setPending(!pending);
-    }, [pending])
 
     return (  
         <div >
@@ -105,11 +118,27 @@ const CreateProcess = () => {
                     />
                 </div>
                 <div>
-                    <button className="baseButton">Create new process</button>
+                    <button
+  className="baseButton"
+  type="submit"
+  disabled={pending}
+>
+  {pending ? (
+    <>
+      <Spinner
+        animation="border"
+        size="sm"
+        style={{ marginRight: "8px" }}
+      />
+      Creating...
+    </>
+  ) : (
+    "Create new process"
+  )}
+</button>
+
                 </div>
-                {refValue.current == true && <div style={{marginTop: "2em"}}>
-                    <Spinner animation="border" />
-                </div>}
+                
             </form>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
