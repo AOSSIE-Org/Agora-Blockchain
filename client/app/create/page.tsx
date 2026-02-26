@@ -24,9 +24,18 @@ const CreatePage: React.FC = () => {
   const [endTime, setEndTime] = useState<Date | null>(new Date());
   const [candidates,setCandidates] = useState<Candidate[]>([])
   const changeChain = () => {
+    // TRAINER FIX: Check if a Wallet is actually installed first!
+    if (typeof window !== "undefined" && !(window as any).ethereum) {
+      toast.error("No Crypto Wallet Found!");
+      alert("Please install MetaMask to continue.");
+      window.open("https://metamask.io/download/", "_blank");
+      return;
+    } 
+
+    // If wallet exists, proceed with the switch
     switchChain({ chainId: sepolia.id });
   }
-  interface Candidate {
+  interface Candidate {  
     name: string;
     description: string;
   }
@@ -68,6 +77,12 @@ const CreatePage: React.FC = () => {
 
     const start = BigInt(Math.floor(startTime.getTime() / 1000));
     const end = BigInt(Math.floor(endTime.getTime() / 1000));
+    // FIX: Check if start time is in the past
+    const now = BigInt(Math.floor(Date.now() / 1000));
+    if (start < now) {
+      toast.error("Invalid timing. Start time cannot be in the past.");
+      return;
+    }
 
     if (start >= end) {
       toast.error("Invalid timing. End time must be after start time.");
