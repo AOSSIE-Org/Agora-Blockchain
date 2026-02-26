@@ -14,6 +14,21 @@ describe("ElectionFactory", function () {
     maxVotes: 3,
     options: ["Option 1", "Option 2", "Option 3"]
   };
+  // candidateID is required for tests, although the contract overwrites it during initialization
+  // This ensures consistent test behavior
+  const mockCandidates = [
+  {
+    name: "Candidate 1",
+    description: "First candidate",
+    candidateID: 0
+  },
+  {
+    name: "Candidate 2",
+    description: "Second candidate",
+    candidateID: 1
+  }
+];
+
 
   beforeEach(async function () {
     [owner, user1, user2, router] = await ethers.getSigners();
@@ -35,7 +50,7 @@ describe("ElectionFactory", function () {
 
   describe("Election Creation", function () {
     it("Should create a new election", async function () {
-      await factory.createElection(mockElectionInfo, 0, 0);
+      await factory.createElection(mockElectionInfo,mockCandidates, 0, 0);
       expect(await factory.electionCount()).to.equal(1);
       
       const openElections = await factory.getOpenElections();
@@ -43,18 +58,18 @@ describe("ElectionFactory", function () {
     });
 
     it("Should allow multiple elections creation", async function () {
-      await factory.createElection(mockElectionInfo, 0, 0);
-      await factory.createElection(mockElectionInfo, 0, 0);
+      await factory.createElection(mockElectionInfo,mockCandidates, 0, 0);
+      await factory.createElection(mockElectionInfo,mockCandidates, 0, 0);
       
       expect(await factory.electionCount()).to.equal(2);
       const openElections = await factory.getOpenElections();
       expect(openElections.length).to.equal(2);
     });
   });
-
+ 
   describe("Election Deletion", function () {
     beforeEach(async function () {
-      await factory.createElection(mockElectionInfo, 0, 0);
+      await factory.createElection(mockElectionInfo, mockCandidates,0, 0);
     });
 
     it("Should allow owner to delete their election", async function () {
