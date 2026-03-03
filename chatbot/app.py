@@ -7,15 +7,33 @@ from flask_cors import CORS
 from os.path import dirname, abspath, join
 
 # Define a simple tokenizer and stemmer
-def tokenize(sentence):
-    return sentence.split()  # Tokenize by splitting on spaces
+# def tokenize(sentence):
+#     return sentence.split()  # Tokenize by splitting on spaces
 
-def stem(word):
-    return word.lower()  # Simple stemming by converting to lowercase
+# def stem(word):
+#     return word.lower()  # Simple stemming by converting to lowercase
 
-def bag_of_words(tokenized_sentence, words):
-    bag = [1 if stem(word) in [stem(w) for w in tokenized_sentence] else 0 for word in words]
-    return torch.tensor(bag, dtype=torch.float32)
+# def bag_of_words(tokenized_sentence, words):
+#     bag = [1 if stem(word) in [stem(w) for w in tokenized_sentence] else 0 for word in words]
+#     return torch.tensor(bag, dtype=torch.float32)
+
+import nltk
+from nltk.stem import WordNetLemmatizer
+import re
+from sentence_transformers import SentenceTransformer
+
+# Downloading resources and init Lemmatizer
+nltk.download('punkt')
+nltk.download('wordnet')
+lemmatizer = WordNetLemmatizer()
+
+# Loading the Embedding Model
+embedder = SentenceTransformer('all-MiniLM-L6-v2')
+
+def clean_and_lemmatize(sentence):    
+    words = nltk.word_tokenize(sentence.lower())
+    return [lemmatizer.lemmatize(re.sub(r'[^\w\s]', '', w)) for w in words if w.strip()]
+
 
 class NeuralNet(nn.Module):
     def __init__(self, input_size, hidden_size, num_classes):
@@ -41,10 +59,12 @@ with open('intents.json', 'r') as json_data:
 FILE = "data.pth"
 data = torch.load(FILE,weights_only=True)
 
-input_size = data["input_size"]
+# size is fixed
+input_size = 384 
+tags = data['tags']
+
 hidden_size = data["hidden_size"]
 output_size = data["output_size"]
-all_words = data['all_words']
 tags = data['tags']
 model_state = data["model_state"]
 
@@ -60,13 +80,17 @@ def chat():
         request_data = request.get_json()
         user_message = request_data.get('message', '')
 
-        # Tokenize and process the message
-        sentence = tokenize(user_message)
-        X = bag_of_words(sentence, data['all_words']).unsqueeze(0).to(device)
+        # # Tokenize and process the message
+        # sentence = tokenize(user_message)
+        # X = bag_of_words(sentence, data['all_words']).unsqueeze(0).to(device)
 
-        # Check if input is gibberish (no known words recognized)
-        if X.sum().item() == 0:
-            return jsonify({"message": "I do not understand..."})
+        # # Check if input is gibberish (no known words recognized)
+        # if X.sum().item() == 0:
+        #     return jsonify({"message": "I do not understand..."})
+
+        # Getting semantic embedding (384-dimensional vector)
+        embedding = embedder.encode(user_message)
+        X = torch.tensor(embedding, dtype=torch.float32).unsqueeze(0).to(device)        
 
         # Make prediction
         output = model(X)
