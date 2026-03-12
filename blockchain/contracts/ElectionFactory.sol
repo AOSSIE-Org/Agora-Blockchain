@@ -14,6 +14,8 @@ contract ElectionFactory is CCIPReceiver {
     error OwnerRestricted();
     error NotWhitelistedSender();
     error InvalidCandidatesLength();
+    error InvalidStartTime();
+    error InvalidEndTime();
 
     struct CCIPVote {
         address election;
@@ -61,7 +63,8 @@ contract ElectionFactory is CCIPReceiver {
         uint _resultType
     ) external {
         if (_candidates.length<2) revert InvalidCandidatesLength();
-        //add checks of time
+        if (_electionInfo.startTime <= block.timestamp) revert InvalidStartTime();
+        if (_electionInfo.endTime <= _electionInfo.startTime) revert InvalidEndTime();
         address electionAddress = Clones.clone(electionGenerator);
         address _ballot = ballotGenerator.generateBallot(
             _ballotType,
