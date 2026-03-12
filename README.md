@@ -45,7 +45,7 @@ git clone https://github.com/AOSSIE-Org/Agora-Blockchain
 
 2. **Set up Environment Variables**:
 
-   Create `.env.local` in the `blockchain` directory:
+   Create `.env` in the `blockchain` directory:
    ```
    PRIVATE_KEY=<your_private_key>
    RPC_URL_SEPOLIA=<your_sepolia_rpc_url>
@@ -53,7 +53,7 @@ git clone https://github.com/AOSSIE-Org/Agora-Blockchain
    ETHERSCAN_KEY=<your_etherscan_api_key>
    ```
 
-   Create `.env.local` in the `client` directory:
+   Create `.env` in the `client` directory:
    ```
    NEXT_PUBLIC_PINATA_JWT=<your_pinata_jwt>
    ```
