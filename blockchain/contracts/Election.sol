@@ -47,6 +47,14 @@ contract Election is Initializable {
         _;
     }
 
+    modifier ensureBallot() {
+        if (!ballotInitialized) {
+            ballot.init(candidates.length);
+            ballotInitialized = true;
+        }
+        _;
+    }
+
     ElectionInfo public electionInfo;
 
     address public factoryContract;
@@ -92,12 +100,8 @@ contract Election is Initializable {
         resultCalculator = IResultCalculator(_resultCalculator);
     }
 
-    function userVote(uint[] memory voteArr) external electionInactive {
+    function userVote(uint[] memory voteArr) external electionInactive ensureBallot {
         if (userVoted[msg.sender]) revert AlreadyVoted();
-        if (ballotInitialized == false) {
-            ballot.init(candidates.length);
-            ballotInitialized = true;
-        }
         ballot.vote(voteArr);
         userVoted[msg.sender] = true;
         totalVotes++;
@@ -106,12 +110,8 @@ contract Election is Initializable {
     function ccipVote(
         address user,
         uint[] memory _voteArr
-    ) external electionInactive {
+    ) external electionInactive ensureBallot {
         if (userVoted[user]) revert AlreadyVoted();
-        if (ballotInitialized == false) {
-            ballot.init(candidates.length);
-            ballotInitialized = true;
-        }
         if (msg.sender != factoryContract) revert OwnerPermissioned();
         userVoted[user] = true;
         ballot.vote(_voteArr);
