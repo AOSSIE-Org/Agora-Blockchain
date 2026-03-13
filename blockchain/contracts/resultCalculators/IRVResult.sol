@@ -71,7 +71,7 @@ contract IRVResult is Errors, Candidatecheck {
                     }
                 }
                 // Return the array with the correct size
-                winners = new uint256[](2);
+                winners = new uint256[](count);
                 for (uint256 i = 0; i < count; i++) {
                     winners[i] = tiedWinners[i];
                 }
