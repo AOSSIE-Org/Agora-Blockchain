@@ -13,6 +13,11 @@ contract Election is Initializable {
     error ElectionInactive();
     error InvalidCandidateID();
 
+    event Voted(address indexed voter, uint totalVotes);
+    event CandidateAdded(uint indexed candidateId, string name);
+    event CandidateRemoved(uint indexed candidateId);
+    event ResultsDeclared(uint[] winners);
+
     mapping(address user => bool isVoted) public userVoted;
 
     struct ElectionInfo {
@@ -101,6 +106,7 @@ contract Election is Initializable {
         ballot.vote(voteArr);
         userVoted[msg.sender] = true;
         totalVotes++;
+        emit Voted(msg.sender, totalVotes);
     }
 
     function ccipVote(
@@ -116,6 +122,7 @@ contract Election is Initializable {
         userVoted[user] = true;
         ballot.vote(_voteArr);
         totalVotes++;
+        emit Voted(user, totalVotes);
     }
 
     function addCandidate(
@@ -128,10 +135,12 @@ contract Election is Initializable {
             _description
         );
         candidates.push(newCandidate);
+        emit CandidateAdded(candidates.length - 1, _name);
     }
 
     function removeCandidate(uint _id) external onlyOwner electionStarted {
     if (_id >= candidates.length) revert InvalidCandidateID();
+    emit CandidateRemoved(_id);
     candidates[_id] = candidates[candidates.length - 1]; // Replace with last element
     candidates.pop(); 
 }
@@ -155,6 +164,7 @@ contract Election is Initializable {
         );
         winners = _winners;
         resultsDeclared = true;
+        emit ResultsDeclared(winners);
     }
 
     function getWinners() external view returns (uint[] memory) {
