@@ -77,20 +77,23 @@ contract ElectionFactory is CCIPReceiver {
             msg.sender,
             resultCalculator
         );
+        electionOwner[electionCount] = msg.sender;
         electionCount++;
-        electionOwner[openBasedElections.length] = msg.sender;
         openBasedElections.push(address(election));
     }
 
     function deleteElection(uint _electionId) external {
         if (electionOwner[_electionId] != msg.sender) revert OnlyOwner();
-        uint lastElement = openBasedElections.length - 1;
-        if (_electionId != lastElement) {
-            openBasedElections[_electionId] = openBasedElections[lastElement];
-            electionOwner[_electionId] = electionOwner[lastElement];
+        uint lastIndex = openBasedElections.length - 1;
+        // Swap the last element into the slot of the election being deleted
+        for (uint i = 0; i <= lastIndex; i++) {
+            if (Election(openBasedElections[i]).electionId() == _electionId) {
+                openBasedElections[i] = openBasedElections[lastIndex];
+                break;
+            }
         }
         openBasedElections.pop();
-        delete electionOwner[lastElement];
+        delete electionOwner[_electionId];
     }
 
     function addWhitelistedContract(
