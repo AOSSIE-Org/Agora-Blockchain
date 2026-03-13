@@ -26,9 +26,14 @@ contract RankedBallot is IBallot {
         uint totalCandidates = candidateVotes.length;
         if (voteArr.length != totalCandidates) revert VoteInputLength();
 
+        bool[] memory seen = new bool[](totalCandidates);
         for (uint i = 0; i < totalCandidates; i++) {
+            uint candidateId = voteArr[i];
+            if (candidateId >= totalCandidates) revert InvalidCandidateID();
+            if (seen[candidateId]) revert DuplicateCandidateID();
+            seen[candidateId] = true;
             // voteArr[i] is the candidate ID, i is the rank (0-based)
-            candidateVotes[voteArr[i]] += totalCandidates - i;
+            candidateVotes[candidateId] += totalCandidates - i;
         }
     }
 
