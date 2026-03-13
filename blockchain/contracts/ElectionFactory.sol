@@ -54,6 +54,11 @@ contract ElectionFactory is CCIPReceiver {
         _;
     }
 
+    modifier onlyElectionOwner(uint _electionId) {
+        if (electionOwner[_electionId] != msg.sender) revert OnlyOwner();
+        _;
+    }
+
     function createElection(
         Election.ElectionInfo memory _electionInfo,
         Election.Candidate[] memory _candidates, // add candidates separately due to separation of concerns 
@@ -82,8 +87,7 @@ contract ElectionFactory is CCIPReceiver {
         openBasedElections.push(address(election));
     }
 
-    function deleteElection(uint _electionId) external {
-        if (electionOwner[_electionId] != msg.sender) revert OnlyOwner();
+    function deleteElection(uint _electionId) external onlyElectionOwner(_electionId) {
         uint lastElement = openBasedElections.length - 1;
         if (_electionId != lastElement) {
             openBasedElections[_electionId] = openBasedElections[lastElement];

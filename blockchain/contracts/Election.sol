@@ -47,6 +47,11 @@ contract Election is Initializable {
         _;
     }
 
+    modifier onlyFactory() {
+        if (msg.sender != factoryContract) revert OwnerPermissioned();
+        _;
+    }
+
     ElectionInfo public electionInfo;
 
     address public factoryContract;
@@ -106,13 +111,12 @@ contract Election is Initializable {
     function ccipVote(
         address user,
         uint[] memory _voteArr
-    ) external electionInactive {
+    ) external electionInactive onlyFactory {
         if (userVoted[user]) revert AlreadyVoted();
         if (ballotInitialized == false) {
             ballot.init(candidates.length);
             ballotInitialized = true;
         }
-        if (msg.sender != factoryContract) revert OwnerPermissioned();
         userVoted[user] = true;
         ballot.vote(_voteArr);
         totalVotes++;
