@@ -10,6 +10,8 @@ const errorMessages = {
   IncorrectCredits: " Incorrect Credits Given",
   NoCandidates: "No Candidates to Vote",
   ChainMismatchError: "Switch to Mainnet!",
+  InvalidCandidateID: "Invalid candidate ID in vote array",
+  DuplicateCandidateID: "Duplicate candidate ID in vote array",
 };
 
 export const ErrorMessage = (error: any) => {
