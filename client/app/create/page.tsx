@@ -29,9 +29,11 @@ const CreatePage: React.FC = () => {
   interface Candidate {
     name: string;
     description: string;
+    mediaURI: string;
+    mediaFile?: File;
   }
   const addCandidate = () => {
-    setCandidates([...candidates, { name: "", description: "" }]);
+    setCandidates([...candidates, { name: "", description: "", mediaURI: "" }]);
   };
   
   const removeCandidate = (index: number) => {
@@ -39,9 +41,13 @@ const CreatePage: React.FC = () => {
     setCandidates(newCandidates);
   };
   
-  const updateCandidate = (index: number, field: keyof Candidate, value: string) => {
+  const updateCandidate = (index: number, field: keyof Candidate, value: string | File) => {
     const newCandidates = candidates.map((candidate, i) => {
       if (i === index) {
+        if (field === 'mediaFile' && value instanceof File) {
+          // When a file is selected, store it for later upload but don't set mediaURI yet
+          return { ...candidate, [field]: value };
+        }
         return { ...candidate, [field]: value };
       }
       return candidate;
@@ -77,22 +83,61 @@ const CreatePage: React.FC = () => {
       toast.error("please enter all candidate information or remove empty candidates.")
       return 
     }
-  // passed candidates to the create election function 
+
+    // Show loading toast
+    const loadingToast = toast.loading("Uploading media and creating election...");
+
     try {
+      // First, upload any media files to IPFS and update mediaURI values
+      const candidatesWithMedia = [...candidates];
+      
+      for (let i = 0; i < candidatesWithMedia.length; i++) {
+        const candidate = candidatesWithMedia[i];
+        if (candidate.mediaFile) {
+          try {
+            // Import the pinFileToIPFS function dynamically to avoid issues
+            const { pinFileToIPFS } = await import("../helpers/pinToIPFS");
+            
+            // Upload the file
+            const result = await pinFileToIPFS(candidate.mediaFile);
+            
+            // Update the mediaURI with the IPFS hash
+            candidatesWithMedia[i] = {
+              ...candidate,
+              mediaURI: result.IpfsHash
+            };
+            
+            console.log(`Uploaded media for candidate ${i}:`, result.IpfsHash);
+          } catch (error) {
+            console.error(`Error uploading media for candidate ${i}:`, error);
+            toast.error(`Failed to upload media for ${candidate.name}`);
+          }
+        }
+      }
+
+      // Now create the election with the updated candidate data
       await writeContractAsync({
         address: ELECTION_FACTORY_ADDRESS,
         abi: ElectionFactory,
         functionName: "createElection",
         args: [
           { startTime: start, endTime: end, name, description }, // ElectionInfo object
-          candidates.map((c, index) => ({ candidateID: BigInt(index), name: c.name, description: c.description })), 
+          candidatesWithMedia.map((c, index) => ({
+            candidateID: BigInt(index),
+            name: c.name,
+            description: c.description,
+            mediaURI: c.mediaURI || "",
+          })),
           ballotType,
           ballotType,
         ],
       });
+      
+      toast.dismiss(loadingToast);
       toast.success("Election created successfully!");
       router.push("/");
     } catch (error) {
+      toast.dismiss(loadingToast);
       console.error("Error creating election:", error);
       toast.error(ErrorMessage(error));
     }
@@ -187,6 +232,27 @@ const CreatePage: React.FC = () => {
                     className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     required
                   />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Candidate Media (Image or Video)
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*,video/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          updateCandidate(index, "mediaFile", file);
+                        }
+                      }}
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
+                    {candidate.mediaFile && (
+                      <p className="mt-1 text-sm text-green-600">
+                        File selected: {candidate.mediaFile.name}
+                      </p>
+                    )}
+                  </div>
                 </motion.div>
               ))
             )}

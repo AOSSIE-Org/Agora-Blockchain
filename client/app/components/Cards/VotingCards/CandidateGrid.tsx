@@ -16,6 +16,7 @@ import { useParams } from "next/navigation";
 import { sepolia } from "viem/chains";
 import { unpinJSONFile } from "@/app/helpers/pinToIPFS";
 import CandidateDescription from "../../Fragment/CandidateDescription";
+import CandidateMedia from "../../Fragment/CandidateMedia";
 import Vote from "../../Modal/Vote";
 
 const CandidateGrid = ({
@@ -117,12 +118,19 @@ const CandidateGrid = ({
         </Menu>
       )}
 
-      <div className="flex mt-2 flex-col items-center pb-2">
-        <img
-          className="w-16 h-16 mb-3 rounded-full shadow-lg"
-          src={AVATARS[candidateId % 4]}
-          alt="pfp"
-        />
+      <div className="flex mt-2 flex-col items-center pb-10">
+        {candidate.mediaURI ? (
+          <div className="w-16 h-16 mb-3 rounded-full shadow-lg overflow-hidden">
+            <CandidateMedia ipfsHash={candidate.mediaURI} />
+          </div>
+        ) : (
+          <img
+            className="w-16 h-16 mb-3 rounded-full shadow-lg"
+            src={AVATARS[candidateId % 4]}
+            alt="pfp"
+          />
+        )}
+        
         <h5 className="mb-1 text-xl font-medium text-gray-900">
           {candidate.name} #{Number(candidateId)}
         </h5>

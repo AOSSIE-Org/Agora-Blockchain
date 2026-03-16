@@ -18,6 +18,7 @@ import { sepolia } from "viem/chains";
 import { fetchFileFromIPFS } from "@/app/helpers/fetchFileFromIPFS";
 import { unpinJSONFile } from "@/app/helpers/pinToIPFS";
 import CandidateDescription from "../../Fragment/CandidateDescription";
+import CandidateMedia from "../../Fragment/CandidateMedia";
 
 const CandidateCard = ({
   candidate,
@@ -62,11 +63,17 @@ const CandidateCard = ({
         className="flex relative items-center "
       >
         <div className="flex-shrink-0">
-          <img
-            className="w-9 h-9 rounded-full"
-            src={AVATARS[candidateId % 4]}
-            alt="pfp"
-          />
+          {candidate.mediaURI ? (
+            <div className="w-9 h-9 rounded-full overflow-hidden">
+              <CandidateMedia ipfsHash={candidate.mediaURI} />
+            </div>
+          ) : (
+            <img
+              className="w-9 h-9 rounded-full"
+              src={AVATARS[candidateId % 4]}
+              alt="pfp"
+            />
+          )}
         </div>
         <div className="flex-1 min-w-0 ms-4">
           <p className="text-sm font-medium text-gray-900 truncate ">

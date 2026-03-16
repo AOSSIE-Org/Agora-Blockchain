@@ -27,6 +27,7 @@ contract Election is Initializable {
         uint candidateID; // remove candidateId its not needed
         string name;
         string description;
+        string mediaURI;  // IPFS hash for candidate media (image/video)
     }
 
     modifier onlyOwner() {
@@ -80,7 +81,8 @@ contract Election is Initializable {
                 Candidate(
                     i,
                     _candidates[i].name,
-                    _candidates[i].description
+                    _candidates[i].description,
+                    _candidates[i].mediaURI
                 )
             );
         }
@@ -120,12 +122,14 @@ contract Election is Initializable {
 
     function addCandidate(
         string calldata _name,
-        string calldata _description
+        string calldata _description,
+        string calldata _mediaURI
     ) external onlyOwner electionStarted {
         Candidate memory newCandidate = Candidate(
             candidates.length,
             _name,
-            _description
+            _description,
+            _mediaURI
         );
         candidates.push(newCandidate);
     }
