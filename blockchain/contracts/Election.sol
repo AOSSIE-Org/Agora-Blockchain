@@ -24,9 +24,10 @@ contract Election is Initializable {
     }
 
     struct Candidate {
-        uint candidateID; // remove candidateId its not needed
+        uint candidateID;
         string name;
         string description;
+        bool isActive;  // Added isActive flag
     }
 
     modifier onlyOwner() {
@@ -75,12 +76,13 @@ contract Election is Initializable {
         address _resultCalculator
     ) external initializer {
         electionInfo = _electionInfo;
-        for(uint i = 0 ;i< _candidates.length;i++){ // add _candidates to candidates array 
+        for(uint i = 0; i < _candidates.length; i++) {
             candidates.push(
                 Candidate(
                     i,
                     _candidates[i].name,
-                    _candidates[i].description
+                    _candidates[i].description,
+                    true  // Set initial candidates as active
                 )
             );
         }
@@ -125,19 +127,35 @@ contract Election is Initializable {
         Candidate memory newCandidate = Candidate(
             candidates.length,
             _name,
-            _description
+            _description,
+            true  // Set new candidate as active
         );
         candidates.push(newCandidate);
     }
 
     function removeCandidate(uint _id) external onlyOwner electionStarted {
-    if (_id >= candidates.length) revert InvalidCandidateID();
-    candidates[_id] = candidates[candidates.length - 1]; // Replace with last element
-    candidates.pop(); 
-}
+        if (_id >= candidates.length) revert InvalidCandidateID();
+        require(candidates[_id].isActive, "Candidate already inactive");
+        candidates[_id].isActive = false;
+    }
 
     function getCandidateList() external view returns (Candidate[] memory) {
-        return candidates;
+        uint activeCount = 0;
+        for (uint i = 0; i < candidates.length; i++) {
+            if (candidates[i].isActive) {
+                activeCount++;
+            }
+        }
+
+        Candidate[] memory activeCandidates = new Candidate[](activeCount);
+        uint index = 0;
+        for (uint i = 0; i < candidates.length; i++) {
+            if (candidates[i].isActive) {
+                activeCandidates[index] = candidates[i];
+                index++;
+            }
+        }
+        return activeCandidates;
     }
 
     function getResult() external {

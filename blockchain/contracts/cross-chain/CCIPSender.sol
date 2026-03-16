@@ -33,6 +33,10 @@ contract CCIPSender is OwnerIsCreator {
     uint public constant minTokens = 25000000000000000000;
     mapping(address election => bool status) public electionApproved;
 
+    // New state variables
+    mapping(address election => uint256 balance) public electionBalance;
+    uint256 public constant VOTER_FEE = 1000000000000000000; // 1 LINK token per vote
+
     /// @notice Constructor initializes the contract with the router address.
     constructor(address _router, address _link, address _electionFactory) {
         s_router = IRouterClient(_router);
@@ -53,8 +57,37 @@ contract CCIPSender is OwnerIsCreator {
     function addElection(address _election) external {
         uint256 allowance = s_linkToken.allowance(msg.sender, address(this));
         if (allowance < minTokens) revert InsufficientAllowance();
+        
+        // Transfer initial deposit to contract
         s_linkToken.transferFrom(msg.sender, address(this), minTokens);
+        
+        // Set election balance and approve status
+        electionBalance[_election] = minTokens;
         electionApproved[_election] = true;
+    }
+
+    // New function to add LINK tokens to specific election
+    function depositLinkToElection(address _election, uint256 _amount) external {
+        require(electionApproved[_election], "Election not approved");
+        require(_amount > 0, "Amount must be greater than 0");
+        
+        uint256 allowance = s_linkToken.allowance(msg.sender, address(this));
+        require(allowance >= _amount, "Insufficient allowance");
+        
+        s_linkToken.transferFrom(msg.sender, address(this), _amount);
+        electionBalance[_election] += _amount;
+    }
+
+    // New function to withdraw unused LINK tokens
+    function withdrawElectionBalance(address _election) external {
+        require(msg.sender == owner() || msg.sender == _election, "Unauthorized");
+        require(electionApproved[_election], "Election not approved");
+        
+        uint256 balance = electionBalance[_election];
+        require(balance > 0, "No balance to withdraw");
+        
+        electionBalance[_election] = 0;
+        s_linkToken.transfer(msg.sender, balance);
     }
 
     function sendMessage(
@@ -65,30 +98,32 @@ contract CCIPSender is OwnerIsCreator {
         if (!electionApproved[_election]) {
             revert CCIPNotSupported();
         }
-        // Create an EVM2AnyMessage struct in memory with necessary information for sending a cross-chain message
-        CCIPVote memory _voteDetails = CCIPVote(
-            _election,
-            msg.sender,
-            _voteArr
-        );
+
+        // Calculate fees
         Client.EVM2AnyMessage memory evm2AnyMessage = Client.EVM2AnyMessage({
             receiver: abi.encode(electionFactory),
-            data: abi.encode(_voteDetails), // ABI-encoded vote
-            tokenAmounts: new Client.EVMTokenAmount[](0), // Empty array indicating no tokens are being sent
+            data: abi.encode(CCIPVote(_election, msg.sender, _voteArr)),
+            tokenAmounts: new Client.EVMTokenAmount[](0),
             extraArgs: Client._argsToBytes(
                 Client.EVMExtraArgsV1({gasLimit: 200_000})
             ),
             feeToken: address(s_linkToken)
         });
 
-        uint256 fees = s_router.getFee(
-            destinationChainSelector,
-            evm2AnyMessage
-        );
+        uint256 fees = s_router.getFee(destinationChainSelector, evm2AnyMessage);
+        
+        // Check voter has approved enough LINK tokens
+        uint256 totalFee = fees + VOTER_FEE;
+        uint256 voterAllowance = s_linkToken.allowance(msg.sender, address(this));
+        if (voterAllowance < totalFee) revert InsufficientAllowance();
 
-        if (fees > s_linkToken.balanceOf(address(this)))
-            revert NotEnoughBalance(s_linkToken.balanceOf(address(this)), fees);
+        // Transfer fee from voter
+        s_linkToken.transferFrom(msg.sender, address(this), totalFee);
+        
+        // Add voter fee to election balance
+        electionBalance[_election] += VOTER_FEE;
 
+        // Approve router to spend LINK
         s_linkToken.approve(address(s_router), fees);
 
         messageId = s_router.ccipSend(destinationChainSelector, evm2AnyMessage);
