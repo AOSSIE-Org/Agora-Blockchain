@@ -24,115 +24,171 @@ Agora is a library of voting algorithms like `Moore's`, `Oklahoma` , `Borda` , `
   - [TailwindCSS](https://tailwindcss.com/): A utility-first CSS framework for efficient styling.
   - [zustand](https://zustand.docs.pmnd.rs/getting-started/introduction): A state management library for React, used for managing global state in the Next.js application.
 
-Here's a refined version of the development guide:
-
 ## Development Guide
 
 ### Running Locally
 
-**Clone the Repository**:
+**Clone the Repository:**
 
 ```bash
 git clone https://github.com/AOSSIE-Org/Agora-Blockchain
+cd Agora-Blockchain
 ```
-### Option 1: Docker Setup 
 
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/AOSSIE-Org/Agora-Blockchain
-   cd Agora-Blockchain
-   ```
+## 🔐 Environment Files — Important Notice
 
-2. **Set up Environment Variables**:
+This project uses two types of environment files:
 
-   Create `.env.local` in the `blockchain` directory:
-   ```
-   PRIVATE_KEY=<your_private_key>
-   RPC_URL_SEPOLIA=<your_sepolia_rpc_url>
-   RPC_URL_FUJI=<your_fuji_rpc_url>
-   ETHERSCAN_KEY=<your_etherscan_api_key>
-   ```
+### ✔ .env.example (for local testing only)
 
-   Create `.env.local` in the `client` directory:
-   ```
-   NEXT_PUBLIC_PINATA_JWT=<your_pinata_jwt>
-   ```
+Contains dummy values used for:
+- Running Hardhat tests
+- Local blockchain
+- Local frontend development
 
-3. **Run with Docker Compose**:
-   ```bash
-   docker-compose up --build
-   ```
+Copy these before running:
 
-4. **Access the Application**:
-   - Frontend: http://localhost:3000
-   - Blockchain Node: http://localhost:8545
+**Backend:**
+```bash
+cp blockchain/.env.example blockchain/.env
+```
 
-The application will automatically reload when you make changes to the source code.
+**Frontend:**
+```bash
+cp client/.env.example client/.env.local
+```
 
-### Option 2: Manual Setup
-## Backend
-1. **Navigate to the Blockchain Directory**:
+These dummy values are **ONLY for local development**.
 
-   ```bash
-   cd blockchain
-   ```
+### ✔ .env / .env.local (for real testnet/mainnet deployments)
 
-2. **Install Dependencies**:
+When deploying to actual networks, replace the dummy values with real keys.
 
-   ```bash
-   npm install
-   ```
+**Backend .env format for real deployment:**
+```
+PRIVATE_KEY=<your_real_private_key>
+RPC_URL_AMOY=<your_amoy_rpc>
+RPC_URL_SEPOLIA=<your_sepolia_rpc>
+RPC_URL_FUJI=<your_fuji_rpc>
+RPC_URL_BSC=<your_bsc_rpc>
+ETHERSCAN_KEY=<your_real_etherscan_key>
+```
 
-3. **Test the Contracts**:
+**Frontend .env.local format for real deployment:**
+```
+NEXT_PUBLIC_PINATA_JWT=<your_real_pinata_jwt>
+```
 
-   ```bash
-   npx hardhat test
-   ```
+### ⚠️ Never commit .env or .env.local to GitHub.
 
-4. **Create an `.env.local` file** with the following environment variables:
+---
 
-   ```bash
-   PRIVATE_KEY=<your_private_key>
-   RPC_URL_SEPOLIA=<your_sepolia_rpc_url>
-   RPC_URL_FUJI=<your_fuji_rpc_url>
-   ETHERSCAN_KEY=<your_etherscan_api_key>
-   ```
+## Option 1: Docker Setup
 
-5. **Compile & Deploy Contracts**:
-   ```bash
-   npx hardhat ignition deploy ./ignition/modules/<ContractModule> --network <Network> --verify
-   ```
+**Clone the Repository:**
+```bash
+git clone https://github.com/AOSSIE-Org/Agora-Blockchain
+cd Agora-Blockchain
+```
 
-## Frontend
+**Set up Environment Variables for Local Testing:**
 
-1. **Navigate to the Client Directory**:
+Backend:
+```bash
+cp blockchain/.env.example blockchain/.env
+```
 
-   ```bash
-   cd client
-   ```
+Frontend:
+```bash
+cp client/.env.example client/.env.local
+```
 
-2. **Install Dependencies**:
+**Run with Docker Compose:**
+```bash
+docker-compose up --build
+```
 
-   ```bash
-   npm install
-   ```
+**Access the Application:**
+- Frontend: http://localhost:3000
+- Blockchain Node: http://localhost:8545
 
-3. **Run the Application**:
+The application will automatically reload when you make changes.
 
-   ```bash
-   npm run dev
-   ```
+---
 
-4. **Create an `.env.local` file** with the following environment variables:
+## Option 2: Manual Setup
 
-   ```bash
-   NEXT_PUBLIC_PINATA_JWT=<your_pinata_jwt>
-   ```
+### Backend
 
-5. **Visit the Live App at**:
-   **[localhost](http://localhost:3000/)**
+**Navigate to the Blockchain Directory:**
+```bash
+cd blockchain
+```
 
-## About smart contracts
+**Install Dependencies:**
+```bash
+npm install
+```
+
+**Local Testing Environment Setup:**
+```bash
+cp .env.example .env
+```
+
+This includes dummy:
+- `PRIVATE_KEY`
+- `RPC URLs`
+- `ETHERSCAN_KEY`
+
+**Run Tests:**
+```bash
+npx hardhat test
+```
+
+**Real Deployment Environment (replace with real values):**
+```
+PRIVATE_KEY=<your_real_private_key>
+RPC_URL_SEPOLIA=<your_real_rpc>
+RPC_URL_FUJI=<your_real_rpc>
+ETHERSCAN_KEY=<your_real_etherscan_key>
+```
+
+**Compile & Deploy Contracts:**
+```bash
+npx hardhat ignition deploy ./ignition/modules/<ContractModule> --network <Network> --verify
+```
+
+### Frontend
+
+**Navigate to the Client Directory:**
+```bash
+cd client
+```
+
+**Install Dependencies:**
+```bash
+npm install
+```
+
+**Local Development Environment:**
+```bash
+cp .env.example .env.local
+```
+
+**Real Deployment Environment:**
+```
+NEXT_PUBLIC_PINATA_JWT=<your_real_pinata_jwt>
+```
+
+**Run the Application:**
+```bash
+npm run dev
+```
+
+**Visit the Live App:**
+👉 **[http://localhost:3000/](http://localhost:3000/)**
+
+## About Smart Contracts
 
 The architecture of your Election Factory contract is designed to facilitate the creation and management of elections on the blockchain, incorporating cross-chain voting capabilities through Chainlink's Cross-Chain Interoperability Protocol (CCIP). Below is a detailed explanation:
 
@@ -140,17 +196,17 @@ The architecture of your Election Factory contract is designed to facilitate the
 
 The `ElectionFactory` contract serves as the core component of the election creation and management system. It is responsible for generating new election instances, handling cross-chain voting, and maintaining a record of active elections. The contract leverages several other contracts and libraries to achieve its functionality, including the `Election`, `BallotGenerator`, and `ResultCalculator` contracts, as well as Chainlink's CCIP components.
 
-- ### Key Features:
+### Key Features
 
-  - Election Creation: Utilizes a clonable election template (electionGenerator) to efficiently create new election contracts.
-  - Ballot and Result Handling: Generates ballots using the BallotGenerator contract and calculates election results with a dedicated ResultCalculator contract.
-  - Cross-Chain Voting: Implements Chainlink's Cross-Chain Interoperability Protocol (CCIP) to allow voting from multiple blockchain networks.
+- **Election Creation**: Utilizes a clonable election template (electionGenerator) to efficiently create new election contracts.
+- **Ballot and Result Handling**: Generates ballots using the BallotGenerator contract and calculates election results with a dedicated ResultCalculator contract.
+- **Cross-Chain Voting**: Implements Chainlink's Cross-Chain Interoperability Protocol (CCIP) to allow voting from multiple blockchain networks.
 
-- ### Efficiency and Security:
+### Efficiency and Security
 
-  - Clonable Contracts: Reduces deployment costs and resource usage by cloning a pre-deployed election template.
-  - Owner Management: Ensures only the election creator can delete or modify their election, providing security and control.
-  - Whitelisted Cross-Chain Communication: Only allows approved contracts to send votes across chains, preventing unauthorized access.
+- **Clonable Contracts**: Reduces deployment costs and resource usage by cloning a pre-deployed election template.
+- **Owner Management**: Ensures only the election creator can delete or modify their election, providing security and control.
+- **Whitelisted Cross-Chain Communication**: Only allows approved contracts to send votes across chains, preventing unauthorized access.
 
 ## Deployed Instances
 
