@@ -1,34 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import "./interface/IBallot.sol";
+import "./BaseBallot.sol";
 
-contract RankedBallot is IBallot {
-    address public electionContract;
-
+contract RankedBallot is BaseBallot {
     uint[] private candidateVotes;
 
-    modifier onlyOwner() {
-        if (msg.sender != electionContract) revert OwnerPermissioned();
-        _;
+    function _afterInit() internal override {
+        candidateVotes = new uint[](totalCandidates);
     }
 
-    constructor(address _electionAddress) {
-        electionContract = _electionAddress;
-    }
-
-    function init(uint totalCandidate) external onlyOwner {
-        candidateVotes = new uint[](totalCandidate);
-    }
-
-    // voting as preference candidate
     function vote(uint[] memory voteArr) external onlyOwner {
-        uint totalCandidates = candidateVotes.length;
         if (voteArr.length != totalCandidates) revert VoteInputLength();
 
         for (uint i = 0; i < totalCandidates; i++) {
-            // voteArr[i] is the candidate ID, i is the rank (0-based)
-            candidateVotes[voteArr[i]] += totalCandidates - i;
+            candidateVotes[voteArr[i]] += totalCandidates - i; // Rank-based weighting
         }
     }
 
