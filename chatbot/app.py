@@ -1,69 +1,105 @@
-import random
+import os
 import json
 import torch
-import torch.nn as nn
+import nltk
+import numpy as np
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-from os.path import dirname, abspath, join
+from nltk.stem import PorterStemmer
+from nltk.tokenize import word_tokenize
 
-# Define a simple tokenizer and stemmer
+################################
+# PATH SETUP
+################################
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+INTENTS_PATH = os.path.join(BASE_DIR, "intents.json")
+MODEL_PATH = os.path.join(BASE_DIR, "data.pth")
+
+################################
+# NLTK SAFE SETUP (3.8.2+)
+################################
+def ensure_nltk_tokenizers():
+    try:
+        nltk.data.find("tokenizers/punkt_tab/english")
+    except LookupError:
+        try:
+            nltk.download("punkt_tab")
+        except Exception:
+            nltk.download("punkt")
+
+ensure_nltk_tokenizers()
+
+################################
+# NLP UTILITIES
+################################
+stemmer = PorterStemmer()
+
 def tokenize(sentence):
-    return sentence.split()  # Tokenize by splitting on spaces
+    return word_tokenize(sentence)
 
 def stem(word):
-    return word.lower()  # Simple stemming by converting to lowercase
+    return stemmer.stem(word.lower())
 
 def bag_of_words(tokenized_sentence, words):
-    bag = [1 if stem(word) in [stem(w) for w in tokenized_sentence] else 0 for word in words]
-    return torch.tensor(bag, dtype=torch.float32)
+    sentence_words = [stem(w) for w in tokenized_sentence]
+    bag = np.zeros(len(words), dtype=np.float32)
+    for idx, w in enumerate(words):
+        if w in sentence_words:
+            bag[idx] = 1
+    return bag
 
-class NeuralNet(nn.Module):
+################################
+# LOAD DATA
+################################
+with open(INTENTS_PATH, "r", encoding="utf-8") as f:
+    intents = json.load(f)
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+data = torch.load(MODEL_PATH, map_location=device)
+
+class NeuralNet(torch.nn.Module):
     def __init__(self, input_size, hidden_size, num_classes):
-        super(NeuralNet, self).__init__()
-        self.l1 = nn.Linear(input_size, hidden_size)
-        self.l2 = nn.Linear(hidden_size, hidden_size)
-        self.l3 = nn.Linear(hidden_size, num_classes)
-        self.relu = nn.ReLU()
-    
+        super().__init__()
+        self.l1 = torch.nn.Linear(input_size, hidden_size)
+        self.l2 = torch.nn.Linear(hidden_size, hidden_size)
+        self.l3 = torch.nn.Linear(hidden_size, num_classes)
+        self.relu = torch.nn.ReLU()
+
     def forward(self, x):
         x = self.relu(self.l1(x))
         x = self.relu(self.l2(x))
-        x = self.l3(x)
-        return x
+        return self.l3(x)
 
+model = NeuralNet(
+    data["input_size"],
+    data["hidden_size"],
+    data["output_size"]
+).to(device)
+
+model.load_state_dict(data["model_state"])
+model.eval()
+
+all_words = data["all_words"]
+tags = data["tags"]
+
+################################
+# FLASK APP
+################################
 app = Flask(__name__)
-CORS(app) 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-with open('intents.json', 'r') as json_data:
-    intents = json.load(json_data)
-
-FILE = "data.pth"
-data = torch.load(FILE,weights_only=True)
-
-input_size = data["input_size"]
-hidden_size = data["hidden_size"]
-output_size = data["output_size"]
-all_words = data['all_words']
-tags = data['tags']
-model_state = data["model_state"]
-
-model = NeuralNet(input_size, hidden_size, output_size).to(device)
-model.load_state_dict(model_state)
-model.eval() 
-
-bot_name = "Agora"
-
-@app.route('/api/chat', methods=['POST'])
+@app.route("/chat", methods=["POST"])
 def chat():
-    try:
-        request_data = request.get_json()
-        user_message = request_data.get('message', '')
+    data = request.json
+    if not data:
+        return jsonify({"error": "Request body must be JSON"}), 400
+    message = data.get("message")
+    if not message:
+        return jsonify({"error": "Message is required"}), 400
 
-        # Tokenize and process the message
-        sentence = tokenize(user_message)
-        X = bag_of_words(sentence, data['all_words']).unsqueeze(0).to(device)
+    tokens = tokenize(message)
+    X = bag_of_words(tokens, all_words)
+    X = torch.from_numpy(X).unsqueeze(0).to(device)
 
+    with torch.no_grad():
         # Check if input is gibberish (no known words recognized)
         if X.sum().item() == 0:
             return jsonify({"message": "I do not understand..."})
@@ -71,24 +107,26 @@ def chat():
         # Make prediction
         output = model(X)
         _, predicted = torch.max(output, dim=1)
-        tag = data['tags'][predicted.item()]
-        prob = torch.softmax(output, dim=1)[0][predicted.item()]
+        tag = tags[predicted.item()]
 
-        # Determine response
-        if prob.item() > 0.75:
-            for intent in intents['intents']:
-                if tag == intent["tag"]:
-                    bot_response = random.choice(intent['responses'])
-                    break
-            else:
-                bot_response = "I do not understand..."
-        else:
-            bot_response = "I do not understand..."
+        probs = torch.softmax(output, dim=1)
+        confidence = probs[0][predicted.item()]
 
-        return jsonify({"message": bot_response})
+        if confidence.item() > 0.75:
+            for intent in intents["intents"]:
+                if intent["tag"] == tag:
+                    return jsonify({
+                        "response": np.random.choice(intent["responses"])
+                    })
 
-    except Exception as e:
-        return jsonify({"error": str(e)})
+    return jsonify({"response": "Sorry, I didn't understand that."})
 
-if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000,debug=True)
+################################
+# SAFE ENTRYPOINT
+################################
+if __name__ == "__main__":
+    debug = os.getenv("FLASK_DEBUG", "false").lower() == "true"
+    host = os.getenv("FLASK_HOST", "127.0.0.1")
+    port = int(os.getenv("FLASK_PORT", "5000"))
+
+    app.run(host=host, port=port, debug=debug)
