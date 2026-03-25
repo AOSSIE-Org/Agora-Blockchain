@@ -116,7 +116,7 @@ def chat():
                         "response": np.random.choice(intent["responses"])
                     })
 
-    return jsonify({"response": "Sorry, I didn’t understand that."})
+    return jsonify({"response": "Sorry, I didn't understand that."})
 
 ################################
 # SAFE ENTRYPOINT
