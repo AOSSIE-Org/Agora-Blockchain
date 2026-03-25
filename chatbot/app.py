@@ -88,7 +88,10 @@ app = Flask(__name__)
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    message = request.json.get("message")
+    data = request.json
+    if not data:
+        return jsonify({"error": "Request body must be JSON"}), 400
+    message = data.get("message")
     if not message:
         return jsonify({"error": "Message is required"}), 400
 
