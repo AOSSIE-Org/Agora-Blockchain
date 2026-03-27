@@ -5,4 +5,5 @@ interface Errors {
     error VoteInputLength();
     error IncorrectCredits();
     error OwnerPermissioned();
+    error InvalidVotePermutation();
 }

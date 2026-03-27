@@ -28,6 +28,8 @@ cp .env.sample .env;
 ```
 
 - Update the `RPC_URL_MUMBAI` to a Polygon Mumbai RPC endpoint. I used [Alchemy's](https://alchemy.com/?r=zU2MTQwNTU5Mzc2M)
+- Update the `ALLOWED_ISSUERS` to a comma-separated list of trusted issuer DIDs. This is a critical security step. If this variable is not set, the server will log a warning and no issuers will be trusted.
+  - Example: `ALLOWED_ISSUERS=did:polygonid:polygon:mumbai:...,did:polygonid:polygon:mumbai:...`
 - Optionally update the `VERIFIER_DID` to your DID
 - Don't change `HOSTED_SERVER_URL` or `FRONTEND_URL` yet
 

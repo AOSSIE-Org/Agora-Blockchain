@@ -28,7 +28,7 @@ const CandidateGrid = ({
   candidate: any;
 }) => {
   const { id: electionAddress } = useParams<{ id: `0x${string}` }>();
-  const { switchChain } = useSwitchChain();
+  const { switchChainAsync } = useSwitchChain();
   const { chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const candidateId = Number(candidate.candidateID);
@@ -36,7 +36,7 @@ const CandidateGrid = ({
 
   const removeCandidate = async () => {
     try {
-      if (chain?.id === 43113) switchChain({ chainId: sepolia.id });
+      if (chain?.id === 43113) await switchChainAsync({ chainId: sepolia.id });
       await writeContractAsync({
         address: electionAddress,
         abi: Election,

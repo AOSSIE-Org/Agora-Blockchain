@@ -29,14 +29,14 @@ const CandidateCard = ({
   isOwner: boolean;
 }) => {
   const { id: electionAddress } = useParams<{ id: `0x${string}` }>();
-  const { switchChain } = useSwitchChain();
+  const { switchChainAsync } = useSwitchChain();
   const { chain } = useAccount();
   const [inside, setinside] = useState(false);
   const { writeContractAsync } = useWriteContract();
   const candidateId = Number(candidate.candidateID);
   const removeCandidate = async () => {
     try {
-      if (chain?.id === 43113) switchChain({ chainId: sepolia.id });
+      if (chain?.id === 43113) await switchChainAsync({ chainId: sepolia.id });
       await writeContractAsync({
         address: electionAddress as `0x${string}`,
         abi: Election,

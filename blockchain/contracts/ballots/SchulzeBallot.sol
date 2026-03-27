@@ -26,6 +26,7 @@ contract SchulzeBallot is IBallot {
     function vote(uint[] memory voteArr) external onlyOwner {
         uint totalCandidates = preferences.length;
         if (voteArr.length != totalCandidates) revert VoteInputLength();
+        _validatePermutation(voteArr, totalCandidates);
         for (uint i = 0; i < totalCandidates; i++) {
             for (uint j = i + 1; j < totalCandidates; j++) {
                 preferences[voteArr[i]][voteArr[j]] += 1;
@@ -35,5 +36,14 @@ contract SchulzeBallot is IBallot {
 
     function getVotes() external view onlyOwner returns (uint[][] memory) {
         return preferences;
+    }
+
+    function _validatePermutation(uint[] memory arr, uint n) internal pure {
+        bool[] memory seen = new bool[](n);
+        for (uint i = 0; i < n; i++) {
+            if (arr[i] >= n) revert InvalidVotePermutation();
+            if (seen[arr[i]]) revert InvalidVotePermutation();
+            seen[arr[i]] = true;
+        }
     }
 }

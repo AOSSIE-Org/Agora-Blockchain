@@ -20,7 +20,7 @@ const ButtonCard = ({ isOwner }: { isOwner: boolean }) => {
   const candidateList = electionData[7].result;
   const { id: electionAddress } = useParams<{ id: `0x${string}` }>();
   const { chain } = useAccount();
-  const { switchChain } = useSwitchChain();
+  const { switchChainAsync } = useSwitchChain();
   const { writeContractAsync } = useWriteContract();
   const { setelectionModal } = useElectionModal();
   const [openModal, setopenModal] = useState<boolean>(false);
@@ -29,7 +29,7 @@ const ButtonCard = ({ isOwner }: { isOwner: boolean }) => {
   const electionEnded = Math.floor(Date.now() / 1000) > Number(electionInfo[1]);
   const getResult = async () => {
     try {
-      if (chain?.id === 43113) switchChain({ chainId: sepolia.id });
+      if (chain?.id === 43113) await switchChainAsync({ chainId: sepolia.id });
       await writeContractAsync({
         address: electionAddress,
         abi: Election,

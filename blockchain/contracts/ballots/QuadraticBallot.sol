@@ -20,14 +20,14 @@ contract QuadraticBallot is IBallot {
     function init(uint totalCandidate) external onlyOwner {
         candidateVotes = new uint[](totalCandidate);
     }
-    // voting as preference candidate
+    // Quadratic voting: voteArr[i] = number of votes for candidate i.
+    // Cost = sum of voteArr[i]^2 for all i. Total cost must not exceed 100 credits.
     function vote(uint[] memory voteArr) external onlyOwner {
         uint totalCandidates = candidateVotes.length;
         if (voteArr.length != totalCandidates) revert VoteInputLength();
         if (!checkCreditsQuadratic(voteArr)) revert IncorrectCredits();
 
         for (uint i = 0; i < totalCandidates; i++) {
-            // voteArr[i] is the credits alloted per candidate
             candidateVotes[i] += voteArr[i];
         }
     }
@@ -40,9 +40,11 @@ contract QuadraticBallot is IBallot {
         uint[] memory voteArr
     ) internal pure returns (bool) {
         uint totalCredits = 100;
+        uint usedCredits = 0;
         for (uint i = 0; i < voteArr.length; i++) {
-            totalCredits = totalCredits - voteArr[i];
+            // Quadratic cost: N votes costs N^2 credits
+            usedCredits += voteArr[i] * voteArr[i];
         }
-        return totalCredits == 0;
+        return usedCredits <= totalCredits && usedCredits > 0;
     }
 }

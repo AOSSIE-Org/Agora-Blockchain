@@ -13,13 +13,13 @@ const CrossChain = ({
   isEnded: boolean;
   isCrossChainEnabled: boolean;
 }) => {
-  const { switchChain } = useSwitchChain();
+  const { switchChainAsync } = useSwitchChain();
   const { chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const [buttonValue, setbuttonValue] = useState(false);
   const addCrossChain = async () => {
     try {
-      if (chain?.id !== 43113) switchChain({ chainId: avalancheFuji.id });
+      if (chain?.id !== 43113) await switchChainAsync({ chainId: avalancheFuji.id });
       await writeContractAsync({
         address: LINK_FUJI,
         abi: erc20Abi,

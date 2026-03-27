@@ -103,7 +103,7 @@ export function PolygonIDVerifier({
 
   const reportVerificationResult = (result) => {
     console.log("reporting verification result", result);
-    // onVerificationResult(result);
+    onVerificationResult(result);
   };
 
   function openInNewTab(url) {

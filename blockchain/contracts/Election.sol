@@ -12,6 +12,9 @@ contract Election is Initializable {
     error ElectionIncomplete();
     error ElectionInactive();
     error InvalidCandidateID();
+    error InvalidElectionTime();
+    error ResultsAlreadyDeclared();
+    error MinimumCandidatesRequired();
 
     mapping(address user => bool isVoted) public userVoted;
 
@@ -20,11 +23,10 @@ contract Election is Initializable {
         uint endTime;
         string name;
         string description;
-        // Election type: 0 for invite based 1 for open
     }
 
     struct Candidate {
-        uint candidateID; // remove candidateId its not needed
+        uint candidateID;
         string name;
         string description;
     }
@@ -42,8 +44,9 @@ contract Election is Initializable {
         _;
     }
 
-    modifier electionStarted() {
-        if (block.timestamp > electionInfo.startTime) revert ElectionInactive();
+    // Reverts if the election has already started (strict less-than to avoid boundary overlap)
+    modifier electionNotStarted() {
+        if (block.timestamp >= electionInfo.startTime) revert ElectionInactive();
         _;
     }
 
@@ -74,8 +77,11 @@ contract Election is Initializable {
         address _owner,
         address _resultCalculator
     ) external initializer {
+        if (_electionInfo.startTime >= _electionInfo.endTime) revert InvalidElectionTime();
+        if (_electionInfo.startTime < block.timestamp) revert InvalidElectionTime();
+
         electionInfo = _electionInfo;
-        for(uint i = 0 ;i< _candidates.length;i++){ // add _candidates to candidates array 
+        for(uint i = 0; i < _candidates.length; i++){
             candidates.push(
                 Candidate(
                     i,
@@ -107,12 +113,12 @@ contract Election is Initializable {
         address user,
         uint[] memory _voteArr
     ) external electionInactive {
+        if (msg.sender != factoryContract) revert OwnerPermissioned();
         if (userVoted[user]) revert AlreadyVoted();
         if (ballotInitialized == false) {
             ballot.init(candidates.length);
             ballotInitialized = true;
         }
-        if (msg.sender != factoryContract) revert OwnerPermissioned();
         userVoted[user] = true;
         ballot.vote(_voteArr);
         totalVotes++;
@@ -121,7 +127,7 @@ contract Election is Initializable {
     function addCandidate(
         string calldata _name,
         string calldata _description
-    ) external onlyOwner electionStarted {
+    ) external onlyOwner electionNotStarted {
         Candidate memory newCandidate = Candidate(
             candidates.length,
             _name,
@@ -130,11 +136,17 @@ contract Election is Initializable {
         candidates.push(newCandidate);
     }
 
-    function removeCandidate(uint _id) external onlyOwner electionStarted {
-    if (_id >= candidates.length) revert InvalidCandidateID();
-    candidates[_id] = candidates[candidates.length - 1]; // Replace with last element
-    candidates.pop(); 
-}
+    function removeCandidate(uint _id) external onlyOwner electionNotStarted {
+        if (candidates.length <= 2) revert MinimumCandidatesRequired();
+        if (_id >= candidates.length) revert InvalidCandidateID();
+        uint lastIndex = candidates.length - 1;
+        if (_id != lastIndex) {
+            candidates[_id] = candidates[lastIndex];
+            // Update the moved candidate's ID to reflect its new position
+            candidates[_id].candidateID = _id;
+        }
+        candidates.pop();
+    }
 
     function getCandidateList() external view returns (Candidate[] memory) {
         return candidates;
@@ -142,6 +154,8 @@ contract Election is Initializable {
 
     function getResult() external {
         if (block.timestamp < electionInfo.endTime) revert ElectionIncomplete();
+        if (resultsDeclared) revert ResultsAlreadyDeclared();
+
         bytes memory payload = abi.encodeWithSignature("getVotes()");
 
         (bool success, bytes memory allVotes) = address(ballot).staticcall(

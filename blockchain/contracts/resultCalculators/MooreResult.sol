@@ -15,12 +15,18 @@ contract MooreResult is Errors, Candidatecheck, WinnersArray {
             return checkEdgeCases(candidatesLength);
         }
 
+        // Calculate total votes cast across all candidates
+        uint totalVotes = 0;
+        for (uint i = 0; i < candidatesLength; i++) {
+            totalVotes += candidateList[i];
+        }
+
         uint maxVotes = 0;
         uint winnerCount = 0;
         uint[] memory winners;
         for (uint i = 0; i < candidatesLength; i++) {
             uint votes = candidateList[i];
-            if (votes > candidatesLength / 2) {
+            if (votes > totalVotes / 2) {
                 winners = new uint[](1);
                 winners[0] = i;
                 return winners;

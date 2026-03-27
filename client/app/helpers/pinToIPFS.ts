@@ -1,39 +1,41 @@
-const JWT = process.env.NEXT_PUBLIC_PINATA_JWT;
+// Pinata calls are proxied through /api/ipfs to keep the JWT server-side only.
+// The PINATA_JWT env var (without NEXT_PUBLIC_ prefix) is used in app/api/ipfs/route.ts.
 
 export const pinJSONFile = async (body: any) => {
-  const options = {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${JWT}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  };
-
   try {
-    const response = await fetch(
-      "https://api.pinata.cloud/pinning/pinJSONToIPFS",
-      options
-    );
+    const response = await fetch("/api/ipfs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Failed to pin to IPFS: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`);
+    }
+
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
-    throw err; // rethrow the error to be handled by the caller
+    throw err;
   }
 };
 
-export const unpinJSONFile = async (CID: String) => {
-  const options = {
-    method: "DELETE",
-    headers: { Authorization: `Bearer ${JWT}` },
-  };
-
+export const unpinJSONFile = async (CID: string) => {
   try {
-    await fetch(`https://api.pinata.cloud/pinning/unpin/${CID}`, options);
+    const response = await fetch("/api/ipfs", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cid: CID }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Failed to unpin from IPFS: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`);
+    }
   } catch (err) {
     console.error(err);
-    throw err; // rethrow the error to be handled by the caller
+    throw err;
   }
 };

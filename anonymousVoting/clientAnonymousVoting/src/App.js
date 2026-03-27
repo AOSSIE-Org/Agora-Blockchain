@@ -19,17 +19,17 @@ function App() {
 
   const renderRoutes = () => {
     let ret;
-    // if (!hasRegistered){
-    //   ret = 
-    //   <Routes>
-    //     <Route path="/auth" element={<Register/>} />
-    //     <Route path="/howItWorks" element={<HowItWorks/>} />
-    //     <Route path="/dashboard" element={<Dashboard/>} />
-    //     <Route path="/election" element={<Election />} />
-
-    //   </Routes>
-    // }else{
-      ret = 
+    if (!hasRegistered){
+      ret =
+      <Routes>
+        <Route path="/auth" element={<Register/>} />
+        <Route path="/howItWorks" element={<HowItWorks/>} />
+        <Route path="/dashboard" element={<Dashboard/>} />
+        <Route path="/election" element={<Election />} />
+        <Route path="*" element={<Navigate to="/auth" />} />
+      </Routes>
+    }else{
+      ret =
       <Routes>
         <Route path="/" element={<Navigate to="/auth" />} />
         <Route path="/auth" element={<Register/>} />
@@ -37,8 +37,9 @@ function App() {
         <Route path="/createProcess" element={<CreateProcess/>} />
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/election" element={<Election />} />
+        <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
-    // }
+    }
     return ret;
   }
 

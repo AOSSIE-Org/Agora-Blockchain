@@ -14,6 +14,8 @@ contract ElectionFactory is CCIPReceiver {
     error OwnerRestricted();
     error NotWhitelistedSender();
     error InvalidCandidatesLength();
+    error IncompatibleBallotResultType();
+    error InvalidElectionTime();
 
     struct CCIPVote {
         address election;
@@ -56,12 +58,15 @@ contract ElectionFactory is CCIPReceiver {
 
     function createElection(
         Election.ElectionInfo memory _electionInfo,
-        Election.Candidate[] memory _candidates, // add candidates separately due to separation of concerns 
+        Election.Candidate[] memory _candidates,
         uint _ballotType,
         uint _resultType
     ) external {
-        if (_candidates.length<2) revert InvalidCandidatesLength();
-        //add checks of time
+        if (_candidates.length < 2) revert InvalidCandidatesLength();
+        if (_electionInfo.startTime >= _electionInfo.endTime) revert InvalidElectionTime();
+        if (_electionInfo.startTime < block.timestamp) revert InvalidElectionTime();
+        _validateBallotResultCompat(_ballotType, _resultType);
+
         address electionAddress = Clones.clone(electionGenerator);
         address _ballot = ballotGenerator.generateBallot(
             _ballotType,
@@ -80,6 +85,25 @@ contract ElectionFactory is CCIPReceiver {
         electionCount++;
         electionOwner[openBasedElections.length] = msg.sender;
         openBasedElections.push(address(election));
+    }
+
+    // Validates that ballot type and result type are compatible
+    function _validateBallotResultCompat(uint _ballotType, uint _resultType) internal pure {
+        // BallotType 1 (General) -> ResultType 1 or 2
+        // BallotType 2 (Ranked) -> ResultType 1 or 2
+        // BallotType 3 (IRV) -> ResultType 3
+        // BallotType 4 (Schulze) -> ResultType 4
+        // BallotType 5 (Quadratic) -> ResultType 5
+        // BallotType 6 (Score) -> ResultType 6
+        // BallotType 7 (KemenyYoung) -> ResultType 7
+        // BallotType 8 (Moore) -> ResultType 8
+        if (_ballotType == 1 || _ballotType == 2) {
+            if (_resultType != 1 && _resultType != 2) revert IncompatibleBallotResultType();
+        } else if (_ballotType >= 3 && _ballotType <= 8) {
+            if (_resultType != _ballotType) revert IncompatibleBallotResultType();
+        } else {
+            revert IncompatibleBallotResultType();
+        }
     }
 
     function deleteElection(uint _electionId) external {

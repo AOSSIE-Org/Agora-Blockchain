@@ -6,23 +6,24 @@ import {Candidatecheck} from "./abstract/CandidateCheck.sol";
 import {VoteWinnerCount} from "./abstract/VoteWinnerCount.sol";
 import {WinnersArray} from "./abstract/WinnersArray.sol";
 
-contract KemenyYoungResult is
+contract CopelandResult is
     Errors,
     Candidatecheck,
     VoteWinnerCount,
     WinnersArray
 {
-    function calculateKemenyYoungResult(
+    function calculateCopelandResult(
         bytes memory returnData
     ) public pure returns (uint256[] memory) {
-        // Decode the returnData to extract the vote arrays
         uint256[][] memory votes = abi.decode(returnData, (uint256[][]));
-
-        // Perform Kemeny-Young calculation to determine the winner
-        return performKemenyYoung(votes);
+        return performCopeland(votes);
     }
 
-    function performKemenyYoung(
+    // Uses Copeland pairwise comparison method as an on-chain feasible
+    // approximation of Kemeny-Young (true K-Y requires O(n!) permutation search).
+    // Each candidate scores +1 for each pairwise contest they win.
+    // The candidate(s) with the most pairwise wins is declared winner.
+    function performCopeland(
         uint256[][] memory votes
     ) internal pure returns (uint256[] memory) {
         uint256 numCandidates = votes.length;
@@ -31,48 +32,24 @@ contract KemenyYoungResult is
             return checkEdgeCases(numCandidates);
         }
 
-        // Compute pairwise scores
-        uint256[][] memory pairwiseScores = new uint256[][](numCandidates);
+        // Compute Copeland scores: for each pair (i, j), candidate i gets
+        // a point if more voters prefer i over j than j over i.
+        uint256[] memory scores = new uint256[](numCandidates);
         for (uint i = 0; i < numCandidates; i++) {
-            pairwiseScores[i] = new uint256[](numCandidates);
             for (uint j = 0; j < numCandidates; j++) {
                 if (i != j) {
-                    pairwiseScores[i][j] = votes[i][j] > votes[j][i]
-                        ? votes[i][j]
-                        : votes[j][i];
-                }
-            }
-        }
-
-        // Find the ranking with the highest Kemeny score
-        uint256[] memory bestRanking = new uint256[](numCandidates);
-        uint256 bestScore = 0;
-
-        for (uint i = 0; i < numCandidates; i++) {
-            uint256[] memory ranking = new uint256[](numCandidates);
-            uint256 score = 0;
-
-            for (uint j = 0; j < numCandidates; j++) {
-                if (i != j) {
-                    if (pairwiseScores[i][j] > pairwiseScores[j][i]) {
-                        ranking[i]++;
-                        score += pairwiseScores[i][j];
+                    if (votes[i][j] > votes[j][i]) {
+                        scores[i]++;
                     }
                 }
             }
-
-            if (score > bestScore) {
-                bestScore = score;
-                bestRanking = ranking;
-            }
         }
 
-        uint256 highestRankingScore;
+        uint256 highestScore;
         uint256 winnerCount;
 
-        (highestRankingScore, winnerCount) = getVoteWinnerCount(bestRanking);
+        (highestScore, winnerCount) = getVoteWinnerCount(scores);
 
-        // Collect all candidates with the highest ranking score
-        return getWinnersArray(winnerCount, highestRankingScore, bestRanking);
+        return getWinnersArray(winnerCount, highestScore, scores);
     }
 }

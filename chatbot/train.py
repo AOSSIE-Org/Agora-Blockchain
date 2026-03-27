@@ -1,3 +1,13 @@
+"""Training module for the Agora chatbot neural network model.
+
+This module trains a neural network classifier on intent-based patterns from a JSON
+configuration file. It processes natural language inputs into bag-of-words
+representations and trains the model to classify user messages into predefined intents.
+
+The trained model state and vocabulary are saved to a PyTorch file for later use in
+the Flask API.
+"""
+
 import numpy as np
 import random
 import json
@@ -9,19 +19,59 @@ import nltk
 nltk.download('punkt')
 
 
-# Define a simple tokenizer and stemmer
 def tokenize(sentence):
+    """Tokenize a sentence into individual words.
+    
+    Args:
+        sentence (str): The input sentence to tokenize.
+        
+    Returns:
+        list: A list of words obtained by splitting on whitespace.
+    """
     return sentence.split()  # Tokenize by splitting on spaces
 
 def stem(word):
+    """Apply simple stemming to a word by converting to lowercase.
+    
+    Args:
+        word (str): The input word to stem.
+        
+    Returns:
+        str: The lowercased word.
+    """
     return word.lower()  # Simple stemming by converting to lowercase
 
 def bag_of_words(tokenized_sentence, words):
+    """Convert a tokenized sentence into a bag-of-words vector.
+    
+    Creates a binary vector where each element represents whether a vocabulary word
+    appears in the tokenized sentence (1) or not (0).
+    
+    Args:
+        tokenized_sentence (list): List of words from the input sentence.
+        words (list): The complete vocabulary of known words.
+        
+    Returns:
+        torch.Tensor: A 1D float tensor of shape (len(words),) with binary values.
+    """
     bag = [1 if stem(word) in [stem(w) for w in tokenized_sentence] else 0 for word in words]
     return torch.tensor(bag, dtype=torch.float32)
 
 class NeuralNet(nn.Module):
+    """Simple 3-layer neural network for intent classification.
+    
+    A feedforward neural network with two hidden layers using ReLU activation
+    for classifying input vectors into predefined intent classes.
+    """
+    
     def __init__(self, input_size, hidden_size, num_classes):
+        """Initialize the neural network layers.
+        
+        Args:
+            input_size (int): Dimension of the input features (bag-of-words size).
+            hidden_size (int): Number of neurons in each hidden layer.
+            num_classes (int): Number of output classes (intents).
+        """
         super(NeuralNet, self).__init__()
         self.l1 = nn.Linear(input_size, hidden_size)
         self.l2 = nn.Linear(hidden_size, hidden_size)
@@ -29,6 +79,14 @@ class NeuralNet(nn.Module):
         self.relu = nn.ReLU()
     
     def forward(self, x):
+        """Forward pass through the network.
+        
+        Args:
+            x (torch.Tensor): Input tensor of shape (batch_size, input_size).
+            
+        Returns:
+            torch.Tensor: Output logits of shape (batch_size, num_classes).
+        """
         x = self.relu(self.l1(x))
         x = self.relu(self.l2(x))
         x = self.l3(x)
@@ -90,18 +148,36 @@ output_size = len(tags)
 print(input_size, output_size)
 
 class ChatDataset(Dataset):
+    """PyTorch Dataset for chatbot training data.
+    
+    Wraps the preprocessed training data (bag-of-words features and intent labels)
+    into a format compatible with PyTorch DataLoader.
+    """
 
     def __init__(self):
+        """Initialize the dataset with global training data."""
         self.n_samples = len(X_train)
         self.x_data = X_train
         self.y_data = y_train
 
-    # support indexing such that dataset[i] can be used to get i-th sample
     def __getitem__(self, index):
+        """Retrieve a single training sample.
+        
+        Args:
+            index (int): Index of the sample to retrieve.
+            
+        Returns:
+            tuple: (feature_tensor, label) where feature_tensor is a bag-of-words
+                   vector and label is the intent class index.
+        """
         return self.x_data[index], self.y_data[index]
 
-    # we can call len(dataset) to return the size
     def __len__(self):
+        """Return the total number of samples in the dataset.
+        
+        Returns:
+            int: Number of training samples.
+        """
         return self.n_samples
 
 dataset = ChatDataset()

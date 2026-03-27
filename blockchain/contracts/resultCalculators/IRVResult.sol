@@ -7,120 +7,110 @@ contract IRVResult is Errors, Candidatecheck {
     function calculateIRVResult(
         bytes memory returnData
     ) public pure returns (uint256[] memory winners) {
-        // Decode the returnData to extract the vote arrays
         uint256[][] memory votes = abi.decode(returnData, (uint256[][]));
-
-        // Perform IRV calculation to determine the winner(s)
         winners = performIRV(votes);
     }
 
     function performIRV(
         uint256[][] memory votes
     ) internal pure returns (uint256[] memory winners) {
+        // Guard against empty votes array
+        if (votes.length == 0) {
+            revert NoWinner();
+        }
+
         uint256 numCandidates = votes[0].length;
 
-        // Check for no candidates
         if (numCandidates < 2) {
             return checkEdgeCases(numCandidates);
         }
 
-        uint256[] memory remainingCandidates = new uint256[](numCandidates);
-        for (uint256 i = 0; i < numCandidates; i++) {
-            remainingCandidates[i] = i;
-        }
+        // Cap iterations to numCandidates to prevent unbounded loop
+        for (uint256 round = 0; round < numCandidates; round++) {
+            // Count active (non-exhausted) ballots
+            uint256 activeBallots = 0;
+            for (uint256 i = 0; i < votes.length; i++) {
+                if (votes[i].length > 0) {
+                    activeBallots++;
+                }
+            }
 
-        while (true) {
-            // Count the first preferences
+            if (activeBallots == 0) {
+                revert NoWinner();
+            }
+
+            // Count first preferences
             uint256[] memory firstPreferences = countFirstPreferences(
                 votes,
                 numCandidates
             );
 
-            // If any candidate has a majority, they are the winner
+            // Check if any candidate has a majority of active ballots
             for (uint256 i = 0; i < firstPreferences.length; i++) {
-                if (firstPreferences[i] > votes.length / 2) {
+                if (firstPreferences[i] > activeBallots / 2) {
                     winners = new uint256[](1);
                     winners[0] = i;
                     return winners;
                 }
             }
 
-            // No winner yet, eliminate the candidate with the fewest first preferences
-            uint256 minVotes = votes.length;
-            uint256 minCandidate = votes.length;
-            bool tie = true;
+            // Find the minimum non-zero vote count
+            uint256 minVotes = activeBallots + 1;
             for (uint256 i = 0; i < firstPreferences.length; i++) {
-                if (firstPreferences[i] < minVotes && firstPreferences[i] > 0) {
+                if (firstPreferences[i] > 0 && firstPreferences[i] < minVotes) {
                     minVotes = firstPreferences[i];
-                    minCandidate = i;
-                    tie = false;
-                } else if (
-                    firstPreferences[i] == minVotes && firstPreferences[i] > 0
-                ) {
-                    tie = false; // Updated tie condition
                 }
             }
-            // Check if all remaining candidates are tied
-            if (tie) {
-                uint256[] memory tiedWinners = new uint256[](numCandidates);
-                uint256 count = 0;
-                for (uint256 i = 0; i < firstPreferences.length; i++) {
-                    if (firstPreferences[i] > 0) {
-                        tiedWinners[count] = i;
-                        count++;
+
+            // Count how many candidates have votes, and how many are tied at min
+            uint256 candidatesWithVotes = 0;
+            uint256 candidatesAtMin = 0;
+            for (uint256 i = 0; i < firstPreferences.length; i++) {
+                if (firstPreferences[i] > 0) {
+                    candidatesWithVotes++;
+                    if (firstPreferences[i] == minVotes) {
+                        candidatesAtMin++;
                     }
                 }
-                // Return the array with the correct size
-                winners = new uint256[](2);
-                for (uint256 i = 0; i < count; i++) {
-                    winners[i] = tiedWinners[i];
+            }
+
+            // If all remaining candidates have equal votes, they are all tied winners
+            if (candidatesAtMin == candidatesWithVotes) {
+                winners = new uint256[](candidatesWithVotes);
+                uint256 idx = 0;
+                for (uint256 i = 0; i < firstPreferences.length; i++) {
+                    if (firstPreferences[i] > 0) {
+                        winners[idx] = i;
+                        idx++;
+                    }
                 }
                 return winners;
             }
 
-            // Create a new array for the next round of votes without the eliminated candidate
-            for (uint256 i = 0; i < votes.length; i++) {
-                votes[i] = removeCandidate(votes[i], minCandidate);
-            }
-
-            // Check if all votes are exhausted
-            bool allVotesExhausted = true;
-            for (uint256 i = 0; i < votes.length; i++) {
-                if (votes[i].length > 0) {
-                    allVotesExhausted = false;
+            // Eliminate the candidate with fewest first preferences
+            // (if multiple tied at min, eliminate the first one found)
+            uint256 minCandidate = numCandidates;
+            for (uint256 i = 0; i < firstPreferences.length; i++) {
+                if (firstPreferences[i] == minVotes) {
+                    minCandidate = i;
                     break;
                 }
             }
 
-            // If all votes are exhausted, return remaining candidates
-
-            if (allVotesExhausted) {
-                uint256 remainingCount = 0;
-                for (uint256 i = 0; i < remainingCandidates.length; i++) {
-                    if (remainingCandidates[i] != votes.length) {
-                        remainingCount++;
-                    }
-                }
-
-                winners = new uint256[](remainingCount);
-                uint256 index = 0;
-                for (uint256 i = 0; i < remainingCandidates.length; i++) {
-                    if (remainingCandidates[i] != votes.length) {
-                        winners[index] = remainingCandidates[i];
-                        index++;
-                    }
-                }
-
-                return winners;
+            // Remove the eliminated candidate from all ballots
+            for (uint256 i = 0; i < votes.length; i++) {
+                votes[i] = removeCandidate(votes[i], minCandidate);
             }
         }
+
+        // Fallback: should not reach here, but return remaining candidates
+        revert NoWinner();
     }
 
     function countFirstPreferences(
         uint256[][] memory votes,
         uint256 numCandidates
     ) internal pure returns (uint256[] memory) {
-        // Count the first preferences for each candidate
         uint256[] memory firstPreferences = new uint256[](numCandidates);
         for (uint256 i = 0; i < votes.length; i++) {
             if (votes[i].length > 0) {
@@ -134,7 +124,18 @@ contract IRVResult is Errors, Candidatecheck {
         uint256[] memory ballot,
         uint256 candidate
     ) internal pure returns (uint256[] memory) {
-        uint256[] memory newBallot = new uint256[](ballot.length - 1);
+        // First count how many times candidate appears
+        uint256 removeCount = 0;
+        for (uint256 i = 0; i < ballot.length; i++) {
+            if (ballot[i] == candidate) {
+                removeCount++;
+            }
+        }
+        // If candidate not in ballot, return as-is
+        if (removeCount == 0) {
+            return ballot;
+        }
+        uint256[] memory newBallot = new uint256[](ballot.length - removeCount);
         uint256 index = 0;
         for (uint256 i = 0; i < ballot.length; i++) {
             if (ballot[i] != candidate) {

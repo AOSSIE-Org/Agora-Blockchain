@@ -8,7 +8,7 @@ const { humanReadableAuthReason, proofRequest } = require("./proofRequest");
 require("dotenv").config();
 
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 app.use(
   cors({
@@ -70,7 +70,7 @@ async function getAuthQr(req, res) {
 
   console.log(`getAuthQr for ${sessionId}`);
 
-  io.sockets.emit(
+  io.to(sessionId).emit(
     sessionId,
     socketMessage("getAuthQr", STATUS.IN_PROGRESS, sessionId)
   );
@@ -93,7 +93,12 @@ async function getAuthQr(req, res) {
   // store this session's auth request
   authRequests.set(sessionId, request);
 
-  io.sockets.emit(sessionId, socketMessage("getAuthQr", STATUS.DONE, request));
+  // Clean up the auth request after 10 minutes to prevent memory leaks
+  setTimeout(() => {
+    authRequests.delete(sessionId);
+  }, 10 * 60 * 1000);
+
+  io.to(sessionId).emit(sessionId, socketMessage("getAuthQr", STATUS.DONE, request));
 
   return res.status(200).set("Content-Type", "application/json").send(request);
 }
@@ -107,7 +112,7 @@ async function handleVerification(req, res) {
 
   console.log(`handleVerification for ${sessionId}`);
 
-  io.sockets.emit(
+  io.to(sessionId).emit(
     sessionId,
     socketMessage("handleVerification", STATUS.IN_PROGRESS, authRequest)
   );
@@ -140,9 +145,9 @@ async function handleVerification(req, res) {
     const opts = {
       AcceptedStateTransitionDelay: 5 * 60 * 1000, // up to a 5 minute delay accepted by the Verifier
     };
-    authResponse = await verifier.fullVerify(tokenStr, authRequest, opts);
+    const authResponse = await verifier.fullVerify(tokenStr, authRequest, opts);
     const userId = authResponse.from;
-    io.sockets.emit(
+    io.to(sessionId).emit(
       sessionId,
       socketMessage("handleVerification", STATUS.DONE, authResponse)
     );
@@ -155,10 +160,10 @@ async function handleVerification(req, res) {
       "Error handling verification: Double check the value of your RPC_URL_MUMBAI in the .env file. Are you using a valid api key for Polygon Mumbai from your RPC provider? Visit https://alchemy.com/?r=zU2MTQwNTU5Mzc2M and create a new app with Polygon Mumbai"
     );
     console.log("handleVerification error", sessionId, error);
-    io.sockets.emit(
+    io.to(sessionId).emit(
       sessionId,
       socketMessage("handleVerification", STATUS.ERROR, error)
     );
-    return res.status(500).send(error);
+    return res.status(500).json({ error: 'Verification failed' });
   }
 }

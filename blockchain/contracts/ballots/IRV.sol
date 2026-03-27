@@ -25,10 +25,20 @@ contract IRV is IBallot {
     // voting as preference candidate
     function vote(uint[] memory voteArr) external onlyOwner {
         if (totalCandidates != voteArr.length) revert VoteInputLength();
+        _validatePermutation(voteArr, totalCandidates);
         votes.push(voteArr);
     }
 
-    function getVotes() external view returns (uint256[][] memory) {
+    function getVotes() external view onlyOwner returns (uint256[][] memory) {
         return votes;
+    }
+
+    function _validatePermutation(uint[] memory arr, uint n) internal pure {
+        bool[] memory seen = new bool[](n);
+        for (uint i = 0; i < n; i++) {
+            if (arr[i] >= n) revert InvalidVotePermutation();
+            if (seen[arr[i]]) revert InvalidVotePermutation();
+            seen[arr[i]] = true;
+        }
     }
 }

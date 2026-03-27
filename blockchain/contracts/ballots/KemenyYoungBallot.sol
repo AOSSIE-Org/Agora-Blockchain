@@ -28,6 +28,7 @@ contract KemenyYoungBallot is IBallot {
     function vote(uint[] memory voteArr) external onlyOwner {
         uint totalCandidates = votes.length;
         if (voteArr.length != totalCandidates) revert VoteInputLength();
+        _validatePermutation(voteArr, totalCandidates);
 
         // Store the ranking for this voter
         for (uint i = 0; i < totalCandidates; i++) {
@@ -39,5 +40,14 @@ contract KemenyYoungBallot is IBallot {
 
     function getVotes() external view onlyOwner returns (uint256[][] memory) {
         return votes;
+    }
+
+    function _validatePermutation(uint[] memory arr, uint n) internal pure {
+        bool[] memory seen = new bool[](n);
+        for (uint i = 0; i < n; i++) {
+            if (arr[i] >= n) revert InvalidVotePermutation();
+            if (seen[arr[i]]) revert InvalidVotePermutation();
+            seen[arr[i]] = true;
+        }
     }
 }
