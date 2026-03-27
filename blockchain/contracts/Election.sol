@@ -131,10 +131,11 @@ contract Election is Initializable {
     }
 
     function removeCandidate(uint _id) external onlyOwner electionStarted {
-    if (_id >= candidates.length) revert InvalidCandidateID();
-    candidates[_id] = candidates[candidates.length - 1]; // Replace with last element
-    candidates.pop(); 
-}
+        if (_id >= candidates.length) revert InvalidCandidateID();
+        candidates[_id] = candidates[candidates.length - 1];
+        candidates[_id].candidateID = _id; // fix stale ID after swap
+        candidates.pop();
+    }
 
     function getCandidateList() external view returns (Candidate[] memory) {
         return candidates;
