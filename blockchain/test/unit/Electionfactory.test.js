@@ -117,6 +117,78 @@ describe('ElectionFactory', function () {
         
 
     })
+    it('should revert if election time range is invalid', async function () {
+      const { electionFactory } = await loadFixture(deployElectionFactoryFixture)
+
+      const electionInfo = {
+        startTime: Math.floor(Date.now() / 1000) + 3600,
+        endTime: Math.floor(Date.now() / 1000) + 60,
+        name: 'invalid-time-election',
+        description: 'invalid election time range',
+      }
+      const initialCandidates = [
+        { candidateID: 1, name: 'candidate1', description: 'candidate1' },
+        { candidateID: 2, name: 'candidate2', description: 'candidate2s' },
+      ]
+
+      await expect(
+        electionFactory.createElection(electionInfo, initialCandidates, 1, 1)
+      ).to.be.revertedWithCustomError(electionFactory, 'InvalidElectionTime')
+    })
+    it('should revert if election end time is in the past', async function () {
+      const { electionFactory } = await loadFixture(deployElectionFactoryFixture)
+
+      const electionInfo = {
+        startTime: 1,
+        endTime: 2,
+        name: 'past-time-election',
+        description: 'end time already passed',
+      }
+      const initialCandidates = [
+        { candidateID: 1, name: 'candidate1', description: 'candidate1' },
+        { candidateID: 2, name: 'candidate2', description: 'candidate2s' },
+      ]
+
+      await expect(
+        electionFactory.createElection(electionInfo, initialCandidates, 1, 1)
+      ).to.be.revertedWithCustomError(electionFactory, 'InvalidElectionTime')
+    })
+    it('should revert if ballot and result types do not match', async function () {
+      const { electionFactory } = await loadFixture(deployElectionFactoryFixture)
+
+      const electionInfo = {
+        startTime: Math.floor(Date.now() / 1000) + 60,
+        endTime: Math.floor(Date.now() / 1000) + 3600,
+        name: 'invalid-types-election',
+        description: 'mismatched ballot and result types',
+      }
+      const initialCandidates = [
+        { candidateID: 1, name: 'candidate1', description: 'candidate1' },
+        { candidateID: 2, name: 'candidate2', description: 'candidate2s' },
+      ]
+
+      await expect(
+        electionFactory.createElection(electionInfo, initialCandidates, 1, 2)
+      ).to.be.revertedWithCustomError(electionFactory, 'InvalidVotingConfig')
+    })
+    it('should revert if ballot type is outside supported range', async function () {
+      const { electionFactory } = await loadFixture(deployElectionFactoryFixture)
+
+      const electionInfo = {
+        startTime: Math.floor(Date.now() / 1000) + 60,
+        endTime: Math.floor(Date.now() / 1000) + 3600,
+        name: 'invalid-ballot-type-election',
+        description: 'unsupported ballot type',
+      }
+      const initialCandidates = [
+        { candidateID: 1, name: 'candidate1', description: 'candidate1' },
+        { candidateID: 2, name: 'candidate2', description: 'candidate2s' },
+      ]
+
+      await expect(
+        electionFactory.createElection(electionInfo, initialCandidates, 9, 9)
+      ).to.be.revertedWithCustomError(electionFactory, 'InvalidVotingConfig')
+    })
     it('should delete the election ', async function () {
       const { electionFactory, election, owner } = await loadFixture(
         deployElectionFactoryFixture
