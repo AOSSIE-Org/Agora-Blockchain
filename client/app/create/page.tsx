@@ -13,6 +13,49 @@ import { sepolia } from "viem/chains";
 import { ArrowPathIcon , PlusIcon, TrashIcon} from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import ElectionInfoPopup from "../components/Modal/ElectionInfoPopup";
+import { pinJSONFile, unpinJSONFile } from "../helpers/pinToIPFS";
+
+interface Candidate {
+  name: string;
+  description: string;
+}
+
+interface PinnedCandidate {
+  candidateID: bigint;
+  name: string;
+  description: string;
+}
+
+const pinCandidateDescriptions = async (
+  candidates: Candidate[]
+): Promise<PinnedCandidate[]> => {
+  const pinnedCandidates: PinnedCandidate[] = [];
+
+  try {
+    for (let index = 0; index < candidates.length; index++) {
+      const candidate = candidates[index];
+      const response = await pinJSONFile({
+        pinataContent: {
+          name: candidate.name,
+          description: candidate.description,
+        },
+      });
+
+      pinnedCandidates.push({
+        candidateID: BigInt(index),
+        name: candidate.name,
+        description: response.IpfsHash,
+      });
+    }
+
+    return pinnedCandidates;
+  } catch (error) {
+    await Promise.allSettled(
+      pinnedCandidates.map((candidate) => unpinJSONFile(candidate.description))
+    );
+    throw error;
+  }
+};
 
 const CreatePage: React.FC = () => {
   const router = useRouter();
@@ -25,10 +68,6 @@ const CreatePage: React.FC = () => {
   const [candidates,setCandidates] = useState<Candidate[]>([])
   const changeChain = () => {
     switchChain({ chainId: sepolia.id });
-  }
-  interface Candidate {
-    name: string;
-    description: string;
   }
   const addCandidate = () => {
     setCandidates([...candidates, { name: "", description: "" }]);
@@ -77,15 +116,19 @@ const CreatePage: React.FC = () => {
       toast.error("please enter all candidate information or remove empty candidates.")
       return 
     }
-  // passed candidates to the create election function 
+
+    let pinnedCandidates: PinnedCandidate[] | undefined;
+
     try {
+      pinnedCandidates = await pinCandidateDescriptions(candidates);
+
       await writeContractAsync({
         address: ELECTION_FACTORY_ADDRESS,
         abi: ElectionFactory,
         functionName: "createElection",
         args: [
           { startTime: start, endTime: end, name, description }, // ElectionInfo object
-          candidates.map((c, index) => ({ candidateID: BigInt(index), name: c.name, description: c.description })), 
+          pinnedCandidates,
           ballotType,
           ballotType,
         ],
@@ -93,6 +136,12 @@ const CreatePage: React.FC = () => {
       toast.success("Election created successfully!");
       router.push("/");
     } catch (error) {
+      if (pinnedCandidates) {
+        await Promise.allSettled(
+          pinnedCandidates.map((candidate) => unpinJSONFile(candidate.description))
+        );
+      }
+
       console.error("Error creating election:", error);
       toast.error(ErrorMessage(error));
     }
@@ -147,7 +196,8 @@ const CreatePage: React.FC = () => {
             
             {candidates.length === 0 ? (
               <p className="text-gray-500 text-sm italic text-center py-4">
-                No candidates added yet. Click "Add Candidate" to begin adding candidates.
+                No candidates added yet. Click &quot;Add Candidate&quot; to begin
+                adding candidates.
               </p>
             ) : (
               candidates.map((candidate, index) => (

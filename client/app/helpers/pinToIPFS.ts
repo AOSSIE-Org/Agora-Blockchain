@@ -1,6 +1,16 @@
 const JWT = process.env.NEXT_PUBLIC_PINATA_JWT;
 
-export const pinJSONFile = async (body: any) => {
+type PinJSONBody = {
+  pinataContent: Record<string, unknown>;
+};
+
+type PinJSONResponse = {
+  IpfsHash: string;
+};
+
+export const pinJSONFile = async (
+  body: PinJSONBody
+): Promise<PinJSONResponse> => {
   const options = {
     method: "POST",
     headers: {
@@ -15,8 +25,17 @@ export const pinJSONFile = async (body: any) => {
       "https://api.pinata.cloud/pinning/pinJSONToIPFS",
       options
     );
+
+    if (!response.ok) {
+      throw new Error(`Pinata pin request failed with status ${response.status}`);
+    }
+
     const data = await response.json();
-    console.log(data);
+
+    if (!data?.IpfsHash || typeof data.IpfsHash !== "string") {
+      throw new Error("Pinata pin request did not return a valid IpfsHash");
+    }
+
     return data;
   } catch (err) {
     console.error(err);
@@ -31,7 +50,16 @@ export const unpinJSONFile = async (CID: String) => {
   };
 
   try {
-    await fetch(`https://api.pinata.cloud/pinning/unpin/${CID}`, options);
+    const response = await fetch(
+      `https://api.pinata.cloud/pinning/unpin/${CID}`,
+      options
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Pinata unpin request failed with status ${response.status}`
+      );
+    }
   } catch (err) {
     console.error(err);
     throw err; // rethrow the error to be handled by the caller
