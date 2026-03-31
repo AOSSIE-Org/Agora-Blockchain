@@ -59,9 +59,9 @@ describe('Election', function () {
         description: 'This is a test election',
       }
       const initialCandidates = [
-        { candidateID: 10, name: 'Alice', description: 'Alice desc' },
-        { candidateID: 11, name: 'Bob', description: 'Bob desc' },
-        { candidateID: 12, name: 'Carol', description: 'Carol desc' },
+        { candidateID: 0, name: 'Alice', description: 'Alice desc' },
+        { candidateID: 1, name: 'Bob', description: 'Bob desc' },
+        { candidateID: 2, name: 'Carol', description: 'Carol desc' },
       ]
 
       await electionFactory.createElection(electionInfo, initialCandidates, 1, 1)
