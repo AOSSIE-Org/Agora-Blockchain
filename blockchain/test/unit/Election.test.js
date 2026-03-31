@@ -48,6 +48,38 @@ describe('Election', function () {
       candidates = await electionInstance.getCandidateList()
       expect(candidates.length).to.equal(3)
     })
+
+    it('Should update the moved candidateID when removing a candidate', async function () {
+      const { electionFactory } = await loadFixture(deployElectionFactoryFixture)
+
+      const electionInfo = {
+        startTime: Math.floor(Date.now() / 1000) + 60,
+        endTime: Math.floor(Date.now() / 1000) + 3600,
+        name: 'Test Election',
+        description: 'This is a test election',
+      }
+      const initialCandidates = [
+        { candidateID: 10, name: 'Alice', description: 'Alice desc' },
+        { candidateID: 11, name: 'Bob', description: 'Bob desc' },
+        { candidateID: 12, name: 'Carol', description: 'Carol desc' },
+      ]
+
+      await electionFactory.createElection(electionInfo, initialCandidates, 1, 1)
+
+      const openElections = await electionFactory.getOpenElections()
+      const Election = await ethers.getContractFactory('Election')
+      const electionInstance = Election.attach(openElections[0])
+
+      await electionInstance.removeCandidate(0)
+
+      const candidates = await electionInstance.getCandidateList()
+
+      expect(candidates.length).to.equal(2)
+      expect(candidates[0].name).to.equal('Carol')
+      expect(candidates[0].candidateID).to.equal(0)
+      expect(candidates[1].name).to.equal('Bob')
+      expect(candidates[1].candidateID).to.equal(1)
+    })
   })
 
   describe('Voting Process', function () {
