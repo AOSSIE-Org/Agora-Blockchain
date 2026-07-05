@@ -35,10 +35,12 @@ app = Flask(__name__)
 CORS(app) 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-with open('intents.json', 'r') as json_data:
+BASE_DIR = dirname(abspath(__file__))
+
+with open(join(BASE_DIR, 'intents.json'), 'r') as json_data:
     intents = json.load(json_data)
 
-FILE = "data.pth"
+FILE = join(BASE_DIR, "data.pth")
 data = torch.load(FILE,weights_only=True)
 
 input_size = data["input_size"]
