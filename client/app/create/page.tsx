@@ -24,8 +24,10 @@ const CreatePage: React.FC = () => {
   const [endTime, setEndTime] = useState<Date | null>(new Date());
   const [candidates, setCandidates] = useState<Candidate[]>([])
   const changeChain = () => {
-    switchChain({ chainId: sepolia.id });
-  }
+  switchChain({ 
+    chainId: process.env.NODE_ENV === 'development' ? hardhat.id : sepolia.id 
+  });
+}
   interface Candidate {
     name: string;
     description: string;
