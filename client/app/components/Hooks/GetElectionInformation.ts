@@ -14,7 +14,7 @@ export const useElectionInformation = ({
   const electionContract = {
     abi: Election,
     address: electionAddress,
-    chainId: sepolia.id,
+    // chainId: sepolia.id,
   };
   const CCIPContract = {
     abi: CCIPSender,

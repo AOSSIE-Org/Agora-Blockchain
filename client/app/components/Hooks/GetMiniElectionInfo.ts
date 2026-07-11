@@ -8,7 +8,7 @@ export const useMiniElectionInfo = ({
   electionAddress: `0x${string}`;
 }) => {
   const { data: electionInfo, isLoading } = useReadContract({
-    chainId: sepolia.id,
+    // chainId: sepolia.id,
     abi: Election,
     address: electionAddress,
     functionName: "electionInfo",
@@ -22,7 +22,7 @@ export const useMiniOwnerInfo = ({
   electionAddress: `0x${string}`;
 }) => {
   const { data: owner, isLoading: loadingOwner } = useReadContract({
-    chainId: sepolia.id,
+    // chainId: sepolia.id,
     abi: Election,
     address: electionAddress,
     functionName: "owner",
