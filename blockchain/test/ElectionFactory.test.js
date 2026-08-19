@@ -10,10 +10,12 @@ describe("ElectionFactory", function () {
     description: "Test Description",
     startTime: Math.floor(Date.now() / 1000) + 3600,
     endTime: Math.floor(Date.now() / 1000) + 7200,
-    minVotes: 1,
-    maxVotes: 3,
-    options: ["Option 1", "Option 2", "Option 3"]
   };
+
+  const mockCandidates = [
+    { candidateID: 0, name: "Option 1", description: "Option 1" },
+    { candidateID: 1, name: "Option 2", description: "Option 2" }
+  ];
 
   beforeEach(async function () {
     [owner, user1, user2, router] = await ethers.getSigners();
@@ -35,7 +37,7 @@ describe("ElectionFactory", function () {
 
   describe("Election Creation", function () {
     it("Should create a new election", async function () {
-      await factory.createElection(mockElectionInfo, 0, 0);
+      await factory.createElection(mockElectionInfo, mockCandidates, 0, 0);
       expect(await factory.electionCount()).to.equal(1);
       
       const openElections = await factory.getOpenElections();
@@ -43,8 +45,8 @@ describe("ElectionFactory", function () {
     });
 
     it("Should allow multiple elections creation", async function () {
-      await factory.createElection(mockElectionInfo, 0, 0);
-      await factory.createElection(mockElectionInfo, 0, 0);
+      await factory.createElection(mockElectionInfo, mockCandidates, 0, 0);
+      await factory.createElection(mockElectionInfo, mockCandidates, 0, 0);
       
       expect(await factory.electionCount()).to.equal(2);
       const openElections = await factory.getOpenElections();
@@ -54,7 +56,7 @@ describe("ElectionFactory", function () {
 
   describe("Election Deletion", function () {
     beforeEach(async function () {
-      await factory.createElection(mockElectionInfo, 0, 0);
+      await factory.createElection(mockElectionInfo, mockCandidates, 0, 0);
     });
 
     it("Should allow owner to delete their election", async function () {

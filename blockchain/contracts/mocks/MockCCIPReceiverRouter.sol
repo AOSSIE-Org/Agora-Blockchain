@@ -11,6 +11,10 @@ contract MockCCIPReceiverRouter {
         electionFactory = ElectionFactory(_electionFactory);
     }
 
+    function setElectionFactory(address _electionFactory) public {
+        electionFactory = ElectionFactory(_electionFactory);
+    }
+
     function sendMessage(
         bytes32 _messageId , 
         address _user , 
