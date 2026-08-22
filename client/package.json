@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/is-prop-valid": "^1.4.0",
     "@headlessui/react": "^2.1.0",
     "@material-tailwind/react": "^2.1.9",
     "@nextui-org/theme": "^2.2.6",

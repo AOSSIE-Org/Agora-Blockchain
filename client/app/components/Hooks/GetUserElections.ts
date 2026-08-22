@@ -5,7 +5,7 @@ import { useReadContract } from "wagmi";
 
 export const useUserElections = () => {
   const { data: elections, isLoading } = useReadContract({
-    chainId: sepolia.id,
+    // chainId: sepolia.id,
     abi: ElectionFactory,
     address: ELECTION_FACTORY_ADDRESS,
     functionName: "getOpenElections",
