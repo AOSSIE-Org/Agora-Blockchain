@@ -76,7 +76,13 @@ const CreatePage: React.FC = () => {
       toast.error("Invalid timing. End time must be after start time.");
       return;
     }
-    if (candidates.length > 0 && candidates.some(candidate => !candidate.name.trim() || !candidate.description.trim())) {
+    const normalizedCandidates = candidates.map((candidate) => ({
+      ...candidate,
+      name: candidate.name.trim(),
+      description: candidate.description.trim(),
+    }));
+
+    if (normalizedCandidates.some(candidate => !candidate.name || !candidate.description)) {
       toast.error("please enter all candidate information or remove empty candidates.")
       return
     }
@@ -88,7 +94,11 @@ const CreatePage: React.FC = () => {
         functionName: "createElection",
         args: [
           { startTime: start, endTime: end, name, description }, // ElectionInfo object
-          candidates.map((c, index) => ({ candidateID: BigInt(index), name: c.name, description: c.description })),
+          normalizedCandidates.map((candidate, index) => ({
+            candidateID: BigInt(index),
+            name: candidate.name,
+            description: candidate.description,
+          })),
           ballotType,
           ballotType,
         ],
