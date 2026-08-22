@@ -20,6 +20,7 @@ const CreatePage: React.FC = () => {
   const { switchChain } = useSwitchChain();
   const { chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
+  const isDevelopment = process.env.NODE_ENV === 'development';
   const [startTime, setStartTime] = useState<Date | null>(new Date());
   const [endTime, setEndTime] = useState<Date | null>(new Date());
   const [candidates, setCandidates] = useState<Candidate[]>([])
@@ -75,7 +76,7 @@ const CreatePage: React.FC = () => {
       toast.error("Invalid timing. End time must be after start time.");
       return;
     }
-    if (candidates.length > 0 && candidates.some(candidate => !candidate.name || !candidate.description)) {
+    if (candidates.length > 0 && candidates.some(candidate => !candidate.name.trim() || !candidate.description.trim())) {
       toast.error("please enter all candidate information or remove empty candidates.")
       return
     }
@@ -235,7 +236,7 @@ const CreatePage: React.FC = () => {
           </motion.button>
         </form>
       </motion.div>
-      {chain?.id !== sepolia.id && chain?.id !== hardhat.id && <ChainSwitchModal onSwitch={changeChain} />}
+      {chain?.id !== sepolia.id && (!isDevelopment || chain?.id !== hardhat.id) && <ChainSwitchModal onSwitch={changeChain} />}
       <Toaster />
     </motion.div>
   );
@@ -343,7 +344,7 @@ const ChainSwitchModal: React.FC<ChainSwitchModalProps> = ({ onSwitch }) => (
       className="bg-white rounded-lg p-8 shadow-xl text-center"
     >
       <p className="text-xl mb-4 text-gray-800">
-        Creating Elections is supported only on Sepolia
+        Creating Elections is supported only on Sepolia (or Hardhat in development).
       </p>
       <motion.button
         onClick={onSwitch}
