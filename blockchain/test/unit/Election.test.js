@@ -48,7 +48,7 @@ describe('Election', function () {
       candidates = await electionInstance.getCandidateList()
       expect(candidates.length).to.equal(3)
       for (let i = 0; i < candidates.length; i++) {
-        expect(candidates[i].candidateID).to.equal(i)
+        expect(candidates[i].candidateID).to.equal(BigInt(i))
       }
     })
   })
