@@ -155,6 +155,34 @@ describe('ElectionFactory', function () {
         'election1'
       )
     })
+    it('Should not allow non-owner to delete election', async function () {
+      const { electionFactory, otherAccount } = await loadFixture(
+        deployElectionFactoryFixture
+      )
+      const electionInfo = {
+        startTime: Math.floor(Date.now() / 1000) + 60,
+        endTime: Math.floor(Date.now() / 1000) + 3600,
+        name: 'election1',
+        description: 'This is election1',
+      }
+      const initialCandidates = [
+        { candidateID: 1, name: 'candidate1', description: 'candidate1' },
+        { candidateID: 2, name: 'candidate2', description: 'candidate2s' },
+      ]
+      const ballotType = 1
+      const resultType = 1
+
+      await electionFactory.createElection(
+        electionInfo,
+        initialCandidates,
+        ballotType,
+        resultType
+      )
+
+      await expect(
+        electionFactory.connect(otherAccount).deleteElection(0)
+      ).to.be.revertedWithCustomError(electionFactory, 'OnlyOwner')
+    })
   })
   describe('ElectionFactory Owner Management', function () {
     it('Should allow only owner to add whitelisted contracts', async function () {
